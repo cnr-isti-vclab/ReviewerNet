@@ -142,12 +142,13 @@ a:hover { text-decoration: underline; }
   width: 750px;
   margin: 0 auto;
   padding-top: 30px;
+  background: #f0f0f0;
 }
 
 #content {
   display: block;
   width: 100%;
-  background: #fff;
+  background: #f0f0f0;
   padding: 25px 20px;
   padding-bottom: 35px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;

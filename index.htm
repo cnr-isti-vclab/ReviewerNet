@@ -1,25 +1,132 @@
 <!DOCTYPE html>
-<html lang="en-US"><head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Author Autocomplete Search</title>
-  <link rel="stylesheet" type="text/css" media="all" href="searchPage/style.css">
-  <script type="text/javascript" src="searchPage/jquery-1.js"></script>
-  <script type="text/javascript" src="searchPage/jquery.js"></script>
-  <script type="text/javascript" src="searchPage/script.js"></script>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-</head>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Author Autocomplete Search</title>
+    <link rel="stylesheet" type="text/css" media="all" href="searchPage/style.css">
+    <script type="text/javascript" src="searchPage/jquery-1.js"></script>
+    <script type="text/javascript" src="searchPage/jquery.js"></script>
+    <script type="text/javascript" src="searchPage/script.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+  </head>
+  <body style="height: 100%; width:100%">
 
-<body>
-  <div id="w">
-    <div id="content">
-      <h1>Author Autocomplete Search</h1>      
-      <div id="searchfield">
-        <form><input name="author" class="biginput" id="autocomplete" autocomplete="off" type="text"></form>
-      </div>
-      
-      <div id="outputbox">
-        <p id="outputcontent">Type a partial/full author name and the result will be displayed here.</p>
-      </div>
+      <div id="container1", style="border-style: solid; height: 10%; width:100%">
+        <h1 id="heading1", style = "height: 100%; width:100%">Papers&Authors Browser</h1>
     </div>
-  </div>
-<div class="autocomplete-suggestions" style="position: absolute; display: none; width: 600px; top: 246px; left: 374.5px; max-height: 300px; z-index: 9999;"></div></body></html>
+
+
+     <div id="w", style="height: 100%; width: 35%; float:left">
+        <div id="content", style="height: 100%; width: 100%">
+          <h1 style = "font-size: 2em">Papers&Authors Search</h1>      
+            <div id="searchfield", style="width: 100%">
+              <form style="width: 90%"><input name="author" class="biginput" id="autocomplete" autocomplete="off" type="text", style="width: 100%"></form>
+            </div> 
+            <div id="outputbox", style="width: 100%">
+              <p id="outputcontent">Type a partial/full author name and the result will be displayed here.</p>
+            </div>
+            <div class="autocomplete-suggestions", style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
+        </div>
+
+      </div>
+
+    <div id= "paperGraphDiv", class = "a", style="width: 65%; height:100%; float:right">       
+       <meta charset="utf-8">
+        <style>
+
+        .links line {
+          stroke: #999;
+          stroke-opacity: 0.6;
+        }
+
+        .nodes circle {
+          stroke: #fff;
+          stroke-width: 1.5px;
+        }
+
+        </style>
+        <svg width="100%" height="100%"></svg>
+        <script>
+
+          var svg = d3.select("svg")
+
+        var svg = d3.select("svg"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+console.log(svg.attr("cx"))
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(function(d) { return d.id; }))
+            .force("charge", d3.forceManyBody())
+            .force("center", d3.forceCenter(400, 300/*width / 2, height / 2*/));
+
+
+        d3.json("./searchPage/miserables.json", function(error, graph) {
+          if (error) throw error;
+          var link = svg.append("g")
+              .attr("class", "links")
+            .selectAll("line")
+            .data(graph.links)
+            .enter().append("line")
+              .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+          var node = svg.append("g")
+              .attr("class", "nodes")
+            .selectAll("circle")
+            .data(graph.nodes)
+            .enter().append("circle")
+              .attr("r", 5)
+              .attr("fill", function(d) { return color(d.group); })
+              .call(d3.drag()
+                  .on("start", dragstarted)
+                  .on("drag", dragged)
+                  .on("end", dragended));
+
+          node.append("title")
+              .text(function(d) { return d.id; });
+
+          simulation
+              .nodes(graph.nodes)
+              .on("tick", ticked);
+
+          simulation.force("link")
+              .links(graph.links);
+
+          function ticked() {
+            link
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node
+                .attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+          }
+          
+        });
+
+        function dragstarted(d) {
+          if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        }
+
+        function dragged(d) {
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+          if (!d3.event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        }
+
+        </script>
+
+
+    </div>
+  </body>
+</html>
