@@ -398,3 +398,335 @@ PAIds = getAuthSet(A_U_AIn_U_AOut)
 papersAAInOut = papersFromAllAuthors(r"C:\***\papers.json", PAIds)
 #>> len(papersAAInOut) = 1.7M
 # avgParers per author = 33 
+
+######################################################################
+#  Function to generate the testing file and the ranked papers file  #
+######################################################################
+#############################################
+# Functions for ranking and building        #
+# the project dataset related to the papers #
+#############################################
+#
+# "papers":[
+#    {idP, value(name), authorsId, year, jN, venue, inC, outC, top10Related:[idR, score] )}, the last no comma
+#      id    0              1        2     3     4    5    6           7    idr   r(idP, idr)
+# ]
+#
+# if score  < 0 there's a conflict
+#function that writes the papers JSON ranked file in in path
+def papersForSearchFile(path, pJSON):
+    i = 1
+    l = len(pJSON)
+    with  open(path, mode='w', encoding = 'utf8')  as f:
+        f.write('{"papers": [')
+        for paper in pJSON:
+            idP = paper
+            p = pJSON[paper]
+            h = p[7]
+            lim = len(h)
+            top10 = []
+            for i in range(0, lim):
+                el = heapq.heappop(h)
+                r = el[0]
+                idE = el[1]
+                top10.append([r, idE])
+                top10.sort(reverse = True)
+            pF = {'idP':idP, 'value':p[0], 'authorsId': sorted(list(p[1])),\
+                  'year':p[2], 'jN':p[3], 'venue':p[4], 'inC': sorted(list(p[5])),\
+                  'outC': sorted(list(p[6])), 'top10':top10}
+            f.write(json.dumps(pF))
+            if i < l:
+                f.write(', ')
+            i+=1
+        f.write(']}')   
+
+# This functions returns all the coAuthors of all the authors in aSet
+def getCoAuth(aSet, aJSON):
+    coAuthSet = set()
+    for a in aSet:
+        coAa = aJSON[a][1]
+        for coA in coAa:
+            coAuthSet.add(coA)
+    return coAuthSet
+
+# CONFLICT DETECTION pt.2
+# This function checks whether there are coAuthorships
+# between the two sets of authors ids.
+def isCoAuth(aSet1, aSet2, aJSON):
+    coAuthSet1 = getCoAuth(aSet1, aJSON)
+    coAuthSet2 = getCoAuth(aSet2, aJSON)
+    return ((len(aSet1.intersection(coAuthSet2))>0) or ((len(aSet2.intersection(coAuthSet1))>0)))
+
+def relatedness(aJSON, authSet1, authSet2, papersSets1, papersSets2):
+    score = len(set(papersSets1[0]).intersection(set(papersSets2[0])))+\
+            len(set(papersSets1[1]).intersection(set(papersSets2[1])))
+    if isCoAuth(authSet1, authSet2, aJSON):
+        return -score
+    else:
+        return score
+    
+def getPaperSet(pIn, pOut):
+    return [pIn, pOut]
+
+def getAuthorsSet(authors):
+    authSet = set()
+    if len(authors)>0:
+        for auth in authors:
+            idA = auth['ids'] 
+            if len(idA)>0:
+                authSet.add(idA[0])
+    return authSet
+                
+def generatePapersJson(papers):
+    papersJson = dict()
+    i = 0
+    jN = ''
+    venue = ''
+    for p in papers:
+        add = True
+        try:
+            idP = p['id']
+            title = p['title']
+            authorsId = getAuthorsSet(p['authors'])
+            year = p['year']
+        except Exception:
+            add = False
+            continue;
+        try:
+            jN = p['journalName']
+        except Exception:
+            continue;
+        try:
+            venue = p['venue']
+        except Exception:
+            continue;
+        inC = set(p['inCitations'])
+        outC = set(p['outCitations'])
+        if(add):
+            papersJson[idP] = [title, authorsId, year, jN, venue, inC, outC, []]
+        else:
+            i = i+1
+    print(str(len(papersJson))+' papers loaded, '+str(i)+' discarded')
+    return papersJson
+        
+# Global variables and function that mantain 
+# the top-10 min-heap of each paper
+k = 4
+capacity = 10
+def insert(heap, idP, relatedness):
+    v = (relatedness, idP)
+    if len(heap) == 0:
+        heapq.heappush(heap, v)
+    else:
+        val = v[0]
+        if val > k:
+            if len(heap) < capacity:
+                heapq.heappush(heap, v)
+            else:
+                if( val > heap[0][0] ):
+                    heapq.heappushpop(heap, v)
+    return heap
+
+def computeScores(papers, pJSON, aJSON):
+    id1 = 0
+    i = 1
+    l = len(papers)
+    added = 0
+    for p1 in papers:
+        id1 = p1['id']
+        papersSets1 = getPaperSet(p1['inCitations'], p1['outCitations'])
+        authSet1 = getAuthorsSet(p1['authors'])
+        for p2 in papers:
+            id2 = p2['id']
+            if not(id1==id2):
+                papersSets2 = getPaperSet(p2['inCitations'], p2['outCitations'])
+                authSet2 = getAuthorsSet(p2['authors'])
+                r = relatedness(aJSON, set(authSet1), set(authSet2), papersSets1, papersSets2)
+                if(r>0):
+                    added = added + 1
+                    pJSON[id1][7] = insert(pJSON[id1][7], id2, r)
+        i = i+1
+        if i % 250 == 0:
+            perc = (i*100)/l
+            perc = str(perc)
+            perc = perc[0:5]
+            tm = time.asctime()
+            tm = tm.split(' ')
+            tm = tm[3]
+            print('['+tm+'] Processed '+str(perc)+' - '+str(i)+' papers - ')
+    print('added to top10 '+str(added))
+    return pJSON
+
+#papersJSONRanked generation
+papers = []
+with open(r"C:\***\p.json", mode = "r", encoding = 'utf-8') as f:
+    for l in f:
+        p = json.loads(l)
+        papers.append(p)
+len(papers)
+
+authJSON = generateAuthJson(papers)
+authJSON = authorsJSONObj(papers, authJSON)
+
+pJSON = generatePapersJson(papers)
+pJSONRanked = computeScores(papers, pJSON, authJSON)
+papersForSearchFile(r"C:\****\pRanked.json", pJSON) 
+
+
+# papersTestingv generation
+# #dataset format: all in one row
+# "papers":[
+#    {idP, value(name), year, jN, venue )}, the last no comma
+#      id    0            1   2     3      
+# ],
+# "authoringLinks":[
+#     {"source": "authId", "target": "paperId", "value": 1},the last no comma
+# ],
+# "citations":[
+#     {"source": "paperId1", "target": "paperId2", "value": 1},the last no comma
+# ]
+#}
+def getP(path):
+    with open(path, mode = "r", encoding = 'utf-8') as f:
+        papers = []
+        for l in f:
+            p = json.loads(l)
+            papers.append(p)
+        return papers
+    
+def setAuthoring(authoring, authors, idP):
+    for a in authors:
+        heapq.heappush(authoring, (a, idP))
+    return authoring
+
+def setCitations(citations, idP, cIn, cOut):
+    if len(cIn) > 0:
+        for inc in cIn:
+            el = (inc, idP)
+            if not(el in citations):
+                heapq.heappush(citations, el)
+    if len(cOut) > 0:
+        for outc in cOut:
+            el = (idP, outc)
+            if not(el in citations):
+                heapq.heappush(citations, el)
+    return citations
+
+def getPapersTestingJSON(papers):
+    start()
+    citations = []
+    authoring = []
+    papersJson = dict()
+    added = 0
+    i = 0
+    l = len(papers)
+    jN = ''
+    venue = ''
+    for p in papers:
+        add = True
+        try:
+            idP = p['id']
+            title = p['title']
+            authorsId = getAuthorsSet(p['authors'])
+            year = p['year']
+        except Exception:
+            add = False
+            continue;
+        try:
+            jN = p['journalName']
+        except Exception:
+            continue;
+        try:
+            venue = p['venue']
+        except Exception:
+            continue;
+        inC = set(p['inCitations'])
+        outC = set(p['outCitations'])
+        authoring = setAuthoring(authoring, authorsId, idP)
+        citations = setCitations(citations, idP, inC, outC)
+        if(add):
+            papersJson[idP] = [title, year, jN, venue]
+            i = i + 1
+        else:
+            added = added+1
+        if i % 250 == 0:
+            perc = (i*100)/l
+            perc = str(perc)
+            perc = perc[0:5]
+            tm = time.asctime()
+            tm = tm.split(' ')
+            tm = tm[3]
+            print('['+tm+'] Processed '+str(perc)+' - '+str(i)+' papers - ')
+    print(str(len(papersJson))+' papers loaded, '+str(added)+' discarded')
+    end()
+    return papersJson, authoring, citations
+
+# "authoringLinks":[
+#     {"source": "authId", "target": "paperId", "value": 1},the last no comma
+# ],
+# "citations":[
+#     {"source": "paperId1", "target": "paperId2", "value": 1},the last no comma
+# ]
+#}
+def writeCitations(cits, f):
+    lim = len(cits)
+    for i in range(0, lim):
+        el = heapq.heappop(cits)
+        source = el[0]
+        target = el[1]
+        value = 2
+        cF = {'source':source, 'target':target, 'value':value}
+        f.write(json.dumps(cF))
+        if i < (lim-1):
+            f.write(', ')
+    f.write(']} ')
+
+def writeAuth(auth, f):
+    lim = len(auth)
+    for i in range(0, lim):
+        el = heapq.heappop(auth)
+        source = el[0]
+        target = el[1]
+        value = 8
+        aF = {'source':source, 'target':target, 'value':value}
+        f.write(json.dumps(aF))
+        if i < (lim-1):
+            f.write(', ')
+    f.write('], ')
+
+        
+def papersTestingForSearchFile(path, pJSON, auth, cit):
+    i = 1
+    l = len(pJSON)
+    with  open(path, mode='w', encoding = 'utf8')  as f:
+        f.write('{"papers": [')
+        for paper in pJSON:
+            idP = paper
+            p = pJSON[paper]
+            pF = {'idP':idP, 'value':p[0], 'year':p[1], 'jN':p[2], 'venue':p[3]}
+            f.write(json.dumps(pF))
+            if i < (l-1):
+                f.write(', ')
+            i+=1
+        f.write('], ')
+        f.write('"authoringLinks": [')
+        writeAuth(auth, f)
+        f.write('"citations": [')
+        writeCitations(cit, f)
+    print('DONE.')
+        
+
+def getLastest(papers):
+    tmp = []
+    for p in papers:
+        if p['year'] >= 2016:
+            tmp.append(p)
+    return tmp
+
+
+papers = []
+authoring = []
+citations = []
+papers = getP(r"C:\***\p.json")
+pTestingJSON, authoring, citations = getPapersTestingJSON(papers)
+papersTestingForSearchFile(r"C:\***\pTest.json", pTestingJSON, authoring, citations)
