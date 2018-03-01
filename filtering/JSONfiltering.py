@@ -26,10 +26,11 @@ def end():
 #}
 
 #Set of interesting Journals J 
-journals = ['ACM Transaction on Graphics', 'ACM Trans. on Graph.', 'ACM Transaction on Graphics', 'ACM Trans. on Graph.' \
-            'ACM Trans. Graph.', 'ACM TOG', 'Computer Graphics Forum', 'Comp. Graph. Forum', 'IEEE Transaction on Visualization and Computer Graphics', \
-            'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG', 'ACM Trans. Graph.', 'ACM TOG', 'Computer Graphics Forum', 'Comp. Graph. Forum', \
-            'IEEE Transaction on Visualization and Computer Graphics', 'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG']
+#Set of interesting Journals J 
+journals = ['ACM Transactions on Graphics', 'ACM Trans. on Graph.','ACM Trans. Graph.', \
+            'ACM TOG','Computer Graphics Forum', 'Comp. Graph. Forum', \
+            'IEEE Transactions on Visualization and Computer Graphics', \
+            'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG',]
 
 #Useless sttributes in original dataset
 attrDel = ['journalPages', 'journalVolume', \
