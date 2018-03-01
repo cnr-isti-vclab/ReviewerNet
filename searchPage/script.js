@@ -42,12 +42,19 @@ $(function (){
     if(inC.length > 0){
       thehtml += '<strong>In Citations:</strong><br>'
       var inCits =  papersFiltered.filter(isInCited)
+    inCits.sort(function(a, b) {
+            return -(parseInt(a.year) - parseInt(b.year));
+        });
       for (var i = 0; i < inCits.length; i++)
         thehtml += '- '+ inCits[i].value +  ', '+ inCits[i].year +';<br>'
     }
     if(outC.length > 0){
       thehtml += '<strong>Out Citations:</strong><br>'
       var outCits =  papersFiltered.filter(isOutCited)
+      outCits.sort(function(a, b) {
+            return -(parseInt(a.year) - parseInt(b.year));
+        });
+        console.log(outCits)
       for (var i = 0; i < outCits.length; i++)
         thehtml += '- '+outCits[i].value +  ', '+ outCits[i].year +';<br>'
     }
@@ -163,7 +170,7 @@ $(function (){
   
   //paperGraph(papers, citations, simulation, svg)
 
-  var graphTxt = fetch('../datasets/pForTest.txt')
+  var graphTxt = fetch('./searchPage/pForTest.txt')
     .then(response => response.text())
     .then(function(text) {
     //console.log("in jsonTxt: "+text);
