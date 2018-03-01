@@ -1,4 +1,4 @@
-$(function(){
+$(function (){
   var authors = []
   var papers = []
   var citations = []
@@ -8,17 +8,17 @@ $(function(){
   var inC = []
   var outC = []
   
-  function paperFilter(item) { return papersPrint.includes(item.id);};
+  function paperFilter (item) { return papersPrint.includes(item.id);};
 
-  function citFilter(item) {
+  function citFilter (item) {
     var flag = false
     var cit = ""
-    if (item.source === idP){
+    if (item.source === idP && item.type === 'out'){
       cit = item.target
       outC.push(cit)
       flag = true
     }
-    if (item.target === idP){
+    if (item.target === idP && item.type === 'in'){
       cit = item.source
       inC.push(cit)
       flag = true
@@ -105,7 +105,7 @@ $(function(){
         .selectAll("line")
         .data(citations)
         .enter().append("line")
-        .attr("stroke-width", function(d) { return d.value; });
+        .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
       
       var node = svg.append("g")
           .attr("class", "papers")
@@ -161,10 +161,9 @@ $(function(){
       d.fy = null;
     }
   
-  
   //paperGraph(papers, citations, simulation, svg)
 
-  var graphTxt = fetch('../datasets/pTest1.txt')
+  var graphTxt = fetch('../datasets/pForTest.txt')
     .then(response => response.text())
     .then(function(text) {
     //console.log("in jsonTxt: "+text);
