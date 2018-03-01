@@ -54,7 +54,6 @@ $(function (){
       outCits.sort(function(a, b) {
             return -(parseInt(a.year) - parseInt(b.year));
         });
-        console.log(outCits)
       for (var i = 0; i < outCits.length; i++)
         thehtml += '- '+outCits[i].value +  ', '+ outCits[i].year +';<br>'
     }
