@@ -170,7 +170,7 @@ $(function (){
   
   //paperGraph(papers, citations, simulation, svg)
 
-  var graphTxt = fetch('./searchPage/pForTest.txt')
+  var graphTxt = fetch('../datasets/pForTest.txt')
     .then(response => response.text())
     .then(function(text) {
     //console.log("in jsonTxt: "+text);
