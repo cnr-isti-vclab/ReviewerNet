@@ -56,7 +56,7 @@ input, textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  outline: none; 
+  outline: none;
 }
 
 blockquote, q { quotes: none; }
@@ -94,10 +94,10 @@ h1 {
   margin-bottom: 20px;
   padding: .1em 0;
   color: #444;
-	position: relative;
-	overflow: hidden;
-	white-space: nowrap;
-	text-align: center;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
 }
 h1:before,
 h1:after {
@@ -117,6 +117,7 @@ h1:after {
   left: .5em;
   margin: 0 -50% 0 0;
 }
+
 h1 > span {
   display: inline-block;
   vertical-align: middle;
@@ -156,7 +157,7 @@ a:hover { text-decoration: underline; }
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
 }
 
-#searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px; }
+#searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px;}
 
 #searchfield form {
   display: inline-block;
@@ -226,7 +227,94 @@ a:hover { text-decoration: underline; }
 
 
 
-.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto; }
+.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto;}
 .autocomplete-suggestion { padding: 10px 5px; font-size: 1.2em; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #f0f0f0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+
+
+#paperPanel{
+    left:600;
+}
+
+#authPanel{
+    float:right
+}
+
+.panel {
+    width: 50%;
+    background-color: rgba( 80, 44, 210, 0.069 );
+    text-align: center;
+    overflow: hidden;
+    position: absolute;
+    max-height: 0px;
+    z-index: 2;
+    padding 10px;
+    top: 116px;
+    transition: max-height 0.2s ease-out;
+    border-radius: 4px 4px 4px 4px;
+}
+
+#listBox {
+    width: 100%;
+    height: 35%
+}
+
+
+#mySidenav a {
+    position: absolute;
+    left: -80px;
+    transition: 0.3s;
+    padding: 15px;
+    width: 100px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    border-radius: 0 5px 5px 0;
+}
+
+.svg {
+    border:1px #8b6d8b; 
+}
+
+#mySidenav a:hover {
+    left: 0;
+}
+
+#auths {
+    top: 80px;
+    background-color: #a78fa7;
+}
+
+#paps {
+    top: 100px;
+    background-color: #8b6d8b ;
+}
+
+#paperGraphDiv {
+    width: 65%; 
+    height:100%;
+    float:right
+}
+
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 50%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+    border-radius: 4px 4px 4px 4px;
+}
+
+p {
+    padding: 10px
+}
+
+.active, .accordion:hover {
+    background-color: rgba( 80, 44, 210, 0.244 );
+}
