@@ -30,7 +30,8 @@ def end():
 journals = ['ACM Transactions on Graphics', 'ACM Trans. on Graph.','ACM Trans. Graph.', \
             'ACM TOG','Computer Graphics Forum', 'Comp. Graph. Forum', \
             'IEEE Transactions on Visualization and Computer Graphics', \
-            'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG',]
+            'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG',\
+           'Comput. Graphics Forum', 'Comput. Graph. Forum']
 
 #Useless sttributes in original dataset
 attrDel = ['journalPages', 'journalVolume', \
