@@ -245,7 +245,7 @@ $(function (){
     }
     
     
-    
+    getAuths()
     //M150 0 L75 200 L225 200 Z
     var simulation = setSimulation()
     
@@ -304,7 +304,7 @@ $(function (){
     
     //paperGraph(papers, citations, simulation, svg)
     //../datasets/pForTest.txt
-    getAuths()
+    
     var graphTxt = fetch('../datasets/pForTest.txt')
         .then(response => response.text())
         .then(function(text) {
