@@ -1,25 +1,38 @@
 $(function (){
-    var authors = []
-    var authsExclude = []
-    var authsPrint = []
-    var papers = []
-    var citations = []
-    var authoringLinks = []
-    var authoringLinksPrint  = []
-    var idPs = []
-    var papersPrint = []
-    var inC = []
-    var outC = []
-    var search = 0
-    var searchArr = []
-    var searchFor = 0
-    var citPrint = []
-    var mouseDown = false
-  
+    var graph = [],
+        authors = [],
+        authsExclude = [],
+        papers = [],
+        papersCit = {},
+        inC = [],
+        inCits = [],
+        outCits = [],
+        outC = [],
+        citPrint = [],
+        papersPrint = [],
+        papersFiltered = [],
+        citations = [],
+        width = 800,
+        inSz = 100,
+        outSz = 100,
+        height = 500,
+        h = height,
+        w = width,
+        svg,
+        thehtml,
+        idP,
+        idPs = [],
+        simulation,
+        color = d3.scaleLinear()
+            .domain([0, 50, 100])
+            .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
+        rscale = d3.scaleLinear().domain([0, 40])
+            .range([5, 20]);
+    
     var acc = document.getElementsByClassName("accordion");
     var i;
 
-    for (i = 0; i < acc.length; i++) {
+     for (i = 0; i < acc.length; i++) {
       acc[i].addEventListener("click", function() {
         this.classList.toggle("active");
           var panel = this.nextElementSibling.nextElementSibling
@@ -43,14 +56,14 @@ $(function (){
     function paperFilter (item) { return papersPrint.includes(item.id);};
 
     function citFilter (item) {
-        var flag = false
-        var cit = ""
-        if (item.source === idP && item.type === 'out'){
+        var flag = false,
+            cit = "";
+        if (item.source === idP){
           cit = item.target
           outC.push(cit)
           flag = true
         }
-        if (item.target === idP && item.type === 'in'){
+        if (item.target === idP){
           cit = item.source
           inC.push(cit)
           flag = true
@@ -65,6 +78,24 @@ $(function (){
 
     function isOutCited(item){ return outC.includes(item.id)}
 
+    function addId(name, year){
+        var isIn = false
+        //papersPrint = []
+        if(idPs.includes(idP)){
+          isIn = true
+        }
+        else{
+          idPs[idPs.length] = idP
+          papersPrint.push(idP)
+          $("#paperPanel").append("<p><strong>"+idPs.length+".</strong> "+name+","+year+"</p>")
+        }
+        var tempCits = citations.filter(citFilter);
+        citPrint = citPrint.concat(tempCits)
+        papersFiltered = papers.filter(paperFilter)
+            
+        return isIn
+    }
+    
     function prettyPrintPaper(suggestion, papersFiltered){
         var thehtml = '<strong>Title: </strong><br> ' + suggestion.value + ' <br><strong>Year:</strong> ' + suggestion.year
         if(suggestion.jN.length > 0)
@@ -93,21 +124,14 @@ $(function (){
     }
     
     function getArrays(graph) {
-            var p = graph.nodes
-            var n = p.length
-            for (i = 0; i < n; i++)
-              papers[i]=p[i]
-            var c = graph.links
-            n = c.length
-            for (i = 0; i < n; i++)
-              citations[i]=c[i]
-            /*
-            var a = graph.authoringLinks
-            n = a.length
-            for (i = 0; i < n; i++)
-              authoringLinks[i]=a[i]
-            */
-          /*}/)*/
+        var p = graph.nodes,
+            n = p.length;
+        for (i = 0; i < n; i++)
+            papers[i]=p[i]
+        var c = graph.links,
+            n = c.length;
+        for (i = 0; i < n; i++)
+            citations[i]=c[i]
       }
 
     function getAuths() {
@@ -117,18 +141,17 @@ $(function (){
                 var graph = JSON.parse(text)
                 var a = graph.authors
                 var n = a.length
-                for (i = 0; i < n; i++)
+                for (i = 0; i < n; i++) 
                     authors[i]=a[i]
                 })
         }
-    var w = 2000
-    var h = 2000
+   
     function getSvg(){
         var svg = d3.select("svg")
             .attr("width", w)
             .attr("height", h)
             .append("g")
-            .attr("transform","translate(" + 500 + "," + 300 + ")");
+            .attr("transform","translate(" + 400 + "," + 250 + ")");
         svg.append("svg:defs").selectAll("marker")
             .data(["end"])      // Different link/path types can be defined here
             .enter().append("svg:marker")    // This section adds in the arrows
@@ -139,8 +162,8 @@ $(function (){
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
             .attr("orient", "auto")
-            .attr("fill", "#e6e6e6")
-            .attr("stroke", "black")
+            .attr("fill", "#999")
+            .attr("stroke", "#999")
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5 Z");
         return svg
@@ -177,6 +200,7 @@ $(function (){
             .enter().append("line")
             .attr("marker-end","url(#end)")
             .style("stroke","#999999")
+            .attr("stroke-width", 0)
             .style("pointer-events", "none");
 
         var node = svg.append("g")
@@ -185,17 +209,29 @@ $(function (){
             .data(papers)
             .enter().append("circle")
             .attr("r", 0)
-            .attr("fill", function(d) { 
+            .attr("stroke", function(d){
+                if(idPs.includes(d.id))
+                    return "#6d10ca";
+                else return "#999";
+                })
+            .attr("stroke-width", function(d){
+                if(idPs.includes(d.id))
+                    return 2.5;
+                })
+            .attr("fill", function(d) {
+                return color(d.color)}
+                /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
-                else return "rgba( 64, 145, 215, 0.519 )";})
+                else return "rgba( 64, 145, 215, 0.519 )";}*/)
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended))
 
+
         node.transition()
             .duration(1000)
-            .attr("r", 5)
+            .attr("r", 6)
 
         node.append("title")
             .text(function(d) { return d.value; });
@@ -276,26 +312,14 @@ $(function (){
             lookup: papers,
             onSelect: function (suggestion) {
               idP = suggestion.id
-              var isIn = false
-              //papersPrint = []
-              if(idPs.includes(idP)){
-                  isIn = true
-              }
-              else{
-                  idPs[idPs.length] = idP
-                  papersPrint.push(idP)
-                  $("#paperPanel").append("<p><strong>"+idPs.length+".</strong> "+suggestion.value+","+suggestion.year+"</p>")
-              }
-              /*
-              Add print of authors and in out citation
-              */
-              var tempCits = citations.filter(citFilter)
-              citPrint = citPrint.concat(tempCits)
-              var papersFiltered = papers.filter(paperFilter)
-              var thehtml = prettyPrintPaper(suggestion, papersFiltered)
+              var isIn = addId(suggestion.value, suggestion.year)  
+              thehtml = prettyPrintPaper(suggestion, papersFiltered)
               $('#outputcontent').html(thehtml);
-              if(!isIn)
-                paperGraph(papersFiltered, citPrint, idPs, simulation)
+              if(!isIn){
+                console.log(citPrint.length)
+                  paperGraph(papersFiltered, citPrint, idPs, simulation)
+              
+              }
             //simulation.tick()
             }
           });
@@ -309,7 +333,7 @@ $(function (){
         .then(response => response.text())
         .then(function(text) {
         //console.log("in jsonTxt: "+text);
-            var graph = JSON.parse(text)
+            var graph = JSON.parse(text);
             getArrays(graph)
     });
     
