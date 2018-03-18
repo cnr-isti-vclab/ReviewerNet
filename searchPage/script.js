@@ -12,7 +12,7 @@ $(function (){
         papersPrint = [],
         papersFiltered = [],
         citations = [],
-        width = 900,
+        width = 940,
         inSz = 100,
         outSz = 100,
         height = 600,
