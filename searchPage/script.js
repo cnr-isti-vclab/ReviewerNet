@@ -1,25 +1,46 @@
 $(function (){
-    var authors = []
-    var authsExclude = []
-    var authsPrint = []
-    var papers = []
-    var citations = []
-    var authoringLinks = []
-    var authoringLinksPrint  = []
-    var idPs = []
-    var papersPrint = []
-    var inC = []
-    var outC = []
-    var search = 0
-    var searchArr = []
-    var searchFor = 0
-    var citPrint = []
-    var mouseDown = false
-  
+    var graph = [],
+        authors = [],
+        authsExclude = [],
+        papers = [],
+        papersCit = {},
+        inC = [],
+        inCits = [],
+        outCits = [],
+        outC = [],
+        citPrint = [],
+        papersPrint = [],
+        papersFiltered = [],
+        citations = [],
+        width = 800,
+        inSz = 100,
+        outSz = 100,
+        height = 800,
+        h = height,
+        w = width,
+        svg,
+        thehtml,
+        idP,
+        idA, idAs = [],
+        idPs = [],
+        simulation,
+        minYear = 2018,
+        maxYear = 1900,
+        color = d3.scaleLinear()
+            .domain([0, 50, 100])
+            .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
+        rscale = d3.scaleLinear()
+            .domain([0, 40])
+            .range([5, 20]),
+        xConstrained = d3.scaleLinear()
+            .domain([maxYear, minYear])
+            .range([50, width - 50]),
+        xaxis = d3.axisBottom().scale(xConstrained); 
+        
     var acc = document.getElementsByClassName("accordion");
     var i;
 
-    for (i = 0; i < acc.length; i++) {
+     for (i = 0; i < acc.length; i++) {
       acc[i].addEventListener("click", function() {
         this.classList.toggle("active");
           var panel = this.nextElementSibling.nextElementSibling
@@ -40,17 +61,38 @@ $(function (){
         } 
       });
     }
-    function paperFilter (item) { return papersPrint.includes(item.id);};
-
+    function paperFilter (item) { 
+        var r = papersPrint.includes(item.id);
+        if(r)
+            updateYear(item.year)
+        return r;};
+    
+    function updateYear(y){
+        var change = false;
+        if(y<minYear){
+            minYear = y
+            change = true
+        }
+        if(y>maxYear){
+            maxYear = y
+            change = true
+        }
+        if(change){
+            xConstrained.domain([minYear, maxYear])
+            xaxis.scale(xConstrained)
+            //svg.append("g").attr("translate", "(5, 0)").call(xaxis); 
+        }
+    }
+    
     function citFilter (item) {
-        var flag = false
-        var cit = ""
-        if (item.source === idP && item.type === 'out'){
+        var flag = false,
+            cit = "";
+        if (item.source === idP){
           cit = item.target
           outC.push(cit)
           flag = true
         }
-        if (item.target === idP && item.type === 'in'){
+        if (item.target === idP){
           cit = item.source
           inC.push(cit)
           flag = true
@@ -61,11 +103,59 @@ $(function (){
         return flag;
     };
 
+    function isCoAuth(item){ }
+    
     function isInCited(item){ return inC.includes(item.id)}
 
     function isOutCited(item){ return outC.includes(item.id)}
 
-    function prettyPrintPaper(suggestion, papersFiltered){
+    function addId(name, year){
+        var isIn = false
+        //papersPrint = []
+        if(idPs.includes(idP)){
+          isIn = true
+        }
+        else{
+          idPs[idPs.length] = idP
+          papersPrint.push(idP)
+          $("#paperPanel").append("<p><strong>"+idPs.length+".</strong> "+name+","+year+"</p>")
+        }
+        var tempCits = citations.filter(citFilter);
+        citPrint = citPrint.concat(tempCits)
+        papersFiltered = papers.filter(paperFilter)
+            
+        return isIn
+    }
+    
+    function prettyPrintAuthor(auth){
+        function getAuthPapers(item){
+        return auth.paperList.includes(item.id);
+    }
+        var thehtml = '<strong>Name: </strong><br> ' + auth.value
+        if(auth.paperList.length > 0){
+          thehtml += '<br><strong>Pubblications:</strong> ' 
+          var papList =  papers.filter(getAuthPapers)
+        papList.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < papList.length; i++)
+            thehtml += '- '+ papList[i].value +  ', '+ papList[i].year +';<br>'
+        }
+        /*
+        if(auth.coAuthList.length > 0){
+          thehtml += '<strong>Co-authors:</strong><br>'
+          var coAuth =  authors.filter(isCoAuth)
+          coAuth.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < outCits.length; i++)
+            thehtml += '- '+outCits[i].value +  ', '+ outCits[i].year +';<br>'
+        }
+        */
+        return thehtml
+    }
+    
+    function prettyPrintPaper(suggestion){
         var thehtml = '<strong>Title: </strong><br> ' + suggestion.value + ' <br><strong>Year:</strong> ' + suggestion.year
         if(suggestion.jN.length > 0)
           thehtml += '<br><strong>Journal Name:</strong> ' + suggestion.jN;
@@ -93,21 +183,14 @@ $(function (){
     }
     
     function getArrays(graph) {
-            var p = graph.nodes
-            var n = p.length
-            for (i = 0; i < n; i++)
-              papers[i]=p[i]
-            var c = graph.links
-            n = c.length
-            for (i = 0; i < n; i++)
-              citations[i]=c[i]
-            /*
-            var a = graph.authoringLinks
-            n = a.length
-            for (i = 0; i < n; i++)
-              authoringLinks[i]=a[i]
-            */
-          /*}/)*/
+        var p = graph.nodes,
+            n = p.length;
+        for (i = 0; i < n; i++)
+            papers[i]=p[i]
+        var c = graph.links,
+            n = c.length;
+        for (i = 0; i < n; i++)
+            citations[i]=c[i]
       }
 
     function getAuths() {
@@ -117,18 +200,17 @@ $(function (){
                 var graph = JSON.parse(text)
                 var a = graph.authors
                 var n = a.length
-                for (i = 0; i < n; i++)
+                for (i = 0; i < n; i++) 
                     authors[i]=a[i]
                 })
         }
-    var w = 2000
-    var h = 2000
+   
     function getSvg(){
         var svg = d3.select("svg")
             .attr("width", w)
             .attr("height", h)
             .append("g")
-            .attr("transform","translate(" + 500 + "," + 300 + ")");
+            .attr("transform","translate("+0+"," +250 + ")");
         svg.append("svg:defs").selectAll("marker")
             .data(["end"])      // Different link/path types can be defined here
             .enter().append("svg:marker")    // This section adds in the arrows
@@ -139,13 +221,13 @@ $(function (){
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
             .attr("orient", "auto")
-            .attr("fill", "#e6e6e6")
-            .attr("stroke", "black")
+            .attr("fill", "#999")
+            .attr("stroke", "#999")
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5 Z");
         return svg
     }
-    
+    //<script src="https://d3js.org/d3.v4.min.js"></script>
     /*  var svg = d3.select("svg"),
         width = +svg.attr("width"),
         height = +svg.attr("height");
@@ -160,16 +242,19 @@ $(function (){
         var simulation = d3.forceSimulation()
         simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
           .force("charge", d3.forceManyBody())
+//          .force("center", d3.forceCenter(50, 50));
         return simulation;
-              //.force("center", d3.formmmceCenter(w/2, h/2));
+            
     }
-
+        
     function paperGraph(papers, citations, idPs, simulation) {
         simulation.stop()
         d3.select("svg").remove()
         d3.select(".a").append("svg")
         //d3.append("svg:svg")
         svg = getSvg()
+        xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
+        svg.append("g").attr("transform","translate("+0+"," +(-250) + ")").call(xaxis); 
         var link = svg.append("g")
             .attr("class", "citations")
             .selectAll("line")
@@ -177,6 +262,7 @@ $(function (){
             .enter().append("line")
             .attr("marker-end","url(#end)")
             .style("stroke","#999999")
+            .attr("stroke-width", 0)
             .style("pointer-events", "none");
 
         var node = svg.append("g")
@@ -185,17 +271,29 @@ $(function (){
             .data(papers)
             .enter().append("circle")
             .attr("r", 0)
-            .attr("fill", function(d) { 
+            .attr("stroke", function(d){
+                if(idPs.includes(d.id))
+                    return "#6d10ca";
+                else return "#999";
+                })
+            .attr("stroke-width", function(d){
+                if(idPs.includes(d.id))
+                    return 2.5;
+                })
+            .attr("fill", function(d) {
+                return color(d.color)}
+                /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
-                else return "rgba( 64, 145, 215, 0.519 )";})
+                else return "rgba( 64, 145, 215, 0.519 )";}*/)
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended))
 
+
         node.transition()
             .duration(1000)
-            .attr("r", 5)
+            .attr("r", 6)
 
         node.append("title")
             .text(function(d) { return d.value; });
@@ -216,13 +314,14 @@ $(function (){
 
         function ticked() {
             link
-                .attr("x1", function(d) { return d.source.x; })
+                .attr("x1", function(d) { return xConstrained(d.source.year); })
                 .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
+                .attr("x2", function(d) { return xConstrained(d.target.year); })
                 .attr("y2", function(d) { return d.target.y; });
 
             node
-                .attr("cx", function(d) { return d.x; })
+                .attr("cx", function(d) { 
+                return xConstrained(d.year); })
                 .attr("cy", function(d) { return d.y; });
           }  
     }
@@ -245,7 +344,7 @@ $(function (){
     }
     
     
-    
+    getAuths()
     //M150 0 L75 200 L225 200 Z
     var simulation = setSimulation()
     
@@ -255,13 +354,14 @@ $(function (){
             lookup: authors,
             onSelect: function (suggestion) {
               var isIn = false
-              var aId = suggestion.id
+              idA = suggestion.id
+              var thehtml = prettyPrintAuthor(suggestion)
+              $('#outputcontent').html(thehtml);
               var aName = suggestion.value
-              $('#outputcontent').html(aName);
-                if(authsExclude.includes(aId))
+                if(authsExclude.includes(idA))
                     isIn = true
                 else{
-                    authsExclude[authsExclude.length] = aId
+                    authsExclude[authsExclude.length] = idA
                     $("#authPanel").append("<p class = \"pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</p>")
                 }
               //paperGraph(papersFiltered, citPrint, idP, simulation)
@@ -276,26 +376,13 @@ $(function (){
             lookup: papers,
             onSelect: function (suggestion) {
               idP = suggestion.id
-              var isIn = false
-              //papersPrint = []
-              if(idPs.includes(idP)){
-                  isIn = true
-              }
-              else{
-                  idPs[idPs.length] = idP
-                  papersPrint.push(idP)
-                  $("#paperPanel").append("<p><strong>"+idPs.length+".</strong> "+suggestion.value+","+suggestion.year+"</p>")
-              }
-              /*
-              Add print of authors and in out citation
-              */
-              var tempCits = citations.filter(citFilter)
-              citPrint = citPrint.concat(tempCits)
-              var papersFiltered = papers.filter(paperFilter)
-              var thehtml = prettyPrintPaper(suggestion, papersFiltered)
+              var isIn = addId(suggestion.value, suggestion.year)
+              thehtml = prettyPrintPaper(suggestion)
               $('#outputcontent').html(thehtml);
-              if(!isIn)
-                paperGraph(papersFiltered, citPrint, idPs, simulation)
+              if(!isIn){
+                  updateYear(suggestion.year)
+                  paperGraph(papersFiltered, citPrint, idPs, simulation)
+              }
             //simulation.tick()
             }
           });
@@ -304,12 +391,12 @@ $(function (){
     
     //paperGraph(papers, citations, simulation, svg)
     //../datasets/pForTest.txt
-    getAuths()
+    
     var graphTxt = fetch('../datasets/pForTest.txt')
         .then(response => response.text())
         .then(function(text) {
         //console.log("in jsonTxt: "+text);
-            var graph = JSON.parse(text)
+            var graph = JSON.parse(text);
             getArrays(graph)
     });
     
