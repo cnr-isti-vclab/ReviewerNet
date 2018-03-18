@@ -237,7 +237,7 @@ $(function (){
             .attr("refY", 0.5)
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
-            .attr("orient", "auto")
+            .attr("orient", "auto-start-reverse")
             .attr("fill", "#999")
             .attr("stroke", "#999")
             .append("svg:path")
