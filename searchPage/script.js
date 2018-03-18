@@ -44,12 +44,10 @@ $(function (){
       acc[i].addEventListener("click", function() {
         this.classList.toggle("active");
           var panel = this.nextElementSibling.nextElementSibling
-          var svg = d3.select("svg")
         if (panel.style.maxHeight){
           panel.style.maxHeight = null;
         } else {
           var hTranslate =  panel.scrollHeight + "px"
-          console.log(hTranslate)
           var idTemp = authsExclude.length;
           if(this.firstChild.data == "Papers:")
               idTemp = idPs.length
@@ -61,6 +59,11 @@ $(function (){
         } 
       });
     }
+    
+    function handleMouseOver(d){}
+    
+    function handleMouseOut(d){}
+    
     function paperFilter (item) { 
         var r = papersPrint.includes(item.id);
         if(r)
@@ -120,6 +123,8 @@ $(function (){
           papersPrint.push(idP)
           $("#paperPanel").append("<p><strong>"+idPs.length+".</strong> "+name+","+year+"</p>")
         }
+        inC = []
+        outC = []
         var tempCits = citations.filter(citFilter);
         citPrint = citPrint.concat(tempCits)
         papersFiltered = papers.filter(paperFilter)
@@ -205,6 +210,18 @@ $(function (){
                 })
         }
    
+
+    function addPaper(suggestion){
+        idP = suggestion.id
+        var isIn = addId(suggestion.value, suggestion.year)
+        thehtml = prettyPrintPaper(suggestion)
+        $('#outputcontent').html(thehtml);
+        if(!isIn){
+          updateYear(suggestion.year)
+          paperGraph(papersFiltered, citPrint, idPs, simulation)
+        }
+    }
+    
     function getSvg(){
         var svg = d3.select("svg")
             .attr("width", w)
@@ -289,8 +306,12 @@ $(function (){
                 .on("start", dragstarted)
                 .on("drag", dragged)
                 .on("end", dragended))
-
-
+            .on("mouseover", handleMouseOver)
+            .on("mouseout", handleMouseOut)
+            .on("dblclick", function(d) {
+                addPaper(d)
+            });
+                
         node.transition()
             .duration(1000)
             .attr("r", 6)
@@ -375,14 +396,7 @@ $(function (){
         $('#autocomplete').autocomplete({
             lookup: papers,
             onSelect: function (suggestion) {
-              idP = suggestion.id
-              var isIn = addId(suggestion.value, suggestion.year)
-              thehtml = prettyPrintPaper(suggestion)
-              $('#outputcontent').html(thehtml);
-              if(!isIn){
-                  updateYear(suggestion.year)
-                  paperGraph(papersFiltered, citPrint, idPs, simulation)
-              }
+                addPaper(suggestion)
             //simulation.tick()
             }
           });
