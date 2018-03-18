@@ -277,7 +277,7 @@ $(function (){
             .selectAll("line")
             .data(citations)
             .enter().append("line")
-            .attr("marker-end","url(#end)")
+            .attr("marker-start","url(#end)")
             .style("stroke","#999999")
             .attr("stroke-width", 0)
             .style("pointer-events", "none");
