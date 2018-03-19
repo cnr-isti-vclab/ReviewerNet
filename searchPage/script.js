@@ -12,10 +12,10 @@ $(function (){
         papersPrint = [],
         papersFiltered = [],
         citations = [],
-        width = 800,
+        width = 940,
         inSz = 100,
         outSz = 100,
-        height = 800,
+        height = 600,
         h = height,
         w = width,
         svg, popText, popRect,
@@ -296,7 +296,6 @@ $(function (){
             .attr("markerHeight", 4)
             .attr("orient", "auto-start-reverse")
             .attr("fill", "rgba( 148, 127, 127, 0.456 )")
-            //.attr("stroke", "rgba( 148, 127, 127, 0.456 )")
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5 Z");
         return svg
