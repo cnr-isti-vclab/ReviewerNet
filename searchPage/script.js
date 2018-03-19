@@ -18,7 +18,7 @@ $(function (){
         height = 600,
         h = height,
         w = width,
-        svg,
+        svg, popText, popRect,
         thehtml,
         idP,
         idA, idAs = [],
@@ -60,9 +60,65 @@ $(function (){
       });
     }
     
-    function handleMouseOver(d){}
+    function get_tex_width(txt) {
+        this.element = document.createElement('canvas');
+        this.context = this.element.getContext("2d");
+        return this.context.measureText(txt).width + 3 ;
+    }
     
-    function handleMouseOut(d){}
+    function getXRect(x, wdt){
+        if(x+wdt >= width)
+            return x - wdt -15
+        else return x + 5
+    }
+    
+    function getXTxt(x, wdt){
+        if(x+wdt >= width)
+            return x - wdt -10
+        else return x + 10
+    }
+    
+    function handleMouseOver(d){ 
+        d3.select(this).transition()
+            .duration(300)
+            .attr("r", 10);
+        var txt = d.value
+        /*
+        if(txt.length>80)
+            txt = txt.substring(0,80)+"...";
+        */
+        popText.text(txt)
+        var bbox = popText.node().getBBox();
+        var wd = bbox.width,
+            ht = bbox.height,
+            x = this.cx.baseVal.value,
+            y = this.cy.baseVal.value;
+        popRect.attr('fill', color(d.color))
+            .attr('width',wd +10)
+            .attr('height',ht+2)
+            .attr("x", getXRect(x, wd))
+            .attr("y", y-8)
+            .transition()
+            .duration(300)
+            .attr("opacity", 1)
+        popText.attr("x", getXTxt(x, wd))
+            .attr("y", y + 4)
+            .transition()
+            .duration(300)
+            .attr("opacity", 1)
+    }
+    
+    function handleMouseOut(d){
+        popText.attr("width", 0)
+            .attr("x", -5000)
+            .attr("opacity", 0);
+        popRect.attr("x", -5000)
+            .attr("width", 0)
+            .attr("opacity", 0);
+        d3.select(this).transition()
+            .duration(300)
+            .attr("r", 6);
+    }
     
     function paperFilter (item) { 
         var r = papersPrint.includes(item.id);
@@ -222,6 +278,7 @@ $(function (){
         }
     }
     
+    
     function getSvg(){
         var svg = d3.select("svg")
             .attr("width", w)
@@ -238,17 +295,11 @@ $(function (){
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
             .attr("orient", "auto-start-reverse")
-            .attr("fill", "#999")
-            .attr("stroke", "#999")
+            .attr("fill", "rgba( 148, 127, 127, 0.456 )")
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5 Z");
         return svg
-    }
-    //<script src="https://d3js.org/d3.v4.min.js"></script>
-    /*  var svg = d3.select("svg"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
-      */  
+    } 
 
     
     var svg = getSvg()
@@ -278,7 +329,7 @@ $(function (){
             .data(citations)
             .enter().append("line")
             .attr("marker-start","url(#end)")
-            .style("stroke","#999999")
+            .style("stroke","rgba( 148, 127, 127, 0.456 )")
             .attr("stroke-width", 0)
             .style("pointer-events", "none");
 
@@ -288,6 +339,8 @@ $(function (){
             .data(papers)
             .enter().append("circle")
             .attr("r", 0)
+            .attr("id", function(d){
+                return "p"+d.id;})
             .attr("stroke", function(d){
                 if(idPs.includes(d.id))
                     return "#6d10ca";
@@ -311,14 +364,13 @@ $(function (){
             .on("dblclick", function(d) {
                 addPaper(d)
             });
-                
         node.transition()
             .duration(1000)
             .attr("r", 6)
-
+        /*
         node.append("title")
             .text(function(d) { return d.value; });
-
+*/
         simulation
             .nodes(papers)
             .on("tick", ticked)
@@ -333,6 +385,22 @@ $(function (){
             .duration(1000)
             .attr("stroke-width", 2)
 
+        popRect = svg.append("rect")
+             .attr('x',0)
+             .attr('y',-10)
+             .attr('width',0)
+             .attr('height',0)
+             .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+             .attr('opacity',0);
+        popText = svg.append("text")
+            .attr("x", 0)             
+            .attr("y", 0)
+            .attr("text-anchor", "left")  
+            .style("font-size", "11px")
+            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+            .attr("opacity",0)
+            .text("");
+        
         function ticked() {
             link
                 .attr("x1", function(d) { return xConstrained(d.source.year); })
@@ -354,8 +422,8 @@ $(function (){
     }
 
     function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
     }
 
     function dragended(d) {
@@ -385,8 +453,6 @@ $(function (){
                     authsExclude[authsExclude.length] = idA
                     $("#authPanel").append("<p class = \"pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</p>")
                 }
-              //paperGraph(papersFiltered, citPrint, idP, simulation)
-            //simulation.tick()
             }
         });
     });
