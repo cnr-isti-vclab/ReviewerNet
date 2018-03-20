@@ -11,7 +11,7 @@ $(function (){
         citPrint = [],
         papersFiltered = [],
         citations = [],
-        width = 900,
+        width = 800,
         inSz = 100,
         outSz = 100,
         height = 470,
