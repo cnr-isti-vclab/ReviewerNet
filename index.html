@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SemanthicBrowser.org</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css\bootstrap.min.css">
+        <script type="text/javascript" src="src\jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="src\d3.v4.min.js"></script>
+        <script src="src/bootstrap.min.js"></script>
+        <script type="text/javascript" src="src/jquery.autocomplete.js"></script>
+        <script src="src/script.js"></script>
+        <link rel="stylesheet" href="css/theme.css">
+    </head>
+<body>
+<div class="container-fluid">
+    <h2 class="text-center">Semanticbrowser<br>
+    <small>Browse the graph of authors and papers from semanticscholar.org</small></h2>
+    <div class="row">
+        <div class="col-sm-8" style="background-color:white">
+            <div class="panel panel-default" style="height: 500px">
+                <div class="panel-body a text-center" style="width: 100%; height: 100%">
+                    <svg class = "svg" style="width: 100%; height: 100%"></svg>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-body, text-center">
+                <h4>Authors Search</h4>
+                <div id="searchfield" style="width: 100%; padding-top: 3px;">
+                    <form style="width: 90%; margin: 0 auto"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text", style="width: 100%"></form>
+                    <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
+                </div>
+                </div>
+                <div class="panel-group" style="padding-top: 0px;">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h5 class="panel-title text-center">
+                          <a data-toggle="collapse" href="#collapse1">Active authors list</a>
+                        </h5>
+                      </div>
+                      <div id="collapse1" class="panel-collapse collapse">
+                        <ul id = "authList" class="list-group">
+                        </ul>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body, text-center">
+                <h4>Papers Search</h4>
+                <div id="searchfield" style="width: 100%; padding-top: 3px;">
+                    <form style="width: 90%; margin: 0 auto"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text", style="width: 100%"></form>
+                    <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
+                </div>
+                </div>
+                <div class="panel-group" style="padding-top: 0px;">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h5 class="panel-title text-center">
+                          <a data-toggle="collapse" href="#collapse2">Active papers list</a>
+                        </h5>
+                      </div>
+                      <div id="collapse2" class="panel-collapse collapse">
+                        <ul id = "papList" class="list-group">
+                        </ul>
+                      </div>
+                    </div>
+                </div>
+                 <div class="panel-group">
+                  <div class="panel panel-default">
+                    <div id="infoBox" class="panel-heading">
+                      <h5 class="panel-title text-center">
+                        <a data-toggle="collapse" href="#collapse3">Paper InfoBox</a>
+                      </h5>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse">
+                      <div id = "paperInfo" class="panel-body"></div>
+                    </div>
+                  </div>
+                </div> 
+            </div>
+            </div>
+    </div>
+</div>
+</body>
+</html>
