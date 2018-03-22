@@ -17,7 +17,7 @@ $(function (){
         height = 470,
         h = height,
         w = width,
-        svg, popText, popRect,
+        svgP, svgA, popText, popRect,
         thehtml,
         idP, idInfo,
         idA, idAs = [],
@@ -36,29 +36,6 @@ $(function (){
             .range([50, width - 50]),
         xaxis = d3.axisBottom().scale(xConstrained); 
         
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-
-     for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-          var panel = this.nextElementSibling.nextElementSibling
-        if (panel.style.maxHeight){
-          panel.style.maxHeight = null;
-        } else {
-          var hTranslate =  panel.scrollHeight + "px"
-          var idTemp = authsExclude.length;
-          if(this.firstChild.data == "Papers:")
-              idTemp = idPs.length
-          panel.style.maxHeight = panel.scrollHeight + "px";
-          if(idTemp>4){
-              panel.style.maxHeight = "200px";
-              panel.style.overflowY = "auto";
-          }
-        } 
-      });
-    }
-    
     function getXRect(x, wdt){
         if(x+wdt >= width)
             return x - wdt -15
@@ -235,11 +212,6 @@ $(function (){
     
     function clickHandler(d){
         $('#paperInfo').html(paperInfo(d))
-        var ib = d3.select("#infoBox")
-        console.log(ib)
-//        .transition()
-  //          .duration(200)
-    //        .attr("background-color", "rgba( 63, 225, 45, 0.511 )")
     }
     
     
@@ -335,13 +307,14 @@ $(function (){
         
     }
     
-    function getSvg(){
-        var svg = d3.select("svg")
+    function getPaperSvg(){
+        svgP = d3.select("#svgP")
             .attr("width", "100%")
             .attr("height", "100%")
             .append("g")
+            .attr("id", "gP")
             //.attr("transform","translate("+0+"," +250 + ")");
-        svg.append("svg:defs").selectAll("marker")
+        svgP.append("svg:defs").selectAll("marker")
             .data(["end"])      // Different link/path types can be defined here
             .enter().append("svg:marker")    // This section adds in the arrows
             .attr("id", String)
@@ -355,11 +328,47 @@ $(function (){
             //.attr("stroke", "rgba( 148, 127, 127, 0.456 )")
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5 Z");
-        return svg
+        
+        svgP.select("defs")
+            .append("svg:linearGradient")
+            .attr("id", "gradxX")
+            .attr("x0", "1000%")
+            .attr("y0", "0%")
+            .attr("x1", "30%")
+            .attr("y1", "0%")
+            .append("stop")
+            .attr("offset", "0%")
+            .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
+            .style("stop-opacity", "1")
+        svgP.select("defs")
+            .select("linearGradient")
+            .append("stop")
+            .attr("offset", "100%")
+            .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
+            .style("stop-opacity", "1")
+    
+        svgP.select("defs")
+            .append("svg:linearGradient")
+            .attr("id", "gradXx")
+            .attr("x0", "30%")
+            .attr("y0", "0%")
+            .attr("x1", "100%")
+            .attr("y1", "0%")
+            .append("stop")
+            .attr("offset", "0%")
+            .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
+            .style("stop-opacity", "1")
+        svgP.select("defs")
+            .select("linearGradient")
+            .append("stop")
+            .attr("offset", "180%")
+            .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
+            .style("stop-opacity", "1")
     } 
+    
 
     
-    var svg = getSvg()
+    getPaperSvg()
     
     function setSimulation(){
         simulation = d3.forceSimulation()
@@ -372,10 +381,13 @@ $(function (){
         
     function paperGraph(papers, citations, idPs, simulation) {
         simulation.stop()
-        d3.select("svg").remove()
-        d3.select(".a").append("svg")
-        svg = getSvg()
+        d3.select("#svgP").remove()
+        d3.select(".ap").append("svg").attr("id", "svgP")
+        getPaperSvg()
+        var svg = svgP
         svg.attr("y", -5);
+        svg.attr("width", "100%")
+        d3.select("#gP").attr("width", "100%")
         xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
         svg.append("g").call(xaxis); 
         var link = svg.append("g")
@@ -384,7 +396,6 @@ $(function (){
             .data(citations)
             .enter().append("line")
             .attr("marker-start","url(#end)")
-            .style("stroke","rgba( 148, 127, 127, 0.456 )")
             .attr("stroke-width", 0)
             .style("pointer-events", "none");
 
@@ -435,6 +446,7 @@ $(function (){
         link.transition()
             .duration(1000)
             .attr("stroke-width", 2)
+            //.style("stroke","url(#gradxX)")
 
         popRect = svg.append("rect")
              .attr('x',0)
@@ -457,7 +469,11 @@ $(function (){
                 .attr("x1", function(d) { return xConstrained(d.source.year); })
                 .attr("y1", function(d) { return Math.max(6, Math.min(h - 20, d.source.y)); /*d.source.y*/; })
                 .attr("x2", function(d) { return xConstrained(d.target.year); })
-                .attr("y2", function(d) { return Math.max(6, Math.min(h - 20, d.target.y)); /*d.target.y;*/ });
+                .attr("y2", function(d) { return Math.max(6, Math.min(h - 20, d.target.y))})
+                .style("stroke", function(d){if(d.source.x < d.target.x)
+                                                return "url(#gradxX)";
+                                            else                                                    return "url(#gradXx)"
+                                            });
 
             node
                 .attr("cx", function(d) { 

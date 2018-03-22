@@ -1,3 +1,14 @@
+body .panel {
+    background-color: rgba( 71, 66, 66, 0 );
+}
+
+body {
+    background-color: rgba( 71, 66, 66, 0.1 );
+}
+
+.panel-default {
+    margin-bottom: 0px;
+}
 #searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px;}
 
 #searchfield form {
