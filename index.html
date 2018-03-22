@@ -4,32 +4,48 @@
         <title>SemanthicBrowser.org</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css\bootstrap.min.css">
         <script type="text/javascript" src="src\jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="src/d3.v4.min.js"></script>
+        <link rel="stylesheet" href="css\bootstrap.min.css">
         <script src="src\bootstrap.min.js"></script>
         <script type="text/javascript" src="src/jquery.autocomplete.js"></script>
         <script src="src\script.js"></script>
         <link rel="stylesheet" href="css/theme.css">
     </head>
 <body>
+    
 <div class="container-fluid">
-    <h2 class="text-center">Semanticbrowser<br>
-    <small>Browse the graph of authors and papers from semanticscholar.org</small></h2>
-    <div class="row">
-        <div class="col-sm-8" style="background-color:white">
-            <div class="panel panel-default" style="height: 500px">
+    
+     <div class="row">
+        <div class="col-sm-8" style="padding: 2px;">
+            <div class="panel panel-default" style="margin-bottom: 0px;">
                 <div class="panel-body a text-center" style="width: 100%; height: 100%">
-                    <svg class = "svg" style="width: 100%; height: 100%"></svg>
+                    <svg id ="svgA" class = "svg" style="width: 100%; height: 100%"></svg>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="padding: 2px; height: 100%">
             <div class="panel panel-default">
                 <div class="panel-body, text-center">
-                <h4>Authors Search</h4>
-                <div id="searchfield" style="width: 100%; padding-top: 3px;">
-                    <form style="width: 90%; margin: 0 auto"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text", style="width: 100%"></form>
+                <h4>Toolbox</h4>
+                </div>
+            </div>
+        </div>
+    </div>   
+    <div class="row">
+        <div class="col-sm-8" style="padding: 2px;">
+            <div class="panel panel-default" style="height: 500px ">
+                <div class="panel-body a ap text-center" style="width: 100%; height: 100%">
+                    <svg id = "svgP" class = "svg" style="width: 100%; height: 100%">
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="padding: 2px;">
+            <div class="panel panel-default">
+                <div class="panel-body, text-center">
+                <div id="searchfield" style="width: 100%; padding-top: 8px;">
+                    <form style="width: 90%; margin: 0 auto"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" value="Find authors..." style="width: 100%"></form>
                     <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                 </div>
                 </div>
@@ -49,9 +65,8 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-body, text-center">
-                <h4>Papers Search</h4>
-                <div id="searchfield" style="width: 100%; padding-top: 3px;">
-                    <form style="width: 90%; margin: 0 auto"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text", style="width: 100%"></form>
+                <div id="searchfield" style="width: 100%; padding-top: 8px;">
+                    <form style="width: 90%; margin: 0 auto"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" value="Find papers..." style="width: 100%"></form>
                     <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                 </div>
                 </div>
