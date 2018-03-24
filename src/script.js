@@ -178,6 +178,22 @@ $(function (){
             .transition()
             .duration(300)
             .attr("opacity", 1)
+        
+        d3.selectAll(".authNode")
+            .transition().duration(500)
+            .attr("r", function(d1){
+                if(d.authsId.includes(d1.id))
+                    return "9";
+                else return "6";
+            })
+            .attr("fill", function(d1){ 
+                if(d.authsId.includes(d1.id))
+                    return color(d.color);
+                else 
+                    if(authDict[d1.id][0]!=2019)
+                        return "rgba( 239, 137, 35, 0.729 )"
+                    else return "rgba( 127, 127, 127, 0.527 )";
+             })
     }
     
     function handleMouseOut(d){
@@ -190,6 +206,15 @@ $(function (){
         d3.select(this).transition()
             .duration(300)
             .attr("r", 6);
+        
+        d3.selectAll(".authNode")
+            .transition().duration(500)
+            .attr("r", function(d1){ return "6"; })
+            .attr("fill", function(d1){ 
+                if(authDict[d1.id][0]!=2019)
+                    return "rgba( 239, 137, 35, 0.729 )"
+                else return "rgba( 127, 127, 127, 0.527 )";
+             })
     }
     
     function paperFilter (item) { 
@@ -614,6 +639,7 @@ $(function (){
             .data(authsFiltered)
             .enter().append("circle")
             .attr("r", 0)
+            .attr("class", "authNode")
         /*    
         .attr("stroke", function(d){
                 if(idPs.includes(d.id))
