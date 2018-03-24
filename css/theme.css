@@ -6,9 +6,24 @@ body {
     background-color: rgba( 71, 66, 66, 0.1 );
 }
 
+.panel-collapse {
+    max-height: 120px;
+    overflow-y: scroll;
+}
+
+.panel-title:hover {
+     cursor: pointer;
+}
+
 .panel-default {
     margin-bottom: 0px;
 }
+
+#toolbox {
+    height: 185px;
+    overflow-y: scroll;
+}
+
 #searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px;}
 
 #searchfield form {
@@ -20,6 +35,11 @@ body {
   border-radius: 3px;
   margin: 5px 0 0 0;
 }
+
+#searchfield {
+    margin-bottom: 10px;
+}
+
 #searchfield form .biginput {
   width: 600px;
   height: 40px;
@@ -37,6 +57,10 @@ body {
 #searchfield form .biginput:focus {
   color: #858585;
 }
+
+svg {
+    overflow-x: scroll;
+} 
 
 .autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto;}
 .autocomplete-suggestion { padding: 10px 5px; font-size: 0.9em; white-space: nowrap; overflow: hidden; }

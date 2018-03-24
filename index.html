@@ -19,14 +19,14 @@
      <div class="row">
         <div class="col-sm-8" style="padding: 2px;">
             <div class="panel panel-default" style="margin-bottom: 0px;">
-                <div class="panel-body a text-center" style="width: 100%; height: 100%">
+                <div class="panel-body aa graph text-center" style="width: 100%; height: 100%">
                     <svg id ="svgA" class = "svg" style="width: 100%; height: 100%"></svg>
                 </div>
             </div>
         </div>
         <div class="col-sm-4" style="padding: 2px; height: 100%">
             <div class="panel panel-default">
-                <div class="panel-body, text-center">
+                <div id = "toolbox" class="panel-body, text-center">
                 <h4>Toolbox</h4>
                 </div>
             </div>
@@ -35,7 +35,7 @@
     <div class="row">
         <div class="col-sm-8" style="padding: 2px;">
             <div class="panel panel-default" style="height: 500px ">
-                <div class="panel-body a ap text-center" style="width: 100%; height: 100%">
+                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
                     <svg id = "svgP" class = "svg" style="width: 100%; height: 100%">
                     </svg>
                 </div>
@@ -45,15 +45,15 @@
             <div class="panel panel-default">
                 <div class="panel-body, text-center">
                 <div id="searchfield" style="width: 100%; padding-top: 8px;">
-                    <form style="width: 90%; margin: 0 auto"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" value="Find authors..." style="width: 100%"></form>
+                    <form style="width: 90%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" value="Find authors..." style="width: 100%"></form>
                     <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                 </div>
                 </div>
                 <div class="panel-group" style="padding-top: 0px;">
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h5 class="panel-title text-center">
-                          <a data-toggle="collapse" href="#collapse1">Active authors list</a>
+                        <h5 class="panel-title text-center" data-toggle="collapse" href="#collapse1">
+                            Active authors list
                         </h5>
                       </div>
                       <div id="collapse1" class="panel-collapse collapse">
@@ -66,15 +66,15 @@
             <div class="panel panel-default">
                 <div class="panel-body, text-center">
                 <div id="searchfield" style="width: 100%; padding-top: 8px;">
-                    <form style="width: 90%; margin: 0 auto"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" value="Find papers..." style="width: 100%"></form>
+                    <form style="width: 90%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" value="Find papers..." style="width: 100%"></form>
                     <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 100%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                 </div>
                 </div>
                 <div class="panel-group" style="padding-top: 0px;">
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h5 class="panel-title text-center">
-                          <a data-toggle="collapse" href="#collapse2">Active papers list</a>
+                        <h5 class="panel-title text-center" data-toggle="collapse" href="#collapse2">
+                          Active papers list
                         </h5>
                       </div>
                       <div id="collapse2" class="panel-collapse collapse">
@@ -86,8 +86,8 @@
                  <div class="panel-group">
                   <div class="panel panel-default">
                     <div id="infoBox" class="panel-heading">
-                      <h5 class="panel-title text-center">
-                        <a data-toggle="collapse" href="#collapse3">Paper InfoBox</a>
+                      <h5 class="panel-title text-center" data-toggle="collapse" href="#collapse3">
+                        Paper InfoBox
                       </h5>
                     </div>
                     <div id="collapse3" class="panel-collapse collapse">
