@@ -607,10 +607,10 @@ $(function (){
         for(var i = 0; i < na; i++){
             svgA.append('line')
                 .attr('id', "a"+authsExclude[i].toString())
-                .attr('x1', 0)
-                .attr('y1', 0)
-                .attr('x2', 0)
-                .attr('y2', 0)
+                .attr('x1', -50)
+                .attr('y1', -50)
+                .attr('x2', -50)
+                .attr('y2', -50)
                 .attr("marker-start","url(#arrowStart)")
                 .style("opacity", 0.5)
                 .attr("stroke", "rgba( 239, 137, 35, 0.729 )")
@@ -712,16 +712,18 @@ $(function (){
                         return (od+((nw-od)/2)); }
             })
                 .attr("cy", function(d) {
-                var y = Math.max(6, Math.min(150 - 20, d.y));
-                if(authDict[d.id][1] != 1900){
-                var nw =  xConstrained(authDict[d.id][1]),
-                    od =  xConstrained(authDict[d.id][0]);
-                    
-                d3.select("#a"+d.id)
-                    .attr("x1", od)
-                    .attr("y1", y)
-                    .attr("x2", nw)
-                    .attr("y2", y)
+                    var y = Math.max(6, Math.min(150 - 20, d.y));
+                    if(authDict[d.id][1] != 1900){
+                    var nw =  xConstrained(authDict[d.id][1]),
+                        od =  xConstrained(authDict[d.id][0]);
+
+                    if(od!=nw){
+                        d3.select("#a"+d.id)
+                            .attr("x1", od)
+                            .attr("y1", y)
+                            .attr("x2", nw)
+                            .attr("y2", y)
+                    }
                 }
                 return y;
             });
