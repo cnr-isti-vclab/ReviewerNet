@@ -19,9 +19,34 @@ body {
     margin-bottom: 0px;
 }
 
+.list-group {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.panel-body{
+    padding:5px;
+}
+
+.list-group-item {
+    background-color: rgba( 71, 66, 66, 0);
+    padding: 1px;
+    border-width: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.listG {
+    cursor: default;
+}
+
 #toolbox {
     height: 185px;
-    overflow-y: scroll;
+    overflow-y: pointer;
+}
+
+.line{
+    cursor: not-allowed;
 }
 
 #searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px;}
