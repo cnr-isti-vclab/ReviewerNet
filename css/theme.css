@@ -21,6 +21,16 @@ body {
     background-color: rgba( 223, 225, 225, 0.604 );
 }
 
+#cmp {
+    cursor: help;
+}
+.colorP {
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    margin: 0px;
+}
+
 .panel-collapse {
     max-height: 97px;
     overflow-y: auto;
