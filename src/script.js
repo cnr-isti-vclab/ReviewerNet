@@ -40,7 +40,7 @@ var graph = [],
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
     color = d3.scaleLinear()
         .domain([0, 30, 100])
-        .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
+        .range(["#f90000", "#ffffff" , "#0019ff"]),
     rscale = d3.scaleLinear()
         .domain([0, 40])
         .range([5, 20]),
@@ -643,6 +643,8 @@ function getPaperSvg(){
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5 Z");
 
+    
+    
     svgP.select("defs")
         .append("svg:linearGradient")
         .attr("id", "gradxX")
@@ -723,16 +725,22 @@ function getAuthSvg(){
         .attr("y1", "0%")
         .attr("x2", "100%")
         .attr("y2", "0%")
+        .attr("gradientUnits", "userSpaceOnUse")
         .append("stop")
         .attr("offset", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
+        .style("stop-color", "rgba( 239, 137, 35, 0.729 )")
+        .style("stop-opacity", "1")
+    svgA.select("defs")
+        .select("linearGradient")
+        .append("stop")
+        .attr("offset", "50%")
+        .style("stop-color", "rgba( 239, 137, 35, 0.3 )")
         .style("stop-opacity", "1")
     svgA.select("defs")
         .select("linearGradient")
         .append("stop")
         .attr("offset", "100%")
-        .style("stop-color", "yellow")
+        .style("stop-color", "rgba( 239, 137, 35, 0.9 )")
         .style("stop-opacity", "1")
 }
 
@@ -899,6 +907,7 @@ function authorGraph(){
                         .attr("y1", y)
                         .attr("x2", nw)
                         .attr("y2", y)
+                        .attr("stroke", "url(#gradOWO)")
                 }
             }
             return y;
@@ -1047,7 +1056,7 @@ function dragendedA(d) {
 }    
 
 $(function (){
-    createSlider()
+    toolboxInit()
     $( window ).resize(function() {
         width = $(".ap").width()
         height = $(".ap").height()
@@ -1060,7 +1069,12 @@ $(function (){
         if(authsExclude.length > 0)
             authorGraph()
     });
-    
+    $('#papers-autocomplete').click(function (e){
+    this.value=""
+    });
+    $('#authors-autocomplete').click(function (e){
+    this.value=""
+    });
     /*
     function setClickHandler(){
         ul = $('.list-group');
@@ -1069,7 +1083,7 @@ $(function (){
     
     
     */
-    
+    //$("a").on("click", function(){    })
     getPaperSvg()
     getAuthSvg()
     getAuths()
