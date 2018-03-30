@@ -1,14 +1,38 @@
-body .panel {
-    background-color: rgba( 71, 66, 66, 0 );
+html, body, .container-fluid {
+    height:100%;
+}
+
+.panel-default {
+    background-color:  rgba( 255, 255, 255, 0 );
+    border: 0px;
+    border-radius: 5px;
+}
+
+.graph {
+    background-color:  #efefef;
+    border: 0px;
+}
+
+.sidebar-nav {
+    height: inherit;
 }
 
 body {
-    background-color: rgba( 71, 66, 66, 0.1 );
+    background-color: rgba( 223, 225, 225, 0.604 );
 }
 
 .panel-collapse {
-    max-height: 120px;
-    overflow-y: scroll;
+    max-height: 97px;
+    overflow-y: auto;
+}
+
+.al {
+    max-height: 40px;
+    overflow-y: auto;
+}
+
+.element {
+    cursor: pointer;
 }
 
 .panel-title:hover {
@@ -19,9 +43,26 @@ body {
     margin-bottom: 0px;
 }
 
+a {
+    padding 2px;
+    text-rendering: optimizeLegibility;
+    color: #6666a3
+}
+
+.panel-heading {
+    padding: 0px;
+    height: 16px;
+    background-color: black;
+}
+
+.panelDefault {
+    background-color: black;
+    padding: 0px;
+}
+
 .list-group {
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin-top: 1px;
+    margin-bottom: 1px;
 }
 
 .panel-body{
@@ -40,16 +81,37 @@ body {
     cursor: default;
 }
 
+#papL {
+    max-height: 87px;
+    overflow-y: auto;
+}
+
 #toolbox {
-    height: 185px;
-    overflow-y: pointer;
+    height: 100%;
+    overflow-y: auto;
 }
 
 .line{
     cursor: not-allowed;
 }
 
-#searchfield { display: block; width: 100%; text-align: center; margin-bottom: 35px;}
+#thetaPap {
+    transform: translate(5%, 2px);
+    width: 90.5%
+}
+
+#MNP {
+    cursor: help
+}
+
+#thetaPapCb{
+    cursor: help
+}
+
+#searchfield { 
+    display: block; 
+    width: 100%; 
+    text-align: center;}
 
 #searchfield form {
   display: inline-block;
@@ -59,10 +121,6 @@ body {
   padding: 5px;
   border-radius: 3px;
   margin: 5px 0 0 0;
-}
-
-#searchfield {
-    margin-bottom: 10px;
 }
 
 #searchfield form .biginput {
