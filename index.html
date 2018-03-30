@@ -40,22 +40,22 @@
                         </div>
                         </div>
                         <div class="row" id="tbRow2">
-                            <div id="colorMapP" style="width: 100%; height: 50px">
-                            <svg id = "svgColorP" height="15px" width="93%" >
-                              <defs>
+                            <div id="colorMapP" style="width: 100%; height: 50px" title="Color map based on the number of in-citations">
+                            <svg id = "svgColorP" height="30px" width="93%" > 
+                            <defs>
                                 <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
                                   <stop id = "firstStopS" offset="0%" style="stop-color:red;stop-opacity:1" />
                                   <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />
                                   <stop id="thirdStopS" offset="100%" style="stop-color:blue;stop-opacity:1" />
                                 </linearGradient>
                               </defs>
-                              <rect id="cmp" x="5" y="5" width="99%" height="10px" fill="url(#grad2)" />
-                            </svg>
+                              <rect id="cmp" x="5" y="5" width="99%" height="10px" fill="url(#grad2)" text ="100"/>
+                                </svg>
                             <br>
-                            <input id = "firstStop" type="color" value="#f90000" class="colorP" style="float: left; transform: translate(15px, -40%)" >
-                            <input id = "secondStop" type="color" value="#ffffff" class="colorP" style="transform: translate(0, -40%)">
-                            <input id = "thirdStop" type="color" value="#0019ff" class="colorP" style="float: right; transform: translate(-10px, -40%)">
-                            </div>
+                            <input id = "firstStop" type="color" value="#f90000" class="colorP" style="float: left; transform: translate(15px, -100%)" >
+                            <input id = "secondStop" type="color" value="#ffffff" class="colorP" style="transform: translate(0, -100%)">
+                            <input id = "thirdStop" type="color" value="#0019ff" class="colorP" style="float: right; transform: translate(-10px, -100%)">
+                        </div>
                         </div>
                     </div>
                 </div>

@@ -80,8 +80,23 @@ function updateColorMap(){
 }
 
 function colorMappingInit(){
-    $('#firstStop')
-        .on("change", function(){
+    d3.select("#svgColorP")
+        .append("text").text("0")
+        .attr("x", "6%")
+        .attr("y", "98%")
+        .attr("fill", "black")
+    d3.select("#svgColorP")
+        .append("text").text("30")
+        .attr("x", "54%")
+        .attr("y", "98%")
+        .attr("fill", "black")
+    d3.select("#svgColorP")
+        .append("text").text("100")
+        .attr("x", "89%")
+        .attr("y", "97%")
+        .attr("fill", "black")
+
+    $('#firstStop').on("change", function(){
         fS = this.value
         updateColorMap()
         });
