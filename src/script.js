@@ -75,7 +75,7 @@ function authClickHandler(d){
 
 function handlerMouseOverA(d){ 
     d3.select(this).transition()
-        .duration(300)
+        .duration(200)
         .attr("r", 10);
     var txt = d.value
     /*
@@ -94,7 +94,7 @@ function handlerMouseOverA(d){
         .attr("x", getXRect(x, wd))
         .attr("y", y-8)
         .transition()
-        .duration(300)
+        .duration(200)
         .attr("opacity", 1)
         .attr('fill', function(){
             if(authDict[d.id][0]!=2019) 
@@ -105,11 +105,21 @@ function handlerMouseOverA(d){
     popTextA.attr("x", getXTxt(x, wd))
         .attr("y", y + 4)
         .transition()
-        .duration(300)
+        .duration(200)
         .attr("opacity", 1)
 
+    d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", 0.2)
+    
     d3.selectAll(".papersNode")
-        .transition().duration(500)
+        .transition().duration(200)
+        .style("opacity", function(d1){
+            if(d1.authsId.includes(d.id))
+                return 1;
+            else
+                return 0.2;
+        })
         .attr("r", function(d1){
             if(d1.authsId.includes(d.id))
                 return "9";
@@ -142,11 +152,15 @@ function handlerMouseOutA(d){
         .attr("width", 0)
         .attr("opacity", 0);
     d3.select(this).transition()
-        .duration(300)
+        .duration(200)
         .attr("r", 6);
+    d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", 1)
     d3.selectAll(".papersNode")
-        .transition().duration(300)
+        .transition().duration(200)
         .attr("r", "6")
+        .style("opacity", 1)
         .attr("stroke", function(d1){
             if(idPs.includes(d1.id))
                 return "#6d10ca";
@@ -161,7 +175,7 @@ function handlerMouseOutA(d){
 
 function handleMouseOver(d){ 
     d3.select(this).transition()
-        .duration(300)
+        .duration(200)
         .attr("r", 10);
     var txt = d.value
     /*
@@ -181,16 +195,16 @@ function handleMouseOver(d){
         .attr("x", getXRect(x, wd))
         .attr("y", y-8)
         .transition()
-        .duration(300)
+        .duration(200)
         .attr("opacity", 1)
     popText.attr("x", getXTxt(x, wd))
         .attr("y", y + 4)
         .transition()
-        .duration(300)
+        .duration(200)
         .attr("opacity", 1)
 
     d3.selectAll(".authNode")
-        .transition().duration(500)
+        .transition().duration(200)
         .attr("r", function(d1){
             if(d.authsId.includes(d1.id))
                 return "9";
@@ -214,11 +228,11 @@ function handleMouseOut(d){
         .attr("width", 0)
         .attr("opacity", 0);
     d3.select(this).transition()
-        .duration(300)
+        .duration(200)
         .attr("r", 6);
 
     d3.selectAll(".authNode")
-        .transition().duration(500)
+        .transition().duration(200)
         .attr("r", function(d1){ return "6"; })
         .attr("fill", function(d1){ 
             if(authDict[d1.id][0]!=2019)
@@ -407,13 +421,13 @@ function ListMouseOver(event){
         idClick = idClick.substring(1,idClick.length);
     if(event.target.id[0]=='p'){
         svgP.select("#p"+idClick).transition()
-            .duration(300)
+            .duration(200)
             .attr("r", 10)
             .attr("fill", function(d){
-                d3.select(event.target).transition().duration(300)
+                d3.select(event.target).transition().duration(200)
                     .style("background-color", "rgba( 71, 66, 66, 0.2)") 
                 d3.selectAll(".authNode")
-                    .transition().duration(500)
+                    .transition().duration(200)
                     .attr("r", function(d1){
                         if(d.authsId.includes(d1.id))
                             return "9";
@@ -430,13 +444,21 @@ function ListMouseOver(event){
                 return color(d.color)            
         })  
     }else{
-        d3.select(event.target).transition().duration(300)
+        d3.select(event.target).transition().duration(200)
             .style("background-color", function(){ return "rgba( 221, 167, 109, 0.842 )";}) 
         svgA.select("#aa"+idClick).transition()
-            .duration(300)
+            .duration(200)
             .attr("r", "9");
+        d3.selectAll(".plink")
+            .transition().duration(200)
+            .style("opacity", 0.2)
         d3.selectAll(".papersNode")
-            .transition().duration(500)
+            .transition().duration(200)
+            .style("opacity", function(d1){
+               if(d1.authsId.includes(idClick))
+                    return 1;
+                else return 0.2;
+            })
             .attr("r", function(d1){
                 if(d1.authsId.includes(idClick))
                     return "9";
@@ -467,13 +489,13 @@ function ListMouseOut(event){
 
     if(event.target.id[0]=='p'){
         svgP.select("#p"+idClick).transition()
-            .duration(300)
+            .duration(200)
             .attr("r", 6)
             .attr("fill", function(d){
                 d3.select(event.target).transition().duration(200).
                     style("background-color", "rgba( 71, 66, 66, 0)") 
                 d3.selectAll(".authNode")
-                .transition().duration(500)
+                .transition().duration(200)
                 .attr("r", function(d1){ return "6"; })
                 .attr("fill", function(d1){     
                     if(authDict[d1.id][0]!=2019)
@@ -486,11 +508,15 @@ function ListMouseOut(event){
         d3.select(event.target).transition().duration(200)
             .style("background-color", "rgba( 71, 66, 66, 0)") 
          svgA.select("#aa"+idClick).transition()
-            .duration(300)
+            .duration(200)
             .attr("r", 6);
+        d3.selectAll(".plink")
+            .transition().duration(200)
+            .style("opacity", 1)
         d3.selectAll(".papersNode")
-            .transition().duration(300)
+            .transition().duration(200)
             .attr("r", "6")
+            .style("opacity", 1)
             .attr("stroke", function(d1){
                 if(idPs.includes(d1.id))
                     return "#6d10ca";
@@ -543,8 +569,6 @@ function addPaper(suggestion){
       updateADpapers()
       paperGraph(papersFiltered, citPrint, idPs, simulation)
       authorGraph()
-      foo()
-
     }
 }
 
@@ -931,6 +955,7 @@ function paperGraph(papers, citations, idPs, simulation) {
         .selectAll("line")
         .data(citations)
         .enter().append("line")
+        .attr("class", "plink")
         .attr("marker-start","url(#end)")
         .attr("stroke-width", 0)
         .style("pointer-events", "none");
