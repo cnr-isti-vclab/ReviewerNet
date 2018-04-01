@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width; initial-scale=1; height=device-height">
         <script type="text/javascript" src="src\jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="src\jscolor.js"></script>
         <script type="text/javascript" src="src/d3.v4.min.js"></script>
         <link rel="stylesheet" href="css\bootstrap.min.css">
         <link rel="stylesheet" href="css\nouislider.min.css">
@@ -39,7 +40,7 @@
                             <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
                         </div>
                         </div>
-                        <div class="row" id="tbRow2">
+                        <div class="row" id="tbRow2" style="height: 40px">
                             <div id="colorMapP" style="width: 100%; height: 50px" title="Color map based on the number of in-citations">
                             <svg id = "svgColorP" height="30px" width="93%" > 
                             <defs>
@@ -52,10 +53,32 @@
                               <rect id="cmp" x="5" y="5" width="99%" height="10px" fill="url(#grad2)" text ="100"/>
                                 </svg>
                             <br>
-                            <input id = "firstStop" type="color" value="#f90000" class="colorP" style="float: left; transform: translate(15px, -100%)" >
+                                <input name="color1" type="hidden" id="color_value1" value="f90000">
+                                <button
+                                    id = "firstStop"
+                                    class="colorP jscolor{valueElement:color_value1, value:'f90000'}"
+                                    style="float: left; transform: translate(15px, -100%)">
+                                </button>
+                                <input name="color2" type="hidden" id="color_value2" value="ffffff">
+                                <button
+                                    id = "secondStop"
+                                    class="colorP jscolor{valueElement:color_value2, value: 'ffffff'}"
+                                    style="transform: translate(0, -100%)">
+                                </button>
+                                <input name="color3" type="hidden" id="color_value3" value="0019ff">
+                                <button
+                                    id = "thirdStop"
+                                    class="colorP jscolor{valueElement:color_value3, value: '0019ff'}"
+                                    style="float: right; transform: translate(-10px, -100%)">
+                                </button>
+                             <!-- <input id = "firstStop" type="color" value="#f90000" class="colorP" style="float: left; transform: translate(15px, -100%)" >
                             <input id = "secondStop" type="color" value="#ffffff" class="colorP" style="transform: translate(0, -100%)">
-                            <input id = "thirdStop" type="color" value="#0019ff" class="colorP" style="float: right; transform: translate(-10px, -100%)">
+                            <input id = "thirdStop" type="color" value="#0019ff" class="colorP" style="float: right; transform: translate(-10px, -100%)">-->
                         </div>
+                        </div>
+                        <div class="row" id="tbRow3">
+                        <input type="checkbox" id="onlyExclude" style = "float: left"/><p style="float: left; transform: translateX(1%)">Show only authors form exclude list</p>
+                        <input type="checkbox" id="allAuth" style = "float: right"/><p style="float: right; transform: translateX(-2%)">Show all authors</p>
                         </div>
                     </div>
                 </div>

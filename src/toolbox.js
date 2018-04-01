@@ -20,6 +20,13 @@ function toggle ( element ){
     }
 }
 
+function toggleAE (){
+    showExclude = this.checked
+}
+function toggleAA (){
+    showAll = this.checked
+}
+
 
 
 function createSlider(){
@@ -79,10 +86,11 @@ function updateColorMap(){
         paperGraph(papersFiltered, citPrint, idPs, simulation)
 }
 
+
 function colorMappingInit(){
     d3.select("#svgColorP")
         .append("text").text("0")
-        .attr("x", "6%")
+        .attr("x", "7%")
         .attr("y", "98%")
         .attr("fill", "black")
     d3.select("#svgColorP")
@@ -95,24 +103,44 @@ function colorMappingInit(){
         .attr("x", "89%")
         .attr("y", "97%")
         .attr("fill", "black")
-
-    $('#firstStop').on("change", function(){
-        fS = this.value
+    
+    d3.select('#color_value1').on("change", function(){
+        /*Aggiungere rettangolo sopra testo e onchange rimuovi+riaggiungi*/
+        fS = "#"+this.value
+        console.log(this)
         updateColorMap()
         });
-    $('#secondStop').on("change", function(){
-        sS = this.value
+    d3.select('#color_value2').on("change", function(){
+        sS = "#"+this.value
         updateColorMap()
     });
-    $('#thirdStop').on("change", function(){
-        tS = this.value
+    d3.select('#color_value3').on("change", function(){
+        tS = "#"+this.value
         updateColorMap()
     });
+}
+
+function checkboxesInit(){
+    if(checkboxAE){
+        checkboxAE.checked = true;
+        checkboxAE.addEventListener('click', function(){
+            toggleAE.call(this);
+            authorGraph()
+        });
+    }
+    if(checkboxAA){
+        checkboxAA.checked = false;
+        checkboxAA.addEventListener('click', function(){
+            toggleAA.call(this);
+            authorGraph()
+        });
+    }
 }
 
 function toolboxInit(){
     createSlider()
     colorMappingInit()
+    checkboxesInit()
 }
 
 
