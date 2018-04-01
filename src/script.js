@@ -26,6 +26,8 @@ var graph = [],
     svgP, svgA, popText, popRect, popTextA, popRectA,
     thehtml,
     idP, idInfo,
+    showExclude = true,
+    showAll = false,
     idA, idAs = [],
     idPs = [], ul,
     simulation, simulationA,
@@ -35,6 +37,10 @@ var graph = [],
     maxInCits = 0,addId,
     maxYear = 1900,
     checkboxTP = document.getElementById('thetaPapCb'),
+    checkboxAE = 
+    document.getElementById('onlyExclude'),
+    checkboxAA = 
+    document.getElementById('allAuth'),
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
@@ -800,143 +806,152 @@ function thetaPapFilter(item){
 }
 
 function authorGraph(){
+    var authsDef = null;
+    authsFiltered = authors.filter(authFilter);
+    if(showExclude)
+        authsDef = authsFiltered
+    if(showAll)
+        authsDef = authors
+    
     if(simulationA)
         simulationA.stop()
     d3.select("#svgA").remove()
     d3.select(".aa").append("svg").attr("id", "svgA")
     getAuthSvg()
-    var na = authsExclude.length
-    //svg.attr("y", -5);
-    for(var i = 0; i < na; i++){
-        svgA.append('line')
-            .attr('id', "a"+authsExclude[i].toString())
-            .attr('x1', -50)
-            .attr('y1', -50)
-            .attr('x2', -50)
-            .attr('y2', -50)
-            .attr("marker-start","url(#arrowStart)")
-            .style("opacity", 0.5)
-            .attr("stroke", "rgba( 239, 137, 35, 0.729 )")
-            .attr("marker-end", "url(#arrow)")
-    }
     svgA.attr("width", "100%")
     d3.select("#gA").attr("width", "100%")
-    //xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
-    //svg.append("g").call(xaxis); 
-    /*
-    var link = svg.append("g")
-        .attr("class", "citations")
-        .selectAll("line")
-        .data(citations)
-        .enter().append("line")
-        .attr("marker-start","url(#end)")
-        .attr("stroke-width", 0)
-        .style("pointer-events", "none");
-    */
+    
+    if(authsDef){
+        if(checkboxTP.checked )
+            authsDef = authsDef.filter(thetaPapFilter) 
+        var na = authsDef.length
+        //svg.attr("y", -5);
+        for(var i = 0; i < na; i++){
+            svgA.append('line')
+                .attr('id', "a"+authsDef[i].id)
+                .attr('x1', -50)
+                .attr('y1', -50)
+                .attr('x2', -50)
+                .attr('y2', -50)
+                .attr("marker-start","url(#arrowStart)")
+                .style("opacity", 0.5)
+                .attr("stroke", "rgba( 239, 137, 35, 0.729 )")
+                .attr("marker-end", "url(#arrow)")
+        }
+        //xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
+        //svg.append("g").call(xaxis); 
+        /*
+        var link = svg.append("g")
+            .attr("class", "citations")
+            .selectAll("line")
+            .data(citations)
+            .enter().append("line")
+            .attr("marker-start","url(#end)")
+            .attr("stroke-width", 0)
+            .style("pointer-events", "none");
+        */
+       
+        var node = svgA.append("g")
+        var node = svgA.append("g")
+            .attr("class", "authors")
+            .selectAll("circle")
+            .data(authsDef)
+            .enter().append("circle")
+            .attr("r", 0)
+            .attr("id", function (d){ return "aa"+d.id})
+            .attr("class", "authNode")
+        /*    
+        .attr("stroke", function(d){
+                if(idPs.includes(d.id))
+                    return "#6d10ca";
+                else return "#999";
+                })
 
-    authsFiltered = authors.filter(authFilter)
-    if(checkboxTP.checked)
-        authsFiltered = authsFiltered.filter(thetaPapFilter)        
-    var node = svgA.append("g")
-    var node = svgA.append("g")
-        .attr("class", "authors")
-        .selectAll("circle")
-        .data(authsFiltered)
-        .enter().append("circle")
-        .attr("r", 0)
-        .attr("id", function (d){ return "aa"+d.id})
-        .attr("class", "authNode")
-    /*    
-    .attr("stroke", function(d){
-            if(idPs.includes(d.id))
-                return "#6d10ca";
-            else return "#999";
+            .attr("stroke-width", function(d){
+                if(idPs.includes(d.id))
+                    return 2.5;
+                })*/
+            .attr("fill", function(d) {
+    //                console.log("o: "+authDict[d.id][0])
+    //                console.log("n: "+authDict[d.id][1])
+                if(authDict[d.id][0]!=2019)
+                    return "rgba( 239, 137, 35, 0.729 )"
+                else return "rgba( 127, 127, 127, 0.527 )";
             })
+            .call(d3.drag()
+                .on("start", dragstartedA)
+                .on("drag", draggedA)
+                .on("end", dragendedA))
+            .on("click", authClickHandler)
+            .on("mouseover", handlerMouseOverA)
+            .on("mouseout", handlerMouseOutA)
+        node.transition()
+            .duration(1000)
+            .attr("r", 6)
 
-        .attr("stroke-width", function(d){
-            if(idPs.includes(d.id))
-                return 2.5;
-            })*/
-        .attr("fill", function(d) {
-//                console.log("o: "+authDict[d.id][0])
-//                console.log("n: "+authDict[d.id][1])
-            if(authDict[d.id][0]!=2019)
-                return "rgba( 239, 137, 35, 0.729 )"
-            else return "rgba( 127, 127, 127, 0.527 )";
-        })
-        .call(d3.drag()
-            .on("start", dragstartedA)
-            .on("drag", draggedA)
-            .on("end", dragendedA))
-        .on("click", authClickHandler)
-        .on("mouseover", handlerMouseOverA)
-        .on("mouseout", handlerMouseOutA)
-    node.transition()
-        .duration(1000)
-        .attr("r", 6)
+        if(simulationA){
+            simulationA
+                .nodes(authsDef)
+                .on("tick", ticked)
 
-    if(simulationA){
-        simulationA
-            .nodes(authsFiltered)
-            .on("tick", ticked)
+            simulationA.restart()
+            simulationA.tick()
+        }
 
-        simulationA.restart()
-        simulationA.tick()
-    }
+        /*simulation.force("link")
+            .links(citations);
 
-    /*simulation.force("link")
-        .links(citations);
+        link.transition()
+            .duration(1000)
+            .attr("stroke-width", 2)
+            //.style("stroke","url(#gradxX)")
+    */
+        popRectA = svgA.append("rect")
+             .attr('x',0)
+             .attr('y',-10)
+             .attr('width',0)
+             .attr('height',0)
+             .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+             .attr('opacity',0)
+             //.style("border-radius", "10px")
+        popTextA = svgA.append("text")
+            .attr("x", 0)             
+            .attr("y", 0)
+            .attr("text-anchor", "left")  
+            .style("font-size", "11px")
+            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+            .attr("opacity",0)
+            .text("");
 
-    link.transition()
-        .duration(1000)
-        .attr("stroke-width", 2)
-        //.style("stroke","url(#gradxX)")
-*/
-    popRectA = svgA.append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         //.style("border-radius", "10px")
-    popTextA = svgA.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
+        function ticked() {
+            node
+                .attr("cx", function(d) { 
+                    if(authDict[d.id][0] == 2019)
+                        return Math.max(7, Math.min(w-10, d.x));
+                    else{
+                        var nw = xConstrained(authDict[d.id][1]),
+                            od = xConstrained(authDict[d.id][0]);
+                        return (od+((nw-od)/2)); }
+            })
+                .attr("cy", function(d) {
+                    var y = Math.max(7, Math.min(heightA - 10, d.y));
+                    if(authDict[d.id][1] != 1900){
+                    var nw =  xConstrained(authDict[d.id][1]),
+                        od =  xConstrained(authDict[d.id][0]);
 
-    function ticked() {
-        node
-            .attr("cx", function(d) { 
-                if(authDict[d.id][0] == 2019)
-                    return Math.max(7, Math.min(w-10, d.x));
-                else{
-                    var nw = xConstrained(authDict[d.id][1]),
-                        od = xConstrained(authDict[d.id][0]);
-                    return (od+((nw-od)/2)); }
-        })
-            .attr("cy", function(d) {
-                var y = Math.max(7, Math.min(heightA - 10, d.y));
-                if(authDict[d.id][1] != 1900){
-                var nw =  xConstrained(authDict[d.id][1]),
-                    od =  xConstrained(authDict[d.id][0]);
-
-                if(od!=nw){
-                    d3.select("#a"+d.id)
-                        .attr("x1", od)
-                        .attr("y1", y)
-                        .attr("x2", nw)
-                        .attr("y2", y)
-                        .attr("stroke", "url(#gradOWO)")
+                    if(od!=nw){
+                        d3.select("#a"+d.id)
+                            .attr("x1", od)
+                            .attr("y1", y)
+                            .attr("x2", nw)
+                            .attr("y2", y)
+                            .attr("stroke", "url(#gradOWO)")
+                    }
                 }
-            }
-            return y;
-        });
-    }  
+                return y;
+            });
+        }
+    }
 }
 
 function paperGraph(papers, citations, idPs, simulation) {
@@ -1131,6 +1146,7 @@ $(function (){
             else{
                 authsExclude[authsExclude.length] = idA
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
+                 console.log(authDict)
                 //prettyPrintAuthor(suggestion)
                 authorGraph()
             }
