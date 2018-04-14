@@ -271,7 +271,33 @@ function updateYear(y){
 }
 
 function citFilter (currentValue) {
-   
+    /*
+    let flag = false,
+        cit = "";
+    its++;
+    if(!(typeof(currentValue.source)==='string')){
+        debugger;
+        console.log("after typeof cit "+its)
+        console.log(currentValue.source)
+    }
+    
+    if (currentValue.source.localeCompare(idP) == 0){
+      cit = currentValue.target
+      outC.push(cit)
+      flag = true
+    }
+    if (currentValue.target.localeCompare(idP) == 0){
+      cit = currentValue.source
+      inC.push(cit)
+      flag = true
+    }
+    if(write && flag && !(papersPrint.includes(cit))){
+      papersPrint.push(cit)
+        console.log(cit)
+    }
+    //console.log(flag)
+    return flag;
+    */
     let flag = false,
         cit = "", srcId,
         trgId;
@@ -293,6 +319,10 @@ function citFilter (currentValue) {
       flag = true
     }
     if(write && flag && !(papersPrint.includes(cit))){ 
+        console.log("src: ")
+        console.log(srcId)
+        console.log("tgr: ")
+        console.log(trgId)
         papersPrint.push(cit)
     }
     return flag;
@@ -314,6 +344,8 @@ function updateColor(){
         minInCits = Math.min(minInCits, papersFiltered[i].color)
         maxInCits = Math.max(maxInCits, papersFiltered[i].color)
     }
+    console.log("[UPDATECOLOR@script.js] minC: "+minInCits)
+    console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
 }
 
 function addId(name, year){
@@ -325,19 +357,24 @@ function addId(name, year){
     }
     else{
       idPs[idPs.length] = idP
-      
+      papersPrint.push(idP)        
+      //console.log("brfore [@addId] ")
+      //console.log(papersCit)
       papersCit[idP] = [[], []];
-    
+     //console.log("after [@addId] ")
+      //console.log(papersCit)
       $("#papList").append("<li id=\""+"p"+idP+
                            "\" class=\"paplist list-group-item pAuth\">"
                            +idPs.length+".</strong> "+name+", "+year+"</li>")
-    
+      //console.log("cits")
+      //console.log(citations)
         
       write = true;
       its = 0;
       let tempCits = citations.filter(citFilter);
       write = false;
-    
+      console.log("tempCits: ") 
+      console.log(tempCits[1])
       for(var i = 0; i<inC.length; i++)
         papersCit[idP][0].push(inC[i])
       for(var i = 0; i<outC.length; i++)
@@ -409,6 +446,7 @@ function updateAD(d){
         authDict[sAList[i]][0] = Math.min(authDict[sAList[i]][0], dx);
         authDict[sAList[i]][1] = Math.max(authDict[sAList[i]][1], dx); 
     }
+    //console.log(authDict)
 }
 
 function updateADpapers(){
@@ -420,7 +458,7 @@ function updateADpapers(){
 function addFromList(event){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length);
-
+    //console.log()
     if(event.target.id[0]=='p'){
         var paper = papersFiltered.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick))
@@ -552,8 +590,25 @@ function ListMouseOut(event){
 }
 
 function deleteP(idCk){
-    var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
-
+    var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;/*
+        lic = papersCit[idCk][0].length, lic1,
+        loc = papersCit[idCk][1].length, loc1; 
+    
+    for(var i = 0; i < lic; i++){
+        lic1 = papersCit[papersCit[idCk][0][i]][0].lenght
+        for(var j = 0; j < lic1; j++)
+        
+    }
+    
+    papersFiltered.filter(function (item){
+        return papersCit[idCk][0].includes(item.id) ||       papersCit[idCk][1].includes(item.id)})
+        //citts = papersFiltered.filter(x => plset.has(x));;
+    
+    
+    
+    citts.filter(x => console.log(x))
+    */
+    
     if (index > -1) {
         minYear = 2018
         minInCits = 100
@@ -577,6 +632,7 @@ function deleteP(idCk){
         papersPrint = []
         citPrint = []
         papersCit = {}
+        //debugger;
         if(idsT.length > 0)
             for(var i = 0; i < lp; i++){
                 var pap = pT[i];
@@ -644,11 +700,11 @@ function setMouseHandlers(){
 
 function addPaper(suggestion){
     idP = suggestion.id
-
+    //console.log(suggestion)
     var isIn = addId(suggestion.value, suggestion.year)
     $('#paperInfo').html(paperInfo(suggestion));
     setPapHandlers()
-
+    //setMouseHandlers()
     if(!isIn){
       updateYear(suggestion.year)
       updateADpapers()
@@ -939,7 +995,20 @@ function authorGraph(){
             .attr("r", 0)
             .attr("id", function (d){ return "aa"+d.id})
             .attr("class", "authNode")
+        /*    
+        .attr("stroke", function(d){
+                if(idPs.includes(d.id))
+                    return "#6d10ca";
+                else return "#999";
+                })
+
+            .attr("stroke-width", function(d){
+                if(idPs.includes(d.id))
+                    return 2.5;
+                })*/
             .attr("fill", function(d) {
+    //                console.log("o: "+authDict[d.id][0])
+    //                console.log("n: "+authDict[d.id][1])
                 if(authDict[d.id][0]!=2019)
                     return "rgba( 239, 137, 35, 0.729 )"
                 else return "rgba( 127, 127, 127, 0.527 )";
@@ -963,6 +1032,15 @@ function authorGraph(){
             simulationA.restart()
             simulationA.tick()
         }
+
+        /*simulation.force("link")
+            .links(citations);
+
+        link.transition()
+            .duration(1000)
+            .attr("stroke-width", 2)
+            //.style("stroke","url(#gradxX)")
+    */
         popRectA = svgA.append("rect")
              .attr('x',0)
              .attr('y',-10)
@@ -1196,12 +1274,17 @@ $(function (){
           this.value = null
           var isIn = false
           idA = suggestion.id
+          /*var thehtml = prettyPrintAuthor(suggestion)
+          $('#outputcontent').html(thehtml);
+          */
           var aName = suggestion.value
             if(authsExclude.includes(idA))
                 isIn = true
             else{
                 authsExclude[authsExclude.length] = idA
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
+                 //console.log(authDict)
+                //prettyPrintAuthor(suggestion)
                 authorGraph()
             }
         }
