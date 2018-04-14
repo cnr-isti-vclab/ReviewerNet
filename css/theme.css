@@ -24,11 +24,28 @@ body {
 #cmp {
     cursor: help;
 }
+
+.delete-btn {
+    background-color:transparent; 
+    border-radius: 10px;
+    transform: translateY(-10%);
+    border-width: 0px;
+    padding: 0px;
+    background-color: rgba( 191, 191, 191, 0.0 );
+}
+
+.delete-img{
+    transform: translateY(0%);
+    width: 20px;
+    height: 20px;
+}
+
 .colorP {
     width: 25px;
     height: 25px;
     padding: 0px;
     margin: 0px;
+    
 }
 
 .panel-collapse {
@@ -94,6 +111,7 @@ a {
 #papL {
     max-height: 87px;
     overflow-y: auto;
+    overflow-x: auto;
 }
 
 #toolbox {
