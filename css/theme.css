@@ -58,6 +58,41 @@ body {
     overflow-y: auto;
 }
 
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#authTable {
+    height: 98%;
+}
+
+.authNode {
+    cursor: pointer
+}
+
+.authLine {
+    height: 16px;
+    padding: 1px;
+}
+.authLine {
+    height: 99%;
+    padding: 0px;
+}
+
+.svgA {
+    width: 100%;
+    height: 22px
+}
+/*
+RIGHE TABELLA
+tr, td, th {
+    text-align: left;
+    padding: 1px;
+}
+*/
+
 .element {
     cursor: pointer;
 }
