@@ -192,8 +192,8 @@ function authorGraph(){
                         rH = d3.select(this).node().getBBox().height,
                         nX = od+(delta-rW)/2;
                     console.log(d3.select(this).node().getBBox())
-                    if(delta > rH) return Math.min(nX+1, $(".ap").width()-rW-20 );
-                    else return Math.min(od-(rW/2), $(".ap").width()-rW-20);
+                    if(delta > rH) return  Math.min(nX+1, $(".ap").width()-rW-20 );
+                    else return Math.max(8, Math.min(od-(rW/2), $(".ap").width()-rW-20));
                 })
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
