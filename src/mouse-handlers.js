@@ -6,41 +6,6 @@ function authClickHandler(d){
 }
 
 function handlerMouseOverA(d){ 
-    /*
-    d3.select(this).transition()
-        .duration(200)
-        .attr("width", 100);
-    var txt = d.value
-
-    if(txt.length>80)
-        txt = txt.substring(0,80)+"...";
-
-    popTextA.text(txt)
-    var bbox = popTextA.node().getBBox();
-    var wd = bbox.width,
-        ht = bbox.height,
-        x = this.cx.baseVal.value,
-        y = this.cy.baseVal.value;
-    popRectA.attr('fill', "rgba( 221, 167, 109, 0.842 )")
-        .attr('width',wd +10)
-        .attr('height',ht+2)
-        .attr("x", getXRect(x, wd))
-        .attr("y", y-8)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-        .attr('fill', function(){
-            if(authDict[d.id][0]!=2019) 
-                return "rgba( 221, 167, 109, 0.842 )";
-            else 
-                return "rgba( 127, 127, 127, 0.527 )";
-        })
-    popTextA.attr("x", getXTxt(x, wd))
-        .attr("y", y + 4)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-*/
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 0.2)
@@ -78,17 +43,6 @@ function handlerMouseOverA(d){
 
 function handlerMouseOutA(d){
     if(!click){
-        /*
-    popTextA.attr("width", 0)
-        .attr("x", -5000)
-        .attr("opacity", 0);
-    popRectA.attr("x", -5000)
-        .attr("width", 0)
-        .attr("opacity", 0);
-    d3.select(this).transition()
-        .duration(200)
-        .attr("width", 500);
-        */
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 1)
