@@ -1,5 +1,6 @@
 var graph = [],
     click = false,
+    authTable = d3.select("#authTable"),
     authors = [],
     authsExclude = [],
     papers = [],
@@ -70,7 +71,6 @@ function getXTxt(x, wdt){
         return x - wdt -10
     else return x + 10
 }
-
 
 function paperFilter (item) { 
     var r = papersPrint.includes(item.id);
@@ -176,28 +176,6 @@ function addId(name, year){
     return isIn
 }
 
-function prettyPrintAuthor(auth){
-    function getAuthPapers(item){
-    return auth.paperList.includes(item.id);
-}
-    var thehtml = '<strong>Name: </strong><br> ' + auth.value
-    if(auth.paperList.length > 0){
-      thehtml += '<br><strong>Pubblications:</strong> ' 
-      var papList =  papersFiltered.filter(getAuthPapers)
-    papList.sort(function(a, b) {
-            return -(parseInt(a.year) - parseInt(b.year));
-        });
-      for (var i = 0; i < papList.length; i++)
-        thehtml += '- '+ papList[i].value +  ', '+ papList[i].year +';<br>'
-    }
-    //$("#toolbox").html(thehtml)
-    return thehtml
-}
-
-
-
-
-
 function getArrays(graph) {
     var p = graph.nodes,
         n = p.length;
@@ -221,22 +199,6 @@ function getAuths() {
                 authDict[a[i].id] = [2019, 1900]}    
         })
     }
-
-
-function updateAD(d){
-    var sAList = d.authsId,
-        i, nS = sAList.length, dx = d.year;
-    for(var i = 0; i < nS; i++){
-        authDict[sAList[i]][0] = Math.min(authDict[sAList[i]][0], dx);
-        authDict[sAList[i]][1] = Math.max(authDict[sAList[i]][1], dx); 
-    }
-}
-
-function updateADpapers(){
-    var lp = papersFiltered.length
-    for(var i = 0; i < lp; i++)
-        updateAD(papersFiltered[i])
-}
 
 function deleteP(idCk){
     var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
@@ -467,66 +429,6 @@ function getPaperSvg(){
         .style("stop-opacity", "1")
 } 
 
-function getAuthSvg(){
-    svgA = d3.select("#svgA")
-        .attr("width", "100%")
-        .attr("height", function(){return heightA;})
-        .append("g")
-        .attr("id", "gA")
-    svgA.append("svg:defs").selectAll("marker")
-        .data(["arrow"])      // Different link/path types can be defined here
-        .enter().append("svg:marker")    // This section adds in the arrows
-        .attr("id", String)
-        .attr("viewBox", "0 0 40 40")
-        .attr("refX", 7)
-        .attr("refY", 3)
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .attr("orient", "auto")
-        .attr("markerUnits", "strokeWidth")
-        .attr("fill", "rgba( 239, 137, 35, 0.729 )")
-        .append("svg:path")
-        .attr("d", "M0,0 L0,6 L9,3 z");
-
-    svgA.select("defs").append("svg:marker")    // This section adds in the arrows
-        .attr("id", "arrowStart")
-        .attr("viewBox", "0 0 40 40")
-        .attr("refX", 7)
-        .attr("refY", 3)
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .attr("orient", "auto-start-reverse")
-        .attr("markerUnits", "strokeWidth")
-        .attr("fill", "rgba( 239, 137, 35, 0.729 )")
-        .append("svg:path")
-        .attr("d", "M0,0 L0,6 L9,3 z");
-
-    svgA.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradOWO")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.729 )")
-        .style("stop-opacity", "1")
-    svgA.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "50%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.3 )")
-        .style("stop-opacity", "1")
-    svgA.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.9 )")
-        .style("stop-opacity", "1")
-}
-
 function setSimulation(){
     simulation = d3.forceSimulation()
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
@@ -536,141 +438,12 @@ function setSimulation(){
 
 }
 
- function setSimulationA(){
-    simulationA = d3.forceSimulation()
-    simulationA.force("link", d3.forceLink().id(function(d) { return d.id; }))
-      .force("charge", d3.forceManyBody())
-      //.force("center",    d3.forceCenter(150, 150));
-    return simulationA;
-
-}
-
-function authFilter(item){
-    return authsExclude.includes(item.id)
-}
-
 function thetaPapFilter(item){
     var paps = 0, lp = papersFiltered.length,
         plset = new Set(papersPrint),
         commonValues = item.paperList.filter(x => plset.has(x));
 
     return commonValues.length >= thetaPap;
-}
-
-function authorGraph(){
-    var authsDef = null;
-    authsFiltered = authors.filter(authFilter);
-    if(showExclude)
-        authsDef = authsFiltered
-    if(showAll)
-        authsDef = authors
-    
-    if(simulationA)
-        simulationA.stop()
-    d3.select("#svgA").remove()
-    d3.select(".aa").append("svg").attr("id", "svgA")
-    getAuthSvg()
-    svgA.attr("width", "100%")
-    d3.select("#gA").attr("width", "100%")
-    
-    if(authsDef){
-        if(checkboxTP.checked )
-            authsDef = authsDef.filter(thetaPapFilter) 
-        var na = authsDef.length
-        //svg.attr("y", -5);
-        for(var i = 0; i < na; i++){
-            svgA.append('line')
-                .attr('id', "a"+authsDef[i].id)
-                .attr('x1', -50)
-                .attr('y1', -50)
-                .attr('x2', -50)
-                .attr('y2', -50)
-                .attr("marker-start","url(#arrowStart)")
-                .style("opacity", 0.5)
-                .attr("stroke", "rgba( 239, 137, 35, 0.729 )")
-                .attr("marker-end", "url(#arrow)")
-        }
-       
-        var node = svgA.append("g")
-        var node = svgA.append("g")
-            .attr("class", "authors")
-            .selectAll("circle")
-            .data(authsDef)
-            .enter().append("circle")
-            .attr("r", 0)
-            .attr("id", function (d){ return "aa"+d.id})
-            .attr("class", "authNode")
-            .attr("fill", function(d) {
-                if(authDict[d.id][0]!=2019)
-                    return "rgba( 239, 137, 35, 0.729 )"
-                else return "rgba( 127, 127, 127, 0.527 )";
-            })
-            .call(d3.drag()
-                .on("start", dragstartedA)
-                .on("drag", draggedA)
-                .on("end", dragendedA))
-            .on("click", authClickHandler)
-            .on("mouseover", handlerMouseOverA)
-            .on("mouseout", handlerMouseOutA)
-        node.transition()
-            .duration(1000)
-            .attr("r", 6)
-
-        if(simulationA){
-            simulationA
-                .nodes(authsDef)
-                .on("tick", ticked)
-
-            simulationA.restart()
-            simulationA.tick()
-        }
-
-        popRectA = svgA.append("rect")
-             .attr('x',0)
-             .attr('y',-10)
-             .attr('width',0)
-             .attr('height',0)
-             .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-             .attr('opacity',0)
-             //.style("border-radius", "10px")
-        popTextA = svgA.append("text")
-            .attr("x", 0)             
-            .attr("y", 0)
-            .attr("text-anchor", "left")  
-            .style("font-size", "11px")
-            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-            .attr("opacity",0)
-            .text("");
-
-        function ticked() {
-            node
-                .attr("cx", function(d) { 
-                    if(authDict[d.id][0] == 2019)
-                        return Math.max(7, Math.min(w-10, d.x));
-                    else{
-                        var nw = xConstrained(authDict[d.id][1]),
-                            od = xConstrained(authDict[d.id][0]);
-                        return (od+((nw-od)/2)); }
-            })
-                .attr("cy", function(d) {
-                    var y = Math.max(7, Math.min(heightA - 10, d.y));
-                    if(authDict[d.id][1] != 1900){
-                    var nw =  xConstrained(authDict[d.id][1]),
-                        od =  xConstrained(authDict[d.id][0]);
-
-                    if(od!=nw){
-                        d3.select("#a"+d.id)
-                            .attr("x1", od)
-                            .attr("y1", y)
-                            .attr("x2", nw)
-                            .attr("y2", y)
-                            .attr("stroke", "url(#gradOWO)")
-                    }
-                }
-                return y;
-            });
-        }
-    }
 }
 
 function paperGraph(papers1, citations1, idPs, simulation) {
@@ -797,23 +570,6 @@ function dragended(d) {
   d.fy = null;
 }
 
- function dragstartedA(d) {
-  if (!d3.event.active) simulationA.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
-}
-
-function draggedA(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-}
-
-function dragendedA(d) {
-  if (!d3.event.active) simulationA.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
-}    
-
 $(function (){
     toolboxInit()
     setMouseHandlers()
@@ -867,8 +623,6 @@ $(function (){
             else{
                 authsExclude[authsExclude.length] = idA
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
-                 //console.log(authDict)
-                //prettyPrintAuthor(suggestion)
                 authorGraph()
             }
         }

@@ -11,13 +11,13 @@ function foo(){console.log(papersFiltered.length)}
     Toolbox
 */
 function toggle ( element ){
-    // If the checkbox is checked, disabled the slider.
-    // Otherwise, re-enable it.
-    if ( !this.checked ) {
-        element.setAttribute('disabled', true);
-    } else {
-        element.removeAttribute('disabled');
-    }
+	// If the checkbox is checked, disabled the slider.
+	// Otherwise, re-enable it.
+	if ( !this.checked ) {
+		element.setAttribute('disabled', true);
+	} else {
+		element.removeAttribute('disabled');
+	}
 }
 
 function toggleAE (){
@@ -58,7 +58,7 @@ function createSlider(){
     if(checkboxTP){
         checkboxTP.checked = false;
         checkboxTP.addEventListener('click', function(){
-       toggle.call(this, sliderTP);
+	   toggle.call(this, sliderTP);
         authorGraph()
         });
     }

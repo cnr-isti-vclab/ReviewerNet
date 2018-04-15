@@ -6,14 +6,15 @@ function authClickHandler(d){
 }
 
 function handlerMouseOverA(d){ 
+    /*
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 10);
+        .attr("width", 100);
     var txt = d.value
-    /*
+
     if(txt.length>80)
         txt = txt.substring(0,80)+"...";
-    */
+
     popTextA.text(txt)
     var bbox = popTextA.node().getBBox();
     var wd = bbox.width,
@@ -39,7 +40,7 @@ function handlerMouseOverA(d){
         .transition()
         .duration(200)
         .attr("opacity", 1)
-
+*/
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 0.2)
@@ -77,6 +78,7 @@ function handlerMouseOverA(d){
 
 function handlerMouseOutA(d){
     if(!click){
+        /*
     popTextA.attr("width", 0)
         .attr("x", -5000)
         .attr("opacity", 0);
@@ -85,7 +87,8 @@ function handlerMouseOutA(d){
         .attr("opacity", 0);
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 6);
+        .attr("width", 500);
+        */
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 1)
