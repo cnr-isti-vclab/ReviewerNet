@@ -239,24 +239,7 @@ function updateADpapers(){
 }
 
 function deleteP(idCk){
-    var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;/*
-        lic = papersCit[idCk][0].length, lic1,
-        loc = papersCit[idCk][1].length, loc1; 
-    
-    for(var i = 0; i < lic; i++){
-        lic1 = papersCit[papersCit[idCk][0][i]][0].lenght
-        for(var j = 0; j < lic1; j++)
-        
-    }
-    
-    papersFiltered.filter(function (item){
-        return papersCit[idCk][0].includes(item.id) ||       papersCit[idCk][1].includes(item.id)})
-        //citts = papersFiltered.filter(x => plset.has(x));;
-    
-    
-    
-    citts.filter(x => console.log(x))
-    */
+    var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
     
     if (index > -1) {
         minYear = 2018
@@ -281,7 +264,7 @@ function deleteP(idCk){
         papersPrint = []
         citPrint = []
         papersCit = {}
-        //debugger;
+
         if(idsT.length > 0)
             for(var i = 0; i < lp; i++){
                 var pap = pT[i];
