@@ -176,7 +176,6 @@ function handleMouseOut(d){
 function clickHandler(d){
     $('#paperInfo').html(paperInfo(d))
     setPapHandlers()
-//    setMouseHandlers()
 }
 
 function addFromList(event){
@@ -184,7 +183,7 @@ function addFromList(event){
         idClick = idClick.substring(1,idClick.length);
     //console.log()
     if(event.target.id[0]=='p'){
-        var paper = papersFiltered.filter(function (item){ return item.id === idClick})[0];
+        var paper = papers.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick))
             addPaper(paper)
     }else{
@@ -204,12 +203,12 @@ function ListMouseOver(event){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length);
     if(event.target.id[0]=='p'){
+        d3.select(event.target).transition().duration(200)
+        .style("background-color", "rgba( 71, 66, 66, 0.2)") 
         svgP.select("#p"+idClick).transition()
             .duration(200)
             .attr("r", 10)
             .attr("fill", function(d){
-                d3.select(event.target).transition().duration(200)
-                    .style("background-color", "rgba( 71, 66, 66, 0.2)") 
                 d3.selectAll(".authNode")
                     .transition().duration(200)
                     .attr("r", function(d1){
@@ -272,12 +271,12 @@ function ListMouseOut(event){
         idClick = idClick.substring(1,idClick.length);
 
     if(event.target.id[0]=='p'){
+        d3.select(event.target).transition().duration(200)
+            .style("background-color", "rgba( 71, 66, 66, 0)") 
         svgP.select("#p"+idClick).transition()
             .duration(200)
             .attr("r", 6)
             .attr("fill", function(d){
-                d3.select(event.target).transition().duration(200).
-                    style("background-color", "rgba( 71, 66, 66, 0)") 
                 d3.selectAll(".authNode")
                 .transition().duration(200)
                 .attr("r", function(d1){ return "6"; })
