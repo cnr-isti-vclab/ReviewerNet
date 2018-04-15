@@ -6,6 +6,8 @@ function authClickHandler(d){
 }
 
 function handlerMouseOverA(d){ 
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
+    
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 0.2)
@@ -42,7 +44,19 @@ function handlerMouseOverA(d){
 }
 
 function handlerMouseOutA(d){
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
     if(!click){
+        /*
+    popTextA.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    popRectA.attr("x", -5000)
+        .attr("width", 0)
+        .attr("opacity", 0);
+    d3.select(this).transition()
+        .duration(200)
+        .attr("width", 500);
+        */
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 1)
@@ -102,10 +116,7 @@ function handleMouseOver(d){
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
                 return color(d.color);
-            else 
-                if(authDict[d1.id][0]!=2019)
-                    return "rgba( 239, 137, 35, 0.729 )"
-                else return "rgba( 127, 127, 127, 0.527 )";
+            else return "rgba( 221, 167, 109, 0.342 )"
          })
 }
 
@@ -122,12 +133,7 @@ function handleMouseOut(d){
 
     d3.selectAll(".authNode")
         .transition().duration(200)
-        .attr("r", function(d1){ return "6"; })
-        .attr("fill", function(d1){ 
-            if(authDict[d1.id][0]!=2019)
-                return "rgba( 239, 137, 35, 0.729 )"
-            else return "rgba( 127, 127, 127, 0.527 )";
-         })
+        .attr("fill", "rgba( 221, 167, 109, 0.342 )")
 }
 
 function clickHandler(d){
@@ -168,27 +174,17 @@ function ListMouseOver(event){
             .attr("fill", function(d){
                 d3.selectAll(".authNode")
                     .transition().duration(200)
-                    .attr("r", function(d1){
-                        if(d.authsId.includes(d1.id))
-                            return "9";
-                        else return "6";
-                    })
                     .attr("fill", function(d1){ 
                         if(d.authsId.includes(d1.id))
                             return color(d.color);
                         else 
-                            if(authDict[d1.id][0]!=2019)
-                                return "rgba( 239, 137, 35, 0.729 )"
-                            else return "rgba( 127, 127, 127, 0.527 )";
+                            return "rgba( 221, 167, 109, 0.342 )"
                      })        
                 return color(d.color)            
         })  
     }else{
         d3.select(event.target).transition().duration(200)
-            .style("background-color", function(){ return "rgba( 221, 167, 109, 0.842 )";}) 
-        svgA.select("#aa"+idClick).transition()
-            .duration(200)
-            .attr("r", "9");
+            .style("background-color", function(){ return "rgba( 138, 223, 223, 0.569 )";}) 
         d3.selectAll(".plink")
             .transition().duration(200)
             .style("opacity", 0.2)
@@ -236,20 +232,12 @@ function ListMouseOut(event){
             .attr("fill", function(d){
                 d3.selectAll(".authNode")
                 .transition().duration(200)
-                .attr("r", function(d1){ return "6"; })
-                .attr("fill", function(d1){     
-                    if(authDict[d1.id][0]!=2019)
-                        return "rgba( 239, 137, 35, 0.729 )"
-                    else return "rgba( 127, 127, 127, 0.527 )";
-                 })  
+                .attr("fill", "rgba( 221, 167, 109, 0.342 )")  
                 return color(d.color) 
             })        
     }else{
         d3.select(event.target).transition().duration(200)
             .style("background-color", "rgba( 71, 66, 66, 0)") 
-         svgA.select("#aa"+idClick).transition()
-            .duration(200)
-            .attr("r", 6);
         d3.selectAll(".plink")
             .transition().duration(200)
             .style("opacity", 1)

@@ -582,8 +582,7 @@ $(function (){
         updateWidth()
         if(papersFiltered.length > 0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
-        if(authsExclude.length > 0)
-            authorGraph()
+        authorGraph()
     });
     $('#papers-autocomplete').click(function (e){
     this.value=""

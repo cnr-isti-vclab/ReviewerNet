@@ -81,9 +81,14 @@ table {
     padding: 0px;
 }
 
+.auth-name {
+    cursor: pointer
+}
+
 .svgA {
     width: 100%;
-    height: 22px
+    height: 18px;
+    padding: 0;
 }
 /*
 RIGHE TABELLA

@@ -158,7 +158,7 @@ function authorGraph(){
                     if(od!=nw)return od;
                     else return od-2;
                 })
-                .attr('y',11)
+                .attr('y',8)
                 .attr('width',function(d){
                     let nw = xConstrained(authDict[d.id][1]),
                         od = xConstrained(authDict[d.id][0]);
@@ -166,47 +166,37 @@ function authorGraph(){
                     else return 4;
                 })
                 .attr('height', "5px")
-                .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+                .attr('fill',"rgba( 221, 167, 109, 0.342 )")
                 .style("border-radius", "4px")
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
                 .on("mouseout", handlerMouseOutA)
-     
-        authTable.selectAll(".svgA")
-                .append("rect")
-                .attr("id", function(d){return "arect"+d.id})
-        
+         
         authTable.selectAll(".svgA")
                 .append("text")
                 .attr("class", "auth-name")
-                .attr("x", function(d){
-                    let nw = xConstrained(authDict[d.id][1]),
-                        od = xConstrained(authDict[d.id][0]);
-                    if(od!=nw) return od+20;
-                    else return od-10;
-                })             
-                .attr("y", 10)
+                .attr("y", 15)
                 //.attr('fill',"rgba( 221, 167, 109, 0.2 )")
                 .style("border-radius", "3px")
                 .attr("text-anchor", "center")  
                 .style("font-size", "13px")
                 .text(function (d){ return d.value })
                 .attr("fill", function(d){
+                    return "#474747";
+                })
+                .attr("x", function(d){
                     let nw = xConstrained(authDict[d.id][1]),
                         od = xConstrained(authDict[d.id][0]),
-                        rct = d3.select("#arect"+d.id),
+                        delta = nw-od,
                         rW = d3.select(this).node().getBBox().width,
-                        rH = d3.select(this).node().getBBox().height;
-                    rct.attr('fill', "rgba( 221, 167, 109, 0.1 )")
-                        .attr('width',rW +10)
-                        .attr('height',rH)
-                        .attr("y", -5)        
-            
-                    if(od!=nw)
-                        rct.attr("x", od+14)
-                    else rct.attr("x", od-22);
-                    return "black";
+                        rH = d3.select(this).node().getBBox().height,
+                        nX = od+(delta-rW)/2;
+                    console.log(d3.select(this).node().getBBox())
+                    if(delta > rH) return Math.min(nX+1, $(".ap").width()-rW-20 );
+                    else return Math.min(od-(rW/2), $(".ap").width()-rW-20);
                 })
-                console.log("DONE")
+                .on("click", authClickHandler)
+                .on("mouseover", handlerMouseOverA)
+                .on("mouseout", handlerMouseOutA)
     }
 }
