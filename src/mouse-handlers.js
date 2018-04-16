@@ -183,6 +183,7 @@ function ListMouseOver(event){
                 return color(d.color)            
         })  
     }else{
+        d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
         d3.select(event.target).transition().duration(200)
             .style("background-color", function(){ return "rgba( 138, 223, 223, 0.569 )";}) 
         d3.selectAll(".plink")
@@ -236,6 +237,7 @@ function ListMouseOut(event){
                 return color(d.color) 
             })        
     }else{
+        d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
         d3.select(event.target).transition().duration(200)
             .style("background-color", "rgba( 71, 66, 66, 0)") 
         d3.selectAll(".plink")

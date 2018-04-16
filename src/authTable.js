@@ -40,97 +40,22 @@ function updateADpapers(){
         updateAD(papersFiltered[i])
 }
 
-function getAuthSvg(){
-    svgA = d3.select("#svgA")
-        .attr("width", "100%")
-        .attr("height", function(){return heightA;})
-        .append("g")
-        .attr("id", "gA")
-    svgA.append("svg:defs").selectAll("marker")
-        .data(["arrow"])      // Different link/path types can be defined here
-        .enter().append("svg:marker")    // This section adds in the arrows
-        .attr("id", String)
-        .attr("viewBox", "0 0 40 40")
-        .attr("refX", 7)
-        .attr("refY", 3)
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .attr("orient", "auto")
-        .attr("markerUnits", "strokeWidth")
-        .attr("fill", "rgba( 239, 137, 35, 0.729 )")
-        .append("svg:path")
-        .attr("d", "M0,0 L0,6 L9,3 z");
-
-    svgA.select("defs").append("svg:marker")    // This section adds in the arrows
-        .attr("id", "arrowStart")
-        .attr("viewBox", "0 0 40 40")
-        .attr("refX", 7)
-        .attr("refY", 3)
-        .attr("markerWidth", 40)
-        .attr("markerHeight", 40)
-        .attr("orient", "auto-start-reverse")
-        .attr("markerUnits", "strokeWidth")
-        .attr("fill", "rgba( 239, 137, 35, 0.729 )")
-        .append("svg:path")
-        .attr("d", "M0,0 L0,6 L9,3 z");
-
-    svgA.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradOWO")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.729 )")
-        .style("stop-opacity", "1")
-    svgA.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "50%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.3 )")
-        .style("stop-opacity", "1")
-    svgA.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 239, 137, 35, 0.9 )")
-        .style("stop-opacity", "1")
+function apFilter(item){
+    return AP.includes(item.id)
 }
 
-function setSimulationA(){
-    simulationA = d3.forceSimulation()
-    simulationA.force("link", d3.forceLink().id(function(d) { return d.id; }))
-      .force("charge", d3.forceManyBody())
-      //.force("center",    d3.forceCenter(150, 150));
-    return simulationA;
-
-}
-
-function authFilter(item){
-    return authsExclude.includes(item.id)
-}
-
-function appendText(svgt, idAu){
-    svgt.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
+function anpFilter(item){
+    return ANP.includes(item.id)
 }
 
 function authorGraph(){
     var authsDef = null;
-    authsFiltered = authors.filter(authFilter);
-    if(showExclude)
-        authsDef = authsFiltered
+    authsFiltered = [];
+
     if(showAll)
-        authsDef = authors
+        authsDef = authors.filter(anpFilter)
+    else if (showExclude) 
+        authsDef = authors.filter(apFilter)
     
     $("#authTable").html("")
     
