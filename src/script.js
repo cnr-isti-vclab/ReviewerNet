@@ -2,6 +2,8 @@ var graph = [],
     click = false,
     authTable = d3.select("#authTable"),
     authors = [],
+    AP = [],
+    ANP = [],
     authsExclude = [],
     papers = [],
     papersPrint = [],
@@ -142,6 +144,29 @@ function updateColor(){
     console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
 }
 
+function getAP(){
+    let np = papersFiltered.length, i = 0;
+    for(i = 0; i < np; i++)
+        if(idPs.includes(papersFiltered[i].id)){
+            let aid = papersFiltered[i].authsId,
+                nAid = aid.length, j = 0;
+            for(j = 0; j < nAid; j++)
+                if(!AP.includes(aid[j]))
+                    AP.push(aid[j])
+            }
+}
+
+function getANP(){
+    let np = papersFiltered.length, i = 0;
+    for(i = 0; i < np; i++){
+        let aid = papersFiltered[i].authsId,
+            nAid = aid.length, j = 0;
+        for(j = 0; j < nAid; j++)
+            if(!ANP.includes(aid[j]))
+                ANP.push(aid[j])
+    }
+}
+
 function addId(name, year){
     var isIn = false
     inC = []
@@ -152,7 +177,8 @@ function addId(name, year){
     else{
       idPs[idPs.length] = idP
       papersPrint.push(idP)        
-
+      AP = []
+      ANP = []
       papersCit[idP] = [[], []];
 
       $("#papList").append("<li id=\""+"p"+idP+
@@ -171,6 +197,8 @@ function addId(name, year){
       papersFiltered = papers.filter(paperFilter)
       updateADpapers()
       updateColor()
+      getAP()
+      getANP()
     }
     
     return isIn
@@ -602,11 +630,9 @@ $(function (){
     */
     //$("a").on("click", function(){    })
     getPaperSvg()
-    getAuthSvg()
     getAuths()
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
-    simulationA = setSimulationA()
     
     $('#authors-autocomplete').autocomplete({
         lookup: authors,
