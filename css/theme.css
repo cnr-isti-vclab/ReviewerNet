@@ -40,6 +40,10 @@ body {
     height: 20px;
 }
 
+p {
+    margin: 0;
+}
+
 .colorP {
     width: 25px;
     height: 25px;
@@ -64,6 +68,27 @@ table {
     width: 100%;
 }
 
+#authViz {
+    background-color: rgba( 224, 225, 225, 0.204 );
+    border-radius: 5px;
+    border-width: 1px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    width: 90%;
+    font-size: 0.9em;
+}
+
+#tbRow4 {
+    margin: 1px;
+    padding-top: 2px;
+    height: 30px
+}
+
+.stat {
+    font-size: 0.8em;
+    font-style: italic
+}
+
 #authTable {
     height: 98%;
 }
@@ -84,6 +109,11 @@ table {
 .auth-name {
     cursor: pointer
 }
+
+.stat {
+    text-align: center;
+}
+
 
 .svgA {
     width: 100%;
@@ -168,7 +198,7 @@ a {
     width: 90.5%
 }
 
-#MNP {
+#MNP, #MNoC   {
     cursor: help
 }
 
@@ -180,6 +210,10 @@ a {
     display: block; 
     width: 100%; 
     text-align: center;}
+
+.row {
+    padding 2px;
+}
 
 #searchfield form {
   display: inline-block;

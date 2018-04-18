@@ -26,6 +26,9 @@ var graph = [],
     thetaPap = 2,
     inputNumberTP = document.getElementById('input-numberTP'),
     sliderTP = document.getElementById('thetaPap'),
+    thetaCit = 2,
+    inputNumberTOC = document.getElementById('input-numberTOC'),
+    sliderTOC = document.getElementById('thetaCit'),
     svgP, svgA, popText, popRect, popTextA, popRectA,
     thehtml,
     idP, idInfo,
@@ -40,10 +43,8 @@ var graph = [],
     maxInCits = 0,
     maxYear = 1900,
     checkboxTP = document.getElementById('thetaPapCb'),
-    checkboxAE = 
-    document.getElementById('onlyExclude'),
-    checkboxAA = 
-    document.getElementById('allAuth'),
+    checkboxTOC = document.getElementById('thetaCitCb'),
+    authViz = document.getElementById('authViz'),
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
@@ -486,7 +487,12 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
     xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
-    svg.append("g").call(xaxis); 
+    svg.append("g").call(xaxis);
+    
+    $("#pn").html("<strong><font color=\"#275d58\">P =</font></strong> "+idPs.length)
+    $("#npn").html("<strong><font color=\"#275d58\">N(P) =</font></strong> "+papersFiltered.length)
+    
+    
     var link = svg.append("g")
         .attr("class", "citations")
         .selectAll("line")
@@ -571,16 +577,56 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("y1", function(d) { return Math.max(10, Math.min(h - 10, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
             .attr("y2", function(d) { return Math.max(10, Math.min(h - 10, d.target.y))})
-            .style("stroke", function(d){if(d.source.x < d.target.x)
-                                            return "url(#gradxX)";
-                                        else                                                    return "url(#gradXx)"
-                                        });
+            .style("stroke", function(d){
+                if(d.source.x < d.target.x)
+                    return "url(#gradxX)";
+                else return "url(#gradXx)"
+            })
+            .style("opacity", checkThetaLink)
+        
         node
             .attr("cx", function(d) { 
             var nX = xConstrained(d.year);
             return nX; })
-            .attr("cy", function(d) { return Math.max(10, Math.min(h - 10, d.y)); });
+            .attr("cy", function(d) { return Math.max(10, Math.min(h - 10, d.y)); })
+            .style("opacity", checkThetaNode)
     }
+}
+
+function checkThetaCit(idX){
+    inC=[]
+    outC=[]
+    write = false
+    idP = idX
+    citations.filter(citFilter)
+    if(outC.length >= thetaCit)
+        return 1;
+    else return 0.2
+}
+
+function checkThetaLink(d){
+    if(checkboxTOC.checked){    
+        if(papersCit[d.source.id] && papersCit[d.target.id])
+           if(papersCit[d.source.id][1].length >= thetaCit && 
+           papersCit[d.target.id][1].length >= thetaCit)
+                return 1;
+            else
+                return 0.1;
+        else return (checkThetaCit(d.source.id)+checkThetaCit(d.target.id))/4
+    }
+    else return 1;
+}
+
+function checkThetaNode(d1){
+  if(checkboxTOC.checked){
+        if(papersCit[d1.id])
+            if(papersCit[d1.id][1].length >= thetaCit)
+                return 1;
+            else
+                return 0.2;
+        else return checkThetaCit(d1.id)
+    }
+    else return 1;  
 }
 
 function dragstarted(d) {
