@@ -30,9 +30,8 @@
         <div class="col-sm-4" style="padding: 2px; height: 100%">
             <div class="panel panel-default" style="height: 95%; border: 0px;">
                 <div id = "toolbox" class="panel-body, text-center">
-                <h4>Toolbox</h4>
-                    <div class="container-fluid" style="height: 78%">
-                        <div class="row" id="tbRow1">
+                    <div class="container-fluid" style="height: 78%; padding-top: 6px;">
+                        <div class="row" id="tbRow1" style="margin-bottom: 5px;">
                         <div id="thetaPap" style="float: left; width: 70%; transform: translate(15px, 0)">
                         </div>
                         <div style="float: right; width: 22%; transform: translate(0px, -10%)">
@@ -41,7 +40,16 @@
                             <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
                         </div>
                         </div>
-                        <div class="row" id="tbRow2" style="height: 40px">
+                         <div class="row" id="tbRow2">
+                        <div id="thetaCit" style="float: left; width: 68%; transform: translate(15px, 0)">
+                        </div>
+                        <div style="float: right; width: 24%; transform: translate(-1%, -10%)">
+                            <h9 id = "MNoC" title="Minimum number of out-citations.">MNoC</h9>
+                            <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
+                            <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/> 
+                        </div>
+                        </div>
+                        <div class="row" id="tbRow3" style="height: 40px">
                             <div id="colorMapP" style="width: 100%; height: 50px" title="Color map based on the number of in-citations">
                             <svg id = "svgColorP" height="30px" width="93%" > 
                             <defs>
@@ -74,15 +82,34 @@
                                 </button>
                         </div>
                         </div>
-                        <div class="row" id="tbRow3">
-                        <input type="checkbox" id="onlyExclude" style = "float: left"/><p style="float: left; transform: translateX(1%)">Show A(P)</p>
-                        <input type="checkbox" id="allAuth" style = "float: right"/><p style="float: right; transform: translateX(-2%)">Show A(N(P))</p>
-                        </div>
                         <div class="row" id="tbRow4">
+                            <table style=" float:left; width:30%">
+                              <tr>
+                                  <td id="apn" class="stat"><strong><font color="#275d58">A(P) =</font></strong> 0</td>
+                                <td id="anpn"class="stat"><strong><font color="#275d58">
+                                    A(N(P)) =</font></strong> 0
+                                    </td>
+                              </tr>
+                              <tr>
+                                <td id="pn" class="stat">
+                                    <strong><font color="#275d58">P =</font></strong> 0
+                                        </td>
+                                <td id="npn" class="stat">
+                                    <strong><font color="#275d58">N(P) =</font></strong> 0</td>
+                              </tr>
+                            </table>
+                        <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
+                          <optgroup label="Authors visualization options:">
+                            <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
+                            <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
+                          </optgroup>
+                        </select>
                         </div>
+                        <div class="row" id="tbRow5">
+                                                    </div>
                     </div>
                 </div>
-            </div>
+              </div>
         </div>
     </div>   
     <div class="row" style="height: 70%">

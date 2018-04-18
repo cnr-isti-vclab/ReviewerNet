@@ -59,11 +59,11 @@ function handlerMouseOutA(d){
         */
     d3.selectAll(".plink")
         .transition().duration(200)
-        .style("opacity", 1)
+        .style("opacity", checkThetaLink)
     d3.selectAll(".papersNode")
         .transition().duration(200)
         .attr("r", "6")
-        .style("opacity", 1)
+        .style("opacity", checkThetaNode)
         .attr("stroke", function(d1){
             if(idPs.includes(d1.id))
                 return "#6d10ca";
@@ -242,11 +242,11 @@ function ListMouseOut(event){
             .style("background-color", "rgba( 71, 66, 66, 0)") 
         d3.selectAll(".plink")
             .transition().duration(200)
-            .style("opacity", 1)
+            .style("opacity", checkThetaLink)
         d3.selectAll(".papersNode")
             .transition().duration(200)
             .attr("r", "6")
-            .style("opacity", 1)
+            .style("opacity", checkThetaNode)
             .attr("stroke", function(d1){
                 if(idPs.includes(d1.id))
                     return "#6d10ca";

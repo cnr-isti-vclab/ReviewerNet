@@ -52,12 +52,15 @@ function authorGraph(){
     var authsDef = null;
     authsFiltered = [];
 
-    if(showAll)
+    if(authViz.value === "anpO" )
         authsDef = authors.filter(anpFilter)
     else if (showExclude) 
         authsDef = authors.filter(apFilter)
     
     $("#authTable").html("")
+    
+    $("#apn").html("<strong><font color=\"#275d58\">A(P) =</font></strong> "+AP.length)
+    $("#anpn").html("<strong><font color=\"#275d58\">A(N(P)) =</font></strong> "+ANP.length)
     
     if(authsDef){
         if(checkboxTP.checked )
@@ -116,7 +119,7 @@ function authorGraph(){
                         rW = d3.select(this).node().getBBox().width,
                         rH = d3.select(this).node().getBBox().height,
                         nX = od+(delta-rW)/2;
-                    console.log(d3.select(this).node().getBBox())
+                   // console.log(d3.select(this).node().getBBox())
                     if(delta > rH) return  Math.min(nX+1, $(".ap").width()-rW-20 );
                     else return Math.max(8, Math.min(od-(rW/2), $(".ap").width()-rW-20));
                 })

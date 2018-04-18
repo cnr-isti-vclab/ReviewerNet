@@ -23,13 +23,15 @@ function toggle ( element ){
 function toggleAE (){
     showExclude = this.checked
 }
+
 function toggleAA (){
     showAll = this.checked
 }
 
-
-
-function createSlider(){
+function createSliders(){
+    /*
+        MNP slider
+    */
     noUiSlider.create(sliderTP, {
         start: 2,
         step: 1,
@@ -62,6 +64,41 @@ function createSlider(){
         authorGraph()
         });
     }
+    /*
+        MNoC slider
+    */
+    noUiSlider.create(sliderTOC, {
+        start: 2,
+        step: 1,
+        connect: [false, true],
+        range: {
+            'min': 0,
+            'max': 20
+        }});
+    sliderTOC.noUiSlider.on('update', function( values, handle ) {
+        var value = values[handle];
+        value = value.substring(0,value.length-3)
+        inputNumberTOC.value = value
+        thetaCit  = value
+        if(papersFiltered.length>0)
+            paperGraph(papersFiltered, citPrint, idPs, simulation)
+    });
+    sliderTOC.setAttribute('disabled', true);
+    d3.select('#input-numberTOC').value = 10;
+    inputNumberTOC.addEventListener('change', function(){
+        if(this.value>50)
+            this.value = 50
+        thetaCit = this.value;
+       sliderTOC.noUiSlider.set([this.value]);
+    });
+    if(checkboxTOC){
+        checkboxTOC.checked = false;
+        checkboxTOC.addEventListener('click', function(){
+	   toggle.call(this, sliderTOC);
+        if(papersFiltered.length>0)
+            paperGraph(papersFiltered, citPrint, idPs, simulation)
+        });
+    }
 }
 
 function updateColorMap(){
@@ -85,7 +122,6 @@ function updateColorMap(){
     if(papersFiltered.length>0)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
 }
-
 
 function colorMappingInit(){
     d3.select("#svgColorP")
@@ -121,27 +157,13 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
-    if(checkboxAE){
-        checkboxAE.checked = true;
-        checkboxAE.addEventListener('click', function(){
-            toggleAE.call(this);
+    authViz.addEventListener('change', function(){
             authorGraph()
-        });
-    }
-    if(checkboxAA){
-        checkboxAA.checked = false;
-        checkboxAA.addEventListener('click', function(){
-            toggleAA.call(this);
-            authorGraph()
-        });
-    }
+    });
 }
 
 function toolboxInit(){
-    createSlider()
+    createSliders()
     colorMappingInit()
     checkboxesInit()
 }
-
-
-
