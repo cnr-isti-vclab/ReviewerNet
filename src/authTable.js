@@ -67,6 +67,15 @@ function rankAuths(auths){
     return auths
 }
 
+function authColor(author){
+    let exclude = false;
+    authsExclude.map(function (el){
+        if(author.coAuthList[el])
+            exclude = true
+    })
+    return exclude
+}
+
 function authorGraph(){
     var authsDef = null;
     authsFiltered = [];
@@ -85,17 +94,12 @@ function authorGraph(){
         if(checkboxTP.checked )
             authsDef = authsDef.filter(thetaPapFilter) 
         var na = authsDef.length
-        console.log("AuthsDef before")
-        console.log(authsDef)
-        
-        authsDef = rankAuths(authsDef)
+        authsDef = rankAuths(authsDef)   
         
         authsDef.sort(function(a, b) {
             return -(a.score - b.score);
         });
         
-        console.log("AuthsDef after")
-        console.log(authsDef)
         authTable.selectAll("tr")
                 .data(authsDef)
                 .enter().append("tr")
@@ -123,7 +127,12 @@ function authorGraph(){
                     else return 4;
                 })
                 .attr('height', "5px")
-                .attr('fill',"rgba( 221, 167, 109, 0.342 )")
+                .attr('fill', function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
                 .style("border-radius", "4px")
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
@@ -138,8 +147,11 @@ function authorGraph(){
                 .attr("text-anchor", "center")  
                 .style("font-size", "13px")
                 .text(function (d){ return d.value })
-                .attr("fill", function(d){
-                    return "#474747";
+                .attr("fill",  function (d){
+                    if(authColor(d))
+                        return "#db0000";
+                    else
+                        return "#474747";
                 })
                 .attr("x", function(d){
                     let nw = xConstrained(authDict[d.id][1]),

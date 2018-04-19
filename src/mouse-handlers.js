@@ -44,7 +44,12 @@ function handlerMouseOverA(d){
 }
 
 function handlerMouseOutA(d){
-    d3.select("#aa"+d.id).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
     if(!click){
         /*
     popTextA.attr("width", 0)
@@ -108,11 +113,6 @@ function handleMouseOver(d){
 
     d3.selectAll(".authNode")
         .transition().duration(200)
-        .attr("r", function(d1){
-            if(d.authsId.includes(d1.id))
-                return "9";
-            else return "6";
-        })
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
                 return color(d.color);
@@ -133,7 +133,12 @@ function handleMouseOut(d){
 
     d3.selectAll(".authNode")
         .transition().duration(200)
-        .attr("fill", "rgba( 221, 167, 109, 0.342 )")
+        .attr("fill", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
 }
 
 function clickHandler(d){
@@ -233,7 +238,12 @@ function ListMouseOut(event){
             .attr("fill", function(d){
                 d3.selectAll(".authNode")
                 .transition().duration(200)
-                .attr("fill", "rgba( 221, 167, 109, 0.342 )")  
+                .attr("fill", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })  
                 return color(d.color) 
             })        
     }else{
