@@ -593,39 +593,22 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     }
 }
 
-function checkThetaCit(idX){
-    inC=[]
-    outC=[]
-    write = false
-    idP = idX
-    citations.filter(citFilter)
-    if(outC.length >= thetaCit)
-        return 1;
-    else return 0.2
-}
-
+//rgba( 223, 225, 225, 0.604 )
 function checkThetaLink(d){
-    if(checkboxTOC.checked){    
-        if(papersCit[d.source.id] && papersCit[d.target.id])
-           if(papersCit[d.source.id][1].length >= thetaCit && 
-           papersCit[d.target.id][1].length >= thetaCit)
+    if(checkboxTOC.checked)    
+        if(d.source.nOc >= thetaCit && d.target.nOc >= thetaCit)
                 return 1;
             else
                 return 0.1;
-        else return (checkThetaCit(d.source.id)+checkThetaCit(d.target.id))/4
-    }
     else return 1;
 }
 
 function checkThetaNode(d1){
-  if(checkboxTOC.checked){
-        if(papersCit[d1.id])
-            if(papersCit[d1.id][1].length >= thetaCit)
-                return 1;
-            else
-                return 0.2;
-        else return checkThetaCit(d1.id)
-    }
+  if(checkboxTOC.checked)
+        if(d1.nOc >= thetaCit)
+            return 1;
+        else
+            return 0.2;
     else return 1;  
 }
 
@@ -701,7 +684,7 @@ $(function (){
         }
     });
     
-    var graphTxt = fetch('datasets/pForTest.txt')
+    var graphTxt = fetch('datasets/P.txt')
         .then(response => response.text())
         .then(function(text) {
             var graph = JSON.parse(text);
