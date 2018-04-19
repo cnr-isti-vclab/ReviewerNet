@@ -94,7 +94,7 @@ function createSliders(){
     if(checkboxTOC){
         checkboxTOC.checked = false;
         checkboxTOC.addEventListener('click', function(){
-           toggle.call(this, sliderTOC);
+       toggle.call(this, sliderTOC);
         if(papersFiltered.length>0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
         });

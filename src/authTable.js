@@ -48,6 +48,25 @@ function anpFilter(item){
     return ANP.includes(item.id)
 }
 
+function rankAuths(auths){
+    let a1 = [],
+        an = auths.length;
+    for(var i = 0; i < an; i++){
+        let score = 0.0,
+            pl = auths[i].paperList,
+            npl = pl.length;
+        pl.map(function(el){
+            if(idPs.includes(el))
+                score+=alpha
+            else if(papersPrint.includes(el))
+                score+=beta
+        })
+        //for(var j = 0; j < npl; j++)
+        auths[i].score=score        
+    }
+    return auths
+}
+
 function authorGraph(){
     var authsDef = null;
     authsFiltered = [];
@@ -66,7 +85,17 @@ function authorGraph(){
         if(checkboxTP.checked )
             authsDef = authsDef.filter(thetaPapFilter) 
         var na = authsDef.length
+        console.log("AuthsDef before")
+        console.log(authsDef)
         
+        authsDef = rankAuths(authsDef)
+        
+        authsDef.sort(function(a, b) {
+            return -(a.score - b.score);
+        });
+        
+        console.log("AuthsDef after")
+        console.log(authsDef)
         authTable.selectAll("tr")
                 .data(authsDef)
                 .enter().append("tr")
