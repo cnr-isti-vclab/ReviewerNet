@@ -1,4 +1,4 @@
-var graph = [],
+var graph = [], alpha = 0.7, beta = 0.4,
     click = false,
     authTable = d3.select("#authTable"),
     authors = [],
@@ -320,6 +320,86 @@ function addPaper(suggestion){
       paperGraph(papersFiltered, citPrint, idPs, simulation)
       authorGraph()
     }
+}
+
+function foo(event){
+    console.log(event)
+}
+
+function paperInfo1(suggestion){
+    
+    idInfo = suggestion.id;
+    var thehtml = "<tr><th>Title</th><td class=\"list-group-item listG\">" + suggestion.value + "</td></tr><tr><th>Year</th><td>" + suggestion.yea+"</td></tr>"
+    function isAuth(item){
+        return suggestion.authsId.includes(item.id);
+    }
+    var aPrint = authors.filter(isAuth)  
+    aPrint.sort(function(a, b) {
+            return (parseInt(a.year) - parseInt(b.year));
+        });
+    thehtml += "<tr id = \"authsPap\" class=\"list-group\"><th rowspan=\""+aPrint.length+"\">Author(s)</th>"
+    for (var i = 0; i < aPrint.length; i++)
+        thehtml += "<td id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</td>'
+    thehtml += "</tr>"
+    if(suggestion.jN.length > 0)
+      thehtml += "<tr><th>Journal Name</th><td>"+suggestion.jN+"</td></tr>";
+
+    if(suggestion.venue.length > 0)
+        thehtml += "<tr><th>Venue</th><td>"+suggestion.venue+"</td></tr>";
+
+    idP = suggestion.id
+    if(idPs.includes(idP)){
+        var inCi = papersCit[idP][0],
+            outCi = papersCit[idP][1];
+        if(inCi.length > 0){
+            thehtml += "<tr id = \"inCits\" class=\"list-group\"><th rowspan=\""+inCi.length+"\">In Citations</th>"
+          var inCits =  papers.filter(isInCited1)
+        inCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < inCits.length; i++)
+            thehtml +="<td id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</td>'
+          thehtml += "</tr>"
+        }
+        if(outCi.length > 0){
+          thehtml += "<tr id = \"outCits\"><th rowspan=\""+outCi.length+"\">Out Citations</th>"
+          var outCits =  papers.filter(isOutCited1)
+          outCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < outCits.length; i++)
+            thehtml += "<td id=\""+"p"+outCits[i].id+"\" onmouseover=\"foo\">"+ outCits[i].value +  ', '+ outCits[i].year +';</td>'
+          thehtml += "</tr>"
+        }
+    }
+    else{
+        inC = []
+        outC = []
+        citations.filter(citFilter);
+        if(inC.length > 0){
+          thehtml += "<tr id = \"inCits\" class=\"list-group\"><th rowspan=\""+inC.length+"\">In Citations</th>"
+          var inCits =  papers.filter(isInCited)
+        inCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < inCits.length; i++)
+            thehtml +="<td id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</td>'
+          thehtml += "</tr>"
+        }
+        if(outC.length > 0){
+          thehtml += "<tr id = \"outCits\" class=\"list-group\"><th rowspan=\""+outC.length+"\">In Citations</th>"
+          var outCits =  papers.filter(isOutCited)
+          outCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < outCits.length; i++)
+            thehtml += "<td id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</td>'
+          thehtml += "</tr>"
+        }
+    }
+
+    return thehtml
+
 }
 
 function paperInfo(suggestion){

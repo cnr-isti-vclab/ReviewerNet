@@ -45,11 +45,11 @@ p {
 }
 
 .colorP {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     padding: 0px;
     margin: 0px;
-    
+    border-radius: 5px;
 }
 
 .panel-collapse {
@@ -120,13 +120,7 @@ table {
     height: 18px;
     padding: 0;
 }
-/*
-RIGHE TABELLA
-tr, td, th {
-    text-align: left;
-    padding: 1px;
-}
-*/
+
 
 .element {
     cursor: pointer;
@@ -166,10 +160,16 @@ a {
     padding:5px;
 }
 
+#paperInfo{
+    /*border: 1px solid rgba( 71, 71, 71, 0.148 );
+    border-collapse: collapse;*/
+}
+
 .list-group-item {
     background-color: rgba( 71, 66, 66, 0);
     padding: 1px;
     border-width: 0;
+    width: 100%;
     border-radius: 4px;
     cursor: pointer;
 }
@@ -227,10 +227,10 @@ a {
 
 #searchfield form .biginput {
   width: 600px;
-  height: 40px;
-  padding: 0 10px 0 10px;
+  height: 25px;
+  padding: 0 3px 0 3px;
   background-color: #fff;
-  border: 1px solid #c8c8c8;
+  border: 0;
   border-radius: 3px;
   color: #aeaeae;
   font-weight:normal;
@@ -247,7 +247,7 @@ svg {
     overflow-x: scroll;
 } 
 
-.autocomplete-suggestions { border: 1px solid #999; background: #fff; cursor: default; overflow: auto;}
+.autocomplete-suggestions { border: 1px solid #999; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow: auto;}
 .autocomplete-suggestion { padding: 10px 5px; font-size: 0.9em; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #f0f0f0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
