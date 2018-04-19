@@ -187,7 +187,6 @@ function addId(name, year){
                            +idPs.length+".</strong> "+name+", "+year+"</li>")
         
       write = true;
-      its = 0;
       let tempCits = citations.filter(citFilter);
       write = false;
       for(var i = 0; i<inC.length; i++)
@@ -231,7 +230,8 @@ function getAuths() {
 
 function deleteP(idCk){
     var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
-    
+    AP = []
+    ANP = []
     if (index > -1) {
         minYear = 2018
         minInCits = 100
