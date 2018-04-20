@@ -134,6 +134,14 @@ function authorGraph(){
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
                 .style("border-radius", "4px")
+                .style("stroke-width", function (d){
+                    if(authsExclude.includes(d.id))
+                        return 0.8
+                    else return 0})
+                .style("stroke", function (d){
+                    if(authsExclude.includes(d.id))
+                        return "rgba( 47, 198, 212, 0.713 )"
+                    })
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
                 .on("mouseout", handlerMouseOutA)
@@ -150,8 +158,9 @@ function authorGraph(){
                 .attr("fill",  function (d){
                     if(authColor(d))
                         return "#db0000";
-                    else
-                        return "#474747";
+                    else if(authsExclude.includes(d.id))
+                            return "#be27be"
+                        else return "#474747";
                 })
                 .attr("x", function(d){
                     let nw = xConstrained(authDict[d.id][1]),
