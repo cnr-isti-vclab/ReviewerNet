@@ -215,10 +215,7 @@ function ListMouseOver(event){
             })
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(idClick)){
-                    d3.select($("#txt"+d1.id)[0])
-                        .attr("x", -1000)
-                        .attr("y", -1000)
-                        .attr("opacity", 0) 
+                        papName(d1)
                         return "#d08701";
                 }
                 else
@@ -270,6 +267,13 @@ function ListMouseOut(event){
             .attr("r", "6")
             .style("opacity", checkThetaNode)
             .attr("stroke", function(d1){
+                if(d1.authsId.includes(idClick)){
+                    d3.select($("#txt"+d1.id)[0])
+                        .attr("x", -1000)
+                        .attr("y", -1000)
+                        .attr("opacity", 0) 
+                        return "#d08701";
+                }
                 if(idPs.includes(d1.id))
                     return "#6d10ca";
                 else return "#999";
@@ -301,12 +305,6 @@ function authDblc(event){
         index = authsExclude.indexOf(idClick),
         lp = authsExclude.length-1;
     
-    d3.select(this).style("background-color", "red").transition()
-        .duration(500)
-        .style("opacity", "0")
-    d3.selectAll(".pAuth").transition()
-        .duration(500)
-        .style("opacity", "0")
     $('#authList').html("")
     authsExclude.splice(index, 1);
     if(authsExclude.length > 0){
