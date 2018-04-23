@@ -1,3 +1,5 @@
+var texts = [];
+
 function authClickHandler(d){
     if(click)
         click = false;
@@ -6,6 +8,9 @@ function authClickHandler(d){
 }
 
 function handlerMouseOverA(d){ 
+   
+    if(click)
+        reset_texts()
     d3.select("#aa"+d.id).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
     
     d3.selectAll(".plink")
@@ -195,6 +200,8 @@ function ListMouseOver(event){
                 return color(d.color)            
         })  
     }else{
+        if(click)
+            reset_texts() 
         d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
         d3.select(event.target).transition().duration(200)
             .style("background-color", function(){ return "rgba( 138, 223, 223, 0.569 )";}) 
