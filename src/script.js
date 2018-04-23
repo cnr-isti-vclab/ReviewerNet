@@ -339,7 +339,7 @@ function foo(event){
     console.log(event)
 }
 
-function paperInfo(suggestion){
+function paperInfoTab(suggestion){
     
     idInfo = suggestion.id;
     var thehtml = "<tr><th>Title</th><td class=\"list-group-item listG\">" + suggestion.value + "</td></tr><tr><th>Year</th><td>" + suggestion.year+"</td></tr>"
@@ -417,7 +417,7 @@ function paperInfo(suggestion){
 
 }
 
-function paperInfo1(suggestion){
+function paperInfo(suggestion){
     idInfo = suggestion.id;
     var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
     function isAuth(item){
