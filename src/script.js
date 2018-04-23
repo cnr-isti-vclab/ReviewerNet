@@ -125,13 +125,23 @@ function citFilter (currentValue) {
     return flag;
 };
 
+function reset_texts(){
+    for(var i = 0; i < texts.length; i++)
+        texts[i].attr("x", -1000)
+                .attr("y", -1000)
+                .attr("opacity", 0)
+    texts = []
+}
+
 function papName(d){
-    var bbox = d3.select($("#txt"+d.id)[0]).node().getBBox();
-    var wd = bbox.width,
+    var p_name = d3.select($("#txt"+d.id)[0]),
+        bbox = p_name.node().getBBox(),
+        wd = bbox.width,
         ht = bbox.height,
         x = d3.select("#p"+d.id).node().cx.baseVal.value,
         y = d3.select("#p"+d.id).node().cy.baseVal.value;
-    d3.select($("#txt"+d.id)[0]).attr("x", getXTxt(x, wd))
+    texts.push(p_name)
+    p_name.attr("x", getXTxt(x, wd))
         .attr("y", y + 4)
         .attr("opacity", 1)
         .attr("fill", "#000000")    
