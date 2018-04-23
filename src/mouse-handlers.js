@@ -35,8 +35,10 @@ function handlerMouseOverA(d){
                     return "#999";
             })
         .attr("stroke-width", function(d1){
-            if(d1.authsId.includes(d.id))
+            if(d1.authsId.includes(d.id)){
+                papName(d1)
                 return 3.5;
+            }
             else
                 if(idPs.includes(d1.id))                    
                     return 2.5;
@@ -70,6 +72,11 @@ function handlerMouseOutA(d){
         .attr("r", "6")
         .style("opacity", checkThetaNode)
         .attr("stroke", function(d1){
+            if(d1.authsId.includes(d.id))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
             if(idPs.includes(d1.id))
                 return "#6d10ca";
             else return "#999";
@@ -207,8 +214,13 @@ function ListMouseOver(event){
                 else return "6";
             })
             .attr("stroke", function(d1){
-                if(d1.authsId.includes(idClick))
-                    return "#d08701";
+                if(d1.authsId.includes(idClick)){
+                    d3.select($("#txt"+d1.id)[0])
+                        .attr("x", -1000)
+                        .attr("y", -1000)
+                        .attr("opacity", 0) 
+                        return "#d08701";
+                }
                 else
                     if(idPs.includes(d1.id))                    
                         return "#6d10ca";
@@ -281,4 +293,34 @@ function papDblc(event){
         .style("opacity", "0")
     $('#papList').html("")
     deleteP(idClick)
+}
+
+function authDblc(event){
+    var idClick = event.target.id,
+        idClick = idClick.substring(1,idClick.length),
+        index = authsExclude.indexOf(idClick),
+        lp = authsExclude.length-1;
+    
+    d3.select(this).style("background-color", "red").transition()
+        .duration(500)
+        .style("opacity", "0")
+    d3.selectAll(".pAuth").transition()
+        .duration(500)
+        .style("opacity", "0")
+    $('#authList').html("")
+    authsExclude.splice(index, 1);
+    if(authsExclude.length > 0){
+        var new_auths = authors.filter(function (item){
+                return authsExclude.includes(item.id)}),
+            al = new_auths.length;
+        
+        for(var i = 0; i < al; i++){
+            let suggestion = new_auths[i],
+                aName = suggestion.value;
+            idA = suggestion.id
+                authsExclude[authsExclude.length] = idA
+                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
+        } 
+    }
+    authorGraph() 
 }

@@ -125,6 +125,18 @@ function citFilter (currentValue) {
     return flag;
 };
 
+function papName(d){
+    var bbox = d3.select($("#txt"+d.id)[0]).node().getBBox();
+    var wd = bbox.width,
+        ht = bbox.height,
+        x = d3.select("#p"+d.id).node().cx.baseVal.value,
+        y = d3.select("#p"+d.id).node().cy.baseVal.value;
+    d3.select($("#txt"+d.id)[0]).attr("x", getXTxt(x, wd))
+        .attr("y", y + 4)
+        .attr("opacity", 1)
+        .attr("fill", "#000000")    
+}
+
 function isCoAuth(item){ }
 
 function isInCited(item){ return inC.includes(item.id)}
@@ -292,7 +304,8 @@ function setPapHandlers(){
 function setMouseHandlers(){
     $("#authList")
         .on("mouseover", "li", ListMouseOver)
-        .on("mouseout", "li", ListMouseOut);
+        .on("mouseout", "li", ListMouseOut)
+        .on("dblclick", "li", authDblc);
     $("#papList")
         .on("click", "li", function(event){
             var idClick = event.target.id,
@@ -326,10 +339,10 @@ function foo(event){
     console.log(event)
 }
 
-function paperInfo1(suggestion){
+function paperInfo(suggestion){
     
     idInfo = suggestion.id;
-    var thehtml = "<tr><th>Title</th><td class=\"list-group-item listG\">" + suggestion.value + "</td></tr><tr><th>Year</th><td>" + suggestion.yea+"</td></tr>"
+    var thehtml = "<tr><th>Title</th><td class=\"list-group-item listG\">" + suggestion.value + "</td></tr><tr><th>Year</th><td>" + suggestion.year+"</td></tr>"
     function isAuth(item){
         return suggestion.authsId.includes(item.id);
     }
@@ -338,9 +351,11 @@ function paperInfo1(suggestion){
             return (parseInt(a.year) - parseInt(b.year));
         });
     thehtml += "<tr id = \"authsPap\" class=\"list-group\"><th rowspan=\""+aPrint.length+"\">Author(s)</th>"
-    for (var i = 0; i < aPrint.length; i++)
-        thehtml += "<td id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</td>'
-    thehtml += "</tr>"
+    
+    thehtml += "<td id=\""+"a"+aPrint[0].id+"\" class=\"list-group-item\">"+ aPrint[0].value + ';</td></tr>'
+    for (var i = 1; i < aPrint.length; i++)
+        thehtml += "<tr id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\"><td>"+ aPrint[i].value + ';</td></tr>'
+
     if(suggestion.jN.length > 0)
       thehtml += "<tr><th>Journal Name</th><td>"+suggestion.jN+"</td></tr>";
 
@@ -353,23 +368,23 @@ function paperInfo1(suggestion){
             outCi = papersCit[idP][1];
         if(inCi.length > 0){
             thehtml += "<tr id = \"inCits\" class=\"list-group\"><th rowspan=\""+inCi.length+"\">In Citations</th>"
-          var inCits =  papers.filter(isInCited1)
-        inCits.sort(function(a, b) {
+            var inCits =  papers.filter(isInCited1)
+            inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<td id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</td>'
-          thehtml += "</tr>"
+            thehtml +="<td id=\""+"p"+inCits[0].id+"\" class=\"list-group-item\">"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
+            for (var i = 1; i < inCits.length; i++)
+                thehtml +="<tr id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\"><td>"+ inCits[i].value +  ', '+ inCits[i].year +';</td></tr>'
         }
         if(outCi.length > 0){
-          thehtml += "<tr id = \"outCits\"><th rowspan=\""+outCi.length+"\">Out Citations</th>"
-          var outCits =  papers.filter(isOutCited1)
-          outCits.sort(function(a, b) {
+            thehtml += "<tr id = \"outCits\" class=\"list-group\"><th rowspan=\""+outCi.length+"\">Out Citations</th>"
+            var outCits =  papers.filter(isOutCited1)
+            outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<td id=\""+"p"+outCits[i].id+"\" onmouseover=\"foo\">"+ outCits[i].value +  ', '+ outCits[i].year +';</td>'
-          thehtml += "</tr>"
+            thehtml +="<td id=\""+"p"+outCits[0].id+"\" class=\"list-group-item\"><td>"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
+            for (var i = 1; i < outCits.length; i++)
+                thehtml +="<tr id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\"><td>"+ outCits[i].value +  ', '+ outCits[i].year +';</td></tr>'
         }
     }
     else{
@@ -377,24 +392,24 @@ function paperInfo1(suggestion){
         outC = []
         citations.filter(citFilter);
         if(inC.length > 0){
-          thehtml += "<tr id = \"inCits\" class=\"list-group\"><th rowspan=\""+inC.length+"\">In Citations</th>"
-          var inCits =  papers.filter(isInCited)
-        inCits.sort(function(a, b) {
+            thehtml += "<tr id = \"inCits\" class=\"list-group\"><th rowspan=\""+inC.length+"\">In Citations</th>"
+            var inCits =  papers.filter(isInCited)
+            inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<td id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</td>'
-          thehtml += "</tr>"
+            thehtml +="<td id=\""+"p"+inCits[0].id+"\" class=\"list-group-item\"><td>"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
+            for (var i = 1; i < inCits.length; i++)
+                thehtml +="<tr id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\"><td>"+ inCits[i].value +  ', '+ inCits[i].year +';</td></tr>'
         }
         if(outC.length > 0){
-          thehtml += "<tr id = \"outCits\" class=\"list-group\"><th rowspan=\""+outC.length+"\">In Citations</th>"
-          var outCits =  papers.filter(isOutCited)
-          outCits.sort(function(a, b) {
+            thehtml += "<tr id = \"outCits\" class=\"list-group\"><th rowspan=\""+outC.length+"\">Out Citations</th>"
+            var outCits =  papers.filter(isOutCited)
+            outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<td id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</td>'
-          thehtml += "</tr>"
+            thehtml +="<td id=\""+"p"+outCits[0].id+"\" class=\"list-group-item\"><td>"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
+            for (var i = 1; i < outCits.length; i++)
+                thehtml +="<tr id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\"><td>"+ outCits[i].value +  ', '+ outCits[i].year +';</td></tr>'
         }
     }
 
@@ -402,7 +417,7 @@ function paperInfo1(suggestion){
 
 }
 
-function paperInfo(suggestion){
+function paperInfo1(suggestion){
     idInfo = suggestion.id;
     var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
     function isAuth(item){
@@ -614,7 +629,8 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
             addPaper(d)
-        });
+        })
+            
     node.transition()
         .duration(1000)
         .attr("r", 6)
@@ -634,6 +650,17 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .attr("stroke-width", 2)
         //.style("stroke","url(#gradxX)")
 
+    for(var i = 0; i < papers1.length; i++)
+        svg.append("text")
+            .attr("id", function(){return "txt"+papers1[i].id})
+            .attr("x", -100)             
+            .attr("y", -100)
+            .attr("text-anchor", "center")  
+            .style("font-size", "11px")
+            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+            .attr("opacity",0)
+            .text(function(){return papers1[i].value});
+    
     popRect = svg.append("rect")
          .attr('x',0)
          .attr('y',-10)
