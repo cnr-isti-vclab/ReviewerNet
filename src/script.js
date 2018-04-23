@@ -666,7 +666,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("x", -100)             
             .attr("y", -100)
             .attr("text-anchor", "center")  
-            .style("font-size", "11px")
+            .style("font-size", "0.7em")
             .attr("fill", "rgba( 2, 2, 2, 0.961 )")
             .attr("opacity",0)
             .text(function(){return papers1[i].value});
