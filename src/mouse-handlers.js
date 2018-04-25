@@ -337,5 +337,9 @@ function authDblc(event){
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
     }
+    $("#authList")
+        .on("mouseover", "li", ListMouseOver)
+        .on("mouseout", "li", ListMouseOut)
+        .on("dblclick", "li", authDblc);
     authorGraph() 
 }
