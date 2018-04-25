@@ -321,14 +321,14 @@ function authDblc(event){
         idClick = idClick.substring(1,idClick.length),
         index = authsExclude.indexOf(idClick),
         lp = authsExclude.length-1;
-    
     $('#authList').html("")
     authsExclude.splice(index, 1);
+    console.log(authsExclude)
     if(authsExclude.length > 0){
         var new_auths = authors.filter(function (item){
                 return authsExclude.includes(item.id)}),
             al = new_auths.length;
-        
+        authsExclude = []
         for(var i = 0; i < al; i++){
             let suggestion = new_auths[i],
                 aName = suggestion.value;
@@ -337,5 +337,29 @@ function authDblc(event){
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
     }
-    authorGraph() 
+    
+    
+    d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", checkThetaLink)
+    d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(idClick))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+
+    authorGraph()
 }
