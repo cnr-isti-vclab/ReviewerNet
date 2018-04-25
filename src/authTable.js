@@ -87,8 +87,8 @@ function authorGraph(){
     
     $("#authTable").html("")
     
-    $("#apn").html("<strong><font color=\"#275d58\">A(P) =</font></strong> "+AP.length)
-    $("#anpn").html("<strong><font color=\"#275d58\">A(N(P)) =</font></strong> "+ANP.length)
+    $("#apn").html("<strong><font color=\"#1e9476\">A(P) =</font></strong> "+AP.length)
+    $("#anpn").html("<strong><font color=\"#1e9476\">A(N(P)) =</font></strong> "+ANP.length)
     
     if(authsDef){
         if(checkboxTP.checked )

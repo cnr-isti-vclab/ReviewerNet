@@ -605,8 +605,8 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
     svg.append("g").call(xaxis);
     
-    $("#pn").html("<strong><font color=\"#275d58\">P =</font></strong> "+idPs.length)
-    $("#npn").html("<strong><font color=\"#275d58\">N(P) =</font></strong> "+papersFiltered.length)
+    $("#pn").html("<strong><font color=\"#1e9476\">P =</font></strong> "+idPs.length)
+    $("#npn").html("<strong><font color=\"#1e9476\">N(P) =</font></strong> "+papersFiltered.length)
     
     
     var link = svg.append("g")

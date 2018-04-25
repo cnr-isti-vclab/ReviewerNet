@@ -34,7 +34,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle{right:-17px;left:auto}
 
 .noUi-connects{border-radius:3px}
 
-.noUi-connect{background:#3FB8AF; border-radius:3px}
+.noUi-connect{background:rgba( 51, 198, 188, 0.539 ); border-radius:3px}
 
 .noUi-draggable{cursor:ew-resize}
 
@@ -52,7 +52,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle{right:-17px;left:auto}
 
 .noUi-vertical .noUi-handle:after{top:17px}[disabled]
 
-.noUi-connect{background:#B8B8B8}[disabled] 
+.noUi-connect{background:  rgba( 146, 169, 169, 0.267 )}[disabled] 
 
 .noUi-handle,[disabled].noUi-handle,[disabled].noUi-target{cursor:not-allowed}
 
