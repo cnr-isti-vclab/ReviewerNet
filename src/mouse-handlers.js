@@ -159,15 +159,17 @@ function clickHandler(d){
 }
 
 function addFromList(event){
-    var idClick = event.target.id,
+    var idClick = event.target.id;
+    
+    if(!idClick)
+        idClick = event.target.parentNode.id
+
+    if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
-    //console.log()
-    if(event.target.id[0]=='p'){
         var paper = papers.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick))
             addPaper(paper)
     }else{
-        var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length);
         if(!authsExclude.includes(idClick)){
             var author = authors.filter(function (item){ return item.id === idClick})[0];
@@ -180,9 +182,13 @@ function addFromList(event){
 }   
 
 function ListMouseOver(event){
-    var idClick = event.target.id,
+    var idClick = event.target.id;
+    
+    if(!idClick)
+        idClick = event.target.parentNode.id
+    
+    if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
-    if(event.target.id[0]=='p'){
         d3.select(event.target).transition().duration(200)
         .style("background-color", "rgba( 71, 66, 66, 0.2)") 
         svgP.select("#p"+idClick).transition()
@@ -200,6 +206,7 @@ function ListMouseOver(event){
                 return color(d.color)            
         })  
     }else{
+        idClick = idClick.substring(1,idClick.length);
         if(click)
             reset_texts() 
         d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
@@ -242,10 +249,13 @@ function ListMouseOver(event){
 }
 
 function ListMouseOut(event){
-    var idClick = event.target.id,
+    var idClick = event.target.id;
+    
+    if(!idClick)
+        idClick = event.target.parentNode.id
+    
+    if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
-
-    if(event.target.id[0]=='p'){
         d3.select(event.target).transition().duration(200)
             .style("background-color", "rgba( 71, 66, 66, 0)") 
         svgP.select("#p"+idClick).transition()
@@ -263,7 +273,7 @@ function ListMouseOut(event){
                 return color(d.color) 
             })        
     }else{
-        d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
+       idClick = idClick.substring(1,idClick.length); d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
         d3.select(event.target).transition().duration(200)
             .style("background-color", "rgba( 71, 66, 66, 0)") 
         d3.selectAll(".plink")
