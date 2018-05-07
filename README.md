@@ -1,7 +1,7 @@
 # Semantic Browser
 This website is a D3.js-based browser on a filtered version of the <a href="http://labs.semanticscholar.org/corpus/">Semantic
 Scholar</a> corpus. The user can search for papers and build its own cluster of interesting papers that we call **P**, from which is 
-generated **N(P)**</strong>, the neighbors of P, that are the in and out citations. Above the paper graph the one referred 
+generated **N(P)**, the neighbors of P, that are the in and out citations. Above the paper graph the one referred 
 to the authors is displayed.
 > *screenshot soon...*
 
@@ -18,9 +18,9 @@ Just visit
 > *tested browsers: Chrome, Firefox, Safari* 
 
 
-
 ## Papers&Authors 
-Mouse events that change the visualization are associated both to authors and papers. 
+Mouse events that change the visualization are associated both to authors and papers. It is also possible to **remove authors and papers from the visualization** simply by double-click on their names in the *Conflicting Authors* and *Area Paper* list (doesn't really remove any author but can change the vizualization of authors conflicting with him/her). Read the toolbox section to find out
+how to remove authors.
 
 ### The paper graph
 * x-constrained by year of pubblication;
@@ -39,3 +39,4 @@ This area of the page allows the user to personalize the view:
 * *Colormap*: ---
 * *Stats*: ---
 * *Display related authors*: ---
+
