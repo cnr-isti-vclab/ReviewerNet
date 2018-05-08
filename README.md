@@ -42,7 +42,7 @@ This area of the page allows the user to personalize the view:
   - **N(P)**: is the total number of visualized papers that includes both paper in *P* and all their neighbors, aka in/out-citations;
   - **A(P)**: is the number of authors of the interesting papers *P*;
   - **A(N(P))** is the number of authors in *N(P))*;
-* **Display related authors**: once enabled thius checkbox enriches the *author area* with all the related authors *A(N(P))*, that are all the authors in *P* and *N(P)*. If is not checked only authors from *P* will be displayed-
+* **Display related authors**: once enabled this checkbox enriches the *author area* with all the related authors *A(N(P))*, that are all the authors in *P* and *N(P)*. If is not checked only authors from *P* will be displayed-
 
 ## Conflicting Authors list
 This area allows the user to serach for authors for which we want to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the *Paper Info* area.
