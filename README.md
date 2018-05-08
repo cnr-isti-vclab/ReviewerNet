@@ -1,7 +1,7 @@
 # Semantic Browser
 This website is a D3.js-based browser on a filtered version of the <a href="http://labs.semanticscholar.org/corpus/">Semantic
-Scholar</a> corpus. The user can search for papers and build its own cluster of interesting papers that we call **P**, from which is 
-generated **N(P)**, the neighbors of P, that are the in and out citations. Above the paper graph the one referred 
+Scholar</a> corpus. The user can search for papers and build its own cluster of interesting papers that we call *P*, from which is 
+generated *N(P)*, the neighbors of *P*, that are the in and out citations. Above the paper graph the one referred 
 to the authors is displayed.
 > *screenshot soon...*
 
@@ -27,16 +27,20 @@ how to remove authors.
 * personalizable color-map based on the number of in-citations;
 
 ### The author area
-* ranked by a weighted sum of the number of papers in **P** and **N(P)**
+* ranked by a weighted sum of the number of papers in *P* and *N(P)*
 * a rectange under the author's name spans from the oldest to the last year of pubblication.
 * name in red indicates conflict with at least one author in the *Conflicting Authors* list;
 * name in purple indicates that the author has been added to the *Conflicting Authors* list;
 
 ## The toolbox
 This area of the page allows the user to personalize the view:
-* *MNP*: ---
-* *MNoC*: ---
-* *Colormap*: ---
-* *Stats*: ---
-* *Display related authors*: ---
+* **MNP**: is the *Mininimum Number of Papers* threshold. Once enabled, it removes from the *authors area* all the authors that have a number of visualized papers less than the indicated one.
+* **MNoC**: is the *Mininimum Number of out-Citations* threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one.
+* **Colormap**: allows the user to change the color-map associated with the number of in-citations. The steps are *0, 30, 100*.
+* **Stats**: this table shows some interesting numbers:
+  - **P**: is the number of paper explicitly added to the visualization (searchbar or double-click on a node);
+  - **N(P)**: is the total number of visualized papers that includes both paper in *P* and all their neighbors, aka in/out-citations;
+  - **A(P)**: is the number of authors of the interesting papers *P*;
+  - **A(N(P))** is the number of authors in *N(P))*;
+* **Display related authors**: once enabled thius checkbox enriches the *author area* with all the related authors *A(N(P))*, that are all the authors in *P* and *N(P)*. If is not checked only authors from *P* will be displayed-
 
