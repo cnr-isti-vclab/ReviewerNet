@@ -29,8 +29,8 @@ how to remove authors.
 ### The author area
 * ranked by a weighted sum of the number of papers in *P* and *N(P)*
 * a rectange under the author's name spans from the oldest to the last year of pubblication.
-* name in red indicates conflict with at least one author in the *Conflicting Authors* list;
-* name in purple indicates that the author has been added to the *Conflicting Authors* list;
+* name in **red** indicates conflict with at least one author in the *Conflicting Authors* list;
+* name in **purple** indicates that the author has been added to the *Conflicting Authors* list;
 
 ## The toolbox
 This area of the page allows the user to personalize the view:
@@ -44,3 +44,11 @@ This area of the page allows the user to personalize the view:
   - **A(N(P))** is the number of authors in *N(P))*;
 * **Display related authors**: once enabled thius checkbox enriches the *author area* with all the related authors *A(N(P))*, that are all the authors in *P* and *N(P)*. If is not checked only authors from *P* will be displayed-
 
+## Conflicting Authors list
+This area allows the user to serach for authors for which we want to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the *Paper Info* area.
+
+## Area Paper
+This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar.
+
+## Paper Info
+This box shows some useful information about the selected paper such as title, year of pub., venue and journal name, authors and citations. Authors and citations have their associated mouse handlers.
