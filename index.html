@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>SemanthicBrowser.org</title>
+        <title>SemanticBrowser.org</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width; initial-scale=1; height=device-height">
         <script type="text/javascript" src="src\jquery-3.3.1.min.js"></script>
@@ -12,6 +12,7 @@
         <script src="src\bootstrap.min.js"></script>
         <script src="src\nouislider.min.js"></script>
         <script type="text/javascript" src="src/jquery.autocomplete.js"></script>
+        <script type="text/javascript" src="src/popup-lib.js"></script>
         <link rel="stylesheet" href="css/theme.css">
     </head>
 <body>
@@ -25,7 +26,8 @@
 
   gtag('config', 'UA-118764276-1');
 </script>
- 
+
+    
 <div class="container-fluid" id= "all" >
     
      <div class="row" style="height: 30%">
@@ -38,6 +40,7 @@
             </div>
         </div>
         <div class="col-sm-4" style="padding: 2px; height: 100%">
+            
             <div class="panel panel-default" style="height: 95%; border: 0px;">
                 <div id = "toolbox" class="panel-body, text-center">
                     <div class="container-fluid" style="height: 78%; padding-top: 6px;">
@@ -45,7 +48,7 @@
                         <div id="thetaPap" style="float: left; width: 70%; transform: translate(15px, 5px)">
                         </div>
                         <div style="float: right; width: 22%; transform: translate(0px, -10%)">
-                            <h9 id = "MNP" title="Minimum number of papers.">MNP</h9>
+                            <h9 id = "MNP" class="pop-up" >MNP</h9>
                             <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
                             <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
                         </div>
@@ -54,13 +57,13 @@
                         <div id="thetaCit" style="float: left; width: 68%; transform: translate(15px, 4px)">
                         </div>
                         <div style="float: right; width: 24%; transform: translate(-1%, -10%)">
-                            <h9 id = "MNoC" title="Minimum number of out-citations.">MNoC</h9>
+                            <h9 id = "MNoC" class="pop-up">MNoC</h9>
                             <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
                             <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/> 
                         </div>
                         </div>
                         <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
-                            <div id="colorMapP" style="width: 100%; height: 40px" title="Color map based on the number of in-citations">
+                            <div id="colorMapP" style="width: 100%; height: 40px" class="pop-up">
                             <svg id = "svgColorP" height="30px" width="93%" > 
                             <defs>
                                 <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -82,7 +85,7 @@
                                 <button
                                     id = "secondStop"
                                     class="colorP jscolor{valueElement:color_value2, value: 'ffffff'}"
-                                    style="transform: translate(0, -200%)">
+                                    style="transform: translate(0, -180%)">
                                 </button>
                                 <input name="color3" type="hidden" id="color_value3" value="#248bda">
                                 <button
@@ -93,8 +96,9 @@
                         </div>
                         </div>
                         <div class="row" id="tbRow4">
-                            <table style=" float:left; width:30%">
-                              <tr>
+                            <table class="pop-up" id="stats" style=" float:left; width:30%">
+                                <caption style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
+                                <tr>
                                   <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
                                 <td id="anpn"class="stat"><strong><font color="#1e9476">
                                     A(N(P)) =</font></strong> 0
@@ -115,13 +119,34 @@
                           </optgroup>
                         </select>
                         </div>
-                        <div class="row" id="tbRow5" style="background-color: rgba( 93, 186, 217, 0.053 );border-radius: 5px; transform: translateY(120%)">
-                            <span style="font-size: 0.7em">Semanthic Browser by</span> <a id="myLink" target="_blank" rel="author" href="https://it.linkedin.com/in/mario-leonardo-salinas-ba2677138" style="cursor:zoom-in; color: #275d58; font-style: oblique ">Mario Leonardo Salinas</a>
+                        <div class="row" id="tbRow5" style="transform: translateY(-20%);border-radius: 5px;">
+                           <table style="width:100%;">
+                              <tr>
+                                <td>
+                                    <br>
+                              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">Semantic Browser </span> 
+                            </td>
+                            <td>
+                                <br>
+                            <a id="myLink" target="_blank" rel="author" href="https://it.linkedin.com/in/mario-leonardo-salinas-ba2677138" style=" cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.7em;)">Mario Leonardo Salinas</a>
+                            </td>
+                                <td rowspan="2" style="justify-content: center">
+                                <a href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.6em">(about)</a>
+<br>
+                                <a href="http://labs.semanticscholar.org/corpus/" style="height: 9px; cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.6em">(data courtesy of semanticScholar)</a>
+                                  </td>
+                              </tr>
+                            </table> 
+<!--
+                            
+-->
                         </div>
                     </div>
                 </div>
               </div>
-        </div>
+        
+         <svg id="tb-svg"></svg>
+         </div>
     </div>   
     <div class="row" style="height: 70%">
         <div class="col-sm-8" style="padding: 2px; height: 100%">
@@ -137,7 +162,7 @@
                 <ul class="nav in" id="side-menu">
                     <li class="sidebar-search">
                     <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                        <span id="aaal" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Conflicting Authors </span>
+                        <span id="conflict-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors </span>
                         <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                         <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 65%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                     </div>
@@ -148,7 +173,7 @@
                     </li>
                     <li class="sidebar-search">
                         <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                            <span id="aaal" class="text-left"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Area Paper</span>
+                            <span id="area-paper-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper</span>
                             <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
                             <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 75%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                         </div>
@@ -160,7 +185,7 @@
                                 </div>
                     </li>
                     <li id="pi" class="element">
-                        <span id="ss" class="text-left"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Paper Info</span>
+                        <span id="paper-info-a" class="text-left pop-up"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Paper Info</span>
                         <table id = "paperInfo" style="width: 98%">
                         </table>
                     </li>

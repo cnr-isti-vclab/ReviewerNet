@@ -11,13 +11,13 @@ function foo(){console.log(papersFiltered.length)}
     Toolbox
 */
 function toggle ( element ){
-    // If the checkbox is checked, disabled the slider.
-    // Otherwise, re-enable it.
-    if ( !this.checked ) {
-        element.setAttribute('disabled', true);
-    } else {
-        element.removeAttribute('disabled');
-    }
+	// If the checkbox is checked, disabled the slider.
+	// Otherwise, re-enable it.
+	if ( !this.checked ) {
+		element.setAttribute('disabled', true);
+	} else {
+		element.removeAttribute('disabled');
+	}
 }
 
 function toggleAE (){
@@ -60,7 +60,7 @@ function createSliders(){
     if(checkboxTP){
         checkboxTP.checked = false;
         checkboxTP.addEventListener('click', function(){
-       toggle.call(this, sliderTP);
+	   toggle.call(this, sliderTP);
         authorGraph()
         });
     }
@@ -94,7 +94,7 @@ function createSliders(){
     if(checkboxTOC){
         checkboxTOC.checked = false;
         checkboxTOC.addEventListener('click', function(){
-       toggle.call(this, sliderTOC);
+	   toggle.call(this, sliderTOC);
         if(papersFiltered.length>0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
         });
@@ -162,8 +162,47 @@ function checkboxesInit(){
     });
 }
 
+function setPopUps(){
+    let svg = toolboxSvg;
+    svg.style("width", "300px")
+        .style("height", "200px")
+    /*
+    SPAN-ids:
+    conflict-a
+    area-paper-a
+    paper-info-a
+    MNP
+    MNoC
+    colorMapP
+    stats
+    apn
+    anpn
+    pn
+    npn
+    */
+    svg.append("rect")
+        .attr("id", "rect-pop")
+         .attr('x',0)
+         .attr('y',0)
+         .attr('width', "100%")
+         .attr('height',"130px")
+         .attr('fill',"#eaeaea")
+         //.attr('opacity',0.1)
+         .attr('opacity',0)
+         .style("border-radius", "30px")
+        .attr("stroke","##878787")
+        .attr("stroke-width","3")
+    
+    d3.selectAll('.pop-up')
+        .on('mouseover', function(){popup(this.id, svg)})
+    .on('mouseout', function(){hide_popup()})
+    
+    
+}
+
 function toolboxInit(){
     createSliders()
     colorMappingInit()
     checkboxesInit()
+    setPopUps()
 }
