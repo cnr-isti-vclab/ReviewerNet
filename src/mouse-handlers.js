@@ -337,7 +337,8 @@ function authDblc(event){
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
     }
-  
+    
+    
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", checkThetaLink)

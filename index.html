@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="col-sm-4" style="padding: 2px; height: 100%">
-            
+            <svg id="tb-svg"></svg>
             <div class="panel panel-default" style="height: 95%; border: 0px;">
                 <div id = "toolbox" class="panel-body, text-center">
                     <div class="container-fluid" style="height: 78%; padding-top: 6px;">
@@ -63,7 +63,7 @@
                         </div>
                         </div>
                         <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
-                            <div id="colorMapP" style="width: 100%; height: 40px" class="pop-up">
+                            <div id="colorMapP" style="width: 100%; height: 40px">
                             <svg id = "svgColorP" height="30px" width="93%" > 
                             <defs>
                                 <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -72,7 +72,7 @@
                                   <stop id="thirdStopS" offset="100%" style="stop-color:#248bda;stop-opacity:1" />
                                 </linearGradient>
                               </defs>
-                              <rect id="cmp" x="5" y="5" width="99%" height="10px" fill="url(#grad2)" text ="100"/>
+                              <rect id="cmp" x="5" y="5" width="99%" class="pop-up" height="10px" fill="url(#grad2)" text ="100"/>
                                 </svg>
                             <br>
                                 <input name="color1" type="hidden" id="color_value1" value="#ff433d">
@@ -96,8 +96,8 @@
                         </div>
                         </div>
                         <div class="row" id="tbRow4">
-                            <table class="pop-up" id="stats" style=" float:left; width:30%">
-                                <caption style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
+                            <table id="stats" style=" float:left; width:30%">
+                                <caption class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
                                 <tr>
                                   <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
                                 <td id="anpn"class="stat"><strong><font color="#1e9476">
@@ -145,7 +145,7 @@
                 </div>
               </div>
         
-         <svg id="tb-svg"></svg>
+         
          </div>
     </div>   
     <div class="row" style="height: 70%">

@@ -98,7 +98,7 @@ text {
     width: 40%;
     position: absolute;
     pointer-events: none;
-    transform: translateY(-80%);
+    z-index: 999;
 }
 
 /* Add animation (fade in the popup) */
@@ -304,10 +304,6 @@ td.list-group-item {
 #searchfield form .biginput:focus {
   color: #858585;
 }
-
-svg {
-    overflow-x: scroll;
-} 
 
 .autocomplete-suggestions { border: 1px solid #999; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow: auto;}
 .autocomplete-suggestion { padding: 10px 5px; font-size: 0.9em; white-space: nowrap; overflow: hidden; }
