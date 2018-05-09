@@ -23,11 +23,11 @@ function popup(title, svg){
             create_text("Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one.", svg)
             show_popup("MNoC", svg, 3, 15)
             break;
-        case "colorMapP":
+        case "cmp":
             create_text("Allows the user to change the color-map associated with the number of in-citations. The steps are 0, 30, 100.", svg)
             show_popup("In-Citations colormap", svg, 3, 15)
             break;
-        case "stats":
+        case "statss":
             create_text("This table shows some interesting numbers, where P is the number of paper explicitly added to the visualization (searchbar or double-click on a node), N(P) is the total number of visualized papers that includes both paper in P and all their neighbors, aka in/out-citations, A(P): is the number of authors of the interesting papers P and A(N(P)) is the number of authors in N(P)).", svg)
             show_popup("Stats", svg, 3, 15)
             break;
@@ -94,7 +94,7 @@ function create_text(txt, svg)
 	{
 		 var text=svg.append("text")
                     .attr("x", -100)             
-                    .attr("y", 15)
+                    .attr("y", -1500)
                     .attr("text-anchor", "left") 
                     .style("font-size", "0.8em")
                     .attr("fill", "black")
