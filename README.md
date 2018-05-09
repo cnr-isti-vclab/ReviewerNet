@@ -45,10 +45,10 @@ This area of the page allows the user to personalize the view:
 * **Display related authors**: once enabled this checkbox enriches the *author area* with all the related authors *A(N(P))*, that are all the authors in *P* and *N(P)*. If is not checked only authors from *P* will be displayed-
 
 ## Conflicting Authors list
-This area allows the user to serach for authors for which we want to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the *Paper Info* area.
+This area allows the user to search for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the *Paper Info* area.
 
 ## Area Paper
-This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar.
+This area allows the user to search for papers to build the topic-based graph. The list of added papers is displayed below the searchbar.
 
 ## Paper Info
 This box shows some useful information about the selected paper such as title, year of pub., venue and journal name, authors and citations. Authors and citations have their associated mouse handlers.
