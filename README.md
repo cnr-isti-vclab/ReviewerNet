@@ -30,7 +30,7 @@ how to remove authors.
 * ranked by a weighted sum of the number of papers in *P* and *N(P)*
 * a rectange under the author's name spans from the oldest to the last year of pubblication.
 * name in **red** indicates conflict with at least one author in the *Conflicting Authors* list;
-* name in **purple** indicates that the author has been added to the *Conflicting Authors* list;
+* name in **purple** or border of the rectangle in **light blue** indicates that the author has been added to the *Conflicting Authors* list;
 
 ## The toolbox
 This area of the page allows the user to personalize the view:
