@@ -34,7 +34,7 @@ how to remove authors.
 
 ## The toolbox
 This area of the page allows the user to personalize the view:
-* **MNP**: is the *Mininimum Number of Papers* threshold. Once enabled, it removes from the *authors area* all the authors that have a number of visualized papers less than the indicated one.
+* **MNP**: is the *Mininimum Number of Papers* threshold. Once enabled, it **removes from the *authors area*** all the authors that have a number of visualized papers less than the indicated one.
 * **MNoC**: is the *Mininimum Number of out-Citations* threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one.
 * **Colormap**: allows the user to change the color-map associated with the number of in-citations. The steps are *0, 30, 100*.
 * **Stats**: this table shows some interesting numbers:
