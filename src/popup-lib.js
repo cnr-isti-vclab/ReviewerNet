@@ -81,9 +81,8 @@ function show_popup(title, svg, off_x,off_y)
 
 function create_text(txt, svg)
 {
-    console.log(lines)
 	let words=txt.split(" "),
-        w = 280;
+        w = 260;
 
 	var line_w=0
     lines = []
@@ -120,8 +119,6 @@ function create_text(txt, svg)
 			line_w=bbox		
         }
 	}
-	console.log(lines)
-    return lines;
 }
 
 function hide_popup(){	
