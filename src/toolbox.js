@@ -11,13 +11,13 @@ function foo(){console.log(papersFiltered.length)}
     Toolbox
 */
 function toggle ( element ){
-	// If the checkbox is checked, disabled the slider.
-	// Otherwise, re-enable it.
-	if ( !this.checked ) {
-		element.setAttribute('disabled', true);
-	} else {
-		element.removeAttribute('disabled');
-	}
+    // If the checkbox is checked, disabled the slider.
+    // Otherwise, re-enable it.
+    if ( !this.checked ) {
+        element.setAttribute('disabled', true);
+    } else {
+        element.removeAttribute('disabled');
+    }
 }
 
 function toggleAE (){
@@ -60,7 +60,7 @@ function createSliders(){
     if(checkboxTP){
         checkboxTP.checked = false;
         checkboxTP.addEventListener('click', function(){
-	   toggle.call(this, sliderTP);
+       toggle.call(this, sliderTP);
         authorGraph()
         });
     }
@@ -94,7 +94,7 @@ function createSliders(){
     if(checkboxTOC){
         checkboxTOC.checked = false;
         checkboxTOC.addEventListener('click', function(){
-	   toggle.call(this, sliderTOC);
+       toggle.call(this, sliderTOC);
         if(papersFiltered.length>0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
         });
@@ -106,14 +106,14 @@ function updateColorMap(){
         1. change stops
         2. remove/redraw rectangle
         3. update colormap range
-    */
+    
     d3.select("#firstStopS")
         .style("stop-color", fS)
     d3.select("#secondStopS")
         .style("stop-color", sS)
     d3.select("#thirdStopS")
         .style("stop-color", tS)
-    
+    */
     d3.select("#cmp").transition()
     .duration(300)
     .attr("fill", "url(#grad2)")
@@ -126,18 +126,21 @@ function updateColorMap(){
 function colorMappingInit(){
     d3.select("#svgColorP")
         .append("text").text("0")
-        .attr("x", "7%")
-        .attr("y", "98%")
+        .attr("x", "2%")
+        .attr("y", "80%")
+        .style("font-size", "0.7em")
         .attr("fill", "black")
     d3.select("#svgColorP")
         .append("text").text("30")
-        .attr("x", "54%")
-        .attr("y", "98%")
+        .attr("x", "49%")
+        .attr("y", "80%")
+        .style("font-size", "0.7em")
         .attr("fill", "black")
     d3.select("#svgColorP")
         .append("text").text("100")
-        .attr("x", "89%")
-        .attr("y", "97%")
+        .attr("x", "95%")
+        .attr("y", "80%")
+        .style("font-size", "0.7em")
         .attr("fill", "black")
     
     d3.select('#color_value1').on("change", function(){
