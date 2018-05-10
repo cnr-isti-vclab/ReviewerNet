@@ -24,7 +24,7 @@ function popup(title, svg){
             show_popup("MNoC", svg, 3, 15)
             break;
         case "cmp":
-            create_text("Allows the user to change the color-map associated with the number of in-citations. The steps are 0, 30, 100.", svg)
+            create_text("Is a color-map associated with the number of in-citations. The steps are 0, 30, 100.", svg)
             show_popup("In-Citations colormap", svg, 3, 15)
             break;
         case "statss":
