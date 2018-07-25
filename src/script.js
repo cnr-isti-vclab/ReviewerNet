@@ -164,8 +164,8 @@ function updateColor(){
         minInCits = Math.min(minInCits, papersFiltered[i].color)
         maxInCits = Math.max(maxInCits, papersFiltered[i].color)
     }
-    console.log("[UPDATECOLOR@script.js] minC: "+minInCits)
-    console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
+    //console.log("[UPDATECOLOR@script.js] minC: "+minInCits)
+    //console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
 }
 
 function getAP(){
@@ -239,10 +239,10 @@ function getArrays(graph) {
   }
 
 function getAuths() {
-    var authTxt = fetch('datasets/A.txt')
+    var authTxt = fetch('datasets/a_v0518f.txt')
         .then(response => response.text())
         .then(function(text){
-            var authG= JSON.parse(text)
+            var authG = JSON.parse(text)
             var a = authG.authors
             var n = a.length
             for (i = 0; i < n; i++){
@@ -813,7 +813,7 @@ $(function (){
         }
     });
     
-    var graphTxt = fetch('datasets/P.txt')
+    var graphTxt = fetch('datasets/p_v0518f.txt')
         .then(response => response.text())
         .then(function(text) {
             var graph = JSON.parse(text);

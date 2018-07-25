@@ -26,6 +26,7 @@ function prettyPrintAuthor(auth){
 }
 
 function updateAD(d){
+    //console.log(d.authsId)
     var sAList = d.authsId,
         i, nS = sAList.length, dx = d.year;
     for(var i = 0; i < nS; i++){
