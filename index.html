@@ -29,13 +29,18 @@
 
     
 <div class="container-fluid" id= "all" >
-    
-     <div class="row" style="height: 30%">
+     <div class="row">
         <div class="col-sm-8" style="padding: 2px; height: 100%">
-            <div class="panel panel-default" style="margin-bottom: 0px; height: 99%">
+            <div class="panel panel-default" style="margin-bottom: 0px; height: 200px">
                 <div class="panel-body aa graph text-center" style="width: 100%; height: 100%; overflow-y: auto">
                     <table id="authTable">
                     </table>
+                </div>
+            </div>
+            <div class="panel panel-default" style="height: 99%">
+                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
+                    <svg id = "svgP" class = "svg" style="width: 100%; height: 100%">
+                    </svg>
                 </div>
             </div>
         </div>
@@ -145,22 +150,8 @@
                         </div>
                     </div>
                 </div>
-              </div>
-        
-         
-         </div>
-    </div>   
-    <div class="row" style="height: 70%">
-        <div class="col-sm-8" style="padding: 2px; height: 100%">
-            <div class="panel panel-default" style="height: 99%">
-                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
-                    <svg id = "svgP" class = "svg" style="width: 100%; height: 100%">
-                    </svg>
-                </div>
             </div>
-        </div>
-        <div class="col-sm-4" style="padding: 2px;">
-            <div id = "sidenav" class="sidebar-nav navbar-collapse">
+             <div id = "sidenav" class="sidebar-nav navbar-collapse">
                 <ul class="nav in" id="side-menu">
                     <li class="sidebar-search">
                     <div id="searchfield" style="width: 100%; padding-top: 1px;">
@@ -193,13 +184,12 @@
                     </li>
             </ul>
             </div>
-        </div>
-       
- <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
- <script src="src\authTable.js"></script>
- <script src="src\mouse-handlers.js"></script>
- <script src="src\toolbox.js"></script>
-    </div>
+         </div>
+    </div>   
+     <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
+     <script src="src\authTable.js"></script>
+     <script src="src\mouse-handlers.js"></script>
+     <script src="src\toolbox.js"></script>
 </div>
 </body>
 </html>
