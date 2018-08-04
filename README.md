@@ -3,7 +3,6 @@ This website is a D3.js-based browser on a filtered version of the <a href="http
 Scholar</a> corpus. The user can search for papers and build its own cluster of interesting papers that we call *P*, from which is 
 generated *N(P)*, the neighbors of *P*, that are the in and out citations. Above the paper graph the one referred 
 to the authors is displayed.
-> *screenshot soon...*
 
 ## Getting started
 Often program committee members are required to find reviewers that know well a subject but are not conflicted with the 
@@ -16,6 +15,9 @@ In this it is immediately possible to identify all the possible candidate-review
 Just visit
 > http://semanticbrowser.org <br>
 > *tested browsers: Chrome, Firefox, Safari* 
+
+
+![SemanticBrowser screenshot](https://hybrs.github.io/images/screenshot.jpg)
 
 
 ## Papers&Authors 
