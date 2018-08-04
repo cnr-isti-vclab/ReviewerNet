@@ -17,7 +17,7 @@ Just visit
 > *tested browsers: Chrome, Firefox, Safari* 
 
 
-![SemanticBrowser screenshot](https://hybrs.github.io/images/screenshot.jpg)
+![SemanticBrowser screenshot](https://raw.githubusercontent.com/hybrs/hybrs.github.io/master/images/screenshot.png)
 
 
 ## Papers&Authors 
