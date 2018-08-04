@@ -14,7 +14,7 @@ In this it is immediately possible to identify all the possible candidate-review
 
 ### Usage
 Just visit
-> https://hybrs.github.io <br>
+> http://semanticbrowser.org <br>
 > *tested browsers: Chrome, Firefox, Safari* 
 
 
