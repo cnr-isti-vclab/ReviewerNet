@@ -23,19 +23,23 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'UA-118764276-1');
 </script>
 
     
 <div class="container-fluid" id= "all" >
-    
-     <div class="row" style="height: 30%">
+     <div class="row">
         <div class="col-sm-8" style="padding: 2px; height: 100%">
-            <div class="panel panel-default" style="margin-bottom: 0px; height: 99%">
+            <div class="panel panel-default" style="margin-bottom: 0px; height: 200px">
                 <div class="panel-body aa graph text-center" style="width: 100%; height: 100%; overflow-y: auto">
                     <table id="authTable">
                     </table>
+                </div>
+            </div>
+            <div class="panel panel-default" style="height: 99%">
+                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
+                    <svg id = "svgP" class = "svg" style="width: 100%" height= 500px >
+                    </svg>
                 </div>
             </div>
         </div>
@@ -45,19 +49,15 @@
                 <div id = "toolbox" class="panel-body, text-center">
                     <div class="container-fluid" style="height: 78%; padding-top: 6px;">
                         <div class="row" id="tbRow1" style="margin-bottom: 5px;">
-                        <div id="thetaPap" style="float: left; width: 70%; transform: translate(15px, 5px)">
-                        </div>
-                        <div style="float: right; width: 22%; transform: translate(0px, -10%)">
-                            <h9 id = "MNP" class="pop-up" >MNP</h9>
+                        <div style="transform: translate(0px, 0px)">
+                            <h9 id = "MNP" class="pop-up" >Minimun number of papers</h9>
                             <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
                             <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
                         </div>
                         </div>
                          <div class="row" id="tbRow2">
-                        <div id="thetaCit" style="float: left; width: 68%; transform: translate(15px, 4px)">
-                        </div>
-                        <div style="float: right; width: 24%; transform: translate(-1%, -10%)">
-                            <h9 id = "MNoC" class="pop-up">MNoC</h9>
+                        <div>
+                            <h9 id = "MNoC" class="pop-up">Minimum number of out-citations</h9>
                             <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
                             <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/> 
                         </div>
@@ -145,22 +145,8 @@
                         </div>
                     </div>
                 </div>
-              </div>
-        
-         
-         </div>
-    </div>   
-    <div class="row" style="height: 70%">
-        <div class="col-sm-8" style="padding: 2px; height: 100%">
-            <div class="panel panel-default" style="height: 99%">
-                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
-                    <svg id = "svgP" class = "svg" style="width: 100%; height: 100%">
-                    </svg>
-                </div>
             </div>
-        </div>
-        <div class="col-sm-4" style="padding: 2px;">
-            <div id = "sidenav" class="sidebar-nav navbar-collapse">
+             <div id = "sidenav" class="sidebar-nav navbar-collapse">
                 <ul class="nav in" id="side-menu">
                     <li class="sidebar-search">
                     <div id="searchfield" style="width: 100%; padding-top: 1px;">
@@ -193,13 +179,12 @@
                     </li>
             </ul>
             </div>
-        </div>
-       
- <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
- <script src="src\authTable.js"></script>
- <script src="src\mouse-handlers.js"></script>
- <script src="src\toolbox.js"></script>
-    </div>
+         </div>
+    </div>   
+     <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
+     <script src="src\authTable.js"></script>
+     <script src="src\mouse-handlers.js"></script>
+     <script src="src\toolbox.js"></script>
 </div>
 </body>
 </html>

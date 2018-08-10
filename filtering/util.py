@@ -7,7 +7,7 @@
 #   . create the papers and authors' datasets
 #   . read/write datasets   
 #
-# The usage is shwon from line 252 on.
+# The usage is shwon from line 381 on.
 #
 ###########################################################################################
 from __future__ import division
@@ -405,6 +405,6 @@ def authorsJSONObj(papers, authJson1):
 #A = authorsJSONObj(papers, authJSON)
 ### once A is ready you can write it with
 #authorsForSearchFile(path, A)
-#auth_file = r"C:/Users/mlsal/Desktop/a_v0518f.txt"
+#auth_file = r"C:/**/a_v0518f.txt"
 #authorsForSearchFile(auth_file, A)
 ##> len(A) = 19.464

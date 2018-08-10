@@ -778,15 +778,7 @@ $(function (){
     $('#authors-autocomplete').click(function (e){
     this.value=""
     });
-    /*
-    function setClickHandler(){
-        ul = $('.list-group');
-        ul.on("click", addFromList)  
-    }
-    
-    
-    */
-    //$("a").on("click", function(){    })
+
     getPaperSvg()
     getAuths()
     //M150 0 L75 200 L225 200 Z
@@ -799,9 +791,6 @@ $(function (){
           this.value = null
           var isIn = false
           idA = suggestion.id
-          /*var thehtml = prettyPrintAuthor(suggestion)
-          $('#outputcontent').html(thehtml);
-          */
           var aName = suggestion.value
             if(authsExclude.includes(idA))
                 isIn = true
@@ -823,13 +812,33 @@ $(function (){
     
     $('#papers-autocomplete').autocomplete({
         lookup: papers,
+        minChars : 3, 
+//      lookupLimit : 50,
         showNoSuggestionNotice: true,
-        beforeRender: function(suggestions){
+        beforeRender: function(container, suggestions){
+            var $divs = $(".autocomplete-suggestion")
+            //console.log(container)
+            var alphabeticallyOrderedDivs = $divs.sort(function (a, b) {
+                var afields = a.innerText.split(','),
+                    al = afields.length,
+                    bfields = b.innerText.split(','),
+                    bl = bfields.length;
+                return afields[al-1] <= bfields[bl-1];
+            });
+            container.html(alphabeticallyOrderedDivs);
+            suggestions.sort(function(a, b){return a.year <= b.year});
+            
         },
         onSelect: function (suggestion) {
             addPaper(suggestion)
             this.value = null
+        },
+        formatResult: function (suggestion, currentValue) {
+            return suggestion.value + ", " + suggestion.year 
         }
       });
+    
+    $('#papers-autocomplete').on("input", function(){})
+                               
     
 });
