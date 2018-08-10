@@ -31,7 +31,7 @@ function toggleAA (){
 function createSliders(){
     /*
         MNP slider
-    */
+    
     noUiSlider.create(sliderTP, {
         start: 2,
         step: 1,
@@ -50,23 +50,23 @@ function createSliders(){
 
     });
     sliderTP.setAttribute('disabled', true);
+    */
     d3.select('#input-numberTP').value = 2;
     inputNumberTP.addEventListener('change', function(){
-        if(this.value>10)
-            this.value = 10
+        if(this.value>100)
+            this.value = 100
+        if(this.value < 0)
+            this.value = 0
         thetaPap = this.value;
-       sliderTP.noUiSlider.set([this.value]);
+        authorGraph();
     });
     if(checkboxTP){
         checkboxTP.checked = false;
-        checkboxTP.addEventListener('click', function(){
-       toggle.call(this, sliderTP);
-        authorGraph()
-        });
-    }
+        authorGraph();
+        }
     /*
         MNoC slider
-    */
+    
     noUiSlider.create(sliderTOC, {
         start: 2,
         step: 1,
@@ -84,20 +84,22 @@ function createSliders(){
             paperGraph(papersFiltered, citPrint, idPs, simulation)
     });
     sliderTOC.setAttribute('disabled', true);
+    */
     d3.select('#input-numberTOC').value = 10;
     inputNumberTOC.addEventListener('change', function(){
-        if(this.value>50)
-            this.value = 50
+        if(this.value>100)
+            this.value = 100
+        if(this.value < 0)
+            this.value = 0
         thetaCit = this.value;
-       sliderTOC.noUiSlider.set([this.value]);
-    });
-    if(checkboxTOC){
-        checkboxTOC.checked = false;
-        checkboxTOC.addEventListener('click', function(){
-       toggle.call(this, sliderTOC);
         if(papersFiltered.length>0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
-        });
+    });
+
+    if(checkboxTOC){
+        checkboxTOC.checked = false;
+        if(papersFiltered.length>0)
+            paperGraph(papersFiltered, citPrint, idPs, simulation)
     }
 }
 
