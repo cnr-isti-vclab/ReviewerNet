@@ -516,7 +516,7 @@ function paperInfoa(suggestion){
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return height})
+        .attr("height", function(){console.log(height); return height})
         .append("g")
         .attr("id", "gP")
     svgP.append("svg:defs").selectAll("marker")
@@ -759,12 +759,19 @@ function dragended(d) {
 }
 
 $(function (){
+    $( window ).on("load", function(){
+        height = this.height
+        heightA = this.height * 0.3
+        w = width
+        h = height
+        updateWidth()
+    })
     toolboxInit()
     setMouseHandlers()
     $( window ).resize(function() {
         width = $(".ap").width()
-        height = $(".ap").height()
-        heightA = $(".aa").height()
+        height = this.height
+        heightA = this.height * 0.3
         w = width
         h = height
         updateWidth()
