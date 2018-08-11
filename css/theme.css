@@ -319,3 +319,12 @@ td.list-group-item {
   stroke-width: 1px;
   cursor: pointer
 }
+
+#logo {
+    position: absolute;
+    float: left
+}
+
+footer {
+    height: 30px
+}
