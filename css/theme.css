@@ -322,9 +322,30 @@ td.list-group-item {
 
 #logo {
     position: absolute;
-    float: left
+    float: left;
+    transform: translate(-20%, -35%)
 }
 
 footer {
     height: 30px
+}
+
+#startMsg {
+    position: absolute;
+}
+
+hr {
+    color: black;
+    border-width: 1px;
+    border-color: #4e5988
+}
+
+.links {
+   cursor: help 
+}
+
+.badge {
+    float: right;
+    position: absolute;
+    background-color: rgba( 78, 89, 136, 0.298 );
 }
