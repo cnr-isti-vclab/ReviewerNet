@@ -38,10 +38,23 @@
                 </div>
             </div>
             <div class="panel panel-default" style="height: 99%">
-                <div class="panel-body graph a ap text-center" style="width: 100%; height: 100%">
-                    <!--
+                <div class="panel-body graph a ap text-left" style="width: 100%; height: 100%">
+                    <span id="startMsg"> 
                     <img id="logo" src="imgs/logo.png" height= 100px width = 100px>
- -->
+                        <h3 style="transform: translateX(6%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">SemanticBrowser.org</h3>
+                    <p>
+                        A <a class="links" href="https://d3js.org/">D3js</a>-based-browser on a filtered version of the <a class="links" href="https://labs.semanticscholar.org/corpus/" title="SemanticScholar lastest corpus link">Semantic Scholar corpus.</a>
+                        <br>The user can search for papers and build its own cluster of interesting papers including in and out-citations. <br> Above the paper graph the one referred to the authors is displayed. <br> With this tool we hope to simplify the <strong>process of choicing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.
+                    </p>
+                    <hr>
+                    <h4>Usage:</h4>
+                        <ol>
+                          <li>build a topic-based graph by searching  for papers titles in the <strong>AREA PAPER</strong> searchbar</li>
+                          <li>build the set of conflicting authors by searching their names in the <strong>CONFILICTING AUTHORS</strong> search bar</li>
+                        </ol>
+                    Once the graph and the conflicting authors list have been populated, good reviewer candidates are shown in the author area.
+                    <br>For further information visit the <a title="GitHub project page" class="links" href="https://github.com/hybrs/hybrs.github.io">GitHub page</a>.
+                    </span>
                     <svg id = "svgP" class = "svg" style="width: 100%" height= 500px >
                     </svg>
                 </div>
@@ -156,7 +169,7 @@
                 <ul class="nav in" id="side-menu">
                     <li class="sidebar-search">
                     <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                        <span id="conflict-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors </span>
+                        <span id="conflict-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors <span id="authors-badge"class="badge"></span> </span>
                         <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                         <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 65%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                     </div>
@@ -167,7 +180,7 @@
                     </li>
                     <li class="sidebar-search">
                         <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                            <span id="area-paper-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper</span>
+                            <span id="area-paper-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper <span id="area-paper-badge"class="badge"></span> </span>
                             <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
                             <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 75%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                         </div>

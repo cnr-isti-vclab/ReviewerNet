@@ -1,4 +1,5 @@
 var graph = [], alpha = 0.7, beta = 0.4,
+    start = true,
     click = false, toolboxSvg = d3.select("#tb-svg"),
     authTable = d3.select("#authTable"),
     authors = [],
@@ -332,6 +333,10 @@ function setMouseHandlers(){
 }
 
 function addPaper(suggestion){
+    if(start){
+        document.getElementById("startMsg").style.visibility = "hidden";
+        start = false;
+    }
     idP = suggestion.id
     //console.log(suggestion)
     var isIn = addId(suggestion.value, suggestion.year)
@@ -766,6 +771,11 @@ $(function (){
         h = height
         updateWidth()
     })
+    
+    $("body").on('click', function(){
+        $(".badge").html("")
+    })
+    
     toolboxInit()
     setMouseHandlers()
     $( window ).resize(function() {
@@ -793,8 +803,16 @@ $(function (){
     
     $('#authors-autocomplete').autocomplete({
         lookup: authors,
+        minChars: 3,
         showNoSuggestionNotice: true,
+        beforeRender: function(container, suggestions){
+            $('#authors-badge').html(suggestions.length)
+        },
         onSelect: function (suggestion) {
+            if(start){
+                document.getElementById("startMsg").style.visibility = "hidden";
+                start = false;
+            }
           this.value = null
           var isIn = false
           idA = suggestion.id
@@ -806,6 +824,7 @@ $(function (){
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
                 authorGraph()
             }
+        $('#authors-badge').html("")                                
         }
     });
     
@@ -820,7 +839,7 @@ $(function (){
     $('#papers-autocomplete').autocomplete({
         lookup: papers,
         minChars : 3, 
-//      lookupLimit : 50,
+        //lookupLimit : 50,
         showNoSuggestionNotice: true,
         beforeRender: function(container, suggestions){
             var $divs = $(".autocomplete-suggestion")
@@ -834,18 +853,24 @@ $(function (){
             });
             container.html(alphabeticallyOrderedDivs);
             suggestions.sort(function(a, b){return a.year <= b.year});
-            
+            $('#area-paper-badge').html(suggestions.length)
         },
         onSelect: function (suggestion) {
             addPaper(suggestion)
             this.value = null
+            $('#area-paper-badge').html("")
         },
         formatResult: function (suggestion, currentValue) {
             return suggestion.value + ", " + suggestion.year 
         }
       });
     
-    $('#papers-autocomplete').on("input", function(){})
+    $('#papers-autocomplete').on("focus", function(){$('#area-paper-badge').html("")})
+    $('#authors-autocomplete').on("focus", function(){$('#authors-badge').html("")})
+    $('.biginput').on("input", function(key){
+        if(this.value.length < 3) 
+            $(".badge").html("")
+    })
                                
     
 });
