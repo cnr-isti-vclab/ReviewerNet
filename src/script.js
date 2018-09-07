@@ -68,7 +68,7 @@ function getXRect(x, wdt){
 }
 
 function updateWidth(){
-    xConstrained.range([10, w -20]);
+    xConstrained.range([15, w -30]);
 }
 
 function getXTxt(x, wdt){
@@ -521,7 +521,7 @@ function paperInfoa(suggestion){
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){console.log(height); return height})
+        .attr("height", function(){return height})
         .append("g")
         .attr("id", "gP")
     svgP.append("svg:defs").selectAll("marker")
@@ -608,8 +608,10 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     svg.attr("y", "100")
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
-    xaxis.scale(xConstrained).ticks(maxYear-minYear, "r");
-    svg.append("g").call(xaxis);
+    let delta = maxYear-minYear
+    if(delta > 30) delta = delta/2
+    xaxis.scale(xConstrained).ticks(delta, "r");
+    svg.append("g").attr("id", "axis").call(xaxis);
     
     $("#pn").html("<strong><font color=\"#1e9476\">P =</font></strong> "+idPs.length)
     $("#npn").html("<strong><font color=\"#1e9476\">N(P) =</font></strong> "+papersFiltered.length)

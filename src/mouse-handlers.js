@@ -11,14 +11,45 @@ function handlerMouseOverA(d){
    
     if(click)
         reset_texts()
-    d3.select("#aa"+d.id).transition().duration(200).attr('fill',"rgba( 138, 223, 223, 0.569 )")
+    d3.select("#aa"+d.id)
+        .transition().duration(200)
+        .attr('fill',"rgba( 138, 223, 223, 0.569 )")
+    
+   /*histogram paper for each author
+    
+    addPaper(){
+    resetAllValues
+    ...
+    for each author
+        counter paper per year
+    ...
+    }
+    
+    d3.select("#svgA"+d.id)
+        .append("rect")
+        //.attr("id", function (d){ return "aa"+d.id})
+        //.attr("class", "authNode")
+        .attr('x',function(d){
+            let nw = xConstrained(authDict[d.id][1]),
+                od = xConstrained(authDict[d.id][0]);
+            if(od!=nw)return od;
+            else return od-2;
+        })
+        .attr('y',4)
+        .attr('width',function(d){
+            let nw = xConstrained(authDict[d.id][1]),
+                od = xConstrained(authDict[d.id][0]);
+            if(od!=nw)return nw-od;
+            else return 4;
+        })
+        .attr('height', "5px")
+        .attr("fill", "#df1414")
+    */
     
     d3.selectAll(".plink")
-        .transition().duration(200)
         .style("opacity", 0.2)
     
     d3.selectAll(".papersNode")
-        .transition().duration(200)
         .style("opacity", function(d1){
             if(d1.authsId.includes(d.id))
                 return 1;
@@ -48,6 +79,7 @@ function handlerMouseOverA(d){
                 if(idPs.includes(d1.id))                    
                     return 2.5;
             })
+    
 }
 
 function handlerMouseOutA(d){

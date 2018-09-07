@@ -25,8 +25,9 @@ journals = ['ACM Transactions on Graphics', 'ACM Trans. on Graph.','ACM Trans. G
             'ACM TOG','Computer Graphics Forum', 'Comp. Graph. Forum', \
             'IEEE Transactions on Visualization and Computer Graphics', \
             'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG',\
-           'Comput. Graphics Forum', 'Comput. Graph. Forum', \
-           'Visual Computer', 'Computer & Graphics','IEEE Visualization']
+           'Comput. Graphics Forum', 'Comput. Graph. Forum', 'SIGGRAPH' \
+           'Visual Computer', 'Computer & Graphics','IEEE Visualization', \
+           'IEEE Computer Graphics & Applications', 'IEEE Comp Graph & Apps', 'IEEE CGA']
 
 def start():
     print('START at: ' + str(time.ctime()))
