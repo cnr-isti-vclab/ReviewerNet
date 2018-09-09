@@ -140,7 +140,7 @@ text {
 }
 
 #authTable {
-    height: 98%;
+    height: inherit;
 }
 
 .authNode {
@@ -372,4 +372,8 @@ hr {
     min-height: inherit;
     max-height: inherit;
     height: inherit;
+}
+
+#aut_table {
+    height: inherit
 }

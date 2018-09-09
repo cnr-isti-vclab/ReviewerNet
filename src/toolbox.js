@@ -162,11 +162,11 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
-  /*
+  
     authViz.addEventListener('change', function(){
             authorGraph()
     });
-    */
+    
     let spinnerMNoC = $( "#MNoC" ).spinner({
             min: 0,
             disabled: true,

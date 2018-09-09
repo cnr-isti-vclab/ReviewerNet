@@ -115,26 +115,22 @@ function authorGraph(){
                 .attr("id", function (d){ return "aa"+d.id})
                 .attr("class", "authNode")
                 .attr('x',function(d){
-                    let nw = xConstrained(authDict[d.id][1]),
-                        od = xConstrained(authDict[d.id][0]);
-                    if(od!=nw)return od;
-                    else return od-2;
+                     return xConstrained(authDict[d.id][0]-0.5);
                 })
-                .attr('y',8)
+                .attr('y',6)
                 .attr('width',function(d){
-                    let nw = xConstrained(authDict[d.id][1]),
-                        od = xConstrained(authDict[d.id][0]);
-                    if(od!=nw)return nw-od;
-                    else return 4;
+                    let nw = xConstrained(authDict[d.id][1]+0.3),
+                        od = xConstrained(authDict[d.id][0]-0.5);
+                    return nw-od;
                 })
-                .attr('height', "5px")
+                .attr('height', "10px")
                 .attr('fill', function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
-                .style("border-radius", "4px")
+                .style("border-radius", "30px")
                 .style("stroke-width", function (d){
                     if(authsExclude.includes(d.id))
                         return 0.8
@@ -154,7 +150,7 @@ function authorGraph(){
                 //.attr('fill',"rgba( 221, 167, 109, 0.2 )")
                 .style("border-radius", "3px")
                 .attr("text-anchor", "center")  
-                .style("font-size", "13px")
+                .style("font-size", "12px")
                 .text(function (d){ return d.value })
                 .attr("fill",  function (d){
                     if(authColor(d))
@@ -164,15 +160,15 @@ function authorGraph(){
                         else return "#474747";
                 })
                 .attr("x", function(d){
-                    let nw = xConstrained(authDict[d.id][1]),
-                        od = xConstrained(authDict[d.id][0]),
+                    let nw = xConstrained(authDict[d.id][1] + 0.3),
+                        od = xConstrained(authDict[d.id][0] - 0.5),
                         delta = nw-od,
                         rW = d3.select(this).node().getBBox().width,
                         rH = d3.select(this).node().getBBox().height,
                         nX = od+(delta-rW)/2;
-                   // console.log(d3.select(this).node().getBBox())
-                    if(delta > rH) return  Math.min(nX+1, $(".ap").width()-rW-20 );
-                    else return Math.max(8, Math.min(od-(rW/2), $(".ap").width()-rW-20));
+                console.log("text: "+this.text +" l = "+rW)
+                    if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-10 );
+                    else return Math.max(5, Math.min(od+((delta-rW)/2), $(".ap").width()-rW-30));
                 })
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
