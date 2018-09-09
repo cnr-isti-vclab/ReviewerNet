@@ -100,6 +100,7 @@ function create_text(txt, svg)
                     .attr("opacity",0)
                     .text("")
 		text.text(words[i]+" ")
+        console.log(text)
 		let bbox = text.node().getBBox().width
 		
 		if((line_w+bbox)<=w)

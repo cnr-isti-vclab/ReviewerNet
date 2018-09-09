@@ -778,6 +778,23 @@ $(function (){
         $(".badge").html("")
     })
     
+    $( "#resizable" ).resizable({
+            handles: "s",
+            resize: function( event, ui ) {
+                if(ui.size.height < 200){
+                    heightA = 200
+                    ui.size.height = 200
+                }
+                else if(ui.size.height > 450){
+                    heightA = 450
+                    ui.size.height = 450
+                }
+                else heightA = ui.size.height
+               document.getElementById('aut_table').clientHeight = heightA;
+
+            }
+    });
+    
     toolboxInit()
     setMouseHandlers()
     $( window ).resize(function() {
@@ -803,14 +820,25 @@ $(function (){
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     
+    /*
+        Tutti in un file a parte
+    */
+    $( "#conflict-a" ).tooltip({
+      show: {
+        effect: "slideDown",
+        delay: 150
+      }
+    });
+    
     $('#authors-autocomplete').autocomplete({
-        lookup: authors,
-        minChars: 3,
+        source: authors,
+        minLength: 3,
         showNoSuggestionNotice: true,
-        beforeRender: function(container, suggestions){
-            $('#authors-badge').html(suggestions.length)
+        response: function(event, ui){
+            $('#authors-badge').html(ui.content.length)
         },
-        onSelect: function (suggestion) {
+        select: function (event, ui) {
+            suggestion = ui.item
             if(start){
                 document.getElementById("startMsg").style.visibility = "hidden";
                 start = false;
@@ -839,10 +867,12 @@ $(function (){
     
     
     $('#papers-autocomplete').autocomplete({
-        lookup: papers,
-        minChars : 3, 
-        //lookupLimit : 50,
-        showNoSuggestionNotice: true,
+        source: papers,
+        minLength : 3, 
+        response: function( event, ui ) {    
+            ui.content.sort(function (a, b) {return a.year <= b.year;});
+            $('#area-paper-badge').html(ui.content.length)
+        },
         beforeRender: function(container, suggestions){
             var $divs = $(".autocomplete-suggestion")
             //console.log(container)
@@ -855,17 +885,22 @@ $(function (){
             });
             container.html(alphabeticallyOrderedDivs);
             suggestions.sort(function(a, b){return a.year <= b.year});
-            $('#area-paper-badge').html(suggestions.length)
+            
         },
-        onSelect: function (suggestion) {
-            addPaper(suggestion)
+        select: function (event, ui) {
+            addPaper(ui.item)
             this.value = null
             $('#area-paper-badge').html("")
         },
         formatResult: function (suggestion, currentValue) {
             return suggestion.value + ", " + suggestion.year 
         }
-      });
+      })
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+        .append( "<div>" + item.value+ "<br>" + item.year + "</div>" )
+        .appendTo( ul );
+    };
     
     $('#papers-autocomplete').on("focus", function(){$('#area-paper-badge').html("")})
     $('#authors-autocomplete').on("focus", function(){$('#authors-badge').html("")})

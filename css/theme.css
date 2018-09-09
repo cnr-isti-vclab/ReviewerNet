@@ -2,8 +2,19 @@ html, body, .container-fluid {
     height:100%;
 }
 
+#resizable { 
+    width:inherit; 
+    min-height: 200px; 
+    max-height: 450px;
+    background-color: rgba( 223, 225, 225, 0 );
+}
+
+.ui-widget-content {
+    border-right-width: none;
+}
+
 .panel-default {
-    background-color:  rgba( 255, 255, 255, 0 );
+    background-color: rgba( 255, 255, 255, 0 );
     border: 0px;
     border-radius: 5px;
 }
@@ -11,6 +22,8 @@ html, body, .container-fluid {
 .graph {
     background-color:  #efefef;
     border: 0px;
+    max-height: inherit;
+    height: inherit;rit;
 }
 
 .sidebar-nav {
@@ -305,10 +318,7 @@ td.list-group-item {
   color: #858585;
 }
 
-.autocomplete-suggestions { border: 1px solid #999; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow: auto;}
-.autocomplete-suggestion { padding: 10px 5px; font-size: 0.9em; white-space: nowrap; overflow: hidden; }
-.autocomplete-selected { background: #f0f0f0; }
-.autocomplete-suggestions strong { font-weight: normal; color: #3399ff; }
+#ui-id-2, #ui-id-1{ border: 1px solid #999; max-height: 250px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow: auto;}
 
 .links line {
   stroke: #999;
@@ -348,4 +358,10 @@ hr {
     float: right;
     position: absolute;
     background-color: rgba( 78, 89, 136, 0.298 );
+}
+
+.col-sm-8 {
+    min-height: inherit;
+    max-height: inherit;
+    height: inherit;
 }

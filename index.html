@@ -12,9 +12,11 @@
         <link rel="stylesheet" href="css\nouislider.min.css">
         <script src="src\bootstrap.min.js"></script>
         <script src="src\nouislider.min.js"></script>
-        <script type="text/javascript" src="src/jquery.autocomplete.js"></script>
+       <!-- <script type="text/javascript" src="src/jquery.autocomplete.js"></script> -->
         <script type="text/javascript" src="src/popup-lib.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <link rel="stylesheet" href="css/theme.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     </head>
 <body>
  
@@ -26,152 +28,109 @@
   gtag('js', new Date());
   gtag('config', 'UA-118764276-1');
 </script>
-
-    
+        
 <div class="container-fluid" id= "all" >
-     <div class="row">
-        <div class="col-sm-8 resize" style="padding: 2px; height: 100%">
-            <div class="panel panel-default" style="margin-bottom: 0px; height: 200px">
-                <div class="panel-body aa graph text-center" style="width: 100%; height: 100%; overflow-y: auto">
-                    <table id="authTable">
-                    </table>
-                </div>
-            </div>
-            <div class="panel panel-default" style="height: 99%">
-                <div class="panel-body graph a ap text-left" style="width: 100%; height: 100%">
-                    <span id="startMsg"> 
-                    <img id="logo" src="imgs/filled_logo.PNG" height= 100px width = 100px>
-                        <h3 style="transform: translateX(6%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">SemanticBrowser.org</h3>
-                    <p>
-                        A <a class="links" href="https://d3js.org/">D3js</a>-based-browser on a filtered version of the <a class="links" href="https://labs.semanticscholar.org/corpus/" title="SemanticScholar lastest corpus link">Semantic Scholar corpus.</a>
-                        <br>The user can search for papers and build its own cluster of interesting papers including in and out-citations. <br> Above the paper graph the one referred to the authors is displayed. <br> With this tool we hope to simplify the <strong>process of choosing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.
-                    </p>
-                    <hr>
-                    <h4>Usage:</h4>
-                        <ol>
-                          <li>build a topic-based graph by searching  for papers titles in the <strong>AREA PAPER</strong> searchbar</li>
-                          <li>build the set of conflicting authors by searching their names in the <strong>CONFILICTING AUTHORS</strong> search bar</li>
-                        </ol>
-                    Once the graph and the conflicting authors list have been populated, good reviewer candidates are shown in the author area.
-                    <br>For further information visit the <a title="GitHub project page" class="links" href="https://github.com/hybrs/hybrs.github.io">GitHub page</a>.
-                    </span>
-                    <svg id = "svgP" class = "svg" style="width: 100%" height= 500px >
-                    </svg>
-                </div>
+    <!-- First row AT - AG --> 
+    <div class="row ui-widget-content" id="resizable">
+        <div class="col-sm-8">
+            <div id="aut_table" class="container-fluid aa graph" style="width: 100%; overflow-y: auto">
+                <!-- Auth Table -->
+                <table id="authTable">
+                </table>
             </div>
         </div>
-        <div class="col-sm-4" style="padding: 2px; height: 100%">
-            <svg id="tb-svg"></svg>
-            <div class="panel panel-default" style="height: 95%; border: 0px;">
-                <div id = "toolbox" class="panel-body, text-center">
-                    <div class="container-fluid" style="height: 78%; padding-top: 6px;">
-                        <div class="row" id="tbRow1" style="margin-bottom: 5px;">
-                        <div style="transform: translate(0px, 0px)">
-                            <h9 id = "MNP" class="pop-up" >Minimun number of papers</h9>
-                            <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
-                            <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
-                        </div>
-                        </div>
-                         <div class="row" id="tbRow2">
-                        <div>
-                            <h9 id = "MNoC" class="pop-up">Minimum number of out-citations</h9>
-                            <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
-                            <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/> 
-                        </div>
-                        </div>
-                        <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
-                            <div id="colorMapP" style="width: 100%; height: 40px">
-                            <svg id = "svgColorP" height="30px" width="93%" > 
-                            <defs>
-                                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
-                                  <stop id = "firstStopS" offset="0%" style="stop-color:#ff433d;stop-opacity:1" />
-                                  <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />
-                                  <stop id="thirdStopS" offset="100%" style="stop-color:#248bda;stop-opacity:1" />
-                                </linearGradient>
-                              </defs>
-                              <rect id="cmp" x="5" y="5" width="98%" class="pop-up" height="10px" fill="url(#grad2)" text ="100" rx="5px" />
-                                </svg>
-                <!--
-                            <br>
-                                <input name="color1" type="hidden" id="color_value1" value="#ff433d">
-                                <button
-                                    id = "firstStop"
-                                    class="colorP jscolor{valueElement:color_value1, value:'ff433d'}"
-                                    style="float: left; transform: translate(15px, -180%)">
-                                </button>
-                                <input name="color2" type="hidden" id="color_value2" value="#ffffff">
-                                <button
-                                    id = "secondStop"
-                                    class="colorP jscolor{valueElement:color_value2, value: 'ffffff'}"
-                                    style="transform: translate(0, -180%)">
-                                </button>
-                                <input name="color3" type="hidden" id="color_value3" value="#248bda">
-                                <button
-                                    id = "thirdStop"
-                                    class="colorP jscolor{valueElement:color_value3, value: '248bda'}"
-                                    style="float: right; transform: translate(-10px, -180%)">
-                                </button>
-                -->
-                            </div>
-                        </div>
-                        <div class="row" id="tbRow4">
-                            <table id="stats" style=" float:left; width:30%">
-                                <caption class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
-                                <tr>
-                                  <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
-                                <td id="anpn"class="stat"><strong><font color="#1e9476">
-                                    A(N(P)) =</font></strong> 0
-                                    </td>
-                              </tr>
-                              <tr>
-                                <td id="pn" class="stat">
-                                    <strong><font color="#1e9476">P =</font></strong> 0
-                                        </td>
-                                <td id="npn" class="stat">
-                                    <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
-                              </tr>
-                            </table>
-                        <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
-                          <optgroup label="Authors visualization options:">
-                            <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
-                            <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
-                          </optgroup>
-                        </select>
-                        </div>
-                        <!--
-                        <div class="row" id="tbRow5" style="transform: translateY(-20%);border-radius: 5px;">
-
-                            <table style="width:100%;">
-                              <tr>
-                                <td>
-                                    <br>
-                              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">Semantic Browser </span> 
-                            </td>
-                            <td>
-                                <br>
-                            <a id="myLink" target="_blank" rel="author" href="https://it.linkedin.com/in/mario-leonardo-salinas-ba2677138" style=" cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.7em;)">Mario Leonardo Salinas</a>
-                            </td>
-                                <td rowspan="2" style="justify-content: center">
-                                <a href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.6em">(about)</a>
-<br>
-                                <a href="http://labs.semanticscholar.org/corpus/" style="height: 9px; cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.6em">(data courtesy of semanticScholar)</a>
-                                  </td>
-                              </tr>
-                            </table> 
-
-                            
--->
-                        </div>
+        <div class="col-sm-4">Author Graph</div>        
+    </div> 
+    <div class="row">
+        <div class="col-sm-8">
+            <div  class="panel-body container-fluid graph a ap text-left" style="width: 100%; height: 100%">
+                <!-- Start Msg -->
+                <span id="startMsg"> 
+                <img id="logo" src="imgs/filled_logo.PNG" height= 100px width = 100px>
+                    <h3 style="transform: translateX(6%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">SemanticBrowser.org</h3>
+                <p>
+                    A <a class="links" href="https://d3js.org/">D3js</a>-based-browser on a filtered version of the <a class="links" href="https://labs.semanticscholar.org/corpus/" title="SemanticScholar lastest corpus link">Semantic Scholar corpus.</a>
+                    <br>The user can search for papers and build its own cluster of interesting papers including in and out-citations. <br> Above the paper graph the one referred to the authors is displayed. <br> With this tool we hope to simplify the <strong>process of choosing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.
+                </p>
+                <hr>
+                <h4>Usage:</h4>
+                    <ol>
+                      <li>build a topic-based graph by searching  for papers titles in the <strong>AREA PAPER</strong> searchbar</li>
+                      <li>build the set of conflicting authors by searching their names in the <strong>CONFILICTING AUTHORS</strong> search bar</li>
+                    </ol>
+                Once the graph and the conflicting authors list have been populated, good reviewer candidates are shown in the author area.
+                <br>For further information visit the <a title="GitHub project page" class="links" href="https://github.com/hybrs/hybrs.github.io">GitHub page</a>.
+                </span>
+                <!-- Paper Graph -->
+                <svg id = "svgP" class = "svg" style="width: 100%" height= 500px >
+                </svg>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <!-- Toolbox -->
+            <div id = "toolbox" class="panel-body, text-center">
+                <div class="container-fluid" style="height: 78%; padding-top: 6px;">
+                <div class="row" id="tbRow1" style="margin-bottom: 5px;">
+                <div style="transform: translate(0px, 0px)">
+                    <h9 id = "MNP" class="pop-up" >Minimun number of papers</h9>
+                    <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
+                    <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
+                </div>
+                </div>
+                 <div class="row" id="tbRow2">
+                <div>
+                    <h9 id = "MNoC" class="pop-up">Minimum number of out-citations</h9>
+                    <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
+                    <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/> 
+                </div>
+                </div>
+                <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
+                    <div id="colorMapP" style="width: 100%; height: 40px">
+                    <svg id = "svgColorP" height="30px" width="93%" > 
+                    <defs>
+                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop id = "firstStopS" offset="0%" style="stop-color:#ff433d;stop-opacity:1" />
+                          <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />
+                          <stop id="thirdStopS" offset="100%" style="stop-color:#248bda;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <rect id="cmp" x="5" y="5" width="98%" class="pop-up" height="10px" fill="url(#grad2)" text ="100" rx="5px" />
+                        </svg>
                     </div>
                 </div>
+                <div class="row" id="tbRow4">
+                    <table id="stats" style=" float:left; width:30%">
+                        <caption class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
+                        <tr>
+                          <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
+                        <td id="anpn"class="stat"><strong><font color="#1e9476">
+                            A(N(P)) =</font></strong> 0
+                            </td>
+                      </tr>
+                      <tr>
+                        <td id="pn" class="stat">
+                            <strong><font color="#1e9476">P =</font></strong> 0
+                                </td>
+                        <td id="npn" class="stat">
+                            <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
+                      </tr>
+                    </table>
+                <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
+                  <optgroup label="Authors visualization options:">
+                    <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
+                    <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
+                  </optgroup>
+                </select>
+                </div>
+                </div>        
             </div>
-             <div id = "sidenav" class="sidebar-nav navbar-collapse">
+            <!-- Search Bars -->
+            <div id = "sidenav" class="sidebar-nav navbar-collapse">
                 <ul class="nav in" id="side-menu">
                     <li class="sidebar-search">
                     <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                        <span id="conflict-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors <span id="authors-badge"class="badge"></span> </span>
+                        <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors <span id="authors-badge"class="badge"></span> </a>
                         <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
-                        <div class="autocomplete-suggestions", id = "authors-autocomplete-suggestions" style="position: absolute; display: none; width: 65%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                     </div>
                     </li>
                     <li id="aal" class="element">
@@ -182,7 +141,6 @@
                         <div id="searchfield" style="width: 100%; padding-top: 1px;">
                             <span id="area-paper-a" class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper <span id="area-paper-badge"class="badge"></span> </span>
                             <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
-                            <div class="autocomplete-suggestions", id = "papers-autocomplete-suggestions" style="position: absolute; display: none; width: 75%; top: 246px; left: 374.5px; max-height: 50%; z-index: 9999;"></div>
                         </div>
                     </li>
                     <li>
@@ -198,8 +156,10 @@
                     </li>
             </ul>
             </div>
-         </div>
-    </div>   
+        </div>  
+    </div>    
+    
+</div>   
      <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
      <script src="src\authTable.js"></script>
      <script src="src\mouse-handlers.js"></script>
