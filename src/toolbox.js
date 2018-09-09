@@ -148,7 +148,7 @@ function colorMappingInit(){
     d3.select('#color_value1').on("change", function(){
         /*Aggiungere rettangolo sopra testo e onchange rimuovi+riaggiungi*/
         fS = "#"+this.value
-        console.log(this)
+        //console.log(this)
         updateColorMap()
         });
     d3.select('#color_value2').on("change", function(){
@@ -162,11 +162,70 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
+  /*
     authViz.addEventListener('change', function(){
             authorGraph()
     });
+    */
+    let spinnerMNoC = $( "#MNoC" ).spinner({
+            min: 0,
+            disabled: true,
+            max: 100,
+            spin: function( event, ui ) {
+                //console.log(ui.value)
+                thetaCit = ui.value;
+                if(papersFiltered.length>0)
+                    paperGraph(papersFiltered, citPrint, idPs, simulation)
+                },
+            change: function( event, ui ) {
+                this.value = this.value > 100 ? 100 : this.value;
+                this.value = this.value < 0 ? 0 : this.value;
+                thetaCit = this.value;
+                if(papersFiltered.length>0)
+                    paperGraph(papersFiltered, citPrint, idPs, simulation)
+                }
+        });
+    let spinnerMNP = $( "#MNP" ).spinner({
+            min: 0,
+            disabled: true,
+            max: 20,
+            spin: function( event, ui ) {
+                    thetaPap = ui.value;
+                    authorGraph();
+                },
+            change: function( event, ui ) {
+                this.value = this.value > 30 ? 30 : this.value;
+                this.value = this.value < 0 ? 0 : this.value;
+                thetaPap = this.value;
+                authorGraph();
+                }
+        });
+    $( ".spinner" ).spinner( "value", 0 );
+    $( "#disableMNP" ).on( "click", function() {
+      if ( spinnerMNP.spinner( "option", "disabled" ) ) {
+        spinnerMNP.spinner( "enable" );
+        this.innerHTML = "Remove filter"
+      } else {
+        spinnerMNP.spinner( "disable" );
+        this.innerHTML = "Filter auhtors"
+        authorGraph()
+      }
+    });
+    $( "#disableMNoC" ).on( "click", function() {
+      if ( spinnerMNoC.spinner( "option", "disabled" ) ) {
+        spinnerMNoC.spinner( "enable" );
+          this.innerHTML = "Remove filter"
+      } else {
+        spinnerMNoC.spinner( "disable" );
+        this.innerHTML = "Filter papers"
+        if(papersFiltered.length>0)
+            paperGraph(papersFiltered, citPrint, idPs, simulation)
+      }
+    });
+    $( "button" ).button();
 }
 
+//Not used
 function setPopUps(){
     let svg = toolboxSvg;
     svg.style("width", "300px")
@@ -206,8 +265,8 @@ function setPopUps(){
 }
 
 function toolboxInit(){
-    createSliders()
+    //createSliders()
     colorMappingInit()
     checkboxesInit()
-    setPopUps()
+    setup_popups()
 }

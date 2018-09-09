@@ -92,7 +92,7 @@ function authorGraph(){
     $("#anpn").html("<strong><font color=\"#1e9476\">A(N(P)) =</font></strong> "+ANP.length)
     
     if(authsDef){
-        if(checkboxTP.checked )
+        if(!checkboxTP.spinner( "option", "disabled" ))
             authsDef = authsDef.filter(thetaPapFilter) 
         var na = authsDef.length
         authsDef = rankAuths(authsDef)   

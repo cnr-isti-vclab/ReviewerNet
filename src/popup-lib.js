@@ -1,3 +1,17 @@
+function setup_popups(){
+    $( ".pop-up" ).tooltip({
+      show: {
+        effect: "slideDown",
+        delay: 200
+      }
+    });
+}
+
+
+/*
+*
+*   OLD VER
+*
 function popup(title, svg){
     d3.selectAll(".text-pop").remove()
     d3.selectAll("#pop-line").remove()
@@ -133,3 +147,4 @@ function hide_popup(){
         .duration(300)
         .attr("opacity","0")
 }
+*/

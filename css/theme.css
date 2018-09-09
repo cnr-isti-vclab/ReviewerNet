@@ -2,11 +2,19 @@ html, body, .container-fluid {
     height:100%;
 }
 
+.pop-up{
+    cursor: help
+}
+
 #resizable { 
     width:inherit; 
     min-height: 200px; 
     max-height: 450px;
     background-color: rgba( 223, 225, 225, 0 );
+}
+
+.spinner {
+    max-width: 30px
 }
 
 .ui-widget-content {

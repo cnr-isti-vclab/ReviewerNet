@@ -44,8 +44,8 @@ var graph = [], alpha = 0.7, beta = 0.4,
     maxInCits = 0,
     maxInCits = 0,
     maxYear = 1900,
-    checkboxTP = document.getElementById('thetaPapCb'),
-    checkboxTOC = document.getElementById('thetaCitCb'),
+    checkboxTP = $('#MNP'),
+    checkboxTOC = $('#MNoC'),
     authViz = document.getElementById('authViz'),
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
@@ -731,7 +731,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
 
 //rgba( 223, 225, 225, 0.604 )
 function checkThetaLink(d){
-    if(checkboxTOC.checked)    
+    if(!checkboxTOC.spinner( "option", "disabled" ))   
         if(d.source.nOc >= thetaCit && d.target.nOc >= thetaCit)
                 return 1;
             else
@@ -740,7 +740,7 @@ function checkThetaLink(d){
 }
 
 function checkThetaNode(d1){
-  if(checkboxTOC.checked)
+  if(!checkboxTOC.spinner( "option", "disabled" ))
         if(d1.nOc >= thetaCit)
             return 1;
         else
@@ -820,15 +820,8 @@ $(function (){
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     
-    /*
-        Tutti in un file a parte
-    */
-    $( "#conflict-a" ).tooltip({
-      show: {
-        effect: "slideDown",
-        delay: 150
-      }
-    });
+    
+    
     
     $('#authors-autocomplete').autocomplete({
         source: authors,
