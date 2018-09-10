@@ -20,7 +20,7 @@ import heapq
 
     
 corpus = r"C:/**/0518corpus.json"
-#Set of interesting Journals J 
+#Set of interesting Journals J : {ACM TOG, CGF, IEEE TVCG, SIGGRAPH, VisComp, C&G, IEEE Vis, IEEE CGA}
 journals = ['ACM Transactions on Graphics', 'ACM Trans. on Graph.','ACM Trans. Graph.', \
             'ACM TOG','Computer Graphics Forum', 'Comp. Graph. Forum', \
             'IEEE Transactions on Visualization and Computer Graphics', \
