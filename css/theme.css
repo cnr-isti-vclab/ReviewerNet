@@ -1,5 +1,9 @@
-html, body, .container-fluid {
-    height:100%;
+.gui-menu-item{
+    font-style: oblique;
+    font-variant-caps: titling-caps; 
+    font-size: 0.8em; 
+    font-weight: bold;
+    color: #1e9476;
 }
 
 .pop-up{
@@ -10,11 +14,26 @@ html, body, .container-fluid {
     width:inherit; 
     min-height: 200px; 
     max-height: 450px;
-    background-color: rgba( 223, 225, 225, 0 );
+    background-color: #efefef;
 }
 
-.spinner {
-    max-width: 30px
+.ui-spinner {
+    width: 40px
+}
+
+.ui-icon{
+    width: 8px;
+    height: 8px
+}
+
+.ui-spinner-button{
+    width: 12px
+}
+
+.ui-menu-item{
+    font-size: 0.85em;
+    padding: 0px;
+    margin: 1px
 }
 
 .ui-widget-content {
@@ -45,6 +64,7 @@ html, body, .container-fluid {
 
 body {
     background-color: rgba( 223, 225, 225, 0.604 );
+    /*overflow-y: hidden; */
 }
 
 #cmp {
@@ -137,6 +157,10 @@ text {
 .stat {
     font-size: 0.8em;
     font-style: italic;
+}
+
+.auth-name{
+    position: absolute
 }
 
 #authTable {
@@ -341,7 +365,7 @@ td.list-group-item {
 #logo {
     position: absolute;
     float: left;
-    transform: translate(-20%, -35%)
+    transform: translate(-20%, -20%)
 }
 
 footer {
@@ -350,6 +374,7 @@ footer {
 
 #startMsg {
     position: absolute;
+    background-color: #efefef;
 }
 
 hr {

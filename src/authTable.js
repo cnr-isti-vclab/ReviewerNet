@@ -115,13 +115,14 @@ function authorGraph(){
                 .attr("id", function (d){ return "aa"+d.id})
                 .attr("class", "authNode")
                 .attr('x',function(d){
-                     return xConstrained(authDict[d.id][0]-0.5);
+                    let x = xConstrained(authDict[d.id][0]-0.5);
+                     return (x < 0 ? 0 : x);
                 })
                 .attr('y',6)
                 .attr('width',function(d){
                     let nw = xConstrained(authDict[d.id][1]+0.3),
                         od = xConstrained(authDict[d.id][0]-0.5);
-                    return nw-od;
+                    return (od < 0 ? nw : nw-od );
                 })
                 .attr('height', "10px")
                 .attr('fill', function (d){
@@ -139,9 +140,38 @@ function authorGraph(){
                     if(authsExclude.includes(d.id))
                         return "rgba( 47, 198, 212, 0.713 )"
                     })
+                .style("z-index", "98")
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
                 .on("mouseout", handlerMouseOutA)
+        
+        authTable.selectAll(".svgA").append("line")
+                .attr("id", function (d){ return "aaline"+d.id})
+                .attr("class", "authLine")
+                .attr('x1',function(d){
+                    let pl = authDict[d.id][2], 
+                        m = pl[0].year
+                        
+                     for (var i = 1; i < pl.length; i++)
+                         m = Math.min(m, pl[i].year)
+            
+                     return (xConstrained(m) < 0 ? 0 : xConstrained(m));
+                })
+                .attr('y1',11)
+                .attr('x2',function(d){ 
+                    let pl = authDict[d.id][2], 
+                        m = pl[0].year
+                        
+                     for (var i = 1; i < pl.length; i++)
+                         m = Math.max(m, pl[i].year)
+            
+                     return xConstrained(m);
+                })
+                .attr('y2',11)
+                .style("stroke", "rgba( 251, 197, 125, 0.83 )")
+                .style("z-index", "1")
+                .style("stroke-width", "2px")
+        
          
         authTable.selectAll(".svgA")
                 .append("text")
@@ -161,15 +191,15 @@ function authorGraph(){
                 })
                 .attr("x", function(d){
                     let nw = xConstrained(authDict[d.id][1] + 0.3),
-                        od = xConstrained(authDict[d.id][0] - 0.5),
+                        od = (xConstrained(authDict[d.id][0] - 0.5) < 0 ? 0 : xConstrained(authDict[d.id][0] - 0.5)),
                         delta = nw-od,
                         rW = d3.select(this).node().getBBox().width,
                         rH = d3.select(this).node().getBBox().height,
                         nX = od+(delta-rW)/2;
-                console.log("text: "+this.text +" l = "+rW)
-                    if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-10 );
-                    else return Math.max(5, Math.min(od+((delta-rW)/2), $(".ap").width()-rW-30));
+                    if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
+                    else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
                 })
+                .style("z-index", "99")
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
                 .on("mouseout", handlerMouseOutA)

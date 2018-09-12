@@ -11,6 +11,7 @@ var graph = [], alpha = 0.7, beta = 0.4,
     papersPrint = [],
     papersCit = {},
     authDict = {}, // [idA][oldX, newX]
+    authHist = {}, // {idA, year1:[idList], year2:[idList]...}
     inC = [],
     outC = [],
     its = 0,
@@ -39,11 +40,10 @@ var graph = [], alpha = 0.7, beta = 0.4,
     idA, idAs = [],
     idPs = [], ul,
     simulation, simulationA,
-    minYear = 2018,
+    minYear = 1995,
     minInCits = 100,
     maxInCits = 0,
-    maxInCits = 0,
-    maxYear = 1900,
+    maxYear = 2018,
     checkboxTP = $('#MNP'),
     checkboxTOC = $('#MNoC'),
     authViz = document.getElementById('authViz'),
@@ -57,7 +57,7 @@ var graph = [], alpha = 0.7, beta = 0.4,
         .domain([0, 40])
         .range([5, 20]),
     xConstrained = d3.scaleLinear()
-        .domain([maxYear, minYear])
+        .domain([minYear, maxYear])
         .range([10, width - 20]),
     xaxis = d3.axisBottom().scale(xConstrained); 
 
@@ -79,9 +79,9 @@ function getXTxt(x, wdt){
 
 function paperFilter (item) { 
     var r = papersPrint.includes(item.id);
-    if(r)
+    /*if(r)
         updateYear(item.year)
-    return r;
+    */return r;
 };
 
 function updateYear(y){
@@ -232,24 +232,30 @@ function getArrays(graph) {
     var p = graph.nodes,
         n = p.length;
     for (i = 0; i < n; i++)
-        papers[i]=p[i]
+        papers.push(p[i])
+        //papers[i]=p[i]
     var c = graph.links,
         n = c.length;
     for (i = 0; i < n; i++)
         citations[i]=c[i]
+        // empty f
+    getAuths()
   }
 
 function getAuths() {
     var authTxt = fetch('datasets/a_v0518f.txt')
         .then(response => response.text())
         .then(function(text){
-            var authG = JSON.parse(text)
-            var a = authG.authors
-            var n = a.length
+            var authG = JSON.parse(text),
+                a = authG.authors,
+                n = a.length
             for (i = 0; i < n; i++){
                 authors[i]=a[i]
-                authDict[a[i].id] = [2019, 1900]}    
+                authDict[a[i].id] = [2019, 1900, []]
+            }
+            
         })
+        
     }
 
 function deleteP(idCk){
@@ -257,11 +263,8 @@ function deleteP(idCk){
     AP = []
     ANP = []
     if (index > -1) {
-        minYear = 2018
         minInCits = 100
-        maxInCits = 0
-        maxInCits = 0
-        maxYear = 1900        
+        maxInCits = 0       
         
         idPs.splice(index, 1);
         idsT = idPs
@@ -285,7 +288,7 @@ function deleteP(idCk){
                 var pap = pT[i];
                 idP = pap.id
                 if(!addId(pap.value, pap.year)){
-                  updateYear(pap.year)
+                  //updateYear(pap.year)
                   updateADpapers()
                 }    
             }
@@ -332,7 +335,19 @@ function setMouseHandlers(){
         .on("dblclick", "li", papDblc);
 }
 
+function updateAuthDict(pf){
+    for(var j = 0; j < pf.length; j++){
+        var auths = pf[j].authsId
+        for(var i = 0; i < auths.length; i++)
+            if(authDict[auths[i]][2].length == 0 )
+                authDict[auths[i]][2] = papers.filter(function(el){
+                        return el.authsId.includes(auths[i])
+                    })
+    }
+}
+
 function addPaper(suggestion){
+    this.value=""
     if(start){
         document.getElementById("startMsg").style.visibility = "hidden";
         start = false;
@@ -344,10 +359,11 @@ function addPaper(suggestion){
     setPapHandlers()
     //setMouseHandlers()
     if(!isIn){
-      updateYear(suggestion.year)
-      updateADpapers()
-      paperGraph(papersFiltered, citPrint, idPs, simulation)
-      authorGraph()
+      //updateYear(suggestion.year)
+        updateADpapers()
+        updateAuthDict(papersFiltered)
+        paperGraph(papersFiltered, citPrint, idPs, simulation)
+        authorGraph()
     }
 }
 
@@ -585,8 +601,9 @@ function setSimulation(){
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
     simulation.force("charge", d3.forceManyBody().strength(-300))
-        .force("center", d3.forceCenter(w / 2, h / 2))
+        .force("center", d3.forceCenter((w / 2), (h / 2)))
         .force('collision', d3.forceCollide().radius(20))
+    
     return simulation;
 
 }
@@ -816,10 +833,8 @@ $(function (){
     });
 
     getPaperSvg()
-    getAuths()
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
-    
     
     
     
@@ -828,6 +843,7 @@ $(function (){
         minLength: 3,
         showNoSuggestionNotice: true,
         response: function(event, ui){
+            ui.content.sort(function (a, b) {return a.value >= b.value;});
             $('#authors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
@@ -847,7 +863,8 @@ $(function (){
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
                 authorGraph()
             }
-        $('#authors-badge').html("")                                
+        $('#authors-badge').html("")
+            this.value = ""
         }
     });
     
@@ -856,8 +873,8 @@ $(function (){
         .then(function(text) {
             var graph = JSON.parse(text);
             getArrays(graph)
+            
     });
-    
     
     $('#papers-autocomplete').autocomplete({
         source: papers,
@@ -865,7 +882,7 @@ $(function (){
         response: function( event, ui ) {    
             ui.content.sort(function (a, b) {return a.year <= b.year;});
             $('#area-paper-badge').html(ui.content.length)
-        },
+        },/*
         beforeRender: function(container, suggestions){
             var $divs = $(".autocomplete-suggestion")
             //console.log(container)
@@ -879,19 +896,19 @@ $(function (){
             container.html(alphabeticallyOrderedDivs);
             suggestions.sort(function(a, b){return a.year <= b.year});
             
-        },
+        },*/
         select: function (event, ui) {
             addPaper(ui.item)
-            this.value = null
+            this.value = ""
             $('#area-paper-badge').html("")
-        },
-        formatResult: function (suggestion, currentValue) {
-            return suggestion.value + ", " + suggestion.year 
         }
       })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
+       let name = item.value
+        if(item.value.length > 45)
+            name = name.substring(0,45) + "..."
       return $( "<li>" )
-        .append( "<div>" + item.value+ "<br>" + item.year + "</div>" )
+        .append( "<div><strong>" + item.year+ "</strong>, " + name + "</div>" )
         .appendTo( ul );
     };
     
