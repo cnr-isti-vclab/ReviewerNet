@@ -14,6 +14,10 @@ function handlerMouseOverA(d){
     d3.select("#aa"+d.id)
         .transition().duration(200)
         .attr('fill',"rgba( 138, 223, 223, 0.569 )")
+
+    d3.select("#aaline"+d.id)
+        .transition().duration(200)
+        .style('stroke',"rgba( 138, 223, 223, 0.569 )")
     
    /*histogram paper for each author
     
@@ -84,6 +88,12 @@ function handlerMouseOverA(d){
 
 function handlerMouseOutA(d){
     d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
@@ -162,6 +172,13 @@ function handleMouseOver(d){
                 return color(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
+     d3.selectAll(".authlLine")
+        .transition().duration(200)
+        .style("stroke", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+         })
 }
 
 function handleMouseOut(d){
@@ -178,6 +195,14 @@ function handleMouseOut(d){
     d3.selectAll(".authNode")
         .transition().duration(200)
         .attr("fill", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
+    d3.selectAll(".authlLine")
+        .transition().duration(200)
+        .style("stroke", function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
