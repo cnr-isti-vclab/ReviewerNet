@@ -253,6 +253,10 @@ td.list-group-item {
     font-size: 0.9em
 }
 
+.paper_in_bars{
+    cursor: pointer
+}
+
 #paperInfo{
     font-size: 0.9em;
 }

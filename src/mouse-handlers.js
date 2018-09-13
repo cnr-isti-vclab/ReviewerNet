@@ -215,6 +215,88 @@ function clickHandler(d){
     setPapHandlers()
 }
 
+function handleMouseOverPB(d){ 
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 4);
+    
+    var txt = d.value
+    /*
+    if(txt.length>80)
+        txt = txt.substring(0,80)+"...";
+    */
+    if(papersPrint.includes(d.id)){
+        popText.text(txt)
+        var bbox = popText.node().getBBox();
+        var wd = bbox.width,
+            ht = bbox.height,
+            pap = d3.select("#p"+d.id),
+            x = pap.node().cx.baseVal.value,
+            y = pap.node().cy.baseVal.value;
+        //popRect.attr('fill', color(d.color))
+        popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
+            .attr('width',wd +10)
+            .attr('height',ht+2)
+            .attr("x", getXRect(x, wd))
+            .attr("y", y-8)
+            .transition()
+            .duration(200)
+            .attr("opacity", 1)
+        popText.attr("x", getXTxt(x, wd))
+            .attr("y", y + 4)
+            .transition()
+            .duration(200)
+            .attr("opacity", 1)
+        pap.transition()
+            .duration(200)
+            .attr("r", 10)
+    }else{
+        popText.text(txt)
+        var bbox = popText.node().getBBox();
+        var wd = bbox.width,
+            ht = bbox.height,
+            x = 250,
+            y = 50;
+        //popRect.attr('fill', color(d.color))
+        popRect.attr('fill', "rgba( 67, 230, 238)")
+            .attr('width',wd +10)
+            .attr('height',ht+2)
+            .attr("x", getXRect(x, wd))
+            .attr("y", y-8)
+            .transition()
+            .duration(200)
+            .attr("opacity", 1)
+        popText.attr("x", getXTxt(x, wd))
+            .attr("y", y + 4)
+            .transition()
+            .duration(200)
+            .attr("opacity", 1)
+    }
+}
+
+function handleMouseOutPB(d){
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 3);
+    popText.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    popRect.attr("x", -5000)
+        .attr("width", 0)
+        .attr("opacity", 0);
+    if(papersPrint.includes(d.id)){
+        d3.select("#p"+d.id).transition()
+            .duration(200)
+            .attr("r", 6);
+    }
+}
+
+function clickHandlerPB(d){
+    $('#paperInfo').html(paperInfo(d))
+    setPapHandlers()
+}
+
+
 function addFromList(event){
     var idClick = event.target.id;
     
