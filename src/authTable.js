@@ -111,6 +111,37 @@ function authorGraph(){
                     return "svgA"+d.id;
                 })
                 .attr("class", "svgA")
+                .append("line")
+                .attr("id", function (d){ return "aaline"+d.id})
+                .attr("class", "authlLine")
+                .attr('x1',function(d){
+                    let pl = authDict[d.id][2], 
+                        m = pl[0].year
+                        
+                     for (var i = 1; i < pl.length; i++)
+                         m = Math.min(m, pl[i].year)
+            
+                     return (xConstrained(m) < 0 ? 0 : xConstrained(m));
+                })
+                .attr('y1',11)
+                .attr('x2',function(d){ 
+                    let pl = authDict[d.id][2], 
+                        m = pl[0].year
+                        
+                     for (var i = 1; i < pl.length; i++)
+                         m = Math.max(m, pl[i].year)
+            
+                     return xConstrained(m);
+                })
+                .attr('y2',11)
+                .style("stroke", "rgba( 251, 197, 125, 0.83 )")
+                .style("z-index", "1")
+                .style("stroke-width", "2px")
+                .on("click", authClickHandler)
+                .on("mouseover", handlerMouseOverA)
+                .on("mouseout", handlerMouseOutA)
+        
+        authTable.selectAll(".svgA")
                 .append("rect")
                 .attr("id", function (d){ return "aa"+d.id})
                 .attr("class", "authNode")
@@ -144,33 +175,6 @@ function authorGraph(){
                 .on("click", authClickHandler)
                 .on("mouseover", handlerMouseOverA)
                 .on("mouseout", handlerMouseOutA)
-        
-        authTable.selectAll(".svgA").append("line")
-                .attr("id", function (d){ return "aaline"+d.id})
-                .attr("class", "authLine")
-                .attr('x1',function(d){
-                    let pl = authDict[d.id][2], 
-                        m = pl[0].year
-                        
-                     for (var i = 1; i < pl.length; i++)
-                         m = Math.min(m, pl[i].year)
-            
-                     return (xConstrained(m) < 0 ? 0 : xConstrained(m));
-                })
-                .attr('y1',11)
-                .attr('x2',function(d){ 
-                    let pl = authDict[d.id][2], 
-                        m = pl[0].year
-                        
-                     for (var i = 1; i < pl.length; i++)
-                         m = Math.max(m, pl[i].year)
-            
-                     return xConstrained(m);
-                })
-                .attr('y2',11)
-                .style("stroke", "rgba( 251, 197, 125, 0.83 )")
-                .style("z-index", "1")
-                .style("stroke-width", "2px")
         
          
         authTable.selectAll(".svgA")

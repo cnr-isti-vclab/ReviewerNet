@@ -167,7 +167,7 @@ text {
     height: inherit;
 }
 
-.authNode {
+.authNode, .authlLine {
     cursor: pointer
 }
 
