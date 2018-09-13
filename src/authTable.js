@@ -77,6 +77,42 @@ function authColor(author){
     return exclude
 }
 
+function printPapers(auths){
+    let an = auths.length
+    for(var i = 0; i < an; i++){
+        let id_a = auths[i].id
+        //console.log(authDict[id_a][2])
+        //console.log(authors.filter(function (el){return el.id === id_a;}))
+        //console.log(authDict[id_a])
+        
+        d3.select("#svgA"+ id_a).selectAll("circle")
+            .data(authDict[id_a][2]).enter()
+            .append("circle")
+            .attr("class", "paper_in_bars")
+            .attr("cx", function (d){
+                //console.log(d)
+                return xConstrained(d.year + d.x_bar)
+            })
+            .attr("cy", 15)
+            .attr("r",3)
+            .attr("stroke", "rgba( 0, 0, 0, 0.22 )")
+            .attr("stroke-width", "1px")
+            .attr("fill", function (d){
+                if(idPs.includes(d.id))
+                    return "rgba( 255, 15, 15, 0.72 )"
+                else if(papersPrint.includes(d.id))
+                    return  "rgba( 71, 255, 160, 0.53 )"
+                else return "rgba( 0, 0, 0, 0.12 )"
+            })
+            .on("click", clickHandlerPB)
+            .on("mouseover", handleMouseOverPB)
+            .on("mouseout", handleMouseOutPB)
+            .on("dblclick", function(d) {
+                addPaper(d)
+            })
+    }
+}
+
 function authorGraph(){
     var authsDef = null;
     authsFiltered = [];
@@ -102,110 +138,113 @@ function authorGraph(){
         });
         
         authTable.selectAll("tr")
-                .data(authsDef)
-                .enter().append("tr")
-                .attr("class", "authLine")
-                .append("td")
-                .attr("class", "authline")
-                .append("svg").attr("id", function(d){
-                    return "svgA"+d.id;
-                })
-                .attr("class", "svgA")
-                .append("line")
-                .attr("id", function (d){ return "aaline"+d.id})
-                .attr("class", "authlLine")
-                .attr('x1',function(d){
-                    let pl = authDict[d.id][2], 
-                        m = pl[0].year
-                        
-                     for (var i = 1; i < pl.length; i++)
-                         m = Math.min(m, pl[i].year)
-            
-                     return (xConstrained(m) < 0 ? 0 : xConstrained(m));
-                })
-                .attr('y1',11)
-                .attr('x2',function(d){ 
-                    let pl = authDict[d.id][2], 
-                        m = pl[0].year
-                        
-                     for (var i = 1; i < pl.length; i++)
-                         m = Math.max(m, pl[i].year)
-            
-                     return xConstrained(m);
-                })
-                .attr('y2',11)
-                .style("stroke", "rgba( 251, 197, 125, 0.83 )")
-                .style("z-index", "1")
-                .style("stroke-width", "2px")
-                .on("click", authClickHandler)
-                .on("mouseover", handlerMouseOverA)
-                .on("mouseout", handlerMouseOutA)
+            .data(authsDef)
+            .enter().append("tr")
+            .attr("class", "authLine")
+            .append("td")
+            .attr("class", "authline")
+            .append("svg").attr("id", function(d){
+                return "svgA"+d.id;
+            })
+            .attr("class", "svgA")
+            .append("line")
+            .attr("id", function (d){ return "aaline"+d.id})
+            .attr("class", "authlLine")
+            .attr('x1',function(d){
+                let pl = authDict[d.id][2], 
+                    m = pl[0].year
+
+                 for (var i = 1; i < pl.length; i++)
+                     m = Math.min(m, pl[i].year)
+
+                 return (xConstrained(m) < 0 ? 0 : xConstrained(m));
+            })
+            .attr('y1',15)
+            .attr('x2',function(d){ 
+                let pl = authDict[d.id][2], 
+                    m = pl[0].year
+
+                 for (var i = 1; i < pl.length; i++)
+                     m = Math.max(m, pl[i].year)
+
+                 return xConstrained(m);
+            })
+            .attr('y2',15)
+            .style("stroke", "rgba( 251, 197, 125, 0.83 )")
+            .style("z-index", "1")
+            .style("stroke-width", "2px")
+            .on("click", authClickHandler)
+            .on("mouseover", handlerMouseOverA)
+            .on("mouseout", handlerMouseOutA)
         
         authTable.selectAll(".svgA")
-                .append("rect")
-                .attr("id", function (d){ return "aa"+d.id})
-                .attr("class", "authNode")
-                .attr('x',function(d){
-                    let x = xConstrained(authDict[d.id][0]-0.5);
-                     return (x < 0 ? 0 : x);
+            .append("rect")
+            .attr("id", function (d){ return "aa"+d.id})
+            .attr("class", "authNode")
+            .attr('x',function(d){
+                let x = xConstrained(authDict[d.id][0]-0.5);
+                 return (x < 0 ? 0 : x);
+            })
+            .attr('y',6)
+            .attr('width',function(d){
+                let nw = xConstrained(authDict[d.id][1]+0.3),
+                    od = xConstrained(authDict[d.id][0]-0.5);
+                return (od < 0 ? nw : nw-od );
+            })
+            .attr('height', "10px")
+            .attr('fill', function (d){
+                if(authColor(d))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+            .style("border-radius", "30px")
+            .style("stroke-width", function (d){
+                if(authsExclude.includes(d.id))
+                    return 0.8
+                else return 0})
+            .style("stroke", function (d){
+                if(authsExclude.includes(d.id))
+                    return "rgba( 47, 198, 212, 0.713 )"
                 })
-                .attr('y',6)
-                .attr('width',function(d){
-                    let nw = xConstrained(authDict[d.id][1]+0.3),
-                        od = xConstrained(authDict[d.id][0]-0.5);
-                    return (od < 0 ? nw : nw-od );
-                })
-                .attr('height', "10px")
-                .attr('fill', function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
-                .style("border-radius", "30px")
-                .style("stroke-width", function (d){
-                    if(authsExclude.includes(d.id))
-                        return 0.8
-                    else return 0})
-                .style("stroke", function (d){
-                    if(authsExclude.includes(d.id))
-                        return "rgba( 47, 198, 212, 0.713 )"
-                    })
-                .style("z-index", "98")
-                .on("click", authClickHandler)
-                .on("mouseover", handlerMouseOverA)
-                .on("mouseout", handlerMouseOutA)
+            .style("z-index", "98")
+            .on("click", authClickHandler)
+            .on("mouseover", handlerMouseOverA)
+            .on("mouseout", handlerMouseOutA)
         
          
         authTable.selectAll(".svgA")
-                .append("text")
-                .attr("class", "auth-name")
-                .attr("y", 15)
-                //.attr('fill',"rgba( 221, 167, 109, 0.2 )")
-                .style("border-radius", "3px")
-                .attr("text-anchor", "center")  
-                .style("font-size", "12px")
-                .text(function (d){ return d.value })
-                .attr("fill",  function (d){
-                    if(authColor(d))
-                        return "#db0000";
-                    else if(authsExclude.includes(d.id))
-                            return "#be27be"
-                        else return "#474747";
-                })
-                .attr("x", function(d){
-                    let nw = xConstrained(authDict[d.id][1] + 0.3),
-                        od = (xConstrained(authDict[d.id][0] - 0.5) < 0 ? 0 : xConstrained(authDict[d.id][0] - 0.5)),
-                        delta = nw-od,
-                        rW = d3.select(this).node().getBBox().width,
-                        rH = d3.select(this).node().getBBox().height,
-                        nX = od+(delta-rW)/2;
-                    if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
-                    else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
-                })
-                .style("z-index", "99")
-                .on("click", authClickHandler)
-                .on("mouseover", handlerMouseOverA)
-                .on("mouseout", handlerMouseOutA)
+            .append("text")
+            .attr("class", "auth-name")
+            .attr("y", 10)
+            //.attr('fill',"rgba( 221, 167, 109, 0.2 )")
+            .style("border-radius", "3px")
+            .attr("text-anchor", "center")  
+            .style("font-size", "12px")
+            .text(function (d){ return d.value })
+            .attr("fill",  function (d){
+                if(authColor(d))
+                    return "#db0000";
+                else if(authsExclude.includes(d.id))
+                        return "#be27be"
+                    else return "#474747";
+            })
+            .attr("x", function(d){
+                let nw = xConstrained(authDict[d.id][1] + 0.3),
+                    od = (xConstrained(authDict[d.id][0] - 0.5) < 0 ? 0 : xConstrained(authDict[d.id][0] - 0.5)),
+                    delta = nw-od,
+                    rW = d3.select(this).node().getBBox().width,
+                    rH = d3.select(this).node().getBBox().height,
+                    nX = od+(delta-rW)/2;
+                if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
+                else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
+            })
+            .style("z-index", "99")
+            .on("click", authClickHandler)
+            .on("mouseover", handlerMouseOverA)
+            .on("mouseout", handlerMouseOutA)
+        
+        printPapers(authsDef)        
     }
+    
 }
