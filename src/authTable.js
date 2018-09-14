@@ -91,7 +91,7 @@ function printPapers(auths){
             .attr("class", "paper_in_bars")
             .attr("cx", function (d){
                 //console.log(d)
-                return xConstrained(d.year + d.x_bar)
+                return xConstrained(d.year + d.x_bar - 0.5)
             })
             .attr("cy", 15)
             .attr("r",3)
@@ -157,7 +157,7 @@ function authorGraph(){
                  for (var i = 1; i < pl.length; i++)
                      m = Math.min(m, pl[i].year)
 
-                 return (xConstrained(m) < 0 ? 0 : xConstrained(m));
+                 return (xConstrained(m-0.5) < 0 ? 0 : xConstrained(m-0.5));
             })
             .attr('y1',15)
             .attr('x2',function(d){ 
@@ -167,7 +167,7 @@ function authorGraph(){
                  for (var i = 1; i < pl.length; i++)
                      m = Math.max(m, pl[i].year)
 
-                 return xConstrained(m);
+                 return xConstrained(m + 0.3);
             })
             .attr('y2',15)
             .style("stroke", "rgba( 251, 197, 125, 0.83 )")

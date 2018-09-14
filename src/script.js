@@ -61,20 +61,32 @@ var graph = [], alpha = 0.7, beta = 0.4,
         .range([10, width - 20]),
     xaxis = d3.axisBottom().scale(xConstrained); 
 
-function getXRect(x, wdt){
+function getXRect(x, wdt, inGraph){
+    
     if(x+wdt >= width)
-        return x - wdt -15
-    else return x + 5
+        if(inGraph)
+            return x-wdt-15
+        else return width - wdt -15
+    else if(x+wdt < wdt) return 5
+        else return x + 5
 }
 
 function updateWidth(){
     xConstrained.range([15, w -30]);
 }
 
-function getXTxt(x, wdt){
+function getXTxt(x, wdt, inGraph){
+    if(x+wdt >= width)
+        if(inGraph)
+            return x-wdt-10
+        else return width - wdt -10
+    else if(x+wdt < wdt) return 10
+        else return x + 10
+    /*
     if(x+wdt >= width)
         return x - wdt -10
     else return x + 10
+    */
 }
 
 function paperFilter (item) { 
@@ -143,7 +155,7 @@ function papName(d){
         x = d3.select("#p"+d.id).node().cx.baseVal.value,
         y = d3.select("#p"+d.id).node().cy.baseVal.value;
     texts.push(p_name)
-    p_name.attr("x", getXTxt(x, wd))
+    p_name.attr("x", getXTxt(x, wd, true))
         .attr("y", y + 4)
         .attr("opacity", 1)
         .attr("fill", "#000000")    
