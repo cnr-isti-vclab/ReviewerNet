@@ -1,3 +1,6 @@
+//grandezza dot proporzionale al numero di pap visualizzati (formula da auth bar)
+//opacità/colore proporzionale co_auth.value
+
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
         .attr("width", "100%")
@@ -119,7 +122,7 @@ function authorGraph() {
         .enter().append("line")
         .attr("class", "alink")
         .attr("marker-start","url(#end)")
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", function(d){return d.value*0.05})
         .style("pointer-events", "none");
 
     var node = svg.append("g")
@@ -129,7 +132,11 @@ function authorGraph() {
         .enter().append("circle")
         .attr("class", "authors-dot")
         .attr("id", function(d){return "ag"+d.id})
-        .attr("r", 3)
+        .attr("r", function(d){
+            if(idAs.includes(d.id))
+                return 4.5;
+            else return 2.5;
+            })
         .attr("stroke", function(d){
             if(idAs.includes(d.id))
                 return "green";
@@ -140,7 +147,10 @@ function authorGraph() {
                 return 2.5;
             })
         .attr("fill", function(d) {
-            return "rgba( 136, 185, 200, 0.627 )"}
+             if(idAs.includes(d.id))
+                return "#ff800a";
+            else return "rgba( 15, 183, 255, 0.673 )";
+            }
             /*
             if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
             else return "rgba( 64, 145, 215, 0.519 )";}*/)

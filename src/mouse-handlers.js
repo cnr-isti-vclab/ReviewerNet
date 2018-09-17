@@ -21,7 +21,7 @@ function handlerMouseOverA(d){
     
     d3.select("#ag"+d.id)
         .transition().duration(200)
-        .attr("r", 6)
+        .attr("r", 7)
     
    /*histogram paper for each author
     
@@ -100,7 +100,11 @@ function handlerMouseOutA(d){
     
    d3.select("#ag"+d.id)
         .transition().duration(200)
-        .attr("r", 3) 
+        .attr("r", function(d){
+            if(idAs.includes(d.id))
+                return 4.5;
+            else return 2.5;
+            }) 
     d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -146,7 +150,7 @@ function handlerMouseOutA(d){
 function handlerMouseOverAG(d){ 
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 6);
+        .attr("r", 7);
     
     var txt = d.value
     
@@ -243,7 +247,11 @@ function handlerMouseOutAG(d){
    
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 3);
+        .attr("r", function(d){
+            if(idAs.includes(d.id))
+                return 4.5;
+            else return 2.5;
+            });
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     popTextA.attr("width", 0)
