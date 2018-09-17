@@ -472,6 +472,7 @@ function addFromList(event){
             $("#authList").append("<li  id=\"a"+idClick+"\"class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+author.value+"</li>")
             //prettyPrintAuthor(suggestion)
             authorBars()
+            authorGraph()
         }
     }
 }   
@@ -618,7 +619,7 @@ function authDblc(event){
         lp = authsExclude.length-1;
     $('#authList').html("")
     authsExclude.splice(index, 1);
-    console.log(authsExclude)
+    //console.log(authsExclude)
     if(authsExclude.length > 0){
         var new_auths = authors.filter(function (item){
                 return authsExclude.includes(item.id)}),
@@ -657,4 +658,5 @@ function authDblc(event){
             })
 
     authorBars()
+    authorGraph()
 }

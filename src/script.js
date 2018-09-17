@@ -409,7 +409,7 @@ function addPaper(suggestion){
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         authorBars()
-        authorGraph([])
+        authorGraph()
     }
 }
 
@@ -870,6 +870,7 @@ $(function (){
         if(papersFiltered.length > 0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
         authorBars()
+        authorGraph()
     });
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -910,6 +911,7 @@ $(function (){
                 authsExclude[authsExclude.length] = idA
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
+                authorGraph()
             }
         $('#authors-badge').html("")
             this.value = ""
