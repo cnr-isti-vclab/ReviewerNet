@@ -12,7 +12,8 @@
 
 #resizable { 
     width:inherit; 
-    min-height: 200px; 
+    min-height: 200px;
+    height: 200px;
     max-height: 450px;
     background-color: #efefef;
 }
@@ -172,7 +173,7 @@ text {
 }
 
 .authLine {
-    height: 16px;
+    height: 35px;
     padding: 1px;
 }
 .authline {
@@ -405,4 +406,18 @@ hr {
 
 #aut_table {
     height: inherit
+}
+#AG-container {
+    max-height: inherit;
+    height: inherit;
+    min-height: inherit;
+    overflow-y: auto;
+    padding: 0
+}
+
+#AG-col {
+    max-height: inherit;
+    height: inherit;
+    min-height: inherit;
+    padding: 0
 }

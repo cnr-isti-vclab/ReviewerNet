@@ -1,4 +1,5 @@
 var graph = [], alpha = 0.7, beta = 0.4,
+    auths_in_g = new Set([]),
     start = true,
     click = false, toolboxSvg = d3.select("#tb-svg"),
     authTable = d3.select("#authTable"),
@@ -7,6 +8,7 @@ var graph = [], alpha = 0.7, beta = 0.4,
     ANP = [],
     lines = [],
     authsExclude = [],
+    authsDef = [],
     papers = [],
     papersPrint = [],
     papersCit = {},
@@ -32,7 +34,7 @@ var graph = [], alpha = 0.7, beta = 0.4,
     thetaCit = 2,
     inputNumberTOC = document.getElementById('input-numberTOC'),
     sliderTOC = document.getElementById('thetaCit'),
-    svgP, svgA, popText, popRect, popTextA, popRectA,
+    svgP, svgAG, popText, popRect, popTextA, popRectA,
     thehtml,
     idP, idInfo,
     showExclude = true,
@@ -282,9 +284,11 @@ function deleteP(idCk){
         idsT = idPs
         
         var n = authors.length
-        for (var i = 0; i < n; i++)
-            authDict[authors[i].id] = [2019, 1900]  
-        
+        for (var i = 0; i < n; i++){
+            authDict[authors[i].id][0]= 2019
+            authDict[authors[i].id][0]= 1900
+        }
+            
         
         var pT = papersFiltered.filter(function (item){
                 return idsT.includes(item.id)})
@@ -301,13 +305,10 @@ function deleteP(idCk){
                 idP = pap.id
                 if(!addId(pap.value, pap.year)){
                   //updateYear(pap.year)
-                  updateADpapers()
+                    updateADpapers()
                 }    
             }
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-        
-        authorGraph()
-        
         if(idInfo === idCk)
             $('#paperInfo').html("")
     }
@@ -407,7 +408,8 @@ function addPaper(suggestion){
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-        authorGraph()
+        authorBars()
+        authorGraph([])
     }
 }
 
@@ -646,7 +648,7 @@ function setSimulation(){
       .force("charge", d3.forceManyBody())
     simulation.force("charge", d3.forceManyBody().strength(-300))
         .force("center", d3.forceCenter((w / 2), (h / 2)))
-        .force('collision', d3.forceCollide().radius(20))
+        .force('collision', d3.forceCollide().radius(10))
     
     return simulation;
 
@@ -867,7 +869,7 @@ $(function (){
         updateWidth()
         if(papersFiltered.length > 0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
-        authorGraph()
+        authorBars()
     });
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -877,8 +879,10 @@ $(function (){
     });
 
     getPaperSvg()
+    getAGSvg()
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
+    simulationA = setAGSimulation()
     
     
     
@@ -905,7 +909,7 @@ $(function (){
             else{
                 authsExclude[authsExclude.length] = idA
                 $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
-                authorGraph()
+                authorBars()
             }
         $('#authors-badge').html("")
             this.value = ""

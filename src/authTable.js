@@ -113,14 +113,17 @@ function printPapers(auths){
     }
 }
 
-function authorGraph(){
-    var authsDef = null;
-    authsFiltered = [];
+function authorBars(){
+    //var authsDef = null;
+    //authsFiltered = [];
 
     if(authViz.value === "anpO" )
         authsDef = authors.filter(anpFilter)
     else if (showExclude) 
         authsDef = authors.filter(apFilter)
+    idAs = []
+    authsDef.map(function(el){idAs.push(el.id)})
+    console.log(idAs)
     
     $("#authTable").html("")
     

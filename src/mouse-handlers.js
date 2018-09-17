@@ -135,6 +135,161 @@ function handlerMouseOutA(d){
     }
 }
 
+function handlerMouseOverAG(d){ 
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 6);
+    
+    var txt = d.value
+    
+    popTextA.text(txt)
+    var bbox = popText.node().getBBox();
+    var wd = bbox.width,
+        ht = bbox.height,
+        x = this.cx.baseVal.value,
+        y = this.cy.baseVal.value;
+    //popRect.attr('fill', color(d.color))
+    popTextA.attr("x", function(){return 400-wd})
+        .attr("y", y)
+        .attr("opacity", 1)
+    
+    if(click)
+        reset_texts()
+    d3.select("#aa"+d.id)
+        .transition().duration(200)
+        .attr('fill',"rgba( 138, 223, 223, 0.569 )")
+
+    d3.select("#aaline"+d.id)
+        .transition().duration(200)
+        .style('stroke',"rgba( 138, 223, 223, 0.569 )")
+    
+   /*histogram paper for each author
+    
+    addPaper(){
+    resetAllValues
+    ...
+    for each author
+        counter paper per year
+    ...
+    }
+    
+    d3.select("#svgA"+d.id)
+        .append("rect")
+        //.attr("id", function (d){ return "aa"+d.id})
+        //.attr("class", "authNode")
+        .attr('x',function(d){
+            let nw = xConstrained(authDict[d.id][1]),
+                od = xConstrained(authDict[d.id][0]);
+            if(od!=nw)return od;
+            else return od-2;
+        })
+        .attr('y',4)
+        .attr('width',function(d){
+            let nw = xConstrained(authDict[d.id][1]),
+                od = xConstrained(authDict[d.id][0]);
+            if(od!=nw)return nw-od;
+            else return 4;
+        })
+        .attr('height', "5px")
+        .attr("fill", "#df1414")
+    */
+    
+    d3.selectAll(".plink")
+        .style("opacity", 0.2)
+    
+    if((authsDef.filter(function(el){return el.id === d.id })).length > 0)    
+    d3.selectAll(".papersNode")
+        .style("opacity", function(d1){
+            if(d1.authsId.includes(d.id))
+                return 1;
+            else
+                return 0.2;
+        })
+        .attr("r", function(d1){
+            if(d1.authsId.includes(d.id))
+                return "9";
+            else return "6";
+        })
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(d.id))
+                return "#d08701";
+            else
+                if(idPs.includes(d1.id))                    
+                    return "#6d10ca";
+                else
+                    return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(d1.authsId.includes(d.id)){
+                papName(d1)
+                return 3.5;
+            }
+            else
+                if(idPs.includes(d1.id))                    
+                    return 2.5;
+            })
+    
+}
+
+function handlerMouseOutAG(d){
+   
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 3);
+    d3.selectAll(".plink")
+        .style("opacity", 0.8)
+    popTextA.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    if(!click){
+        /*
+    popTextA.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    popRectA.attr("x", -5000)
+        .attr("width", 0)
+        .attr("opacity", 0);
+    d3.select(this).transition()
+        .duration(200)
+        .attr("width", 500);
+        */
+    d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", checkThetaLink)
+    d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(d.id))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+    }
+}
+
+
 function handleMouseOver(d){ 
     d3.select(this).transition()
         .duration(200)
@@ -191,7 +346,8 @@ function handleMouseOut(d){
     d3.select(this).transition()
         .duration(200)
         .attr("r", 6);
-
+    d3.selectAll(".plink")
+        .style("opacity", 0.8)
     d3.selectAll(".authNode")
         .transition().duration(200)
         .attr("fill", function (d){
@@ -315,7 +471,7 @@ function addFromList(event){
             authsExclude[authsExclude.length] = idClick
             $("#authList").append("<li  id=\"a"+idClick+"\"class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+author.value+"</li>")
             //prettyPrintAuthor(suggestion)
-            authorGraph()
+            authorBars()
         }
     }
 }   
@@ -500,5 +656,5 @@ function authDblc(event){
                 return 2.5;
             })
 
-    authorGraph()
+    authorBars()
 }
