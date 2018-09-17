@@ -10,6 +10,7 @@ authors of the paper under scrutiny. We propose a tool that allow the user to bu
 *ACM Transactions on Graphics*, *Computer Graphics Forum*, *IEEE Transactions on Visualization and Computer Graphics*,  *SIGGRAPH*, *Visual Computer*, *Computer & Graphics*, *IEEE Visualization*, *IEEE Computer Graphics & Applications*.
 All articles since 1995 are included.
 
+
 The user can also add authors to the *Conflicting Authors* list, the effect is described in the *author area* section.
 In this way it is immediately possible to identify all the possible candidate-reviewers.
 

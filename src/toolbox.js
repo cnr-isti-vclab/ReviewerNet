@@ -45,7 +45,7 @@ function createSliders(){
         value = value.substring(0,value.length-3)
         inputNumberTP.value = value
         thetaPap  = value
-        authorGraph()
+        authorBars
 
 
     });
@@ -58,11 +58,13 @@ function createSliders(){
         if(this.value < 0)
             this.value = 0
         thetaPap = this.value;
-        authorGraph();
+        authorBars();
+        authorGraph()
     });
     if(checkboxTP){
         checkboxTP.checked = false;
-        authorGraph();
+        authorBars();
+        authorGraph()
         }
     /*
         MNoC slider
@@ -164,6 +166,7 @@ function colorMappingInit(){
 function checkboxesInit(){
   
     authViz.addEventListener('change', function(){
+            authorBars()
             authorGraph()
     });
     
@@ -191,13 +194,15 @@ function checkboxesInit(){
             max: 20,
             spin: function( event, ui ) {
                     thetaPap = ui.value;
+                    authorBars();
                     authorGraph();
                 },
             change: function( event, ui ) {
                 this.value = this.value > 30 ? 30 : this.value;
                 this.value = this.value < 0 ? 0 : this.value;
                 thetaPap = this.value;
-                authorGraph();
+                authorBars()
+                authorGraph()
                 }
         });
     $( ".spinner" ).spinner( "value", 0 );
@@ -208,6 +213,7 @@ function checkboxesInit(){
       } else {
         spinnerMNP.spinner( "disable" );
         this.innerHTML = "Filter auhtors"
+        authorBars()
         authorGraph()
       }
     });
