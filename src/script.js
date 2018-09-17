@@ -286,7 +286,7 @@ function deleteP(idCk){
         var n = authors.length
         for (var i = 0; i < n; i++){
             authDict[authors[i].id][0]= 2019
-            authDict[authors[i].id][0]= 1900
+            authDict[authors[i].id][1]= 1900
         }
             
         
