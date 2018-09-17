@@ -149,7 +149,7 @@ function handlerMouseOverAG(d){
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
     //popRect.attr('fill', color(d.color))
-    popTextA.attr("x", function(){return 400-wd})
+    popTextA.attr("x", function(){return 350})
         .attr("y", y)
         .attr("opacity", 1)
     
