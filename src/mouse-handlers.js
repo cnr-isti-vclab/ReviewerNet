@@ -19,6 +19,10 @@ function handlerMouseOverA(d){
         .transition().duration(200)
         .style('stroke',"rgba( 138, 223, 223, 0.569 )")
     
+    d3.select("#ag"+d.id)
+        .transition().duration(200)
+        .attr("r", 6)
+    
    /*histogram paper for each author
     
     addPaper(){
@@ -93,6 +97,10 @@ function handlerMouseOutA(d){
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
+    
+   d3.select("#ag"+d.id)
+        .transition().duration(200)
+        .attr("r", 3) 
     d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"

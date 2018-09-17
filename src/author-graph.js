@@ -72,8 +72,6 @@ function setAGSimulation(){
         .force("charge", f)
         .force("center", d3.forceCenter(wi, he))
         .force('collision', d3.forceCollide().radius(2))
-
-    
     return simulationA;
 
 }
@@ -98,11 +96,13 @@ function authorGraph() {
     
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
+    /*
     console.log("nodes")
     console.log(a_nodes)
     console.log("link")
     console.log(co_authoring)
-    simulationA.stop()
+    */
+    if(simulationA) simulationA.stop()
     d3.select("#svgAG").remove()
     d3.select(".ag-container").append("svg").attr("id", "svgAG")
     getAGSvg()
@@ -160,15 +160,17 @@ function authorGraph() {
         })
         */    
 
-    simulationA
-        .nodes(a_nodes)
-        .on("tick", ticked)
+    if(simulationA){
+        simulationA
+            .nodes(a_nodes)
+            .on("tick", ticked)
 
-    simulationA.restart()
-    simulationA.tick()
+        simulationA.restart()
+        simulationA.tick()
 
-    simulationA.force("link")
-        .links(co_authoring);
+        simulationA.force("link")
+            .links(co_authoring);
+    }
     
         //.style("stroke","url(#gradxX)")
 
