@@ -59,11 +59,11 @@ function getAGSvg(){
 } 
 
 function setAGSimulation(){
-    var wi = 150,
-        he = 250,
+    var wi = 200,
+        he = 200,
         f = d3.forceManyBody()
                 .strength(-5)
-                .distanceMin(400)
+                .distanceMin(40)
                 .distanceMax(80)
                 .theta(2.9)
     
