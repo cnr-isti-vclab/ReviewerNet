@@ -123,7 +123,7 @@ function authorBars(){
         authsDef = authors.filter(apFilter)
     idAs = []
     authsDef.map(function(el){idAs.push(el.id)})
-    console.log(idAs)
+    //console.log(idAs)
     
     $("#authTable").html("")
     
