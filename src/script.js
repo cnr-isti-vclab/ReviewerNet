@@ -289,7 +289,6 @@ function deleteP(idCk){
             authDict[authors[i].id][1]= 1900
         }
             
-        
         var pT = papersFiltered.filter(function (item){
                 return idsT.includes(item.id)})
             
@@ -311,6 +310,8 @@ function deleteP(idCk){
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         if(idInfo === idCk)
             $('#paperInfo').html("")
+        authorBars()
+        authorGraph()
     }
 }
 
