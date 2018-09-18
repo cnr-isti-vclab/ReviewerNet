@@ -7,58 +7,6 @@ function getAGSvg(){
         .attr("height", "450px")
         .append("g")
         .attr("id", "gAG")
-    svgAG.append("svg:defs").selectAll("marker")
-        .data(["end"])      // Different link/path types can be defined here
-        .enter().append("svg:marker")    // This section adds in the arrows
-        .attr("id", String)
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15)
-        .attr("refY", 0.5)
-        .attr("markerWidth", 4)
-        .attr("markerHeight", 4)
-        .attr("orient", "auto-start-reverse")
-        .attr("fill", "rgba( 148, 127, 127, 0.456 )")
-        //.attr("stroke", "rgba( 148, 127, 127, 0.456 )")
-        .append("svg:path")
-        .attr("d", "M0,-5L10,0L0,5 Z");
-
-    svgAG.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradxX")
-        .attr("x0", "1000%")
-        .attr("y0", "0%")
-        .attr("x1", "30%")
-        .attr("y1", "100%")
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
-        .style("stop-opacity", "1")
-    svgAG.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
-        .style("stop-opacity", "1")
-
-    svgAG.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradXx")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x0", "30%")
-        .attr("y0", "0%")
-        .attr("x1", "100%")
-        .attr("y1", "0%")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
-        .style("stop-opacity", "1")
-    svgAG.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "180%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
-        .style("stop-opacity", "1")
 } 
 
 function setAGSimulation(){
@@ -86,8 +34,10 @@ function extract_coauthoring(){
         auths_in_g.add(authsDef[i])
         Object.keys(authsDef[i].coAuthList)
             .forEach(function(key) {
+            if(authsDef[i].coAuthList[key][0] > 0){
             co_authoring.push({'source':authsDef[i].id, 'target': key, 'value': authsDef[i].coAuthList[key][0]})
             auths_in_g.add(key)
+            }
         });
     }
     return co_authoring
@@ -99,12 +49,12 @@ function authorGraph() {
     
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
-    /*
+    
     console.log("nodes")
     console.log(a_nodes)
     console.log("link")
     console.log(co_authoring)
-    */
+    
     if(simulationA) simulationA.stop()
     d3.select("#svgAG").remove()
     d3.select(".ag-container").append("svg").attr("id", "svgAG")
@@ -116,13 +66,13 @@ function authorGraph() {
     //console.log(authsDef.length)
     
     var link = svg.append("g")
-        .attr("class", "citations")
+        .attr("class", "co_auth")
         .selectAll("line")
         .data(co_authoring)
         .enter().append("line")
-        .attr("class", "alink")
-        .attr("marker-start","url(#end)")
-        .attr("stroke-width", function(d){return d.value*0.05})
+        .attr("class", "aglink")
+        .attr("stroke", "rgba( 178, 178, 178, 0.65 )")
+        .attr("stroke-width", function(d){return d.value*0.1})
         .style("pointer-events", "none");
 
     var node = svg.append("g")
@@ -210,18 +160,14 @@ function authorGraph() {
             .attr("y1", function(d) { return d.source.y; })
             .attr("x2", function(d) { return d.target.x; })
             .attr("y2", function(d) { return d.target.y; })
-            .style("stroke", function(d){
-                if(d.source.x < d.target.x)
-                    return "url(#gradxX)";
-                else return "url(#gradXx)"
-            })
-            //.style("opacity", checkThetaLink)
+            
         
         node
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
             //.style("opacity", checkThetaNode)
     }
+    
 }
 
 function dragstartedA(d) {
