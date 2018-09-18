@@ -956,7 +956,7 @@ $(function (){
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
       return $( "<li>" )
-        .append( "<div><strong>" + item.year+ "</strong>, " + name + "</div>" )
+        .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
         .appendTo( ul );
     };
     
