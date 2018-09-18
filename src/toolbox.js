@@ -58,14 +58,18 @@ function createSliders(){
         if(this.value < 0)
             this.value = 0
         thetaPap = this.value;
-        authorBars();
-        authorGraph()
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
     });
     if(checkboxTP){
         checkboxTP.checked = false;
-        authorBars();
-        authorGraph()
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
         }
+    }
     /*
         MNoC slider
     
@@ -166,8 +170,10 @@ function colorMappingInit(){
 function checkboxesInit(){
   
     authViz.addEventListener('change', function(){
+        if(papersFiltered.length > 0){
             authorBars()
             authorGraph()
+        }
     });
     
     let spinnerMNoC = $( "#MNoC" ).spinner({
@@ -194,16 +200,20 @@ function checkboxesInit(){
             max: 20,
             spin: function( event, ui ) {
                     thetaPap = ui.value;
-                    authorBars();
-                    authorGraph();
-                },
+                    if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            },
             change: function( event, ui ) {
                 this.value = this.value > 30 ? 30 : this.value;
                 this.value = this.value < 0 ? 0 : this.value;
                 thetaPap = this.value;
-                authorBars()
-                authorGraph()
+                if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
                 }
+            }
         });
     $( ".spinner" ).spinner( "value", 0 );
     $( "#disableMNP" ).on( "click", function() {
@@ -213,8 +223,10 @@ function checkboxesInit(){
       } else {
         spinnerMNP.spinner( "disable" );
         this.innerHTML = "Filter auhtors"
-        authorBars()
-        authorGraph()
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
       }
     });
     $( "#disableMNoC" ).on( "click", function() {

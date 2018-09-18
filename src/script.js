@@ -687,7 +687,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .enter().append("line")
         .attr("class", "plink")
         .attr("marker-start","url(#end)")
-        .attr("stroke-width", 0)
+        .attr("stroke-width", 2)
         .style("pointer-events", "none");
 
     var node = svg.append("g")
@@ -737,10 +737,6 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     simulation.force("link")
         .links(citations1);
 
-    link.transition()
-        .duration(1000)
-        .attr("stroke-width", 2)
-        //.style("stroke","url(#gradxX)")
 
     for(var i = 0; i < papers1.length; i++)
         svg.append("text")
@@ -867,10 +863,11 @@ $(function (){
         w = width
         h = height
         updateWidth()
-        if(papersFiltered.length > 0)
+        if(papersFiltered.length > 0){
             paperGraph(papersFiltered, citPrint, idPs, simulation)
-        authorBars()
-        authorGraph()
+            authorBars()
+            authorGraph()
+        }
     });
     $('#papers-autocomplete').click(function (e){
     this.value=""
