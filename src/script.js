@@ -923,28 +923,33 @@ $(function (){
             getArrays(graph)
             
     });
-    
+    console.log("WE")
     $('#papers-autocomplete').autocomplete({
         source: papers,
-        minLength : 3, 
-        response: function( event, ui ) {    
-            ui.content.sort(function (a, b) {return a.year <= b.year;});
+        minLength : 3,
+        response: function( event, ui ) {
+            console.log("ui.content");
+            console.log(ui.content);
+            ui.content.sort(function (a, b) {
+                return b.year-a.year/*a.year <= b.year*/;});
+            console.log("ui.content sort");
+            console.log(ui.content);
             $('#area-paper-badge').html(ui.content.length)
-        },/*
-        beforeRender: function(container, suggestions){
-            var $divs = $(".autocomplete-suggestion")
-            //console.log(container)
-            var alphabeticallyOrderedDivs = $divs.sort(function (a, b) {
-                var afields = a.innerText.split(','),
-                    al = afields.length,
-                    bfields = b.innerText.split(','),
-                    bl = bfields.length;
-                return afields[al-1] <= bfields[bl-1];
-            });
-            container.html(alphabeticallyOrderedDivs);
-            suggestions.sort(function(a, b){return a.year <= b.year});
-            
-        },*/
+        },
+//        beforeRender: function(container, suggestions){
+//            var $divs = $(".autocomplete-suggestion")
+//            console.log(container)
+//            var alphabeticallyOrderedDivs = $divs.sort(function (a, b) {
+//                var afields = a.innerText.split(','),
+//                    al = afields.length,
+//                    bfields = b.innerText.split(','),
+//                    bl = bfields.length;
+//                return afields[al-1] <= bfields[bl-1];
+//            });
+//            container.html(alphabeticallyOrderedDivs);
+//            suggestions.sort(function(a, b){return a.year <= b.year});
+//            
+//        },
         select: function (event, ui) {
             addPaper(ui.item)
             this.value = ""
@@ -956,7 +961,7 @@ $(function (){
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
       return $( "<li>" )
-        .append( "<div><strong>" + item.year+ "</strong>, " + name + "</div>" )
+        .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
         .appendTo( ul );
     };
     

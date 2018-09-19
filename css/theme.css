@@ -411,7 +411,7 @@ hr {
     max-height: inherit;
     height: inherit;
     min-height: inherit;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 0
 }
 
@@ -421,3 +421,4 @@ hr {
     min-height: inherit;
     padding: 0
 }
+

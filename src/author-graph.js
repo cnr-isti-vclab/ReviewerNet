@@ -52,12 +52,12 @@ function authorGraph() {
     
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
-    
+    /*    
     console.log("nodes")
     console.log(a_nodes)
     console.log("link")
     console.log(co_authoring)
-    
+    */
     if(simulationA) simulationA.stop()
     d3.select("#svgAG").remove()
     d3.select(".ag-container").append("svg").attr("id", "svgAG")
@@ -73,10 +73,18 @@ function authorGraph() {
         .selectAll("line")
         .data(co_authoring)
         .enter().append("line")
-        .attr("class", "aglink")
-        .attr("stroke", "rgba( 178, 178, 178, 0.65 )")
-        .attr("stroke-width", function(d){return d.value*0.1})
-        .style("pointer-events", "none");
+        .attr("class", "aglink")       
+        .attr("stroke", function(d){
+            if(idAs.includes(d.source) && idAs.includes(d.target) )
+                return "#ff5405"
+            else return "rgba( 178, 178, 178, 0.65 )"})
+        .attr("stroke-width", function(d){
+            if(idAs.includes(d.source) && idAs.includes(d.target) )
+                return d.value*0.15
+            else return d.value*0.1})
+        .on("click", linkAGClickHandler)
+        .on("mouseover", handlerMouseOverLinkAG)
+        .on("mouseout", handlerMouseOutLinkAG)
 
     var node = svg.append("g")
         .attr("class", "authors-el-cont")
@@ -97,7 +105,7 @@ function authorGraph() {
             })
         .attr("stroke-width", function(d){
             if(idAs.includes(d.id))
-                return 2.5;
+                return 1.5;
             })
         .attr("fill", function(d) {
              if(idAs.includes(d.id))
