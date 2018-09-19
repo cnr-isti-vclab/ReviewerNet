@@ -923,7 +923,6 @@ $(function (){
             getArrays(graph)
             
     });
-    console.log("WE")
     $('#papers-autocomplete').autocomplete({
         source: papers,
         minLength : 3,
