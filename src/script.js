@@ -899,6 +899,15 @@ $(function (){
     simulation = setSimulation()
     simulationA = setAGSimulation()
     
+    var graphTxt = fetch('datasets/p_v0518f.txt')
+        .then(response => response.text())
+        .then(function(text) {
+            var graph = JSON.parse(text);
+            getArrays(graph)
+            
+    });
+    
+    document.getElementById("loading").style.visibility = "hidden";
     
     $('#authors-autocomplete').autocomplete({
         source: authors,
@@ -930,14 +939,7 @@ $(function (){
             this.value = ""
         }
     });
-    
-    var graphTxt = fetch('datasets/p_v0518f.txt')
-        .then(response => response.text())
-        .then(function(text) {
-            var graph = JSON.parse(text);
-            getArrays(graph)
-            
-    });
+     
     $('#papers-autocomplete').autocomplete({
         source: papers,
         minLength : 3,

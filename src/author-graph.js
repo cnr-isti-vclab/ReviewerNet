@@ -5,8 +5,9 @@ function getAGSvg(){
     svgAG = d3.select("#svgAG")
         .attr("width", "100%")
         .attr("height", "450px")
-        .call(d3.zoom().on("zoom", function () {
-        svgAG.attr("transform", d3.event.transform)
+        .call(d3.zoom().
+              on("zoom", function () {
+                svgAG.attr("transform", d3.event.transform)
         }))
         .append("g")
         .attr("id", "gAG")
