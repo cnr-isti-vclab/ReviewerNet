@@ -826,7 +826,10 @@ function dragended(d) {
 }
 
 $(function (){
-    _docHeight = (document.height !== undefined) ? document.height : document.body.offsetHeight;
+    _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
+    
+    document.getElementById('all').style.height =(_docHeight).toString()+"px";
+    document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
     
     $( window ).on("load", function(){
         height = this.height
@@ -855,7 +858,7 @@ $(function (){
                document.getElementById('aut_table').clientHeight = heightA;
                 delta =  oldH - heightA
 //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
-                newH = _docHeight - heightA - 30;
+                newH = _docHeight - heightA;
                 console.log("newH "+newH+" heightA "+ heightA)
 //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
                 document.getElementById('pg-row').style.height = newH.toString()+"px";
