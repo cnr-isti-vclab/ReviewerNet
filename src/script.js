@@ -904,10 +904,9 @@ $(function (){
         .then(function(text) {
             var graph = JSON.parse(text);
             getArrays(graph)
-            
+            document.getElementById("loading").style.visibility = "hidden";        
     });
     
-    document.getElementById("loading").style.visibility = "hidden";
     
     $('#authors-autocomplete').autocomplete({
         source: authors,
