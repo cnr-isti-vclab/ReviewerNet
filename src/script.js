@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.4, oldH = 200,
+var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     auths_in_g = new Set([]),
     start = true,
     click = false, toolboxSvg = d3.select("#tb-svg"),
@@ -584,7 +584,7 @@ function paperInfoa(suggestion){
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return height})
+        .attr("height", function(){return "800px"})
         .append("g")
         .attr("id", "gP")
     svgP.append("svg:defs").selectAll("marker")
@@ -648,7 +648,7 @@ function setSimulation(){
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
     simulation.force("charge", d3.forceManyBody().strength(-300))
-        .force("center", d3.forceCenter((w / 2), (h / 2)))
+        .force("center", d3.forceCenter((w / 2), (800 / 2)))
         .force('collision', d3.forceCollide().radius(10))
     
     return simulation;
@@ -770,9 +770,9 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     function ticked() {
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { return Math.max(10, Math.min(h - 10, d.source.y)); /*d.source.y*/; })
+            .attr("y1", function(d) { return Math.max(10, Math.min(800 - 10, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { return Math.max(10, Math.min(h - 10, d.target.y))})
+            .attr("y2", function(d) { return Math.max(10, Math.min(800 - 10, d.target.y))})
             .style("stroke", function(d){
                 if(d.source.x < d.target.x)
                     return "url(#gradxX)";
@@ -784,7 +784,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("cx", function(d) { 
             var nX = xConstrained(d.year);
             return nX; })
-            .attr("cy", function(d) { return Math.max(10, Math.min(h - 10, d.y)); })
+            .attr("cy", function(d) { return Math.max(10, Math.min(800 - 10, d.y)); })
             .style("opacity", checkThetaNode)
     }
 }
@@ -826,6 +826,8 @@ function dragended(d) {
 }
 
 $(function (){
+    _docHeight = (document.height !== undefined) ? document.height : document.body.offsetHeight;
+    
     $( window ).on("load", function(){
         height = this.height
         heightA = this.height * 0.3
@@ -833,7 +835,7 @@ $(function (){
         h = height
         updateWidth()
     })
-    
+       
     $("body").on('click', function(){
         $(".badge").html("")
     })
@@ -853,7 +855,8 @@ $(function (){
                document.getElementById('aut_table').clientHeight = heightA;
                 delta =  oldH - heightA
 //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
-                newH = document.getElementById('pg-row').clientHeight + delta;
+                newH = _docHeight - heightA - 30;
+                console.log("newH "+newH+" heightA "+ heightA)
 //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
                 document.getElementById('pg-row').style.height = newH.toString()+"px";
 //                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
@@ -864,6 +867,8 @@ $(function (){
     
     toolboxInit()
     setMouseHandlers()
+    
+
     $( window ).resize(function() {
         width = $(".ap").width()
         height = this.height
@@ -874,9 +879,10 @@ $(function (){
         if(papersFiltered.length > 0){
             paperGraph(papersFiltered, citPrint, idPs, simulation)
             authorBars()
-            authorGraph()
+            //authorGraph()
         }
     });
+
     $('#papers-autocomplete').click(function (e){
     this.value=""
     });
@@ -889,7 +895,6 @@ $(function (){
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()
-    
     
     
     $('#authors-autocomplete').autocomplete({
