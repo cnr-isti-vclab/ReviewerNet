@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.4,
+var graph = [], alpha = 0.7, beta = 0.4, oldH = 200,
     auths_in_g = new Set([]),
     start = true,
     click = false, toolboxSvg = d3.select("#tb-svg"),
@@ -851,6 +851,13 @@ $(function (){
                 }
                 else heightA = ui.size.height
                document.getElementById('aut_table').clientHeight = heightA;
+                delta =  oldH - heightA
+//                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
+                newH = document.getElementById('pg-row').clientHeight + delta;
+//                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
+                document.getElementById('pg-row').style.height = newH.toString()+"px";
+//                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
+                oldH = heightA;
 
             }
     });
@@ -927,12 +934,12 @@ $(function (){
         source: papers,
         minLength : 3,
         response: function( event, ui ) {
-            console.log("ui.content");
-            console.log(ui.content);
+//            console.log("ui.content");
+//            console.log(ui.content);
             ui.content.sort(function (a, b) {
                 return b.year-a.year/*a.year <= b.year*/;});
-            console.log("ui.content sort");
-            console.log(ui.content);
+//            console.log("ui.content sort");
+//            console.log(ui.content);
             $('#area-paper-badge').html(ui.content.length)
         },
 //        beforeRender: function(container, suggestions){

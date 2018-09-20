@@ -47,9 +47,9 @@
             </div>
         </div>        
     </div> 
-    <div class="row">
-        <div class="col-sm-8 ">
-            <div  class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: 100%">
+    <div class="row" id="pg-row">
+        <div class="col-sm-8 scroll">
+            <div  class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
                 <!-- Start Msg -->
                 <span id="startMsg"> 
                 <img id="logo" src="imgs/filled_logo.PNG" height= 80px width = 100px>
@@ -73,110 +73,110 @@
             </div>
         </div>
         <div class="col-sm-4 scroll">
-            <!-- Toolbox -->
-            <div id = "toolbox" class="panel-body text-center">
-                <div class="container-fluid" style="height: 78%; padding-top: 6px;">
-                <div class="row" id="tbRow1" style="margin-bottom: 5px;">
-<!--                  <div style="transform: translate(0px, 0px)">
-                  <h9 id = "MNP" title = "Is the Mininimum Number of Papers threshold. Once enabled, it removes from the authors area all the authors that have a number of visualized papers less than the indicated one." class="pop-up" >Minimun number of papers</h9>
-                    <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
-                    <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
-                </div>
-                </div>
-                 <div class="row" id="tbRow2"> 
-                <div>-->
-                    <p>
-                      <label class=" pop-up gui-menu-item" title = "Is the Mininimum Number of Papers threshold. Once enabled, it removes from the authors area all the authors that have a number of visualized papers less than the indicated one." for="MNP">Minimum number of papers:</label>
-                      <input id="MNP" class = "spinner" name="value">
-                      <button id="disableMNP">Filter authors</button>
-                    </p>
-                    <p>
-                      <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up gui-menu-item">Minimum number of out-citations:</label>
-                      <input id="MNoC" class = "spinner" name="val">
-                      <button id="disableMNoC">Filter papers</button>
-                    </p>
+            <div class="container-fluid my-container-resize"> 
+                <!-- Toolbox -->
+                <div id = "toolbox" class="panel-body text-center">
+                    <div class="row" id="tbRow1" style="margin-bottom: 5px;">
+    <!--                  <div style="transform: translate(0px, 0px)">
+                      <h9 id = "MNP" title = "Is the Mininimum Number of Papers threshold. Once enabled, it removes from the authors area all the authors that have a number of visualized papers less than the indicated one." class="pop-up" >Minimun number of papers</h9>
+                        <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
+                        <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
+                    </div>
+                    </div>
+                     <div class="row" id="tbRow2"> 
+                    <div>-->
+                        <p>
+                          <label class=" pop-up gui-menu-item" title = "Is the Mininimum Number of Papers threshold. Once enabled, it removes from the authors area all the authors that have a number of visualized papers less than the indicated one." for="MNP">Minimum number of papers:</label>
+                          <input id="MNP" class = "spinner" name="value">
+                          <button id="disableMNP">Filter authors</button>
+                        </p>
+                        <p>
+                          <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up gui-menu-item">Minimum number of out-citations:</label>
+                          <input id="MNoC" class = "spinner" name="val">
+                          <button id="disableMNoC">Filter papers</button>
+                        </p>
 
-                    
-                    <!--
-                    
-                    <h9 id = "MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up">Minimum number of out-citations</h9>
-                    <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
-                    <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/>
-                </div> -->
-                </div>
-                <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
-                    <div id="colorMapP" style="width: 100%; height: 40px">
-                    <svg id = "svgColorP" height="30px" width="93%" > 
-                    <defs>
-                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop id = "firstStopS" offset="0%" style="stop-color:#ff433d;stop-opacity:1" />
-                          <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />
-                          <stop id="thirdStopS" offset="100%" style="stop-color:#248bda;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <rect id="cmp" x="5" y="5" width="98%" class="pop-up" height="10px" fill="url(#grad2)" text ="100" rx="5px" title = "Is a color-map associated with the number of in-citations. The steps are 0, 30, 100."/>
-                        </svg>
+
+                        <!--
+
+                        <h9 id = "MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up">Minimum number of out-citations</h9>
+                        <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
+                        <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/>
+                    </div> -->
                     </div>
-                </div>
-                <div class="row" id="tbRow4">
-                    <table id="stats" style=" float:left; width:30%">
-                        <caption title = "This table shows some interesting numbers, where P is the number of paper explicitly added to the visualization (searchbar or double-click on a node), N(P) is the total number of visualized papers that includes both paper in P and all their neighbors, aka in/out-citations, A(P): is the number of authors of the interesting papers P and A(N(P)) is the number of authors in N(P))." class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
-                        <tr>
-                          <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
-                        <td id="anpn"class="stat"><strong><font color="#1e9476">
-                            A(N(P)) =</font></strong> 0
-                            </td>
-                      </tr>
-                      <tr>
-                        <td id="pn" class="stat">
-                            <strong><font color="#1e9476">P =</font></strong> 0
-                                </td>
-                        <td id="npn" class="stat">
-                            <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
-                      </tr>
-                    </table>
-                <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
-                  <optgroup label="Authors visualization options:">
-                    <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
-                    <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
-                  </optgroup>
-                </select>
-                </div>
-                </div>        
-            </div>
-            <!-- Search Bars -->
-            <div id = "sidenav" class="sidebar-nav navbar-collapse">
-                <ul class="nav in" id="side-menu">
-                    <li class="sidebar-search">
-                    <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                        <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors <span id="authors-badge"class="badge"></span> </a>
-                        <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
-                    </div>
-                    </li>
-                    <li id="aal" class="element">
-                        <ul id = "authList" class="list-group">
-                        </ul>
-                    </li>
-                    <li class="sidebar-search">
-                        <div id="searchfield" style="width: 100%; padding-top: 1px;">
-                            <a id="area-paper-a" title = "This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper <span id="area-paper-badge"class="badge"></span> </a>
-                            <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
+                    <div class="row" id="tbRow3" style="height: 40px; transform: translateY(15%)">
+                        <div id="colorMapP" style="width: 100%; height: 40px">
+                        <svg id = "svgColorP" height="30px" width="93%" > 
+                        <defs>
+                            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop id = "firstStopS" offset="0%" style="stop-color:#ff433d;stop-opacity:1" />
+                              <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />
+                              <stop id="thirdStopS" offset="100%" style="stop-color:#248bda;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <rect id="cmp" x="5" y="5" width="98%" class="pop-up" height="10px" fill="url(#grad2)" text ="100" rx="5px" title = "Is a color-map associated with the number of in-citations. The steps are 0, 30, 100."/>
+                            </svg>
                         </div>
-                    </li>
-                    <li>
-                            <div id ="papL">    
-                        <ul id = "papList" class="list-group">
-                                </ul>
-                                </div>
-                    </li>
-                    <li id="pi" class="element">
-                        <a id="paper-info-a" title="This box shows some useful information about the selected paper such as title, year of pub., venue and journal name, authors and citations. Authors and citations have their associated mouse handlers." class="text-left pop-up"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Paper Info</a>
-                        <table id = "paperInfo" style="width: 98%">
+                    </div>
+                    <div class="row" id="tbRow4">
+                        <table id="stats" style=" float:left; width:30%">
+                            <caption title = "This table shows some interesting numbers, where P is the number of paper explicitly added to the visualization (searchbar or double-click on a node), N(P) is the total number of visualized papers that includes both paper in P and all their neighbors, aka in/out-citations, A(P): is the number of authors of the interesting papers P and A(N(P)) is the number of authors in N(P))." class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
+                            <tr>
+                              <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
+                            <td id="anpn"class="stat"><strong><font color="#1e9476">
+                                A(N(P)) =</font></strong> 0
+                                </td>
+                          </tr>
+                          <tr>
+                            <td id="pn" class="stat">
+                                <strong><font color="#1e9476">P =</font></strong> 0
+                                    </td>
+                            <td id="npn" class="stat">
+                                <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
+                          </tr>
                         </table>
-                    </li>
-            </ul>
-            </div>
-        </div>  
+                    <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
+                      <optgroup label="Authors visualization options:">
+                        <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
+                        <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
+                      </optgroup>
+                    </select>
+                    </div>      
+                </div>
+                <!-- Search Bars -->
+                <div id = "sidenav" class="sidebar-nav navbar-collapse">
+                    <ul class="nav in" id="side-menu">
+                        <li class="sidebar-search">
+                        <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                            <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Conflicting Authors <span id="authors-badge"class="badge"></span> </a>
+                            <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                        </div>
+                        </li>
+                        <li id="aal" class="element">
+                            <ul id = "authList" class="list-group">
+                            </ul>
+                        </li>
+                        <li class="sidebar-search">
+                            <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                                <a id="area-paper-a" title = "This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper <span id="area-paper-badge"class="badge"></span> </a>
+                                <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
+                            </div>
+                        </li>
+                        <li>
+                                <div id ="papL">    
+                            <ul id = "papList" class="list-group">
+                                    </ul>
+                                    </div>
+                        </li>
+                        <li id="pi" class="element">
+                            <a id="paper-info-a" title="This box shows some useful information about the selected paper such as title, year of pub., venue and journal name, authors and citations. Authors and citations have their associated mouse handlers." class="text-left pop-up"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Paper Info</a>
+                            <table id = "paperInfo" style="width: 98%">
+                            </table>
+                        </li>
+                </ul>
+                </div>
+            </div>  
+     </div>
     </div>    
     
 </div>
