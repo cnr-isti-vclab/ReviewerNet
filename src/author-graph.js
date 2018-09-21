@@ -137,8 +137,13 @@ function authorGraph() {
             .nodes(a_nodes)
             .on("tick", ticked)
     
-        simulationA.force("link")
-            .links(co_authoring);
+        try {
+            simulationA.force("link")
+                .links(co_authoring);
+        } catch (e) {
+            console.log(e)
+        }
+        
         simulationA.alphaTarget(0.1).restart()
     }
     

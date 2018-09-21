@@ -30,8 +30,10 @@ function updateAD(d){
     var sAList = d.authsId,
         i, nS = sAList.length, dx = d.year;
     for(var i = 0; i < nS; i++){
-        authDict[sAList[i]][0] = Math.min(authDict[sAList[i]][0], dx);
-        authDict[sAList[i]][1] = Math.max(authDict[sAList[i]][1], dx); 
+        if(authDict[sAList[i]]){
+            authDict[sAList[i]][0] = Math.min(authDict[sAList[i]][0], dx);
+            authDict[sAList[i]][1] = Math.max(authDict[sAList[i]][1], dx); 
+        }else console.log(sAList[i])
     }
 }
 
