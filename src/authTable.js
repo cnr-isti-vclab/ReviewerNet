@@ -179,6 +179,7 @@ function authorBars(){
             .on("click", authClickHandler)
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
+            .on("dblclick", author_dblclick_ABG)
         
         authTable.selectAll(".svgA")
             .append("rect")
@@ -214,6 +215,7 @@ function authorBars(){
             .on("click", authClickHandler)
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
+            .on("dblclick", author_dblclick_ABG)
         
          
         authTable.selectAll(".svgA")
@@ -246,6 +248,7 @@ function authorBars(){
             .on("click", authClickHandler)
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
+            .on("dblclick", author_dblclick_ABG)
         
         printPapers(authsDef)        
     }

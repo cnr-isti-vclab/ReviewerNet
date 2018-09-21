@@ -1,5 +1,10 @@
 //grandezza dot proporzionale al numero di pap visualizzati (formula da auth bar)
 //opacità/colore proporzionale co_auth.value
+let f = d3.forceManyBody()
+                .strength(-5)
+                .distanceMin(40)
+                .distanceMax(200)
+                //.theta(2.9)
 
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
@@ -15,13 +20,7 @@ function getAGSvg(){
 
 function setAGSimulation(){
     var wi = 200,
-        he = 200,
-        f = d3.forceManyBody()
-                .strength(-5)
-                .distanceMin(40)
-                .distanceMax(80)
-                .theta(2.9)
-    
+        he = 200;
     simulationA = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", f)
@@ -120,9 +119,10 @@ function authorGraph() {
             .on("start", dragstartedA)
             .on("drag", draggedA)
             .on("end", dragendedA))
-        .on("click", authClickHandler)
+        //.on("click", authClickHandler)
         .on("mouseover", handlerMouseOverAG)
         .on("mouseout", handlerMouseOutAG)
+        .on("dblclick", author_dblclick_ABG)
         /*
         .on("click", clickHandler)
         .on("mouseover", handleMouseOver)
@@ -136,12 +136,10 @@ function authorGraph() {
         simulationA
             .nodes(a_nodes)
             .on("tick", ticked)
-
-        simulationA.restart()
-        simulationA.tick()
-
+    
         simulationA.force("link")
             .links(co_authoring);
+        simulationA.alphaTarget(0.1).restart()
     }
     
         //.style("stroke","url(#gradxX)")

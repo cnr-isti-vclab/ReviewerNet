@@ -7,6 +7,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     AP = [],
     ANP = [],
     lines = [],
+    authsReview = [], idA_rev,
     authsExclude = [],
     authsDef = [],
     papers = [],
@@ -335,6 +336,10 @@ function setMouseHandlers(){
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", authDblc);
+    $("#rauthList")
+        .on("mouseover", "li", ListMouseOver)
+        .on("mouseout", "li", ListMouseOut)
+        .on("dblclick", "li", r_authDblc);
     $("#papList")
         .on("click", "li", function(event){
             var idClick = event.target.id,
@@ -732,12 +737,10 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .nodes(papers1)
         .on("tick", ticked)
 
-    simulation.restart()
-    simulation.tick()
-
     simulation.force("link")
         .links(citations1);
 
+    simulation.restart()
 
     for(var i = 0; i < papers1.length; i++)
         svg.append("text")
@@ -892,6 +895,9 @@ $(function (){
     $('#authors-autocomplete').click(function (e){
     this.value=""
     });
+    $('#rauthors-autocomplete').click(function (e){
+    this.value=""
+    });
 
     getPaperSvg()
     getAGSvg()
@@ -907,6 +913,36 @@ $(function (){
             document.getElementById("loading").style.visibility = "hidden";        
     });
     
+    $('#rauthors-autocomplete').autocomplete({
+        source: authors,
+        minLength: 3,
+        showNoSuggestionNotice: true,
+        response: function(event, ui){
+            ui.content.sort(function (a, b) {return a.value >= b.value;});
+            $('#rauthors-badge').html(ui.content.length)
+        },
+        select: function (event, ui) {
+            suggestion = ui.item
+            if(start){
+                document.getElementById("startMsg").style.visibility = "hidden";
+                start = false;
+            }
+          this.value = null
+          var isIn = false
+          idA_rev = suggestion.id
+          var aName = suggestion.value
+            if(authsReview.includes(idA_rev))
+                isIn = true
+            else{
+                authsReview.push(idA_rev)
+                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+                /*authorBars()
+                authorGraph()*/
+            }
+        $('#rauthors-badge').html("")
+            this.value = ""
+        }
+    });
     
     $('#authors-autocomplete').autocomplete({
         source: authors,
@@ -982,6 +1018,7 @@ $(function (){
     
     $('#papers-autocomplete').on("focus", function(){$('#area-paper-badge').html("")})
     $('#authors-autocomplete').on("focus", function(){$('#authors-badge').html("")})
+    $('#rauthors-autocomplete').on("focus", function(){$('r#authors-badge').html("")})
     $('.biginput').on("input", function(key){
         if(this.value.length < 3) 
             $(".badge").html("")

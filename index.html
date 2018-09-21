@@ -159,6 +159,16 @@
                             </ul>
                         </li>
                         <li class="sidebar-search">
+                        <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                            <a id="review-a" title = "This area allows the user to serach for authors and elect them as candidate reviewers. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by double-clicking on it in the graphs." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Candidate Reviewer <span id="rauthors-badge"class="badge"></span> </a>
+                            <form style="width: 65%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="rauthoSearchBar" class="biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                        </div>
+                        </li>
+                        <li id="raal" class="element">
+                            <ul id = "rauthList" class="list-group">
+                            </ul>
+                        </li>
+                        <li class="sidebar-search">
                             <div id="searchfield" style="width: 100%; padding-top: 1px;">
                                 <a id="area-paper-a" title = "This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Area Paper <span id="area-paper-badge"class="badge"></span> </a>
                                 <form style="width: 75%; margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
