@@ -1,5 +1,20 @@
 var texts = [];
 
+function author_dblclick_ABG(d){
+    suggestion = d
+    var isIn = false
+    idA_rev = suggestion.id
+    var aName = suggestion.value
+    if(authsReview.includes(idA_rev))
+        isIn = true
+    else{
+        authsReview.push(idA_rev)
+        $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+        /*authorBars()
+        authorGraph()*/
+    }
+}
+
 function authClickHandler(d){
     if(click)
         click = false;
@@ -694,7 +709,6 @@ function authDblc(event){
         } 
     }
     
-    
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", checkThetaLink)
@@ -719,4 +733,64 @@ function authDblc(event){
 
     authorBars()
     authorGraph()
+}
+
+function r_authDblc(event){
+    var idClick = event.target.id,
+        idClick = idClick.substring(1,idClick.length),
+        index = authsReview.indexOf(idClick);
+    $('#rauthList').html("")
+    authsReview.splice(index, 1);
+    //console.log(authsReview)
+    if(authsReview.length > 0){
+        var new_auths = authors.filter(function (item){
+                return authsReview.includes(item.id)}),
+            al = new_auths.length;
+        for(var i = 0; i < al; i++){
+            let suggestion = new_auths[i];
+            $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
+        } 
+    }
+    d3.select("#aa"+idClick).transition().duration(200).attr('fill',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    
+   d3.select("#ag"+idClick)
+        .transition().duration(200)
+        .attr("r", function(d){
+            if(idAs.includes(d.id))
+                return 4.5;
+            else return 2.5;
+            }) 
+    d3.select("#aaline"+idClick).transition().duration(200).style('stroke',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", checkThetaLink)
+    d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(idClick))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+    
 }
