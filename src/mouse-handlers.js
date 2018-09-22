@@ -39,7 +39,7 @@ function unclick_auth(d){
                 else
                     return "rgba( 221, 167, 109, 0.342 )"
             })
-        .attr("opacity", 1)
+        .style("opacity", 1)
     d3.selectAll(".authNode")
         .attr('fill', function (d){
             if(authColor(d))
@@ -49,8 +49,8 @@ function unclick_auth(d){
         })
         .style("opacity", 1)
     d3.selectAll(".auth-name")
-        .attr("opacity", 1)
-    d3.selectAll(".paper_in_bars").attr("opacity", 1)
+        .style("opacity", 1)
+    d3.selectAll(".paper_in_bars").style("opacity", 1)
 }
 
 function authClickHandler(d){
@@ -121,7 +121,7 @@ function authClickHandler(d){
             })
         click = true;
         //mostra autori conflittati in AG e AB
-        d3.selectAll(".paper_in_bars").attr("opacity", 0)
+        d3.selectAll(".paper_in_bars").style("opacity", 0)
         d3.selectAll(".aglink")
             .style("opacity", function(d1){ return ((d1.source.id === d.id || 
                                                     d1.target.id === d.id) &&
@@ -131,12 +131,12 @@ function authClickHandler(d){
             .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
         d3.selectAll(".authlLine")
             .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
-            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
         d3.selectAll(".authNode")
             .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
-            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
         d3.selectAll(".auth-name")
-            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })    
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })    
     }}
 }
 
@@ -268,7 +268,7 @@ function handlerMouseOverAG(d){
         .attr('y',5)
         .attr('width',function(){return wd + 10})
         .attr('height',function(){return ht + 5})
-        .attr('opacity',1)
+        .style('opacity',1)
         
     d3.select("#aa"+d.id)
         .transition().duration(200)
@@ -375,7 +375,7 @@ function handlerMouseOutAG(d){
     
     popTextA.attr("opacity", 0)
     
-    popRectA.attr('opacity',0)
+    popRectA.style('opacity',0)
     
 //    if(!click){
 //        /*
@@ -494,7 +494,7 @@ function handlerMouseOverLinkAG(d){
         .attr('y',5)
         .attr('width',function(){return wd + 10})
         .attr('height',function(){return 3*ht + 17})
-        .attr('opacity',1)
+        .style('opacity',1)
     
     if(clickAG){
         reset_texts()
@@ -534,7 +534,7 @@ function handlerMouseOutLinkAG(d){
             else return 2.5;
             })  
     popTextA.attr("opacity", 0)
-    popRectA.attr('opacity',0)
+    popRectA.style('opacity',0)
     d3.select(this)
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
