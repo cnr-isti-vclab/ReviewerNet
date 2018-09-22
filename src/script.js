@@ -166,6 +166,20 @@ function papName(d){
         .attr("fill", "#000000")    
 }
 
+function papNameConflict(d){
+    var p_name = d3.select($("#txt"+d.id)[0]),
+        bbox = p_name.node().getBBox(),
+        wd = bbox.width,
+        ht = bbox.height,
+        x = d3.select("#p"+d.id).node().cx.baseVal.value,
+        y = d3.select("#p"+d.id).node().cy.baseVal.value;
+    texts.push(p_name)
+    p_name.attr("x", getXTxt(x, wd, true))
+        .attr("y", y + 4)
+        .attr("opacity", 1)
+        .attr("fill", "#db0000"/*"#000000"*/)    
+}
+
 function isCoAuth(item){ }
 
 function isInCited(item){ return inC.includes(item.id)}

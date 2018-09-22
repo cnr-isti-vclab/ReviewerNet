@@ -17,17 +17,129 @@ function author_dblclick_ABG(d){
     }
 }
 
+function unclick_auth(d){
+    click = false;
+    reset_texts()
+    d3.selectAll(".plink").style("opacity", checkThetaLink)
+    d3.selectAll(".papersNode")
+        .style("opacity", checkThetaNode)
+        .attr("r", 6)
+    popRectA.attr("opacity", 0)
+    popTextA.attr("opacity", 0)
+    d3.select(".txtspan").remove()
+    d3.selectAll(".aglink")
+        .attr("opacity", 1)
+    d3.selectAll(".authors-dot")
+        .attr("r", function(d1){ return idAs.includes(d1.id) ?  4.5 : 2.5; })
+        .attr("opacity", 1)
+    d3.selectAll(".authlLine")
+        .style('stroke',function (d1){
+                if(authColor(d1))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+        .attr("opacity", 1)
+    d3.selectAll(".authNode")
+        .attr('fill', function (d){
+            if(authColor(d))
+                return "rgba( 188, 188, 188, 0.454 )"
+            else
+                return "rgba( 221, 167, 109, 0.342 )"
+        })
+        .attr("opacity", 1)
+    d3.selectAll(".auth-name")
+        .attr("opacity", 1)
+    d3.selectAll(".paper_in_bars").attr("opacity", 1)
+}
+
 function authClickHandler(d){
-    if(click)
-        click = false;
-    else
+    if(click){
+        unclick_auth(d)
+        /*click = false;
+        reset_texts()
+        d3.selectAll(".plink").style("opacity", checkThetaLink)
+        d3.selectAll(".papersNode")
+            .style("opacity", checkThetaNode)
+            .attr("r", 6)
+        popRectA.attr("opacity", 0)
+        popTextA.attr("opacity", 0)
+        d3.select(".txtspan").remove()
+        d3.selectAll(".aglink")
+            .attr("opacity", 1)
+        d3.selectAll(".authors-dot")
+            .attr("r", function(d1){ return idAs.includes(d1.id) ?  4.5 : 2.5; })
+            .attr("opacity", 1)
+        d3.selectAll(".authlLine")
+            .style('stroke',function (d1){
+                    if(authColor(d1))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+            .attr("opacity", 1)
+        d3.selectAll(".authNode")
+            .attr('fill', function (d){
+                if(authColor(d))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+            .attr("opacity", 1)
+        d3.selectAll(".auth-name")
+            .attr("opacity", 1)*/
+    }else{
+        reset_texts()
+        clickAG = true;    
+        d3.selectAll(".plink").style("opacity", 0.2)
+        d3.selectAll(".papersNode")
+            .style("opacity", function(d1){
+                var al = d1.authsId,
+                    all = al.length, found = false, i = 0;
+                if(!al.includes(d.id)) return 0.2;
+                while( !found && i < all ){
+                    found = (idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
+                    i++
+                }
+                if(found){
+                    papNameConflict(d1)
+                    return 1;
+                }else return 0.2;
+            })
+            .attr("r",  function(d1){
+                var al = d1.authsId,
+                    all = al.length, found = false, i = 0;
+                if(!al.includes(d.id)) return 6;
+                while( !found && i < all ){
+                    found = (idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
+                    i++
+                }
+                return found ? 9 : 6;
+            })
         click = true;
+        //mostra autori conflittati in AG e AB
+        d3.selectAll(".paper_in_bars").attr("opacity", 0)
+        d3.selectAll(".aglink")
+            .attr("opacity", function(d1){ return ((d1.source.id === d.id || 
+                                                    d1.target.id === d.id) &&
+                                                   idAs.includes(d1.source.id) && idAs.includes(d1.target.id)) ?  1 : 0; })
+        d3.selectAll(".authors-dot")
+            .attr("r", function(d1){ return  d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  7.5 : 2.5; })
+            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+        d3.selectAll(".authlLine")
+            .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+        d3.selectAll(".authNode")
+            .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+        d3.selectAll(".auth-name")
+            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })    
+    }
 }
 
 function handlerMouseOverA(d){ 
-   
-    if(click)
-        reset_texts()
+    reset_texts()
+    if(click) unclick_auth();
     d3.select("#aa"+d.id)
         .transition().duration(200)
         .attr('fill',"rgba( 138, 223, 223, 0.569 )")
@@ -77,6 +189,9 @@ function handlerMouseOverA(d){
 }
 
 function handlerMouseOutA(d){
+        
+    reset_texts()
+    if(click) unclick_auth();
     d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -97,18 +212,7 @@ function handlerMouseOutA(d){
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
-    if(!click){
-        /*
-    popTextA.attr("width", 0)
-        .attr("x", -5000)
-        .attr("opacity", 0);
-    popRectA.attr("x", -5000)
-        .attr("width", 0)
-        .attr("opacity", 0);
-    d3.select(this).transition()
-        .duration(200)
-        .attr("width", 500);
-        */
+
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", checkThetaLink)
@@ -130,10 +234,12 @@ function handlerMouseOutA(d){
             if(idPs.includes(d1.id))
                 return 2.5;
             })
-    }
+    
 }
 
-function handlerMouseOverAG(d){ 
+function handlerMouseOverAG(d){
+    reset_texts()
+    if(click) unclick_auth();
     d3.select(this).transition()
         .duration(200)
         .attr("r", 7);
@@ -160,10 +266,7 @@ function handlerMouseOverAG(d){
         .attr('width',function(){return wd + 10})
         .attr('height',function(){return ht + 5})
         .attr('opacity',1)
-    
-    if(click)
-        reset_texts()
-    
+        
     d3.select("#aa"+d.id)
         .transition().duration(200)
         .attr('fill',"rgba( 138, 223, 223, 0.569 )")
@@ -241,7 +344,7 @@ function handlerMouseOverAG(d){
 }
 
 function handlerMouseOutAG(d){
-   
+   if(click) unclick_auth();
     d3.select(this).transition()
         .duration(200)
         .attr("r", function(d){
@@ -250,7 +353,7 @@ function handlerMouseOutAG(d){
             else return 2.5;
             });
     d3.selectAll(".plink")
-        .style("opacity", 0.8)
+        .style("opacity", checkThetaLink)
     popTextA.attr("width", 0)
         .attr("x", -5000)
         .attr("opacity", 0);
@@ -271,40 +374,38 @@ function handlerMouseOutAG(d){
     
     popRectA.attr('opacity',0)
     
-    if(!click){
-        /*
-    popTextA.attr("width", 0)
-        .attr("x", -5000)
-        .attr("opacity", 0);
-    popRectA.attr("x", -5000)
-        .attr("width", 0)
-        .attr("opacity", 0);
-    d3.select(this).transition()
-        .duration(200)
-        .attr("width", 500);
-        */
-    d3.selectAll(".plink")
-        .transition().duration(200)
-        .style("opacity", checkThetaLink)
-    d3.selectAll(".papersNode")
-        .transition().duration(200)
-        .attr("r", "6")
-        .style("opacity", checkThetaNode)
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(d.id))
-                d3.select($("#txt"+d1.id)[0])
-                    .attr("x", -1000)
-                    .attr("y", -1000)
-                    .attr("opacity", 0)  
-            if(idPs.includes(d1.id))
-                return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d1){
-            if(idPs.includes(d1.id))
-                return 2.5;
-            })
-    }
+//    if(!click){
+//        /*
+//    popTextA.attr("width", 0)
+//        .attr("x", -5000)
+//        .attr("opacity", 0);
+//    popRectA.attr("x", -5000)
+//        .attr("width", 0)
+//        .attr("opacity", 0);
+//    d3.select(this).transition()
+//        .duration(200)
+//        .attr("width", 500);
+//        */
+//    d3.selectAll(".plink")
+//        .style("opacity", checkThetaLink)
+//    d3.selectAll(".papersNode")
+//        .attr("r", "6")
+//        .style("opacity", checkThetaNode)
+//        .attr("stroke", function(d1){
+//            if(d1.authsId.includes(d.id))
+//                d3.select($("#txt"+d1.id)[0])
+//                    .attr("x", -1000)
+//                    .attr("y", -1000)
+//                    .attr("opacity", 0)  
+//            if(idPs.includes(d1.id))
+//                return "#6d10ca";
+//            else return "#999";
+//            })
+//        .attr("stroke-width", function(d1){
+//            if(idPs.includes(d1.id))
+//                return 2.5;
+//            })
+//    }
 }
 
 function linkAGClickHandler(d){
@@ -316,6 +417,7 @@ function linkAGClickHandler(d){
         d3.selectAll(".papersNode")
             .style("opacity", 1)
             .attr("r", 6)
+        //d3.select(".txtspan").remove()
     }else{
         clickAG = true;    
         d3.selectAll(".plink").style("opacity", 0.2)
@@ -336,6 +438,8 @@ function linkAGClickHandler(d){
 }
 
 function handlerMouseOverLinkAG(d){
+    reset_texts()
+    if(clickAG) clickAG = false;
     d3.selectAll(".authors-dot").style("opacity", 0.2)
     d3.selectAll(".aglink").style("opacity", 0.2)
     
@@ -411,6 +515,7 @@ function handlerMouseOverLinkAG(d){
 
 function handlerMouseOutLinkAG(d){
     reset_texts()
+    if(clickAG) clickAG = false;
     d3.selectAll(".authors-dot").style("opacity", 1)
     d3.selectAll(".aglink").style("opacity", 1)
     d3.select("#ag"+d.source.id)
@@ -433,9 +538,9 @@ function handlerMouseOutLinkAG(d){
                 return d.value*0.15
             else return d.value*0.1})
     d3.select(".txtspan").remove()
-    d3.selectAll(".plink").style("opacity", 1)
+    d3.selectAll(".plink").style("opacity", checkThetaLink)
     d3.selectAll(".papersNode")
-        .style("opacity", 1)
+        .style("opacity", checkThetaNode)
         .attr("r", 6)
 }
 
