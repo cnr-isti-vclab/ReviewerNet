@@ -1,6 +1,6 @@
 //grandezza dot proporzionale al numero di pap visualizzati (formula da auth bar)
 //opacità/colore proporzionale co_auth.value
-let f = d3.forceManyBody()
+var f = d3.forceManyBody()
                 .strength(-5)
                 .distanceMin(40)
                 .distanceMax(200)
@@ -34,9 +34,8 @@ function extract_coauthoring(){
     co_authoring = []
     auths_in_g = new Set([])
     for(var i = 0; i< authsDef.length; i++){
-        auths_in_g.add(authsDef[i])
-        Object.keys(authsDef[i].coAuthList)
-            .forEach(function(key) {
+        auths_in_g.add(authsDef[i].id)
+        Object.keys(authsDef[i].coAuthList).forEach(function(key) {
             if(authsDef[i].coAuthList[key][0] > 0){
             co_authoring.push({'source':authsDef[i].id, 'target': key, 'value': authsDef[i].coAuthList[key][0]})
             auths_in_g.add(key)
@@ -49,7 +48,6 @@ function extract_coauthoring(){
 function auths_in_g_filter(item){ return auths_in_g.has(item.id) }
 
 function authorGraph() {
-    
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
     /*    

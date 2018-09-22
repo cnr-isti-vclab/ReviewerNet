@@ -51,7 +51,7 @@ function createSliders(){
     });
     sliderTP.setAttribute('disabled', true);
     */
-    d3.select('#input-numberTP').value = 2;
+    d3.select('#input-numberTP').value = 0;
     inputNumberTP.addEventListener('change', function(){
         if(this.value>100)
             this.value = 100
@@ -60,6 +60,7 @@ function createSliders(){
         thetaPap = this.value;
         if(papersFiltered.length > 0){
             authorBars()
+            console.log(authsDef.length)
             authorGraph()
         }
     });
@@ -91,7 +92,7 @@ function createSliders(){
     });
     sliderTOC.setAttribute('disabled', true);
     */
-    d3.select('#input-numberTOC').value = 10;
+    d3.select('#input-numberTOC').value = 0;
     inputNumberTOC.addEventListener('change', function(){
         if(this.value>100)
             this.value = 100
@@ -220,6 +221,10 @@ function checkboxesInit(){
       if ( spinnerMNP.spinner( "option", "disabled" ) ) {
         spinnerMNP.spinner( "enable" );
         this.innerHTML = "Remove filter"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
       } else {
         spinnerMNP.spinner( "disable" );
         this.innerHTML = "Filter auhtors"
@@ -233,6 +238,8 @@ function checkboxesInit(){
       if ( spinnerMNoC.spinner( "option", "disabled" ) ) {
         spinnerMNoC.spinner( "enable" );
           this.innerHTML = "Remove filter"
+        if(papersFiltered.length>0)
+            paperGraph(papersFiltered, citPrint, idPs, simulation)
       } else {
         spinnerMNoC.spinner( "disable" );
         this.innerHTML = "Filter papers"

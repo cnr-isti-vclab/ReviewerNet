@@ -301,7 +301,7 @@ td.list-group-item {
 }
 
 #aal, #raal {
-    max-height: 40px;
+    max-height: 60px;
     overflow-y: auto;
     font-size: 0.9em;
 }
