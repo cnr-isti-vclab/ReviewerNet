@@ -59,6 +59,38 @@ function authClickHandler(d){
     
     if(click){
         unclick_auth(d)
+        /*click = false;
+        reset_texts()
+        d3.selectAll(".plink").style("opacity", checkThetaLink)
+        d3.selectAll(".papersNode")
+            .style("opacity", checkThetaNode)
+            .attr("r", 6)
+        popRectA.attr("opacity", 0)
+        popTextA.attr("opacity", 0)
+        d3.select(".txtspan").remove()
+        d3.selectAll(".aglink")
+            .attr("opacity", 1)
+        d3.selectAll(".authors-dot")
+            .attr("r", function(d1){ return idAs.includes(d1.id) ?  4.5 : 2.5; })
+            .attr("opacity", 1)
+        d3.selectAll(".authlLine")
+            .style('stroke',function (d1){
+                    if(authColor(d1))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+            .attr("opacity", 1)
+        d3.selectAll(".authNode")
+            .attr('fill', function (d){
+                if(authColor(d))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+            .attr("opacity", 1)
+        d3.selectAll(".auth-name")
+            .attr("opacity", 1)*/
     }else{
         reset_texts()
         clickAG = true;    
@@ -102,7 +134,7 @@ function authClickHandler(d){
             .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
         d3.selectAll(".authNode")
             .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+            .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
         d3.selectAll(".auth-name")
             .attr("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })    
     }}
