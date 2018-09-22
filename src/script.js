@@ -652,7 +652,7 @@ function setSimulation(){
     simulation = d3.forceSimulation()
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
-    simulation.force("charge", d3.forceManyBody().strength(-300))
+    simulation.force("charge", d3.forceManyBody().strength(-240))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
         .force('collision', d3.forceCollide().radius(10))
     
@@ -703,7 +703,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .enter().append("circle")
         .attr("class", "papersNode")
         .attr("id", function(d){return "p"+d.id})
-        .attr("r", 0)
+        .attr("r", 6)
         .attr("stroke", function(d){
             if(idPs.includes(d.id))
                 return "#6d10ca";
@@ -728,10 +728,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("dblclick", function(d) {
             addPaper(d)
         })
-            
-    node.transition()
-        .duration(1000)
-        .attr("r", 6)
+
 
     simulation
         .nodes(papers1)
@@ -773,9 +770,9 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     function ticked() {
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { return Math.max(10, Math.min(800 - 10, d.source.y)); /*d.source.y*/; })
+            .attr("y1", function(d) { return Math.max(6, Math.min(800 - 6, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { return Math.max(10, Math.min(800 - 10, d.target.y))})
+            .attr("y2", function(d) { return Math.max(6, Math.min(800 - 6, d.target.y));})
             .style("stroke", function(d){
                 if(d.source.x < d.target.x)
                     return "url(#gradxX)";
@@ -787,7 +784,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("cx", function(d) { 
             var nX = xConstrained(d.year);
             return nX; })
-            .attr("cy", function(d) { return Math.max(10, Math.min(800 - 10, d.y)); })
+            .attr("cy", function(d) { return Math.max(6, Math.min(800 - 6, d.y)); })
             .style("opacity", checkThetaNode)
     }
 }
@@ -859,10 +856,12 @@ $(function (){
                 }
                 else heightA = ui.size.height
                document.getElementById('aut_table').clientHeight = heightA;
-                delta =  oldH - heightA
+                let delta =  oldH - heightA,
+                    newH = _docHeight - heightA;
+                console.log("resize resizable")
 //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
-                newH = _docHeight - heightA;
-                console.log("newH "+newH+" heightA "+ heightA)
+                
+                //console.log("newH "+newH+" heightA "+ heightA)
 //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
                 document.getElementById('pg-row').style.height = newH.toString()+"px";
 //                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
@@ -877,10 +876,34 @@ $(function (){
 
     $( window ).resize(function() {
         width = $(".ap").width()
-        height = this.height
-        heightA = this.height * 0.3
+        _docHeight = document.documentElement.clientHeight - 40
+        height = document.documentElement.clientHeight - 40
+        heightA = height * 0.3
         w = width
         h = height
+        
+        if(heightA < 200)
+            heightA = 200
+        if(heightA > 450)
+            heightA = 450
+               document.getElementById('aut_table').clientHeight = heightA;
+                let delta =  oldH - heightA,
+                    newH = _docHeight - heightA;
+                document.getElementById('pg-row').style.height = newH.toString()+"px";
+//                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
+                oldH = heightA;
+        
+        console.log("resize"+h)
+        document.getElementById('aut_table').clientHeight = heightA;
+//                let delta = oldH - heightA,
+//                    newH = _docHeight - heightA;
+////                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
+//                
+//                //console.log("newH "+newH+" heightA "+ heightA)
+////                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
+//                document.getElementById('pg-row').style.height = newH.toString()+"px";
+////                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
+//                oldH = heightA;
         updateWidth()
         if(papersFiltered.length > 0){
             paperGraph(papersFiltered, citPrint, idPs, simulation)

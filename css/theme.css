@@ -83,13 +83,6 @@ body {
     cursor: help;
 }
 
-
-#pg-row{
-    min-height: 240px;
-    max-height: 490px;
-    height: 490px
-}
-
 .delete-btn {
     background-color:transparent; 
     border-radius: 10px;
@@ -399,6 +392,9 @@ footer {
 #startMsg {
     position: absolute;
     background-color: #efefef;
+    height: inherit;
+    overflow-y: inherit;
+    overflow-x: hidden
 }
 
 hr {
