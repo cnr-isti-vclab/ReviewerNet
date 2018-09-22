@@ -35,7 +35,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     thetaCit = 0,
     inputNumberTOC = document.getElementById('input-numberTOC'),
     sliderTOC = document.getElementById('thetaCit'),
-    svgP, svgAG, svgAGn, popText, popRect, popTextA, popRectA,
+    svgP, svgAG, svgAGn, svgAxis, popText, popRect, popTextA, popRectA,
     thehtml,
     idP, idInfo,
     showExclude = true,
@@ -76,6 +76,8 @@ function getXRect(x, wdt, inGraph){
 
 function updateWidth(){
     xConstrained.range([15, w -30]);
+    d3.select("#axis").remove()
+    svgAxis.append("g").attr("id", "axis").call(xaxis);
 }
 
 function getXTxt(x, wdt, inGraph){
@@ -400,6 +402,11 @@ function updateAuthDict(pf){
 function addPaper(suggestion){
     this.value=""
     if(start){
+        let delta = maxYear-minYear
+        if(delta > 30) delta = delta/2
+        xaxis.scale(xConstrained).ticks(delta, "r");
+        svgAxis = d3.select("#svgAxis").attr("y", "80")  
+        svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
         start = false;
     }
@@ -674,13 +681,9 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     d3.select(".ap").append("svg").attr("id", "svgP")
     getPaperSvg()
     var svg = svgP
-    svg.attr("y", "100")
+    svg.attr("y", "120")
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
-    let delta = maxYear-minYear
-    if(delta > 30) delta = delta/2
-    xaxis.scale(xConstrained).ticks(delta, "r");
-    svg.append("g").attr("id", "axis").call(xaxis);
     
     $("#pn").html("<strong><font color=\"#1e9476\">P =</font></strong> "+idPs.length)
     $("#npn").html("<strong><font color=\"#1e9476\">N(P) =</font></strong> "+papersFiltered.length)
@@ -827,7 +830,6 @@ function dragended(d) {
 
 $(function (){
     _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
-    
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
     
@@ -858,7 +860,7 @@ $(function (){
                document.getElementById('aut_table').clientHeight = heightA;
                 let delta =  oldH - heightA,
                     newH = _docHeight - heightA;
-                console.log("resize resizable")
+                //console.log("resize resizable")
 //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
                 
                 //console.log("newH "+newH+" heightA "+ heightA)
@@ -893,7 +895,7 @@ $(function (){
 //                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
                 oldH = heightA;
         
-        console.log("resize"+h)
+        //console.log("resize"+h)
         document.getElementById('aut_table').clientHeight = heightA;
 //                let delta = oldH - heightA,
 //                    newH = _docHeight - heightA;
@@ -924,6 +926,7 @@ $(function (){
 
     getPaperSvg()
     getAGSvg()
+
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()
