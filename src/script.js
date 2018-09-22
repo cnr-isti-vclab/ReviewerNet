@@ -77,7 +77,7 @@ function getXRect(x, wdt, inGraph){
 function updateWidth(){
     xConstrained.range([15, w -30]);
     d3.select("#axis").remove()
-    svgAxis.append("g").attr("id", "axis").call(xaxis);
+    if(svgAxis) svgAxis.append("g").attr("id", "axis").call(xaxis);
 }
 
 function getXTxt(x, wdt, inGraph){
