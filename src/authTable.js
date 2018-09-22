@@ -79,6 +79,15 @@ function authColor(author){
     return exclude
 }
 
+function authColor_r(author){
+    let exclude = false;
+    authsReview.map(function (el){
+        if(author.coAuthList[el])
+            exclude = true
+    })
+    return exclude
+}
+
 function printPapers(auths){
     let an = auths.length
     for(var i = 0; i < an; i++){
@@ -219,7 +228,7 @@ function authorBars(){
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
         
-         
+        console.log(authsReview)
         authTable.selectAll(".svgA")
             .append("text")
             .attr("class", "auth-name")
@@ -229,12 +238,21 @@ function authorBars(){
             .attr("text-anchor", "center")  
             .style("font-size", "12px")
             .text(function (d){ return d.value })
+            .style("font-style", function (d){ 
+                if( authColor(d) )
+                    return "italic"
+            })
+            .style("font-weight", function (d){ 
+                if(!authColor(d)) 
+                   return "bold"; })
             .attr("fill",  function (d){
-                if(authColor(d))
+                if(authColor_r(d))
                     return "#db0000";
+                else if(authsReview.includes(d.id))
+                    return "#5263fe";
                 else if(authsExclude.includes(d.id))
-                        return "#be27be"
-                    else return "#474747";
+                     return "#be27be"
+                else return "#474747";
             })
             .attr("x", function(d){
                 let nw = xConstrained(authDict[d.id][1] + 0.3),

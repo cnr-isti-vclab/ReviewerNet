@@ -7,7 +7,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     AP = [],
     ANP = [],
     lines = [],
-    authsReview = [], idA_rev,
+    authsReview = [], authsReview_obj = [], idA_rev,
     authsExclude = [],
     authsDef = [],
     papers = [],
@@ -961,9 +961,10 @@ $(function (){
                 isIn = true
             else{
                 authsReview.push(idA_rev)
+                authsReview_obj.push(suggestion)
                 $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
-                /*authorBars()
-                authorGraph()*/
+                authorBars()
+                //authorGraph()
             }
         $('#rauthors-badge').html("")
             this.value = ""
