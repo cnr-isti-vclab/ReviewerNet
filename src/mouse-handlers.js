@@ -310,7 +310,7 @@ function handlerMouseOutAG(d){
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
     if(clickAG){
-        reset_text()
+        reset_texts()
         clickAG = false;
         d3.selectAll(".plink").style("opacity", 1)
         d3.selectAll(".papersNode")
