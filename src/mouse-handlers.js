@@ -1,4 +1,5 @@
-var texts = [];
+var texts = [],
+    clickAG = false;
 
 function author_dblclick_ABG(d){
     suggestion = d
@@ -38,37 +39,6 @@ function handlerMouseOverA(d){
     d3.select("#ag"+d.id)
         .transition().duration(200)
         .attr("r", 7)
-    
-   /*histogram paper for each author
-    
-    addPaper(){
-    resetAllValues
-    ...
-    for each author
-        counter paper per year
-    ...
-    }
-    
-    d3.select("#svgA"+d.id)
-        .append("rect")
-        //.attr("id", function (d){ return "aa"+d.id})
-        //.attr("class", "authNode")
-        .attr('x',function(d){
-            let nw = xConstrained(authDict[d.id][1]),
-                od = xConstrained(authDict[d.id][0]);
-            if(od!=nw)return od;
-            else return od-2;
-        })
-        .attr('y',4)
-        .attr('width',function(d){
-            let nw = xConstrained(authDict[d.id][1]),
-                od = xConstrained(authDict[d.id][0]);
-            if(od!=nw)return nw-od;
-            else return 4;
-        })
-        .attr('height', "5px")
-        .attr("fill", "#df1414")
-    */
     
     d3.selectAll(".plink")
         .style("opacity", 0.2)
@@ -339,6 +309,30 @@ function handlerMouseOutAG(d){
 
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
+    if(clickAG){
+        reset_text()
+        clickAG = false;
+        d3.selectAll(".plink").style("opacity", 1)
+        d3.selectAll(".papersNode")
+            .style("opacity", 1)
+            .attr("r", 6)
+    }else{
+        clickAG = true;    
+        d3.selectAll(".plink").style("opacity", 0.2)
+        d3.selectAll(".papersNode")
+            .style("opacity", function(d1){
+                if(d.source.coAuthList[d.target.id][2].includes(d1.id))
+                    return 1;
+                else
+                    return 0.2;
+            })
+            .attr("r", function(d1){
+                if(d.source.coAuthList[d.target.id][2].includes(d1.id)){
+                    papName(d1)
+                    return "9";}
+                else return "6";
+        })
+    }
 }
 
 function handlerMouseOverLinkAG(d){
@@ -394,9 +388,29 @@ function handlerMouseOverLinkAG(d){
         .attr('width',function(){return wd + 10})
         .attr('height',function(){return 3*ht + 17})
         .attr('opacity',1)
+    
+    if(clickAG){
+        reset_texts()
+        d3.selectAll(".plink").style("opacity", 0.2)
+        d3.selectAll(".papersNode")
+            .style("opacity", function(d1){
+                if(d.source.coAuthList[d.target.id][2].includes(d1.id))
+                    return 1;
+                else
+                    return 0.2;
+            })
+            .attr("r", function(d1){
+                if(d.source.coAuthList[d.target.id][2].includes(d1.id)){
+                    papName(d1)
+                    return "9";
+                }
+                else return "6";
+            })
+    }
 }
 
 function handlerMouseOutLinkAG(d){
+    reset_texts()
     d3.selectAll(".authors-dot").style("opacity", 1)
     d3.selectAll(".aglink").style("opacity", 1)
     d3.select("#ag"+d.source.id)
@@ -419,6 +433,10 @@ function handlerMouseOutLinkAG(d){
                 return d.value*0.15
             else return d.value*0.1})
     d3.select(".txtspan").remove()
+    d3.selectAll(".plink").style("opacity", 1)
+    d3.selectAll(".papersNode")
+        .style("opacity", 1)
+        .attr("r", 6)
 }
 
 function handleMouseOver(d){ 
