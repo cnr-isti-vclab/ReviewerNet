@@ -170,15 +170,25 @@ function handlerMouseOverAG(d){
     var txt = d.value
     
     popTextA.text(txt)
-    var bbox = popText.node().getBBox();
+    var el   = document.getElementById("svgAG_names");
+    var rect = el.getBoundingClientRect(); // get the bounding rectangle
+
+    var bbox = popTextA.node().getBBox();
     var wd = bbox.width,
-        ht = bbox.height,
-        x = this.cx.baseVal.value,
-        y = this.cy.baseVal.value;
+        ht = bbox.height;
     //popRect.attr('fill', color(d.color))
-    popTextA.attr("x", function(){return 350})
-        .attr("y", y)
+    popTextA.attr("x", function(){
+        let ret = rect.width - wd - 28;
+        //console.log("ret "+ret)
+        return ret;})
+        .attr("y", 20)
         .attr("opacity", 1)
+    
+    popRectA.attr("x", function(){return rect.width - wd - 33})
+        .attr('y',5)
+        .attr('width',function(){return wd + 10})
+        .attr('height',function(){return ht + 5})
+        .attr('opacity',1)
     
     if(click)
         reset_texts()
@@ -285,6 +295,11 @@ function handlerMouseOutAG(d){
         else
             return "rgba( 221, 167, 109, 0.342 )"
     })
+    
+    popTextA.attr("opacity", 0)
+    
+    popRectA.attr('opacity',0)
+    
     if(!click){
         /*
     popTextA.attr("width", 0)
@@ -336,6 +351,48 @@ function handlerMouseOverLinkAG(d){
         .attr("r", 7).style("opacity", 1)
     d3.select(this)
         .attr("stroke-width", 5).style("opacity", 1)
+    
+    var txt = d.source.value + " - " + d.target.value
+    popTextA.text(txt)
+    var el   = document.getElementById("svgAG_names");
+    var rect = el.getBoundingClientRect(); // get the bounding rectangle
+
+    var bbox = popTextA.node().getBBox();
+    var wd = bbox.width,
+        ht = bbox.height;
+    //popRect.attr('fill', color(d.color))
+    popTextA.attr("x", function(){
+        let ret = rect.width - wd - 28;
+        //console.log("ret "+ret+ "wd "+wd+" ht "+ht)
+        return ret;})
+        .attr("y", 20)
+        .attr("opacity", 1)
+    popTextA.append('svg:tspan')
+        .attr("class", "txtspan")
+      .attr('x', function(){
+        let ret = rect.width - wd - 28;
+        return ret;})
+      .attr('dy', 20)
+      .text(function() {
+        return d.value + " shared papers"; })
+        .append('svg:tspan')
+        .attr("class", "txtspan")
+      .attr('x', function(){
+        let ret = rect.width - wd - 28;
+        return ret;})
+      .attr('dy', 20)
+      .text(function() {
+        var shared_p = d.source.coAuthList[d.target.id][2],
+            shared_in_viz = papersFiltered.filter(function (el){
+                return shared_p.includes(el.id);
+            })
+        return shared_in_viz.length+" visualized"; })
+    
+    popRectA.attr("x", function(){return rect.width - wd - 33})
+        .attr('y',5)
+        .attr('width',function(){return wd + 10})
+        .attr('height',function(){return 3*ht + 17})
+        .attr('opacity',1)
 }
 
 function handlerMouseOutLinkAG(d){
@@ -353,12 +410,14 @@ function handlerMouseOutLinkAG(d){
                 return 4.5;
             else return 2.5;
             })  
-
+    popTextA.attr("opacity", 0)
+    popRectA.attr('opacity',0)
     d3.select(this)
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return d.value*0.15
             else return d.value*0.1})
+    d3.select(".txtspan").remove()
 }
 
 function handleMouseOver(d){ 
