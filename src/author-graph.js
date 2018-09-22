@@ -143,7 +143,7 @@ function authorGraph() {
             .on("start", dragstartedA)
             .on("drag", draggedA)
             .on("end", dragendedA))
-        //.on("click", authClickHandler)
+        .on("click", authClickHandler)
         .on("mouseover", handlerMouseOverAG)
         .on("mouseout", handlerMouseOutAG)
         .on("dblclick", author_dblclick_ABG)

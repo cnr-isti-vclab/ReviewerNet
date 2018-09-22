@@ -184,7 +184,12 @@ function authorBars(){
                  return xConstrained(m + 0.3);
             })
             .attr('y2',15)
-            .style("stroke", "rgba( 251, 197, 125, 0.83 )")
+            .style('stroke',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
             .style("z-index", "1")
             .style("stroke-width", "2px")
             .on("click", authClickHandler)
@@ -264,12 +269,13 @@ function authorBars(){
                 if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
                 else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
             })
-            .style("z-index", "99")
+            .style("pointer-events", "none")
+        /*
             .on("click", authClickHandler)
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
-        
+        */
         printPapers(authsDef)        
     }
     
