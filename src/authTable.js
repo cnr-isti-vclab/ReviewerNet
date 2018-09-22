@@ -228,7 +228,7 @@ function authorBars(){
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
         
-        console.log(authsReview)
+        //console.log(authsReview)
         authTable.selectAll(".svgA")
             .append("text")
             .attr("class", "auth-name")
