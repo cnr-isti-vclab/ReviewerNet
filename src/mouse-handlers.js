@@ -337,7 +337,7 @@ function handlerMouseOutAG(d){
 }
 
 function linkAGClickHandler(d){
-//show informative popup
+//show informative popup and hint shared viz papers
 }
 
 function handlerMouseOverLinkAG(d){
