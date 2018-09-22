@@ -43,7 +43,9 @@ Each author and its academic career in our dataset is represented by a triple: r
   - the paper belongs to *N(P)*, **green**;
   - the paper is in the dataset but still not visualized, **gray**;
   The same mouse-handlers associated with the papers in the papers' graph are still usable with the smaller dots.
-* name in **red** indicates conflict with at least one author in the *Conflicting Authors* list;
+* name in **red** indicates conflict with at least one author in the *Candidate Reviewers* list;
+* name in *italic*, but **not bold** indicates conflict with at least one author in the *Conflicted Authors* list;
+* name in **blue** indicates that the author has been added to the *Candidate Reviewers* list;
 * name in **purple** or border of the rectangle in **light blue** indicates that the author has been added to the *Conflicting Authors* list;
 
 ## The toolbox
