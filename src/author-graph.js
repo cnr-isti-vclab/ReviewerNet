@@ -16,6 +16,30 @@ function getAGSvg(){
         }))
         .append("g")
         .attr("id", "gAG")
+    
+    svgAGn = d3.select("#svgAG_names")
+        .attr("width", "100%")
+        .attr("height", "450px")
+        
+    popTextA = svgAGn.append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("id", "agname")
+        .attr("text-anchor", "center")  
+        .style("font-size", "1em")
+        .attr("fill", "rgba( 2, 2, 2, 1 )")
+        .attr("opacity",0)
+        .text("")
+    
+    popRectA = svgAGn.append("rect")
+        .attr('x',0)
+        .attr('y',-10)
+        .attr('width',0)
+        .attr('height',0)
+        .attr("id", "agname_r")
+        .attr('fill',"rgba( 193, 193, 193, 0.65 )")
+        .attr('opacity',0)
+        .style("border-radius", "10px")
 } 
 
 function setAGSimulation(){
@@ -145,27 +169,7 @@ function authorGraph() {
         simulationA.alphaTarget(0.1).restart()
     }
     
-        //.style("stroke","url(#gradxX)")
-
-    for(var i = 0; i < authsDef.length; i++)
-        svg.append("text")
-            .attr("id", function(){return "txt"+authsDef[i].id})
-            .attr("x", -100)             
-            .attr("y", -100)
-            .attr("text-anchor", "center")  
-            .style("font-size", "0.7em")
-            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-            .attr("opacity",0)
-            .text(function(){return authsDef.value});
-    
-    popTextA = svg.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
+        //.style("stroke","url(#gradxX)"
 
     function ticked() {
         link
