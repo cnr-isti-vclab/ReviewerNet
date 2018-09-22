@@ -182,6 +182,7 @@ function handlerMouseOverAG(d){
     
     if(click)
         reset_texts()
+    
     d3.select("#aa"+d.id)
         .transition().duration(200)
         .attr('fill',"rgba( 138, 223, 223, 0.569 )")
@@ -224,7 +225,7 @@ function handlerMouseOverAG(d){
     d3.selectAll(".plink")
         .style("opacity", 0.2)
     
-    if((authsDef.filter(function(el){return el.id === d.id })).length > 0) {   
+    if(idAs.includes(d.id)) {   
     d3.selectAll(".papersNode")
         .style("opacity", function(d1){
             if(d1.authsId.includes(d.id))
@@ -279,11 +280,11 @@ function handlerMouseOutAG(d){
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
     d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
+        if(authColor(d))
+            return "rgba( 188, 188, 188, 0.454 )"
+        else
+            return "rgba( 221, 167, 109, 0.342 )"
+    })
     if(!click){
         /*
     popTextA.attr("width", 0)
@@ -328,38 +329,32 @@ function handlerMouseOverLinkAG(d){
     d3.selectAll(".authors-dot").style("opacity", 0.2)
     d3.selectAll(".aglink").style("opacity", 0.2)
     
-    d3.select("#ag"+d.source.id).transition()
-        .duration(200)
+    d3.select("#ag"+d.source.id)
         .attr("r", 7)
         .style("opacity", 1)
-    d3.select("#ag"+d.target.id).transition()
-        .duration(200)
+    d3.select("#ag"+d.target.id)
         .attr("r", 7).style("opacity", 1)
-    d3.select(this).transition()
-        .duration(200)
+    d3.select(this)
         .attr("stroke-width", 5).style("opacity", 1)
 }
 
 function handlerMouseOutLinkAG(d){
     d3.selectAll(".authors-dot").style("opacity", 1)
     d3.selectAll(".aglink").style("opacity", 1)
-    d3.select("#ag"+d.source.id).transition()
-        .duration(200)
+    d3.select("#ag"+d.source.id)
         .attr("r", function(d){
             if(idAs.includes(d.id))
                 return 4.5;
             else return 2.5;
             })  
-    d3.select("#ag"+d.target.id).transition()
-        .duration(200)
+    d3.select("#ag"+d.target.id)
         .attr("r", function(d){
             if(idAs.includes(d.id))
                 return 4.5;
             else return 2.5;
             })  
 
-    d3.select(this).transition()
-        .duration(200)
+    d3.select(this)
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return d.value*0.15
