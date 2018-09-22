@@ -403,6 +403,10 @@ hr {
     border-color: #4e5988
 }
 
+.noptr{
+    pointer-events: none
+}
+
 .links {
    cursor: help 
 }
