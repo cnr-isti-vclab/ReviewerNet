@@ -9,9 +9,10 @@ function author_dblclick_ABG(d){
         isIn = true
     else{
         authsReview.push(idA_rev)
+        authsReview_obj.push(suggestion)
         $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
-        /*authorBars()
-        authorGraph()*/
+        authorBars()
+        //authorGraph()*/
     }
 }
 
@@ -792,20 +793,21 @@ function authDblc(event){
 function r_authDblc(event){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length),
-        index = authsReview.indexOf(idClick);
+        index = authsReview.indexOf(idClick),
+        elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
+    
     $('#rauthList').html("")
     authsReview.splice(index, 1);
-    //console.log(authsReview)
+    authsReview_obj.splice(elementPos, 1);
+    console.log(authsReview_obj)
     if(authsReview.length > 0){
-        var new_auths = authors.filter(function (item){
-                return authsReview.includes(item.id)}),
-            al = new_auths.length;
+        var al = authsReview_obj.length;
         for(var i = 0; i < al; i++){
-            let suggestion = new_auths[i];
+            let suggestion = authsReview_obj[i];
             $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
     }
-    d3.select("#aa"+idClick).transition().duration(200).attr('fill',function (d){
+    d3.select("#aa"+idClick).attr('fill',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
