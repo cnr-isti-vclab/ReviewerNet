@@ -688,9 +688,10 @@ function setSimulation(){
     simulation = d3.forceSimulation()
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
-    simulation.force("charge", d3.forceManyBody().strength(-240))
+    simulation.force("charge", d3.forceManyBody().strength(-250))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
         .force('collision', d3.forceCollide().radius(10))
+        .force("y", d3.forceY());
     
     return simulation;
 
@@ -804,9 +805,9 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     function ticked() {
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { return Math.max(6, Math.min(800 - 6, d.source.y)); /*d.source.y*/; })
+            .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { return Math.max(6, Math.min(800 - 6, d.target.y));})
+            .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
             .style("stroke", function(d){
                 if(d.source.x < d.target.x)
                     return "url(#gradxX)";
@@ -818,7 +819,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("cx", function(d) { 
             var nX = xConstrained(d.year);
             return nX; })
-            .attr("cy", function(d) { return Math.max(6, Math.min(800 - 6, d.y)); })
+            .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
             .style("opacity", checkThetaNode)
     }
 }
