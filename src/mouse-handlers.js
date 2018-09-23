@@ -135,6 +135,7 @@ function authClickHandler(d){
             .style("opacity", function(d1){ return ((d1.source.id === d.id || 
                                                     d1.target.id === d.id) &&
                                                    idAs.includes(d1.source.id) && idAs.includes(d1.target.id)) ?  1 : 0; })
+
         d3.selectAll(".authors-dot")
             .attr("r", function(d1){ return  d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  7.5 : 2.5; })
             .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })

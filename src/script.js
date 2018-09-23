@@ -753,15 +753,17 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             addPaper(d)
         })
 
+    if(simulation){
+        
+        simulation
+            .nodes(papers1)
+            .on("tick", ticked)
 
-    simulation
-        .nodes(papers1)
-        .on("tick", ticked)
-
-    simulation.force("link")
-        .links(citations1);
-
-    simulation.restart()
+        simulation.force("link")
+            .links(citations1);
+        simulation.alphaTarget(0.1).restart()
+    }
+    
 
     for(var i = 0; i < papers1.length; i++)
         svg.append("text")
@@ -844,7 +846,7 @@ function dragged(d) {
 }
 
 function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
+  if (!d3.event.active) simulation.stop();
   d.fx = null;
   d.fy = null;
 }

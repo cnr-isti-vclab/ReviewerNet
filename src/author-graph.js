@@ -201,7 +201,7 @@ function draggedA(d) {
 }
 
 function dragendedA(d) {
-  if (!d3.event.active) simulationA.alphaTarget(0);
+  if (!d3.event.active) simulationA.stop();
   d.fx = null;
   d.fy = null;
 }
