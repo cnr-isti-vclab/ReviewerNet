@@ -482,10 +482,10 @@ hr {
     text-align: center;
     font-family: fantasy;
     color: rgba( 0, 0, 0, 0.567 );
-    font-size: 1.8em;
+    font-size: 1.2em;
     font-weight: bold;
     font-style: normal;
-    background-color: rgba( 59, 184, 174, 0.1 );
+    background-color: rgba( 59, 184, 174, 0.15 );
     z-index:    10;
     top:        0; 
     left:       0; 
