@@ -987,7 +987,7 @@ $(function (){
                 authsReview_obj.push(suggestion)
                 $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
-                //authorGraph()
+                authorGraph()
             }
         $('#rauthors-badge').html("")
             this.value = ""

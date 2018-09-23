@@ -13,8 +13,11 @@ function author_dblclick_ABG(d){
         authsReview_obj.push(suggestion)
         $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
         authorBars()
-        //authorGraph()*/
+        authorGraph()
     }
+    popTextA.attr("opacity", 0)
+    popRectA.style('opacity',0)
+    d3.select(".txtspan").remove()
 }
 
 function unclick_auth(d){
@@ -132,9 +135,7 @@ function authClickHandler(d){
                 return found ? 1 : 0;
             })
         d3.selectAll(".aglink")
-            .style("opacity", function(d1){ return ((d1.source.id === d.id || 
-                                                    d1.target.id === d.id) &&
-                                                   idAs.includes(d1.source.id) && idAs.includes(d1.target.id)) ?  1 : 0; })
+            .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && idAs.includes(d1.source.id) && idAs.includes(d1.target.id)) ?  1 : 0; })
 
         d3.selectAll(".authors-dot")
             .attr("r", function(d1){ return  d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  7.5 : 2.5; })
@@ -935,54 +936,57 @@ function r_authDblc(event){
     $('#rauthList').html("")
     authsReview.splice(index, 1);
     authsReview_obj.splice(elementPos, 1);
-    console.log(authsReview_obj)
+    //console.log(authsReview_obj)
     if(authsReview.length > 0){
         var al = authsReview_obj.length;
         for(var i = 0; i < al; i++){
             let suggestion = authsReview_obj[i];
             $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
-    }
-    d3.select("#aa"+idClick).attr('fill',function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
+   }
+    authorBars()
+    authorGraph()
     
-   d3.select("#ag"+idClick)
-        .transition().duration(200)
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            }) 
-    d3.select("#aaline"+idClick).transition().duration(200).style('stroke',function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
-    d3.selectAll(".plink")
-        .transition().duration(200)
-        .style("opacity", checkThetaLink)
-    d3.selectAll(".papersNode")
-        .transition().duration(200)
-        .attr("r", "6")
-        .style("opacity", checkThetaNode)
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(idClick))
-                d3.select($("#txt"+d1.id)[0])
-                    .attr("x", -1000)
-                    .attr("y", -1000)
-                    .attr("opacity", 0)  
-            if(idPs.includes(d1.id))
-                return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d1){
-            if(idPs.includes(d1.id))
-                return 2.5;
-            })
+//    d3.select("#aa"+idClick).attr('fill',function (d){
+//                    if(authColor(d))
+//                        return "rgba( 188, 188, 188, 0.454 )"
+//                    else
+//                        return "rgba( 221, 167, 109, 0.342 )"
+//                })
+//    
+//   d3.select("#ag"+idClick)
+//        .transition().duration(200)
+//        .attr("r", function(d){
+//            if(idAs.includes(d.id))
+//                return 4.5;
+//            else return 2.5;
+//            }) 
+//    d3.select("#aaline"+idClick).transition().duration(200).style('stroke',function (d){
+//                    if(authColor(d))
+//                        return "rgba( 188, 188, 188, 0.454 )"
+//                    else
+//                        return "rgba( 221, 167, 109, 0.342 )"
+//                })
+//    d3.selectAll(".plink")
+//        .transition().duration(200)
+//        .style("opacity", checkThetaLink)
+//    d3.selectAll(".papersNode")
+//        .transition().duration(200)
+//        .attr("r", "6")
+//        .style("opacity", checkThetaNode)
+//        .attr("stroke", function(d1){
+//            if(d1.authsId.includes(idClick))
+//                d3.select($("#txt"+d1.id)[0])
+//                    .attr("x", -1000)
+//                    .attr("y", -1000)
+//                    .attr("opacity", 0)  
+//            if(idPs.includes(d1.id))
+//                return "#6d10ca";
+//            else return "#999";
+//            })
+//        .attr("stroke-width", function(d1){
+//            if(idPs.includes(d1.id))
+//                return 2.5;
+//            })
     
 }

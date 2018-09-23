@@ -123,22 +123,21 @@ function authorGraph() {
             else return 2.5;
             })
         .attr("stroke", function(d){
-            if(idAs.includes(d.id))
-                return "green";
-            else return "#999";
+           if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.432 )";
+            else if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id)) return "#be27be";
+            else return "rgba( 114, 114, 114, 0.726 )";
             })
-        .attr("stroke-width", function(d){
-            if(idAs.includes(d.id))
-                return 1.5;
-            })
-        .attr("fill", function(d) {
-             if(idAs.includes(d.id))
-                return "#ff800a";
-            else return "rgba( 15, 183, 255, 0.673 )";
+        .attr("stroke-width", "1px")
+        .attr("fill",  function (d){
+            if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.332 )";
+            else if(authColor_r(d)) return "#db0000";
+            else if(authColor(d)) return "rgba( 188, 188, 188, 0.954 )";
+            else if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id))return "#be27be";
+            else return "rgba( 221, 167, 109, 0.942 )";
             }
-            /*
-            if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
-            else return "rgba( 64, 145, 215, 0.519 )";}*/)
+        )
         .call(d3.drag()
             .on("start", dragstartedA)
             .on("drag", draggedA)
