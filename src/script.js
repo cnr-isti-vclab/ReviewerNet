@@ -1,4 +1,5 @@
 var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
+    loader_str = "<div class=\"loader text-center\"></div>",
     auths_in_g = new Set([]),
     start = true,
     click = false, toolboxSvg = d3.select("#tb-svg"),
@@ -266,8 +267,8 @@ function getArrays(graph) {
         papers.push(p[i])
         //papers[i]=p[i]
     var c = graph.links,
-        n = c.length;
-    for (i = 0; i < n; i++)
+        n1 = c.length;
+    for (i = 0; i < n1; i++)
         citations[i]=c[i]
         // empty f
     getAuths()
