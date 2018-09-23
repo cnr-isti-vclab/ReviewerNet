@@ -15,8 +15,9 @@ function author_dblclick_ABG(d){
         authorBars()
         authorGraph()
     }
-    popTextA.attr("opacity", 0)
-    popRectA.style('opacity',0)
+
+    popTextA.style("opacity", 0)
+    popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
 }
 
@@ -27,8 +28,8 @@ function unclick_auth(d){
     d3.selectAll(".papersNode")
         .style("opacity", checkThetaNode)
         .attr("r", 6)
-    popRectA.attr("opacity", 0)
-    popTextA.attr("opacity", 0)
+    popRectA.style("opacity", 0)
+    popTextA.style("opacity", 0)
     d3.select(".txtspan").remove()
     d3.selectAll(".aglink")
         .style("opacity", 1)
@@ -273,7 +274,7 @@ function handlerMouseOverAG(d){
         //console.log("ret "+ret)
         return ret;})
         .attr("y", 20)
-        .attr("opacity", 1)
+        .style("opacity", 1)
     
     popRectA.attr("x", function(){return rect.width - wd - 33})
         .attr('y',5)
@@ -370,7 +371,9 @@ function handlerMouseOutAG(d){
         .style("opacity", checkThetaLink)
     popTextA.attr("width", 0)
         .attr("x", -5000)
-        .attr("opacity", 0);
+        .style("opacity", 0);
+    popRectA.attr("x", function(){return - 5000})
+        .style('opacity',0)
     d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -384,9 +387,9 @@ function handlerMouseOutAG(d){
             return "rgba( 221, 167, 109, 0.342 )"
     })
     
-    popTextA.attr("opacity", 0)
+    popTextA.style("opacity", 0)
     
-    popRectA.style('opacity',0)
+    popRectA.style("opacity",0)
     
 //    if(!click){
 //        /*
@@ -479,7 +482,7 @@ function handlerMouseOverLinkAG(d){
         //console.log("ret "+ret+ "wd "+wd+" ht "+ht)
         return ret;})
         .attr("y", 20)
-        .attr("opacity", 1)
+        .style("opacity", 1)
     popTextA.append('svg:tspan')
         .attr("class", "txtspan")
       .attr('x', function(){
@@ -544,7 +547,7 @@ function handlerMouseOutLinkAG(d){
                 return 4.5;
             else return 2.5;
             })  
-    popTextA.attr("opacity", 0)
+    popTextA.style("opacity", 0)
     popRectA.style('opacity',0)
     d3.select(this)
         .attr("stroke-width", function(d){
