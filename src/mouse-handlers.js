@@ -121,7 +121,16 @@ function authClickHandler(d){
             })
         click = true;
         //mostra autori conflittati in AG e AB
-        d3.selectAll(".paper_in_bars").style("opacity", 0)
+        d3.selectAll(".paper_in_bars").style("opacity", function(d1){
+                var al = d1.authsId,
+                    all = al.length, found = false, i = 0;
+                if(!al.includes(d.id)) return 0;
+                while( !found && i < all ){
+                    found = (idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
+                    i++
+                }
+                return found ? 1 : 0;
+            })
         d3.selectAll(".aglink")
             .style("opacity", function(d1){ return ((d1.source.id === d.id || 
                                                     d1.target.id === d.id) &&
