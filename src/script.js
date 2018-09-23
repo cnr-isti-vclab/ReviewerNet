@@ -75,6 +75,10 @@ function getXRect(x, wdt, inGraph){
         else return x + 5
 }
 
+function start_click_handler(){
+    document.getElementById("loading").style.visibility = "hidden";
+}
+
 function updateWidth(){
     xConstrained.range([15, w -30]);
     d3.select("#axis").remove()
@@ -285,7 +289,9 @@ function getAuths() {
                 authors[i]=a[i]
                 authDict[a[i].id] = [2019, 1900, []]
             }
-            
+            document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
+            citations.length+" citations<br>"+
+            authors.length+" authors successfully loaded.<br><hr>Click to start using SemanticBrowser!"  
         })
         
     }
@@ -847,7 +853,7 @@ $(function (){
     _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
-    
+    d3.select("#loading").on("click", start_click_handler)
     $( window ).on("load", function(){
         height = this.height
         heightA = this.height * 0.3
@@ -950,8 +956,7 @@ $(function (){
         .then(response => response.text())
         .then(function(text) {
             var graph = JSON.parse(text);
-            getArrays(graph)
-            document.getElementById("loading").style.visibility = "hidden";        
+            getArrays(graph)       
     });
     
     $('#rauthors-autocomplete').autocomplete({
