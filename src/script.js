@@ -853,7 +853,6 @@ $(function (){
     _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
-    d3.select("#loading").on("click", start_click_handler)
     $( window ).on("load", function(){
         height = this.height
         heightA = this.height * 0.3
@@ -958,6 +957,8 @@ $(function (){
             var graph = JSON.parse(text);
             getArrays(graph)       
     });
+    
+    d3.select("#loading").on("click", start_click_handler);
     
     $('#rauthors-autocomplete').autocomplete({
         source: authors,
