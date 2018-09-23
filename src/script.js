@@ -1034,7 +1034,6 @@ $(function (){
     });
      
     $('#papers-autocomplete').autocomplete({
-        source: papers,
         source: function(request, response) {
           
             var terms = request.term.split(' '),
@@ -1046,12 +1045,9 @@ $(function (){
           $.each(papers, function() {
             var t = this.value;
             if (this.value && (!request.term || str_match(matchers, t)))
-            {
-               resultset.push(this);
-           }  
-           return;
-         });
+               resultset.push(this)
 
+          });
          response(resultset);
 
         },
@@ -1086,7 +1082,7 @@ $(function (){
         }
       })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-       let name = item.value
+       let name = item.label
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
       return $( "<li>" )
