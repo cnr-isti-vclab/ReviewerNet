@@ -296,6 +296,14 @@ function getAuths() {
         
     }
 
+
+function str_match(matchers, t){
+    var res = true;
+    for(var i = 0; i < matchers.length; i++)
+        res = res && matchers[i].test(t)
+    return res;
+}
+
 function deleteP(idCk){
     var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
     AP = []
@@ -1027,6 +1035,26 @@ $(function (){
      
     $('#papers-autocomplete').autocomplete({
         source: papers,
+        source: function(request, response) {
+          
+            var terms = request.term.split(' '),
+                matchers = []
+            
+            terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
+  
+          var resultset = [];
+          $.each(papers, function() {
+            var t = this.value;
+            if (this.value && (!request.term || str_match(matchers, t)))
+            {
+               resultset.push(this);
+           }  
+           return;
+         });
+
+         response(resultset);
+
+        },
         minLength : 3,
         response: function( event, ui ) {
 //            console.log("ui.content");
