@@ -688,10 +688,14 @@ function setSimulation(){
     simulation = d3.forceSimulation()
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
-    simulation.force("charge", d3.forceManyBody().strength(-250))
+    simulation.force("charge", d3.forceManyBody()
+                .strength(-50)
+                .distanceMin(40)
+                .distanceMax(140))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
-        .force('collision', d3.forceCollide().radius(10))
-        .force("y", d3.forceY());
+        //.force('collision', d3.forceCollide().radius(10))
+        //.force("y", d3.forceY(-180))
+        .force("x", d3.forceX())
     
     return simulation;
 
