@@ -188,7 +188,7 @@ text {
     padding: 1px;
 }
 .authline {
-    height: 99%;
+    height: inherit;
     padding: 0px;
 }
 
