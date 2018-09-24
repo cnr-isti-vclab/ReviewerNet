@@ -18,17 +18,30 @@
     background-color: #efefef;
 }
 
+.ui-button {
+    height: 30px;
+    padding: 2px;
+    font-size: 0.9em;
+}
+
 .ui-spinner {
-    width: 40px
+    width: 43px;
+    height: 30px;
+    padding: 2px;
+    font-size: 0.9em;
 }
 
 .ui-icon{
-    width: 8px;
-    height: 8px
+    width: 12px;
+    height: 15px
 }
 
 .ui-spinner-button{
-    width: 12px
+    background-color: transparent;
+    width: 12px;
+    height: 15px;
+    padding: 0px
+    
 }
 
 .ui-menu-item{
@@ -490,3 +503,5 @@ hr {
     left:       0; 
     position:   fixed; 
 }
+
+
