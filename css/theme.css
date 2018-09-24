@@ -380,9 +380,9 @@ td.list-group-item {
 }
 
 #logo {
-    position: absolute;
+    position: relative;
     float: left;
-    transform: translate(-20%, -20%)
+    
 }
 
 footer {
