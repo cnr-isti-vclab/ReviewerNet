@@ -358,7 +358,7 @@ function handlerMouseOverAG(d){
 }
 
 function handlerMouseOutAG(d){
-   if(click) unclick_auth();
+   unclick_auth();
     d3.select(this).transition()
         .duration(200)
         .attr("r", function(d){
