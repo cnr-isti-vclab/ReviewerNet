@@ -15,7 +15,6 @@ function author_dblclick_ABG(d){
         authorBars()
         authorGraph()
     }
-
     popTextA.style("opacity", 0)
     popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
@@ -386,7 +385,7 @@ function handlerMouseOutAG(d){
         else
             return "rgba( 221, 167, 109, 0.342 )"
     })
-    
+    reset_texts()
     popTextA.style("opacity", 0)
     
     popRectA.style("opacity",0)
