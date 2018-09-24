@@ -19,8 +19,9 @@
 }
 
 .ui-button {
-    height: 30px;
-    padding: 2px;
+    height: 25px;
+    width: 100px;
+    padding: 0px;
     font-size: 0.9em;
 }
 
@@ -197,7 +198,7 @@ text {
 }
 
 .authLine {
-    height: 35px;
+    height: 10px;
     padding: 1px;
 }
 .authline {

@@ -65,7 +65,7 @@ function updateAD(d){
                     //console.log(ln)
                     authDict[sAList[i]][2][z].x_bar = authDict[sAList[i]][2][z].x_bar/ln
                 }
-            console.log(authDict[sAList[i]])
+            //console.log(authDict[sAList[i]])
         } 
     }
 }
@@ -77,11 +77,13 @@ function updateADpapers(){
 }
 
 function apFilter(item){
-    return AP.includes(item.id)
+    return authsExclude.includes(item.id) || authsReview.includes(item.id)
+        || AP.includes(item.id)
 }
 
 function anpFilter(item){
-    return ANP.includes(item.id)
+    return authsExclude.includes(item.id) || authsReview.includes(item.id)
+        || ANP.includes(item.id) 
 }
 
 function rankAuths(auths){
@@ -165,6 +167,7 @@ function authorBars(){
         authsDef = authors.filter(anpFilter)
     else if (showExclude) 
         authsDef = authors.filter(apFilter)
+    //console.log(authsDef)
     idAs = []
     authsDef.map(function(el){idAs.push(el.id)})
     //console.log(idAs)
@@ -198,11 +201,49 @@ function authorBars(){
             .attr("id", function (d){ return "aaline"+d.id})
             .attr("class", "authlLine")
             .attr('x1',function(d){
-                let pl = authDict[d.id][2], 
-                    m = pl[0].year
-
-                 for (var i = 1; i < pl.length; i++)
-                     m = Math.min(m, pl[i].year)
+                
+                //console.log(authDict[d.id])
+            var m = authDict[d.id][0].year;
+            if(authDict[d.id][2].length == 0){
+                //console.log("except")
+                authDict[d.id][2] = papers.filter(function(el){
+                        return el.authsId.includes(d.id)
+                    })  
+                authDict[d.id][2].sort(function(a, b) {
+                        return a.year - b.year;
+                    });
+                    let list_p = authDict[d.id][2],
+                        curr_year = list_p[0].year,
+                        hist = [],
+                        curr_idx = 0
+                    list_p[0].x_bar = 0
+                    hist.push([curr_year, 1])
+                    for(var z = 1; z < authDict[d.id][2].length; z++){
+                        if(curr_year == list_p[z].year){
+                            hist[curr_idx][1]++
+                            list_p[z].x_bar= hist[curr_idx][1]-1
+                        }
+                        else{
+                            curr_idx++
+                            curr_year = list_p[z].year
+                            hist.push([curr_year, 1])
+                            list_p[z].x_bar = 0
+                        }        
+                    }
+                    for(var z = 1; z < authDict[d.id][2].length; z++){
+                        let ln = hist.filter(function (el) { return el[0] == authDict[d.id][2][z].year; })[0][1]
+                        //console.log(ln)
+                        authDict[d.id][2][z].x_bar = authDict[d.id][2][z].x_bar/ln
+                    }
+                    //let id_a = auths[i]
+                    //console.log(authors.filter(function (el){return el.id === id_a;}))
+                    //console.log(list_p)
+                    //console.log(hist)
+                    //authDict[auths[i]].push(hist)
+            }  
+            
+                 for (var i = 1; i < authDict[d.id][2].length; i++)
+                     m = Math.min(m, authDict[d.id][2][i].year)
 
                  return (xConstrained(m-0.5) < 0 ? 0 : xConstrained(m-0.5));
             })

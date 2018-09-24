@@ -682,6 +682,23 @@ function getPaperSvg(){
         .attr("offset", "180%")
         .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
         .style("stop-opacity", "1")
+    
+    popRect = svgP.append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popText = svgP.append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
 } 
 
 function setSimulation(){
@@ -788,23 +805,6 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .attr("fill", "rgba( 2, 2, 2, 0.961 )")
             .attr("opacity",0)
             .text(function(){return papers1[i].value});
-    
-    popRect = svg.append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         .style("border-radius", "10px")
-    popText = svg.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
 
     function ticked() {
         link
@@ -986,6 +986,12 @@ $(function (){
         select: function (event, ui) {
             suggestion = ui.item
             if(start){
+                let delta = maxYear-minYear
+                if(delta > 30) delta = delta/2
+                document.getElementById("startMsg").style.visibility = "hidden";
+                xaxis.scale(xConstrained).ticks(delta, "r");
+                svgAxis = d3.select("#svgAxis").attr("y", "80")  
+                svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
                 start = false;
             }
@@ -1018,6 +1024,12 @@ $(function (){
         select: function (event, ui) {
             suggestion = ui.item
             if(start){
+                let delta = maxYear-minYear
+                if(delta > 30) delta = delta/2
+                document.getElementById("startMsg").style.visibility = "hidden";
+                xaxis.scale(xConstrained).ticks(delta, "r");
+                svgAxis = d3.select("#svgAxis").attr("y", "80")  
+                svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
                 start = false;
             }
