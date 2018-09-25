@@ -176,6 +176,48 @@ function checkboxesInit(){
             authorGraph()
         }
     });
+    let spinnerN = $( "#N" ).spinner({
+            min: 0,
+            disabled: true,
+            max: 50,
+            spin: function( event, ui ) {
+                    thetaN = ui.value;
+                    if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            },
+            change: function( event, ui ) {
+                this.value = this.value > 50 ? 50 : this.value;
+                this.value = this.value < 0 ? 0 : this.value;
+                thetaN = this.value;
+                if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            }
+        });
+    let spinnerC = $( "#C" ).spinner({
+            min: 0,
+            disabled: true,
+            max: 20,
+            spin: function( event, ui ) {
+                    thetaC = ui.value;
+                    if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            },
+            change: function( event, ui ) {
+                this.value = this.value > 20 ? 20 : this.value;
+                this.value = this.value < 0 ? 0 : this.value;
+                thetaC = this.value;
+                if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            }
+        });
     
     let spinnerMNoC = $( "#MNoC" ).spinner({
             min: 0,
@@ -207,7 +249,7 @@ function checkboxesInit(){
                 }
             },
             change: function( event, ui ) {
-                this.value = this.value > 30 ? 30 : this.value;
+                this.value = this.value > 20 ? 20 : this.value;
                 this.value = this.value < 0 ? 0 : this.value;
                 thetaPap = this.value;
                 if(papersFiltered.length > 0){
@@ -234,6 +276,40 @@ function checkboxesInit(){
         }
       }
     });
+    $( "#disableN" ).on( "click", function() {
+      if ( spinnerN.spinner( "option", "disabled" ) ) {
+        spinnerN.spinner( "enable" );
+        this.innerHTML = "Remove filter"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      } else {
+        spinnerN.spinner( "disable" );
+        this.innerHTML = "Filter auhtors"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      }
+    });
+    $( "#disableC" ).on( "click", function() {
+      if ( spinnerC.spinner( "option", "disabled" ) ) {
+        spinnerC.spinner( "enable" );
+        this.innerHTML = "Remove filter"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      } else {
+        spinnerC.spinner( "disable" );
+        this.innerHTML = "Filter auhtors"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      }
+    });
     $( "#disableMNoC" ).on( "click", function() {
       if ( spinnerMNoC.spinner( "option", "disabled" ) ) {
         spinnerMNoC.spinner( "enable" );
@@ -247,6 +323,10 @@ function checkboxesInit(){
             paperGraph(papersFiltered, citPrint, idPs, simulation)
       }
     });
+    $( "#N" ).spinner("value", 10)
+    $( "#C" ).spinner("value", 7)
+    
+    
     $( "button" ).button();
 }
 

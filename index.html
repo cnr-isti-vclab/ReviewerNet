@@ -81,26 +81,31 @@
                 <!-- Toolbox -->
                 <div id = "toolbox" class="panel-body text-center">
                     <div class="row" id="tbRow1" style="margin-bottom: 5px;">
-    <!--                  <div style="transform: translate(0px, 0px)">
-                      <h9 id = "MNP" title = "Is the Mininimum Number of Papers threshold. Once enabled, it removes from the authors area all the authors that have a number of visualized papers less than the indicated one." class="pop-up" >Minimun number of papers</h9>
-                        <input id="input-numberTP" min="0" max="10" step="1" style="width: 40px" type="number">
-                        <input type="checkbox" id="thetaPapCb" title = "Toggle/remove MNP threshold"/> 
-                    </div>
-                    </div>
-                     <div class="row" id="tbRow2"> 
-                    <div>-->
-                        <p>
-                          <label class=" pop-up gui-menu-item" title = "It's minimum number of authored papers in the PN for a researcher to be included in the RT and the RN." for="MNP">m</label>
-                          <input id="MNP" class = "spinner" name="value">
-                          <button id="disableMNP">Filter authors</button>
-                        </p>
-                        <p>
-                          <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Each paper having a number of out-citations smaller than this threshold is displayed in transparency in the PN." class="pop-up gui-menu-item">c</label>
-                          <input id="MNoC" class = "spinner" name="val">
-                          <button id="disableMNoC">Filter papers</button>
-                        </p>
-
-
+                        <table id = "bnt-table">
+                          <tr>
+                            <td>
+                                <label class=" pop-up gui-menu-item" title = "It's minimum number of authored papers in the PN for a researcher to be included in the RT and the RN." for="MNP">m</label>
+                                <input id="MNP" class = "spinner" name="value">
+                                <button id="disableMNP">Filter authors</button>
+                            </td>
+                            <td>
+                                <label class=" pop-up gui-menu-item" title = "Two researchers are considered as co-authors if they have at least n paper in common published in the last C years" for="N">n</label>
+                                <input id="N" class = "spinner" name="value">
+                                <button id="disableN">Filter<br>authors</button>
+                            </td>
+                            <td>
+                                <label for="C" title = "Two researchers are considered as co-authors if they have at least n papers in common published in the last C years" class="pop-up gui-menu-item">C</label>
+                                <input id="C" class = "spinner" name="val">
+                                <button id="disableC">Filter authors</button>
+                            </td>
+                            <td>
+                                <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Each paper having a number of out-citations smaller than this threshold is displayed in transparency in the PN." class="pop-up gui-menu-item">c</label>
+                                <input id="MNoC" class = "spinner" name="val">
+                                <button id="disableMNoC">Filter papers</button>
+                            </td>
+                          </tr>
+                        </table>
+                        
                         <!--
 
                         <h9 id = "MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up">Minimum number of out-citations</h9>

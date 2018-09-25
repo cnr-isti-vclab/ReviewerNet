@@ -2,7 +2,7 @@ function setup_popups(){
     $( ".pop-up" ).tooltip({
       show: {
         effect: "slideDown",
-        delay: 150
+        delay: 0
       }
     });
 }
