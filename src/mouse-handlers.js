@@ -37,7 +37,7 @@ function unclick_auth(d){
     d3.selectAll(".aglink")
         .style("opacity", 1)
     d3.selectAll(".authors-dot")
-        .attr("r", function(d1){ return idAs.includes(d1.id) ?  4.5 : 2.5; })
+        .attr("r", a_radius)
         .style("opacity", 1)
     d3.selectAll(".authlLine")
         .style('stroke',function (d1){
@@ -235,11 +235,7 @@ function handlerMouseOutA(d){
     
    d3.select("#ag"+d.id)
         .transition().duration(200)
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            }) 
+        .attr("r", a_radius) 
     d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -381,11 +377,7 @@ function handlerMouseOutAG(d){
    unclick_auth();
     d3.select(this).transition()
         .duration(200)
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            });
+        .attr("r", a_radius);
     d3.selectAll(".plink")
         .style("opacity", checkThetaLink)
     popTextA.attr("width", 0)
@@ -555,17 +547,9 @@ function handlerMouseOutLinkAG(d){
     d3.selectAll(".authors-dot").style("opacity", 1)
     d3.selectAll(".aglink").style("opacity", 1)
     d3.select("#ag"+d.source.id)
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            })  
+        .attr("r", a_radius)  
     d3.select("#ag"+d.target.id)
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            })  
+        .attr("r", a_radius)  
     popTextA.style("opacity", 0)
     popRectA.style('opacity',0)
     d3.select(this)

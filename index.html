@@ -100,7 +100,7 @@
                             </td>
                             <td>
                                 <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Each paper having a number of out-citations smaller than this threshold is displayed in transparency in the PN." class="pop-up gui-menu-item">c</label>
-                                <input id="MNoC" class = "spinner" name="val">
+                                <input id="MNoC" class = "spinner" name="value">
                                 <button id="disableMNoC">Filter papers</button>
                             </td>
                           </tr>
@@ -144,12 +144,31 @@
                                 <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
                           </tr>
                         </table>
+                        
+                        <table id = "pruning-table">
+                          <tr>
+                            <td class="tdp">
+                                <label class="checkbox-inline pop-up gui-menu-item"><input type="checkbox" value="">Show A(N(P)) </label> 
+                            </td>
+                            <td class="tdp">
+                                <label class="checkbox-inline pop-up gui-menu-item"><input type="checkbox" value="">Hide conflicted</label>  
+                            </td>
+                            <td class="tdp">
+                                <label for="lastYearOfP" title = "..." class="pop-up gui-menu-item">y</label>
+                        <input id="lastYearOfP" class = "spinner" name="value">
+                        <button id="disableY">Filter authors</button>
+                            </td>
+                            </tr>
+                        </table>
+                        
+                    
                     <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
                       <optgroup label="Authors visualization options:">
                         <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
                         <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
                       </optgroup>
                     </select>
+
 <!--                    <button type="button" style="transform: translateY(30%);" class="btn btn-default">Hide conflicted</button>-->
                     </div>      
                 </div>

@@ -264,6 +264,12 @@ td.list-group-item {
     width: 100%;
 }
 
+#pruning-table {
+    width: 70%;
+    font-size: 0.9em;
+    font-display: auto
+}
+
 .trP{
     border: 1px solid rgba( 122, 122, 122, 0.533 );
     border-right: 0px;

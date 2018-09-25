@@ -73,6 +73,12 @@ function extract_coauthoring(){
 
 function auths_in_g_filter(item){ return auths_in_g.has(item.id) }
 
+function a_radius(d){
+    let r = d.score ? d.score+0.7 : 1.2;
+    r = idAs.includes(d.id) ? r + 0.3 : r
+    return r.toString()+"px";
+}
+
 function authorGraph() {
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
@@ -100,7 +106,7 @@ function authorGraph() {
         .attr("class", "aglink")       
         .attr("stroke", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return "#ff5405"
+                return "#ffb689"//"#ff5405"
             else return "rgba( 178, 178, 178, 0.65 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
@@ -117,11 +123,12 @@ function authorGraph() {
         .enter().append("circle")
         .attr("class", "authors-dot")
         .attr("id", function(d){return "ag"+d.id})
-        .attr("r", function(d){
-            if(idAs.includes(d.id))
-                return 4.5;
-            else return 2.5;
-            })
+        .attr("r", a_radius)//function(d){
+           
+//            if(idAs.includes(d.id))
+//                return 4.5;
+//            else return 2.5;
+          //  })
         .attr("stroke", function(d){
            if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.432 )";
             else if(authsReview.includes(d.id)) return "#5263fe";

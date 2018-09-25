@@ -342,8 +342,6 @@ function authorBars(){
             
                  
                 m = Math.min(m, authDict[d.id][2][0].year)
-                console.log("a: "+d.value)
-                console.log(m)
                  return (xConstrained(m-0.5) < 0 ? 0 : xConstrained(m-0.5));
             })
             .attr('y1',15)
