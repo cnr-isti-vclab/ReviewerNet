@@ -271,9 +271,8 @@ td.list-group-item {
 }
 
 #pruning-table {
-    width: 70%;
+    width: 100%;
     font-size: 0.9em;
-    font-display: auto
 }
 
 .trP{
@@ -501,7 +500,9 @@ hr {
     background-color: "rgba( 0, 0, 0, 0 )";
     pointer-events: none;
 }
-
+#cmpa{
+    pointer-events: all
+}
 .label-txtspan{
     font-size: 0.8em;
     font-style: italic;
@@ -524,3 +525,7 @@ hr {
 }
 
 
+
+#cmpa {
+    opacity: 0.2
+}

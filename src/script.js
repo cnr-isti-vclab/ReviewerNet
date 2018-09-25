@@ -347,9 +347,11 @@ function deleteP(idCk){
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         if(idInfo === idCk)
             $('#paperInfo').html("")
-        authorBars()
-        authorGraph()
-    }
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+        }, 600);
+        }
 }
 
 function setPapHandlers(){
@@ -442,6 +444,7 @@ function addPaper(suggestion){
         svgAxis = d3.select("#svgAxis").attr("y", "80")  
         svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("svgAxis").style.visibility = "visible";
         add_labels()
         start = false;
     }
@@ -456,8 +459,11 @@ function addPaper(suggestion){
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-        authorBars()
-        authorGraph()
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+        }, 600);
+        
     }
 }
 
@@ -703,7 +709,7 @@ function setSimulation(){
         .force("x", d3.forceX())
     simulation.alpha(1)
      simulation.alphaMin(0.0198)
-     simulation.alphaDecay(0.006)
+     simulation.alphaDecay(0.0065)
     return simulation;
 
 }
@@ -976,13 +982,13 @@ $(function (){
 ////                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
 //                oldH = heightA;
         updateWidth()
-        if(papersFiltered.length > 0){
-            paperGraph(papersFiltered, citPrint, idPs, simulation)
-            authorBars()
-            //authorGraph()
-        }
+//        if(papersFiltered.length > 0){
+//            paperGraph(papersFiltered, citPrint, idPs, simulation)
+//            authorBars()
+//            //authorGraph()
+//        }
     });
-
+    document.getElementById("svgAxis").style.visibility = "visible";
     $('#papers-autocomplete').click(function (e){
     this.value=""
     });
@@ -992,10 +998,15 @@ $(function (){
     $('#rauthors-autocomplete').click(function (e){
     this.value=""
     });
-
+    d3.select("#cmpa").on("mouseover", function(){
+          d3.select(this).style("opacity", 0.8)  
+        })
+        .on("mouseout", function(){
+          d3.select(this).style("opacity", 0.2)  
+        })
     getPaperSvg()
     getAGSvg()
-    
+     document.getElementById("svgAxis").style.visibility = "hidden";
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()
@@ -1027,6 +1038,7 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                 document.getElementById("svgAxis").style.visibility = "visible";
                 add_labels()
                 start = false;
             }
@@ -1066,6 +1078,7 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                 document.getElementById("svgAxis").style.visibility = "visible";
                 add_labels()
                 start = false;
             }
