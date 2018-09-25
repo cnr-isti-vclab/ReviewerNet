@@ -105,10 +105,42 @@ function rankAuths(auths){
     return auths
 }
 
+function checkThetaNC(author, el){
+    //check what variable betweet thataN/C set to 0 or its spinner value
+    var l = author.coAuthList[el][1] ? author.coAuthList[el][1] : 1900;
+    if(checkboxTC.spinner( "option", "disabled" ) && checkboxTN.spinner( "option", "disabled" )){
+        return true;
+    }
+    else if(checkboxTC.spinner( "option", "disabled" ) && !checkboxTN.spinner( "option", "disabled" )
+      && author.coAuthList[el][2] && (thetaN == 0 || author.coAuthList[el][2].length >= thetaN)){
+        return true;
+    }
+    else if(!checkboxTC.spinner( "option", "disabled" ) && checkboxTN.spinner( "option", "disabled" )
+      && ((2018 - l) <= thetaC)){
+        return true;
+    }
+    else if((2018 - l) <= thetaC){
+        if(thetaN == 0) return true;
+        let count = 0, i = author.coAuthList[el][2].length-1, found = false;
+        while( i >= 0 && !found ){
+            l = author.coAuthList[el][2][i].year;
+            count++
+            found = ((count == thetaN) || ((2018 - l) > thetaC)) ? true : false;
+            i = i-1;
+        }
+        return count == thetaN ? true : false;
+        //while((2018 - i) <  )
+        //for(var i = 0; i < l; i++){
+          //  author.coAuthList[el][2]
+        //}
+    }else return false;
+}
+
 function authColor(author){
     let exclude = false;
+    //console.log(author)
     authsExclude.map(function (el){
-        if(author.coAuthList[el])
+        if(author.coAuthList[el] && checkThetaNC(author, el))
             exclude = true
     })
     return exclude
@@ -117,7 +149,7 @@ function authColor(author){
 function authColor_r(author){
     let exclude = false;
     authsReview.map(function (el){
-        if(author.coAuthList[el])
+        if(author.coAuthList[el] && checkThetaNC(author, el))
             exclude = true
     })
     return exclude
@@ -134,7 +166,7 @@ function printPapers(auths){
         d3.select("#svgA"+ id_a).selectAll("circle")
             .data(authDict[id_a][2]).enter()
             .append("circle")
-            .attr("class", "paper_in_bars")
+            .attr("class", "paper_in_bars p"+id_a)
             .attr("cx", function (d){
                 //console.log(d)
                 return xConstrained(d.year + d.x_bar - 0.5)
@@ -157,6 +189,72 @@ function printPapers(auths){
                 addPaper(d)
             })
     }
+}
+
+function reset_ABG(){
+     d3.selectAll(".authlLine")
+            .style('stroke',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+
+        
+        d3.selectAll(".authNode")
+            .attr('fill', function (d){
+                if(authColor(d))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+            .style("border-radius", "30px")
+            .style("stroke-width", function (d){
+                if(authsExclude.includes(d.id))
+                    return 0.8
+                else return 0})
+            .style("stroke", function (d){
+                if(authsExclude.includes(d.id))
+                    return "rgba( 47, 198, 212, 0.713 )"
+                })
+
+        d3.selectAll(".auth-name")
+            .style("font-size", "12px")
+            .text(function (d){ return d.value })
+            .style("font-style", function (d){ 
+                if( authColor(d) )
+                    return "italic"
+            })
+            .style("font-weight", function (d){ 
+                if(!authColor(d)) 
+                   return "bold"; })
+            .attr("fill",  function (d){
+                if(authColor_r(d))
+                    return "#db0000";
+                else if(authsReview.includes(d.id))
+                    return "#5263fe";
+                else if(authsExclude.includes(d.id))
+                     return "#be27be"
+                else return "#474747";
+            })
+    
+        d3.selectAll(".authors-dot")
+        .attr("fill",  function (d){
+            if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.332 )";
+            else if(authColor_r(d)) return "#db0000";
+            else if(authColor(d)) return "rgba( 188, 188, 188, 0.954 )";
+            else if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id))return "#be27be";
+            else return "rgba( 221, 167, 109, 0.942 )";
+            }
+        )
+        /*
+            .on("click", authClickHandler)
+            .on("mouseover", handlerMouseOverA)
+            .on("mouseout", handlerMouseOutA)
+            .on("dblclick", author_dblclick_ABG)
+        */
+        //printPapers(authsDef)    
 }
 
 function authorBars(){
@@ -203,7 +301,7 @@ function authorBars(){
             .attr('x1',function(d){
                 
                 //console.log(authDict[d.id])
-            var m = authDict[d.id][0].year;
+            var m = authDict[d.id][0];
             if(authDict[d.id][2].length == 0){
                 //console.log("except")
                 authDict[d.id][2] = papers.filter(function(el){

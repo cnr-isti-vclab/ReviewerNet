@@ -1,3 +1,7 @@
+//ricontrollare checkthetaNC
+//errore con threshold c
+//problema grafi
+
 var texts = [],
     clickAG = false;
 
@@ -59,7 +63,6 @@ function unclick_auth(d){
 function authClickHandler(d){
     
     if(idAs.includes(d.id)){
-    
     if(click){
         unclick_auth(d)
         /*click = false;
@@ -95,8 +98,9 @@ function authClickHandler(d){
         d3.selectAll(".auth-name")
             .attr("opacity", 1)*/
     }else{
+        //console.log("clickA")
         reset_texts()
-        clickAG = true;    
+        click = true;    
         d3.selectAll(".plink").style("opacity", 0.2)
         d3.selectAll(".papersNode")
             .style("opacity", function(d1){
@@ -129,25 +133,41 @@ function authClickHandler(d){
                     all = al.length, found = false, i = 0;
                 if(!al.includes(d.id)) return 0;
                 while( !found && i < all ){
-                    found = (idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
+                    found = !(al[i] === d.id) && idAs.includes(al[i]) && d.coAuthList[al[i]] ? true : false;
                     i++
                 }
                 return found ? 1 : 0;
             })
+//        d3.selectAll(".p"+d.id).style("opacity", function(d1){
+//                var al = d1.authsId,
+//                    all = al.length, found = false, i = 0;
+//                if(!al.includes(d.id)) return 0;
+//                while( !found && i < all ){
+//                    found = !(al[i] === d.id) && idAs.includes(al[i]) && d.coAuthList[al[i]] && checkThetaNC(d, al[i]) ? true : false;
+//                    i++
+//                }
+//                return found ? 1 : 0;
+//            })
         d3.selectAll(".aglink")
-            .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && idAs.includes(d1.source.id) && idAs.includes(d1.target.id)) ?  1 : 0; })
+            .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && idAs.includes(d1.source.id) && idAs.includes(d1.target.id) && checkThetaNC(d1.source, d1.target.id)) ?  1 : 0; })
 
         d3.selectAll(".authors-dot")
-            .attr("r", function(d1){ return  d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  7.5 : 2.5; })
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+            .attr("r", function(d1){ return  d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  7.5 : 2.5; })
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
         d3.selectAll(".authlLine")
-            .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
+            .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
         d3.selectAll(".authNode")
-            .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })
-        d3.selectAll(".auth-name")
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) ?  1 : 0; })    
+            .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
+//        d3.selectAll(".auth-name")
+//            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })   
+                d3.selectAll(".auth-name")
+            .style("opacity", function(d1){ if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
+                    return 1;
+                }else{
+                    d3.selectAll(".p"+d1.id).style("opacity", 0)
+                    return 0;} })   
     }}
 }
 
@@ -253,7 +273,7 @@ function handlerMouseOutA(d){
 
 function handlerMouseOverAG(d){
     reset_texts()
-    if(click) unclick_auth();
+    if(clickAG) unclick_auth();
     d3.select(this).transition()
         .duration(200)
         .attr("r", 7);
@@ -439,13 +459,13 @@ function linkAGClickHandler(d){
         d3.selectAll(".plink").style("opacity", 0.2)
         d3.selectAll(".papersNode")
             .style("opacity", function(d1){
-                if(d.source.coAuthList[d.target.id][2].includes(d1.id))
+                if( checkThetaNC(d.source, d.target.id) && d.source.coAuthList[d.target.id][2].includes(d1.id))
                     return 1;
                 else
                     return 0.2;
             })
             .attr("r", function(d1){
-                if(d.source.coAuthList[d.target.id][2].includes(d1.id)){
+                if( checkThetaNC(d.source, d.target.id) &&  d.source.coAuthList[d.target.id][2].includes(d1.id)){
                     papName(d1)
                     return "9";}
                 else return "6";
