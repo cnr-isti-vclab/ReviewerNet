@@ -169,13 +169,47 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
-  
-    authViz.addEventListener('change', function(){
+//  
+//    authViz.addEventListener('change', function(){
+//        if(papersFiltered.length > 0){
+//            authorBars()
+//            authorGraph()
+//        }
+//    });
+    checkboxA.on('click', function(){
         if(papersFiltered.length > 0){
             authorBars()
             authorGraph()
         }
     });
+    checkboxC.on('click', function(){
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+    });
+    
+    let spinnerY = $( "#lastYearOfP" ).spinner({
+            min: 0,
+            disabled: true,
+            max: 20,
+            spin: function( event, ui ) {
+                    thetaY = ui.value;
+                    if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            },
+            change: function( event, ui ) {
+                this.value = this.value > 20 ? 20 : this.value;
+                this.value = this.value < 0 ? 0 : this.value;
+                thetaY = this.value;
+                if(papersFiltered.length > 0){
+                    authorBars()
+                    authorGraph()
+                }
+            }
+        });
     let spinnerN = $( "#N" ).spinner({
             min: 0,
             disabled: true,
@@ -258,7 +292,6 @@ function checkboxesInit(){
                 }
             }
         });
-    $( ".spinner" ).spinner( "value", 0 );
     $( "#disableMNP" ).on( "click", function() {
       if ( spinnerMNP.spinner( "option", "disabled" ) ) {
         spinnerMNP.spinner( "enable" );
@@ -286,6 +319,23 @@ function checkboxesInit(){
         }
       } else {
         spinnerN.spinner( "disable" );
+        this.innerHTML = "Filter auhtors"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      }
+    });
+    $( "#disableY" ).on( "click", function() {
+      if ( spinnerY.spinner( "option", "disabled" ) ) {
+        spinnerY.spinner( "enable" );
+        this.innerHTML = "Remove filter"
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+      } else {
+        spinnerY.spinner( "disable" );
         this.innerHTML = "Filter auhtors"
         if(papersFiltered.length > 0){
             authorBars()
@@ -325,8 +375,9 @@ function checkboxesInit(){
     });
     $( "#N" ).spinner("value", 10)
     $( "#C" ).spinner("value", 7)
-    
-    
+    $( "#lastYearOfP" ).spinner("value", 7)
+    $( "#MNoC" ).spinner("value", 8)
+    $( "#MNP" ).spinner("value", 0)
     $( "button" ).button();
 }
 
