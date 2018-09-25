@@ -442,6 +442,7 @@ function addPaper(suggestion){
         svgAxis = d3.select("#svgAxis").attr("y", "80")  
         svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
+        add_labels()
         start = false;
     }
     idP = suggestion.id
@@ -543,12 +544,11 @@ function paperInfo(suggestion){
     
     if(suggestion.jN.length > 0)
       thehtml += "<tr class =\"trP\"><th class =\"thP\" >Journal Name</th><td>"+suggestion.jN+"</td></tr>";
-
-    if(suggestion.venue.length > 0)
+    else if(suggestion.venue.length > 0)
         thehtml += "<tr class =\"trP\"><th class =\"thP\" >Venue</th><td>"+suggestion.venue+"</td></tr>";
 
     idP = suggestion.id
-    thehtml += printCits()
+    //thehtml += printCits()
     return thehtml
 
 }
@@ -726,8 +726,10 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
     
-    $("#pn").html("<strong><font color=\"#1e9476\">P =</font></strong> "+idPs.length)
-    $("#npn").html("<strong><font color=\"#1e9476\">N(P) =</font></strong> "+papersFiltered.length)
+    d3.select("#pn").text("P = "+idPs.length).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 20)
+      .attr('dy', 15)
+      .text("N(P) = "+papersFiltered.length)
     
     
     var link = svg.append("g")
@@ -869,6 +871,33 @@ function dragended(d) {
   d.fy = null;
 }
 
+function add_labels(){
+    //Paper Network
+    d3.select("#svgAxis").append("text").attr("class","area-labels").attr("id", "area-name-PN").text("Paper Network").attr("y", 50).attr("x", 20).attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    .append("tspan").attr("class", "label-txtspan")
+        .attr("id", "pn")
+      .attr("x", 22)
+      .attr('dy', 20)
+      .text("P = 0")
+    .append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 20)
+      .attr('dy', 15)
+      .text("N(P) = 0")
+    //Researcher Timeline
+    d3.select("#svgRT").append("text").attr("class","area-labels").attr("id", "area-name-RT").text("Researcher Timeline").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )").append("tspan").attr("class", "label-txtspan")
+      .attr("id", "apn")
+        .attr("x", 5)
+      .attr('dy', 22)
+      .text("A = 0")
+    .append('tspan')
+    .attr("class", "label-txtspan").attr("id", "anpn")
+      .attr("x", 5)
+      .attr('dy', 15)
+      .text("A(N(P)) = 0")
+    //Researcher Network
+    d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
+}
+
 $(function (){
     _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
@@ -966,7 +995,7 @@ $(function (){
 
     getPaperSvg()
     getAGSvg()
-
+    
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()
@@ -998,6 +1027,7 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                add_labels()
                 start = false;
             }
           this.value = null
@@ -1036,6 +1066,7 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                add_labels()
                 start = false;
             }
           this.value = null

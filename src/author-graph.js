@@ -179,7 +179,6 @@ function authorGraph() {
         } catch (e) {
             console.log(e)
         }
-        
         simulationA.restart()
     }
     
@@ -202,7 +201,7 @@ function authorGraph() {
 }
 
 function dragstartedA(d) {
-  if (!d3.event.active) simulationA.restart();
+  if (!d3.event.active) simulationA.alphaTarget(0.2).restart();
   d.fx = d.x;
   d.fy = d.y;
 }

@@ -297,9 +297,13 @@ function authorBars(){
     
     $("#authTable").html("")
     
-    $("#apn").html("<strong><font color=\"#1e9476\">A(P) =</font></strong> "+AP.length)
-    $("#anpn").html("<strong><font color=\"#1e9476\">A(N(P)) =</font></strong> "+ANP.length)
-    
+    d3.select("#apn").text("A(P) = "+AP.length)
+     .append('tspan')
+    .attr("class", "label-txtspan").attr("id", "anpn")
+      .attr("x", 5)
+      .attr('dy', 15)
+      .text("A(N(P)) = "+ANP.length)
+
     if(authsDef){
         if(!checkboxTP.spinner( "option", "disabled" ))
             authsDef = authsDef.filter(thetaPapFilter) 

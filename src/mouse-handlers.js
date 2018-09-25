@@ -263,7 +263,6 @@ function handlerMouseOutA(d){
             if(idPs.includes(d1.id))
                 return 2.5;
             })
-    
 }
 
 function handlerMouseOverAG(d){
@@ -397,6 +396,24 @@ function handlerMouseOutAG(d){
             return "rgba( 221, 167, 109, 0.342 )"
     })
     reset_texts()
+     d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(d.id))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
     popTextA.style("opacity", 0)
     
     popRectA.style("opacity",0)
