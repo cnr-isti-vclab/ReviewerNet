@@ -340,19 +340,16 @@ function authorBars(){
                     //authDict[auths[i]].push(hist)
             }  
             
-                 for (var i = 1; i < authDict[d.id][2].length; i++)
-                     m = Math.min(m, authDict[d.id][2][i].year)
-
+                 
+                m = Math.min(m, authDict[d.id][2][0].year)
+                console.log("a: "+d.value)
+                console.log(m)
                  return (xConstrained(m-0.5) < 0 ? 0 : xConstrained(m-0.5));
             })
             .attr('y1',15)
             .attr('x2',function(d){ 
                 let pl = authDict[d.id][2], 
-                    m = pl[0].year
-
-                 for (var i = 1; i < pl.length; i++)
-                     m = Math.max(m, pl[i].year)
-
+                    m = pl[pl.length-1].year
                  return xConstrained(m + 0.3);
             })
             .attr('y2',15)
