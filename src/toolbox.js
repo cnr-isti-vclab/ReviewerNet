@@ -169,13 +169,26 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
-  
-    authViz.addEventListener('change', function(){
+//  
+//    authViz.addEventListener('change', function(){
+//        if(papersFiltered.length > 0){
+//            authorBars()
+//            authorGraph()
+//        }
+//    });
+    checkboxA.on('click', function(){
         if(papersFiltered.length > 0){
             authorBars()
             authorGraph()
         }
     });
+    checkboxC.on('click', function(){
+        if(papersFiltered.length > 0){
+            authorBars()
+            authorGraph()
+        }
+    });
+    
     let spinnerY = $( "#lastYearOfP" ).spinner({
             min: 0,
             disabled: true,
@@ -362,13 +375,9 @@ function checkboxesInit(){
     });
     $( "#N" ).spinner("value", 10)
     $( "#C" ).spinner("value", 7)
-    $( "#Y" ).spinner("value", 7)
-    $( "#MNoC" ).spinner("value", 10)
-    $( "#MNP" ).spinner("value", 7)
-
-    
-    
-    
+    $( "#lastYearOfP" ).spinner("value", 7)
+    $( "#MNoC" ).spinner("value", 8)
+    $( "#MNP" ).spinner("value", 0)
     $( "button" ).button();
 }
 

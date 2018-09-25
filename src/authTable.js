@@ -76,14 +76,36 @@ function updateADpapers(){
         updateAD(papersFiltered[i])
 }
 
+function prune_auth(d1){
+    let exclude = false;
+    if((checkboxC[0].checked) && (authsExclude.length > 0 || authsReview.length >0)){
+        authsExclude.map(function (el){
+            if(d1.coAuthList[el] && checkThetaNC(d1, el))
+                exclude = true
+        })
+        if(!exclude)
+            authsReview.map(function (el){
+                if(d1.coAuthList[el] && checkThetaNC(d1, el))
+                    exclude = true
+            })
+    }
+    if(!exclude)
+        if(!checkboxTY.spinner( "option", "disabled" ))
+            exclude = (idAs.includes(d1.id) && authDict[d1.id][2] && ( 2018 - authDict[d1.id][2][authDict[d1.id][2].length - 1].year > thetaY )) ? true : false;
+    //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
+    //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
+    console.log("Exclude "+exclude)
+    return !exclude    
+}
+
 function apFilter(item){
-    return authsExclude.includes(item.id) || authsReview.includes(item.id)
-        || AP.includes(item.id)
+    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+        || AP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter(item){
-    return authsExclude.includes(item.id) || authsReview.includes(item.id)
-        || ANP.includes(item.id) 
+    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+        || ANP.includes(item.id)) && prune_auth(item)
 }
 
 function rankAuths(auths){
@@ -260,10 +282,13 @@ function reset_ABG(){
 function authorBars(){
     //var authsDef = null;
     //authsFiltered = [];
-
-    if(authViz.value === "anpO" )
+    console.log("CBA : "+checkboxA[0].checked)
+    console.log("CBC : "+checkboxC[0].checked)
+    console.log("SPINNERY : "+!checkboxTY.spinner( "option", "disabled" ))
+    
+    if(checkboxA[0].checked)
         authsDef = authors.filter(anpFilter)
-    else if (showExclude) 
+    else
         authsDef = authors.filter(apFilter)
     //console.log(authsDef)
     idAs = []
@@ -279,8 +304,7 @@ function authorBars(){
         if(!checkboxTP.spinner( "option", "disabled" ))
             authsDef = authsDef.filter(thetaPapFilter) 
         var na = authsDef.length
-        authsDef = rankAuths(authsDef)   
-        
+        authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {
             return -(a.score - b.score);
         });
