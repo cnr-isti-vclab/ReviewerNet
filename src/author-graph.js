@@ -51,8 +51,14 @@ function setAGSimulation(){
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", f)
         .force("center", d3.forceCenter(wi, he))
-        .force('collision', d3.forceCollide().radius(2))
+        //.force('collision', d3.forceCollide().radius(2))
+        simulationA.alpha(1)
+     simulationA.alphaMin(0.022)
+     //simulationA.alphaDecay(0.01)
+     simulationA.alphaDecay(0.0025)
+    
     return simulationA;
+    
 
 }
  
@@ -174,7 +180,7 @@ function authorGraph() {
             console.log(e)
         }
         
-        simulationA.alphaTarget(0.1).restart()
+        simulationA.restart()
     }
     
         //.style("stroke","url(#gradxX)"
@@ -196,7 +202,7 @@ function authorGraph() {
 }
 
 function dragstartedA(d) {
-  if (!d3.event.active) simulationA.alphaTarget(0.3).restart();
+  if (!d3.event.active) simulationA.restart();
   d.fx = d.x;
   d.fy = d.y;
 }
@@ -207,7 +213,7 @@ function draggedA(d) {
 }
 
 function dragendedA(d) {
-  if (!d3.event.active) simulationA.stop();
-  d.fx = null;
-  d.fy = null;
+  if (!d3.event.active) simulationA.stop()
+      d.fx = null;
+     d.fy = null;
 }

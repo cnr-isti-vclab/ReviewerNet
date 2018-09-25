@@ -687,23 +687,6 @@ function getPaperSvg(){
         .attr("offset", "180%")
         .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
         .style("stop-opacity", "1")
-    
-    popRect = svgP.append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         .style("border-radius", "10px")
-    popText = svgP.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
 } 
 
 function setSimulation(){
@@ -718,7 +701,9 @@ function setSimulation(){
         //.force('collision', d3.forceCollide().radius(10))
         //.force("y", d3.forceY(-180))
         .force("x", d3.forceX())
-    
+    simulation.alpha(1)
+     simulation.alphaMin(0.0198)
+     simulation.alphaDecay(0.006)
     return simulation;
 
 }
@@ -796,10 +781,25 @@ function paperGraph(papers1, citations1, idPs, simulation) {
 
         simulation.force("link")
             .links(citations1);
-        simulation.alphaTarget(0.1).restart()
+        simulation.restart()
     }
     
-
+popRect = svgP.append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popText = svgP.append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
     for(var i = 0; i < papers1.length; i++)
         svg.append("text")
             .attr("id", function(){return "txt"+papers1[i].id})
@@ -853,7 +853,7 @@ function checkThetaNode(d1){
 }
 
 function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  if (!d3.event.active) simulation.alphaTarget(0.2).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
