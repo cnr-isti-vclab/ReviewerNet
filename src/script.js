@@ -347,9 +347,11 @@ function deleteP(idCk){
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         if(idInfo === idCk)
             $('#paperInfo').html("")
-        authorBars()
-        authorGraph()
-    }
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+        }, 600);
+        }
 }
 
 function setPapHandlers(){
@@ -442,6 +444,8 @@ function addPaper(suggestion){
         svgAxis = d3.select("#svgAxis").attr("y", "80")  
         svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("svgAxis").style.visibility = "visible";
+        add_labels()
         start = false;
     }
     idP = suggestion.id
@@ -455,8 +459,11 @@ function addPaper(suggestion){
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-        authorBars()
-        authorGraph()
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+        }, 600);
+        
     }
 }
 
@@ -543,12 +550,11 @@ function paperInfo(suggestion){
     
     if(suggestion.jN.length > 0)
       thehtml += "<tr class =\"trP\"><th class =\"thP\" >Journal Name</th><td>"+suggestion.jN+"</td></tr>";
-
-    if(suggestion.venue.length > 0)
+    else if(suggestion.venue.length > 0)
         thehtml += "<tr class =\"trP\"><th class =\"thP\" >Venue</th><td>"+suggestion.venue+"</td></tr>";
 
     idP = suggestion.id
-    thehtml += printCits()
+    //thehtml += printCits()
     return thehtml
 
 }
@@ -687,23 +693,6 @@ function getPaperSvg(){
         .attr("offset", "180%")
         .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
         .style("stop-opacity", "1")
-    
-    popRect = svgP.append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         .style("border-radius", "10px")
-    popText = svgP.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
 } 
 
 function setSimulation(){
@@ -718,7 +707,9 @@ function setSimulation(){
         //.force('collision', d3.forceCollide().radius(10))
         //.force("y", d3.forceY(-180))
         .force("x", d3.forceX())
-    
+    simulation.alpha(1)
+     simulation.alphaMin(0.0198)
+     simulation.alphaDecay(0.0065)
     return simulation;
 
 }
@@ -741,8 +732,10 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
     
-    $("#pn").html("<strong><font color=\"#1e9476\">P =</font></strong> "+idPs.length)
-    $("#npn").html("<strong><font color=\"#1e9476\">N(P) =</font></strong> "+papersFiltered.length)
+    d3.select("#pn").text("P = "+idPs.length).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 20)
+      .attr('dy', 15)
+      .text("N(P) = "+papersFiltered.length)
     
     
     var link = svg.append("g")
@@ -796,10 +789,25 @@ function paperGraph(papers1, citations1, idPs, simulation) {
 
         simulation.force("link")
             .links(citations1);
-        simulation.alphaTarget(0.1).restart()
+        simulation.restart()
     }
     
-
+popRect = svgP.append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popText = svgP.append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
     for(var i = 0; i < papers1.length; i++)
         svg.append("text")
             .attr("id", function(){return "txt"+papers1[i].id})
@@ -853,7 +861,7 @@ function checkThetaNode(d1){
 }
 
 function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  if (!d3.event.active) simulation.alphaTarget(0.2).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
@@ -867,6 +875,33 @@ function dragended(d) {
   if (!d3.event.active) simulation.stop();
   d.fx = null;
   d.fy = null;
+}
+
+function add_labels(){
+    //Paper Network
+    d3.select("#svgAxis").append("text").attr("class","area-labels").attr("id", "area-name-PN").text("Paper Network").attr("y", 50).attr("x", 20).attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    .append("tspan").attr("class", "label-txtspan")
+        .attr("id", "pn")
+      .attr("x", 22)
+      .attr('dy', 20)
+      .text("P = 0")
+    .append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 20)
+      .attr('dy', 15)
+      .text("N(P) = 0")
+    //Researcher Timeline
+    d3.select("#svgRT").append("text").attr("class","area-labels").attr("id", "area-name-RT").text("Researcher Timeline").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )").append("tspan").attr("class", "label-txtspan")
+      .attr("id", "apn")
+        .attr("x", 5)
+      .attr('dy', 22)
+      .text("A = 0")
+    .append('tspan')
+    .attr("class", "label-txtspan").attr("id", "anpn")
+      .attr("x", 5)
+      .attr('dy', 15)
+      .text("A(N(P)) = 0")
+    //Researcher Network
+    d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
 }
 
 $(function (){
@@ -947,13 +982,13 @@ $(function (){
 ////                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
 //                oldH = heightA;
         updateWidth()
-        if(papersFiltered.length > 0){
-            paperGraph(papersFiltered, citPrint, idPs, simulation)
-            authorBars()
-            //authorGraph()
-        }
+//        if(papersFiltered.length > 0){
+//            paperGraph(papersFiltered, citPrint, idPs, simulation)
+//            authorBars()
+//            //authorGraph()
+//        }
     });
-
+    document.getElementById("svgAxis").style.visibility = "visible";
     $('#papers-autocomplete').click(function (e){
     this.value=""
     });
@@ -963,10 +998,15 @@ $(function (){
     $('#rauthors-autocomplete').click(function (e){
     this.value=""
     });
-
+    d3.select("#cmpa").on("mouseover", function(){
+          d3.select(this).style("opacity", 0.8)  
+        })
+        .on("mouseout", function(){
+          d3.select(this).style("opacity", 0.2)  
+        })
     getPaperSvg()
     getAGSvg()
-
+     document.getElementById("svgAxis").style.visibility = "hidden";
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()
@@ -998,6 +1038,8 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                 document.getElementById("svgAxis").style.visibility = "visible";
+                add_labels()
                 start = false;
             }
           this.value = null
@@ -1036,6 +1078,8 @@ $(function (){
                 svgAxis = d3.select("#svgAxis").attr("y", "80")  
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
+                 document.getElementById("svgAxis").style.visibility = "visible";
+                add_labels()
                 start = false;
             }
           this.value = null
