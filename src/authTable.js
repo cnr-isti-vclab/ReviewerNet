@@ -90,8 +90,9 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        if(!checkboxTY.spinner( "option", "disabled" ))
+        if(!checkboxTY.spinner( "option", "disabled" )){
             exclude = (idAs.includes(d1.id) && authDict[d1.id][2] && ( 2018 - authDict[d1.id][2][authDict[d1.id][2].length - 1].year > thetaY )) ? true : false;
+        }
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
     //console.log("Exclude "+exclude)
@@ -106,6 +107,11 @@ function apFilter(item){
 function anpFilter(item){
     return (authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id)) && prune_auth(item)
+}
+
+function anpFilter_noc(item){
+    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+        || ANP.includes(item.id))
 }
 
 function rankAuths(auths){
@@ -282,13 +288,16 @@ function reset_ABG(){
 function authorBars(){
     //var authsDef = null;
     //authsFiltered = [];
-    if(checkboxA[0].checked)
-        authsDef = authors.filter(anpFilter)
-    else
-        authsDef = authors.filter(apFilter)
-    //console.log(authsDef)
+    
+    authsDef = authors.filter(anpFilter_noc)
     idAs = []
     authsDef.map(function(el){idAs.push(el.id)})
+    if(checkboxA[0].checked)
+        authsDef = authsDef.filter(anpFilter)
+    else
+        authsDef = authsDef.filter(apFilter)
+    //console.log(authsDef)
+
     //console.log(idAs)
     
     $("#authTable").html("")
