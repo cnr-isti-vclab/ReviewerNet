@@ -94,7 +94,7 @@ function prune_auth(d1){
             exclude = (idAs.includes(d1.id) && authDict[d1.id][2] && ( 2018 - authDict[d1.id][2][authDict[d1.id][2].length - 1].year > thetaY )) ? true : false;
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
-    console.log("Exclude "+exclude)
+    //console.log("Exclude "+exclude)
     return !exclude    
 }
 
@@ -282,10 +282,6 @@ function reset_ABG(){
 function authorBars(){
     //var authsDef = null;
     //authsFiltered = [];
-    console.log("CBA : "+checkboxA[0].checked)
-    console.log("CBC : "+checkboxC[0].checked)
-    console.log("SPINNERY : "+!checkboxTY.spinner( "option", "disabled" ))
-    
     if(checkboxA[0].checked)
         authsDef = authors.filter(anpFilter)
     else
