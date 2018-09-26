@@ -698,18 +698,17 @@ function getPaperSvg(){
 function setSimulation(){
     simulation = d3.forceSimulation()
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
-      .force("charge", d3.forceManyBody())
     simulation.force("charge", d3.forceManyBody()
                 .strength(-50)
                 .distanceMin(40)
                 .distanceMax(140))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
-        //.force('collision', d3.forceCollide().radius(10))
+        .force("collision", d3.forceCollide().radius(7).iterations(10))
         //.force("y", d3.forceY(-180))
         .force("x", d3.forceX())
     simulation.alpha(1)
      simulation.alphaMin(0.0198)
-     simulation.alphaDecay(0.0065)
+     simulation.alphaDecay(0.007)
     return simulation;
 
 }
@@ -904,91 +903,7 @@ function add_labels(){
     d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
 }
 
-$(function (){
-    _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
-    document.getElementById('all').style.height =(_docHeight).toString()+"px";
-    document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
-    $( window ).on("load", function(){
-        height = this.height
-        heightA = this.height * 0.3
-        w = width
-        h = height
-        updateWidth()
-    })
-       
-    $("body").on('click', function(){
-        $(".badge").html("")
-    })
-    
-    $( "#resizable" ).resizable({
-            handles: "s",
-            resize: function( event, ui ) {
-                if(ui.size.height < 200){
-                    heightA = 200
-                    ui.size.height = 200
-                }
-                else if(ui.size.height > 450){
-                    heightA = 450
-                    ui.size.height = 450
-                }
-                else heightA = ui.size.height
-               document.getElementById('aut_table').clientHeight = heightA;
-                let delta =  oldH - heightA,
-                    newH = _docHeight - heightA;
-                //console.log("resize resizable")
-//                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
-                
-                //console.log("newH "+newH+" heightA "+ heightA)
-//                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
-                document.getElementById('pg-row').style.height = newH.toString()+"px";
-//                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
-                oldH = heightA;
-
-            }
-    });
-    
-    toolboxInit()
-    setMouseHandlers()
-    
-
-    $( window ).resize(function() {
-        width = $(".ap").width()
-        _docHeight = document.documentElement.clientHeight - 40
-        height = document.documentElement.clientHeight - 40
-        heightA = height * 0.3
-        w = width
-        h = height
-        
-        if(heightA < 200)
-            heightA = 200
-        if(heightA > 450)
-            heightA = 450
-               document.getElementById('aut_table').clientHeight = heightA;
-                let delta =  oldH - heightA,
-                    newH = _docHeight - heightA;
-                document.getElementById('pg-row').style.height = newH.toString()+"px";
-//                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
-                oldH = heightA;
-        
-        //console.log("resize"+h)
-        document.getElementById('aut_table').clientHeight = heightA;
-//                let delta = oldH - heightA,
-//                    newH = _docHeight - heightA;
-////                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
-//                
-//                //console.log("newH "+newH+" heightA "+ heightA)
-////                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
-//                document.getElementById('pg-row').style.height = newH.toString()+"px";
-////                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
-//                oldH = heightA;
-        updateWidth()
-//        if(papersFiltered.length > 0){
-//            paperGraph(papersFiltered, citPrint, idPs, simulation)
-//            authorBars()
-//            //authorGraph()
-//        }
-    });
-    document.getElementById("svgAxis").style.visibility = "visible";
+function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
     });
@@ -998,28 +913,6 @@ $(function (){
     $('#rauthors-autocomplete').click(function (e){
     this.value=""
     });
-    d3.select("#cmpa").on("mouseover", function(){
-          d3.select(this).style("opacity", 0.8)  
-        })
-        .on("mouseout", function(){
-          d3.select(this).style("opacity", 0.2)  
-        })
-    getPaperSvg()
-    getAGSvg()
-     document.getElementById("svgAxis").style.visibility = "hidden";
-    //M150 0 L75 200 L225 200 Z
-    simulation = setSimulation()
-    simulationA = setAGSimulation()
-    
-    var graphTxt = fetch('datasets/p_v0518f.txt')
-        .then(response => response.text())
-        .then(function(text) {
-            var graph = JSON.parse(text);
-            getArrays(graph)       
-    });
-    
-    d3.select("#loading").on("click", start_click_handler);
-    
     $('#rauthors-autocomplete').autocomplete({
         source: authors,
         minLength: 3,
@@ -1163,6 +1056,97 @@ $(function (){
         if(this.value.length < 3) 
             $(".badge").html("")
     })
+}
+
+$(function (){    
+    _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
+    document.getElementById('all').style.height =(_docHeight).toString()+"px";
+    document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
+    $( window ).on("load", function(){
+        height = this.height
+        heightA = this.height * 0.3
+        w = width
+        h = height
+        updateWidth()
+    })
+       
+    $("body").on('click', function(){
+        $(".badge").html("")
+    })
+    
+    $( "#resizable" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+            if(ui.size.height < 200){
+                heightA = 200
+                ui.size.height = 200
+            }
+            else if(ui.size.height > 450){
+                heightA = 450
+                ui.size.height = 450
+            }
+            else heightA = ui.size.height
+            document.getElementById('aut_table').clientHeight = heightA;
+            let delta =  oldH - heightA,
+                newH = _docHeight - heightA;
+            //console.log("resize resizable")
+    //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
+
+            //console.log("newH "+newH+" heightA "+ heightA)
+    //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
+            document.getElementById('pg-row').style.height = newH.toString()+"px";
+    //                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
+            oldH = heightA;
+
+        }
+    });
+    
+    toolboxInit()
+    setMouseHandlers()
+    
+    $( window ).resize(function() {
+        width = $(".ap").width()
+        _docHeight = document.documentElement.clientHeight - 40
+        height = document.documentElement.clientHeight - 40
+        heightA = height * 0.3
+        w = width
+        h = height
+        
+        if(heightA < 200)
+            heightA = 200
+        if(heightA > 450)
+            heightA = 450
+        
+        document.getElementById('aut_table').clientHeight = heightA;
+        let delta =  oldH - heightA,
+            newH = _docHeight - heightA;
+        document.getElementById('pg-row').style.height = newH.toString()+"px";
+        oldH = heightA;
+        document.getElementById('aut_table').clientHeight = heightA;
+        updateWidth()   
+    });
+    document.getElementById("svgAxis").style.visibility = "visible";
+    
+    d3.select("#cmpa")
+        .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
+        .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
+    getPaperSvg()
+    getAGSvg()
+    document.getElementById("svgAxis").style.visibility = "hidden";
+    //M150 0 L75 200 L225 200 Z
+    simulation = setSimulation()
+    simulationA = setAGSimulation()
+    
+    var graphTxt = fetch('datasets/p_v0518f.txt')
+        .then(response => response.text())
+        .then(function(text) {
+            var graph = JSON.parse(text);
+            getArrays(graph)       
+    });
+    
+    d3.select("#loading").on("click", start_click_handler);
+    
+    setup_searchbars()
                                
     
 });

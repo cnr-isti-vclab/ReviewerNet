@@ -191,6 +191,7 @@ text {
 
 #authTable {
     height: inherit;
+    width: inherit
 }
 
 .authNode, .authlLine {

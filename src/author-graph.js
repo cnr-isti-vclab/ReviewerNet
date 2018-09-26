@@ -8,7 +8,7 @@ var f = d3.forceManyBody()
 
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
-        .attr("width", "100%")
+        .style("width", "100%")
         .attr("height", "450px")
         .call(d3.zoom()
               .on("zoom", function () {
@@ -18,7 +18,7 @@ function getAGSvg(){
         .attr("id", "gAG")
     
     svgAGn = d3.select("#svgAG_names")
-        .attr("width", "100%")
+        .style("width", "100%")
         .attr("height", "450px")
         
     popTextA = svgAGn.append("text")
@@ -100,8 +100,6 @@ function authorGraph() {
     getAGSvg()
     var svg = svgAG
     svg.attr("y", "100")
-    svg.attr("width", "100%")
-    d3.select("#gAG").attr("width", "100%")
     //console.log(authsDef.length)
     
     var link = svg.append("g")
