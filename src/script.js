@@ -703,9 +703,8 @@ function setSimulation(){
                 .distanceMin(40)
                 .distanceMax(140))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
-        .force("collision", d3.forceCollide().radius(7).iterations(10))
         //.force("y", d3.forceY(-180))
-        .force("x", d3.forceX())
+        //.force("x", d3.forceX())
     simulation.alpha(1)
      simulation.alphaMin(0.0198)
      simulation.alphaDecay(0.007)
@@ -1058,7 +1057,8 @@ function setup_searchbars(){
     })
 }
 
-$(function (){    
+$(function (){
+    
     _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
@@ -1103,14 +1103,17 @@ $(function (){
     
     toolboxInit()
     setMouseHandlers()
+
     
-    $( window ).resize(function() {
+    window.onresize = function(e) {
+        //console.log("res")
         width = $(".ap").width()
         _docHeight = document.documentElement.clientHeight - 40
         height = document.documentElement.clientHeight - 40
         heightA = height * 0.3
         w = width
         h = height
+        
         
         if(heightA < 200)
             heightA = 200
@@ -1123,8 +1126,12 @@ $(function (){
         document.getElementById('pg-row').style.height = newH.toString()+"px";
         oldH = heightA;
         document.getElementById('aut_table').clientHeight = heightA;
-        updateWidth()   
-    });
+        updateWidth()
+         if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0){
+                authorBars()
+                //authorGraph()
+            }
+    }
     document.getElementById("svgAxis").style.visibility = "visible";
     
     d3.select("#cmpa")
