@@ -1081,9 +1081,9 @@ $(function (){
                 heightA = 200
                 ui.size.height = 200
             }
-            else if(ui.size.height > 450){
-                heightA = 450
-                ui.size.height = 450
+            else if(ui.size.height > 500){
+                heightA = 500
+                ui.size.height = 500
             }
             else heightA = ui.size.height
             document.getElementById('aut_table').clientHeight = heightA;
@@ -1117,8 +1117,8 @@ $(function (){
         
         if(heightA < 200)
             heightA = 200
-        if(heightA > 450)
-            heightA = 450
+        if(heightA > 500)
+            heightA = 500
         
         document.getElementById('aut_table').clientHeight = heightA;
         let delta =  oldH - heightA,
@@ -1128,6 +1128,7 @@ $(function (){
         document.getElementById('aut_table').clientHeight = heightA;
         updateWidth()
          if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0){
+             paperGraph(papersFiltered, citPrint, idPs, simulation)
                 authorBars()
                 //authorGraph()
             }
