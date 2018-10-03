@@ -614,14 +614,14 @@ function handleMouseOver(d){
         .transition().duration(200)
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color(d.color);
+                return color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
      d3.selectAll(".authlLine")
         .transition().duration(200)
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color(d.color);
+                return color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
 }
@@ -784,11 +784,11 @@ function ListMouseOver(event){
                     .transition().duration(200)
                     .attr("fill", function(d1){ 
                         if(d.authsId.includes(d1.id))
-                            return color(d.color);
+                            return color_n(d.color);
                         else 
                             return "rgba( 221, 167, 109, 0.342 )"
                      })        
-                return color(d.color)            
+                return color_n(d.color)            
         })  
     }else{
         idClick = idClick.substring(1,idClick.length);
@@ -855,7 +855,7 @@ function ListMouseOut(event){
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
                 })  
-                return color(d.color) 
+                return color_n(d.color) 
             })        
     }else{
        idClick = idClick.substring(1,idClick.length); d3.select("#aa"+idClick).transition().duration(200).attr('fill',"rgba( 221, 167, 109, 0.342 )")
