@@ -99,10 +99,10 @@ function authorGraph() {
     d3.select(".ag-container").append("svg").attr("id", "svgAG")
     getAGSvg()
     var svg = svgAG
-    svg.attr("y", "100")
+    svgAG.attr("y", "100")
     //console.log(authsDef.length)
     
-    var link = svg.append("g")
+    var link = svgAG.append("g")
         .attr("class", "co_auth")
         .selectAll("line")
         .data(co_authoring)
@@ -120,7 +120,7 @@ function authorGraph() {
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
 
-    var node = svg.append("g")
+    var node = svgAG.append("g")
         .attr("class", "authors-el-cont")
         .selectAll("circle")
         .data(a_nodes)
@@ -202,6 +202,59 @@ function dragstartedA(d) {
   if (!d3.event.active) simulationA.alphaTarget(0.2).restart();
   d.fx = d.x;
   d.fy = d.y;
+    d3.selectAll(".authors-dot")
+        .on("mouseover", function(d){})
+        .on("mouseout", function(d){})
+    
+    d3.selectAll(".agline")
+        .on("mouseover", function(d){})
+        .on("mouseout", function(d){})
+    
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", a_radius);
+    d3.selectAll(".plink")
+        .style("opacity", checkThetaLink)
+    popTextA.attr("width", 0)
+        .attr("x", -5000)
+        .style("opacity", 0);
+    popRectA.attr("x", function(){return - 5000})
+        .style('opacity',0)
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
+    d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
+        if(authColor(d))
+            return "rgba( 188, 188, 188, 0.454 )"
+        else
+            return "rgba( 221, 167, 109, 0.342 )"
+    })
+    reset_texts()
+     d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(d.id))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+    popTextA.style("opacity", 0)
+    
+    popRectA.style("opacity",0)
+    
 }
 
 function draggedA(d) {
@@ -211,6 +264,13 @@ function draggedA(d) {
 
 function dragendedA(d) {
   if (!d3.event.active) simulationA.stop()
+    d3.selectAll(".authors-dot")
+        .on("mouseover", handlerMouseOverAG)
+        .on("mouseout", handlerMouseOutAG)
+    d3.selectAll(".agline")
+        .on("mouseover", handlerMouseOverLinkAG)
+        .on("mouseout", handlerMouseOutLinkAG)
+    handlerMouseOutAG(d)
       d.fx = null;
      d.fy = null;
 }

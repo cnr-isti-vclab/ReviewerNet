@@ -60,8 +60,9 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
     color = d3.scaleLinear()
-        .domain([0, 30, 100])
-        .range(["#f90000", "#ffffff" , "#0019ff"]),
+        .domain([0,100])
+.range(["#00cc99","#ffff99"]),
+//        .range(["#f90000", "#ffffff" , "#0019ff"]),
     rscale = d3.scaleLinear()
         .domain([0, 40])
         .range([5, 20]),
@@ -633,13 +634,36 @@ function paperInfoa(suggestion){
 
 }
 
+function color_n(c){return c > 100 ? color(100):color(c);}
+
+function define_gradients(){
+    svgP.append("svg:defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradxX")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%")
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradxX")
+        .append("stop")
+        .attr("offset", "100%")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
+}
+
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
         .attr("height", function(){return "800px"})
         .append("g")
         .attr("id", "gP")
-    svgP.append("svg:defs").selectAll("marker")
+    define_gradients()
+    /*.selectAll("marker")
         .data(["end"])      // Different link/path types can be defined here
         .enter().append("svg:marker")    // This section adds in the arrows
         .attr("id", String)
@@ -653,46 +677,7 @@ function getPaperSvg(){
         //.attr("stroke", "rgba( 148, 127, 127, 0.456 )")
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5 Z");
-
-    
-    
-    svgP.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradxX")
-        .attr("x0", "1000%")
-        .attr("y0", "0%")
-        .attr("x1", "30%")
-        .attr("y1", "100%")
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
-        .style("stop-opacity", "1")
-    svgP.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
-        .style("stop-opacity", "1")
-
-    svgP.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradXx")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .attr("x0", "30%")
-        .attr("y0", "0%")
-        .attr("x1", "100%")
-        .attr("y1", "0%")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.10 )")
-        .style("stop-opacity", "1")
-    svgP.select("defs")
-        .select("linearGradient")
-        .append("stop")
-        .attr("offset", "180%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.50 )")
-        .style("stop-opacity", "1")
+*/
 } 
 
 function setSimulation(){
@@ -742,9 +727,11 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .data(citations1)
         .enter().append("line")
         .attr("class", "plink")
-        .attr("marker-start","url(#end)")
-        .attr("stroke-width", 2)
-        .style("pointer-events", "none");
+        .attr("stroke-width", "2px")
+        .style("pointer-events", "none")
+        .attr("stroke", "rgba( 112, 112, 112, 0.402 )")
+    //.attr("marker-start","url(#end)")
+        
 
     var node = svg.append("g")
         .attr("class", "papers")
@@ -764,7 +751,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
                 return 2.5;
             })
         .attr("fill", function(d) {
-            return color(d.color)}
+            return color_n(d.color)}
             /*
             if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
             else return "rgba( 64, 145, 215, 0.519 )";}*/)
@@ -823,12 +810,12 @@ popRect = svgP.append("rect")
             .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
             .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
-            .style("stroke", function(d){
-                if(d.source.x < d.target.x)
-                    return "url(#gradxX)";
-                else return "url(#gradXx)"
-            })
             .style("opacity", checkThetaLink)
+           .attr("stroke", function(d){
+                if(d.source.year != d.target.year)
+                    return "url(#gradxX)";
+                else return "lightgray";
+            })
         
         node
             .attr("cx", function(d) { 
