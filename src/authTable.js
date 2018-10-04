@@ -201,15 +201,20 @@ function printPapers(auths){
             })
             .attr("cy", 15)
             .attr("r",3)
-            .attr("stroke", "rgba( 0, 0, 0, 0.22 )")
-            .attr("stroke-width", "1px")
-            .attr("fill", function (d){
+            .attr("stroke", function(d){
                 if(idPs.includes(d.id))
-                    return "rgba( 255, 15, 15, 0.72 )"
-                else if(papersPrint.includes(d.id))
-                    return  "rgba( 71, 255, 160, 0.53 )"
-                else return "rgba( 0, 0, 0, 0.12 )"
+                    return "#4238ff"
+                    //return "#6d10ca";
+                else if(papersPrint.includes(d.id)) return "black";
+                else return "lightgray";
             })
+            .attr("stroke-width", "1.5px")
+            .attr("fill", function (d){
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 137, 137, 137, 0.447 )" }
+                /*
+                if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
+                else return "rgba( 64, 145, 215, 0.519 )";}*/
+            )
             .on("click", clickHandlerPB)
             .on("mouseover", handleMouseOverPB)
             .on("mouseout", handleMouseOutPB)
@@ -385,7 +390,7 @@ function authorBars(){
             })
             .attr('y2',15)
             .style('stroke',function (d){
-                    if(authColor(d))
+                    if(authColor(d) || authColor_r(d))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
@@ -413,12 +418,13 @@ function authorBars(){
             })
             .attr('height', "10px")
             .attr('fill', function (d){
-                if(authColor(d))
+                if(authColor(d) || authColor_r(d))
                     return "rgba( 188, 188, 188, 0.454 )"
                 else
                     return "rgba( 221, 167, 109, 0.342 )"
             })
             .style("border-radius", "30px")
+        /*
             .style("stroke-width", function (d){
                 if(authsExclude.includes(d.id))
                     return 0.8
@@ -426,7 +432,7 @@ function authorBars(){
             .style("stroke", function (d){
                 if(authsExclude.includes(d.id))
                     return "rgba( 47, 198, 212, 0.713 )"
-                })
+                })*/
             .style("z-index", "98")
             .on("click", authClickHandler)
             .on("mouseover", handlerMouseOverA)
@@ -448,16 +454,21 @@ function authorBars(){
                     return "italic"
             })
             .style("font-weight", function (d){ 
-                if(!authColor(d)) 
+                if(!authColor(d) && !authColor_r(d)) 
                    return "bold"; })
             .attr("fill",  function (d){
-                if(authColor_r(d))
+/*                if(authColor_r(d))
                     return "#db0000";
                 else if(authsReview.includes(d.id))
                     return "#5263fe";
                 else if(authsExclude.includes(d.id))
                      return "#be27be"
-                else return "#474747";
+                else return "#474747";*/
+                if(authColor(d)) return "#db0000";
+                else if(authColor_r(d)) return "gray"
+                else if(authsReview.includes(d.id)) return "#5263fe";
+                else if(authsExclude.includes(d.id)) return "#be27be";
+                else return "black";
             })
             .attr("x", function(d){
                 let nw = xConstrained(authDict[d.id][1] + 0.3),

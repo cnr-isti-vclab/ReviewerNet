@@ -302,7 +302,6 @@ function getAuths() {
         
     }
 
-
 function str_match(matchers, t){
     var res = true;
     for(var i = 0; i < matchers.length; i++)
@@ -371,6 +370,7 @@ function setPapHandlers(){
 }
 
 function setMouseHandlers(){
+    d3.select("#loading").on("click", function(){});
     $("#authList")
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
@@ -435,6 +435,16 @@ function updateAuthDict(pf){
             }
     }
 }
+
+
+/*
+Gli autori sono viola
+I co-autori degli autori sono rossi
+I co-autori dei revisori sono grigi (non più rossi)
+I revisori selezionati sono blu
+I candidati disponibili sono neri bold
+
+*/
 
 function addPaper(suggestion){
     this.value=""
@@ -743,7 +753,8 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .attr("r", 6)
         .attr("stroke", function(d){
             if(idPs.includes(d.id))
-                return "#6d10ca";
+                return "#4238ff"
+                //return "#6d10ca";
             else return "#999";
             })
         .attr("stroke-width", function(d){
@@ -1090,7 +1101,6 @@ $(function (){
     
     toolboxInit()
     setMouseHandlers()
-
     
     window.onresize = function(e) {
         //console.log("res")
