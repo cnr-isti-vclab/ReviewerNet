@@ -200,17 +200,18 @@ function printPapers(auths){
                 return xConstrained(d.year + d.x_bar - 0.5)
             })
             .attr("cy", 15)
-            .attr("r",3)
+            .attr("r",function (d){
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
             .attr("stroke", function(d){
                 if(idPs.includes(d.id))
                     return "#4238ff"
                     //return "#6d10ca";
                 else if(papersPrint.includes(d.id)) return "black";
-                else return "lightgray";
+                else return "rgba( 197, 197, 197, 1 )";
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 137, 137, 137, 0.447 )" }
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
                 /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/

@@ -695,14 +695,16 @@ function setSimulation(){
     simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
     simulation.force("charge", d3.forceManyBody()
                 .strength(-50)
-                .distanceMin(40)
-                .distanceMax(140))
+                .theta(0.5))
+//                .distanceMin(40)
+//                .distanceMax(140))
         .force("center", d3.forceCenter((w / 2), (800 / 2)))
         //.force("y", d3.forceY(-180))
         //.force("x", d3.forceX())
     simulation.alpha(1)
      simulation.alphaMin(0.0198)
      simulation.alphaDecay(0.007)
+    
     return simulation;
 
 }
@@ -777,16 +779,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             addPaper(d)
         })
 
-    if(simulation){
-        
-        simulation
-            .nodes(papers1)
-            .on("tick", ticked)
 
-        simulation.force("link")
-            .links(citations1);
-        simulation.restart()
-    }
         
 popRect = svgP.append("rect")
          .attr('x',0)
@@ -814,7 +807,7 @@ popRect = svgP.append("rect")
             .attr("fill", "rgba( 2, 2, 2, 0.961 )")
             .attr("opacity",0)
             .text(function(){return papers1[i].value});
-
+    
     function ticked() {
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
@@ -834,6 +827,16 @@ popRect = svgP.append("rect")
             return nX; })
             .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
             .style("opacity", checkThetaNode)
+    }
+    if(simulation){
+        
+        simulation
+            .nodes(papers1)
+            .on("tick", ticked)
+
+        simulation.force("link")
+            .links(citations1);
+        simulation.alpha(1).restart()
     }
 }
 
@@ -857,7 +860,7 @@ function checkThetaNode(d1){
 }
 
 function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.2).restart();
+  if (!d3.event.active) simulation.alpha(0.6).restart();
   d.fx = d.x;
   d.fy = d.y;
 }

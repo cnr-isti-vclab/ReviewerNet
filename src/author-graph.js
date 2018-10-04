@@ -1,10 +1,8 @@
-//grandezza dot proporzionale al numero di pap visualizzati (formula da auth bar)
-//opacità/colore proporzionale co_auth.value
 var f = d3.forceManyBody()
-                .strength(-5)
+                .strength(-4)
                 .distanceMin(40)
                 .distanceMax(200)
-                //.theta(2.9)
+                .theta(0.2)
 
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
@@ -51,7 +49,7 @@ function setAGSimulation(){
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", f)
         .force("center", d3.forceCenter(wi, he))
-        //.force('collision', d3.forceCollide().radius(2))
+        .force('collision', d3.forceCollide().radius(1))
         simulationA.alpha(1)
      simulationA.alphaMin(0.022)
      //simulationA.alphaDecay(0.01)
@@ -101,7 +99,6 @@ function authorGraph() {
     var svg = svgAG
     svgAG.attr("y", "100")
     //console.log(authsDef.length)
-    
     var link = svgAG.append("g")
         .attr("class", "co_auth")
         .selectAll("line")
@@ -109,17 +106,24 @@ function authorGraph() {
         .enter().append("line")
         .attr("class", "aglink")       
         .attr("stroke", function(d){
-            if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return "#6ba8ff"//return "#ffb689"//"#ff5405"
-            else return "rgba( 178, 178, 178, 0.45 )"})
+            if(idAs.includes(d.source) && idAs.includes(d.target)){
+                let src = authsDef.filter(function (el){
+                        return el.id == d.source;
+                    })[0],
+                    shared_p = src.coAuthList[d.target][2],
+                        shared_in_viz = papersFiltered.filter(function (el){
+                        return shared_p.includes(el.id);
+                    });
+
+                return shared_in_viz.length > 0 ? "#6ba8ff" : "rgba( 178, 178, 178, 0.45 )"//return "#ffb689"//"#ff5405"
+            }else return "rgba( 178, 178, 178, 0.45 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return d.value*0.15
+                return d.value*0.13
             else return d.value*0.1})
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
-
     var node = svgAG.append("g")
         .attr("class", "authors-el-cont")
         .selectAll("circle")
@@ -165,6 +169,8 @@ function authorGraph() {
             addPaper(d)
         })
         */    
+    
+    
 
     if(simulationA){
         simulationA
@@ -177,7 +183,7 @@ function authorGraph() {
         } catch (e) {
             console.log(e)
         }
-        simulationA.restart()
+        simulationA.alpha(1).restart()
     }
     
         //.style("stroke","url(#gradxX)"
@@ -199,7 +205,7 @@ function authorGraph() {
 }
 
 function dragstartedA(d) {
-  if (!d3.event.active) simulationA.alphaTarget(0.2).restart();
+  if (!d3.event.active) simulationA.alpha(0.7).restart();
   d.fx = d.x;
   d.fy = d.y;
 /*    d3.selectAll(".authors-dot")
