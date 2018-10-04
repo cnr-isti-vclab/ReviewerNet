@@ -83,6 +83,8 @@ function getXRect(x, wdt, inGraph){
 
 function start_click_handler(){
     document.getElementById("loading").style.visibility = "hidden";
+    d3.select(".pop-up").style("pointer", "help")
+    toolboxInit()
 }
 
 function updateWidth(){
@@ -297,7 +299,9 @@ function getAuths() {
             }
             document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
             citations.length+" citations<br>"+
-            authors.length+" authors successfully loaded.<br><hr>Click to start using SemanticBrowser!"  
+            authors.length+" authors successfully loaded.<br><hr>Click to start using SemanticBrowser!" 
+            d3.select("#loading").style("pointer-events", "all")
+            d3.select("#loading").on("click", start_click_handler);
         })
         
     }
@@ -370,7 +374,9 @@ function setPapHandlers(){
 }
 
 function setMouseHandlers(){
-    d3.select("#loading").on("click", function(){});
+    $("#loading").on("click", function (event){
+        event.stopPropagation();
+    })
     $("#authList")
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
@@ -860,6 +866,7 @@ function checkThetaNode(d1){
 }
 
 function dragstarted(d) {
+    unclick_auth()
   if (!d3.event.active) simulation.alpha(0.6).restart();
   d.fx = d.x;
   d.fy = d.y;
@@ -1143,7 +1150,7 @@ $(function (){
         h = height
         updateWidth()
     })
-       
+    d3.select(".pop-up").style("pointer", "none")
     $("body").on('click', function(){
         $(".badge").html("")
     })
@@ -1175,9 +1182,8 @@ $(function (){
         }
     });
     
-    toolboxInit()
     setMouseHandlers()
-    
+
     window.onresize = function(e) {
         //console.log("res")
         width = $(".ap").width()
@@ -1201,8 +1207,12 @@ $(function (){
         document.getElementById('aut_table').clientHeight = heightA;
         updateWidth()
          if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0){
+             simulationA.stop()
              paperGraph(papersFiltered, citPrint, idPs, simulation)
-                authorBars()
+                setTimeout(function(){ 
+                    simulation.stop()
+                }, 1000);
+             authorBars()
                 //authorGraph()
             }
     }
@@ -1241,8 +1251,8 @@ $(function (){
             getArrays(graph)       
     });
     
-    d3.select("#loading").on("click", start_click_handler);
-    
+   
+     
     setup_searchbars()
                                
     
