@@ -518,7 +518,7 @@ hr {
     font-size: 1.2em;
     font-weight: bold;
     font-style: normal;
-    background-color: rgba( 59, 184, 174, 0.15 );
+    background-color: #d8d8d8;/*rgba( 59, 184, 174, 0.15 );*/
     z-index:    10;
     top:        0; 
     left:       0; 
