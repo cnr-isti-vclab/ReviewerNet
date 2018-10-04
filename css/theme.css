@@ -393,7 +393,7 @@ td.list-group-item {
   color: #858585;
 }
 
-#ui-id-2, #ui-id-1, #ui-id-3{ border: 1px solid #999; max-height: 250px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow: auto;}
+#ui-id-2, #ui-id-1, #ui-id-3{ border: 1px solid #999; max-height: 250px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
 
 .links line {
   stroke: #999;
