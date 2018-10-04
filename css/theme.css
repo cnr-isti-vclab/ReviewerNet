@@ -523,6 +523,7 @@ hr {
     top:        0; 
     left:       0; 
     position:   fixed;
+    pointer-events: none;
 }
 
 
@@ -550,6 +551,7 @@ hr {
 	font-size:18px;
 	color: rgb(61,61,61);
 	letter-spacing: 0.2em;
+    pointer-events:
 }
 .cssload-loader::before, .cssload-loader::after {
 	content: "";
