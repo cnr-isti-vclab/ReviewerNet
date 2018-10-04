@@ -36,7 +36,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     thetaCit = 8,
     inputNumberTOC = document.getElementById('input-numberTOC'),
     sliderTOC = document.getElementById('thetaCit'),
-    svgP, svgAG, svgAGn, svgAxis, popText, popRect, popTextA, popRectA,
+    svgP, svgAG, svgAGn, svgAxis, popText, popRect, popTextA, popRectA, popRectAX, popTextAx,
     thehtml,
     idP, idInfo,
     showExclude = true,
@@ -787,7 +787,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
             .links(citations1);
         simulation.restart()
     }
-    
+        
 popRect = svgP.append("rect")
          .attr('x',0)
          .attr('y',-10)
@@ -865,12 +865,85 @@ function dragstarted(d) {
 function dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
+    
+     d3.select(this).transition()
+        .duration(200)
+        .attr("r", 10);
+    var txt = d.value
+    /*
+    if(txt.length>80)
+        txt = txt.substring(0,80)+"...";
+    */
+    popText.text(txt)
+    var bbox = popText.node().getBBox();
+    var wd = bbox.width,
+        ht = bbox.height,
+        x = this.cx.baseVal.value,
+        y = this.cy.baseVal.value;
+    popRect.attr('fill', color_n(d.color))
+    //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
+        .attr('width',wd +10)
+        .attr('height',ht+2)
+        .attr("x", getXRect(x, wd, true))
+        .attr("y", y-8)
+        .transition()
+        .duration(200)
+        .attr("opacity", 1)
+    popText.attr("x", getXTxt(x, wd, true))
+        .attr("y", y + 4)
+        .transition()
+        .duration(200)
+        .attr("opacity", 1)
+
+    d3.selectAll(".authNode")
+        .transition().duration(200)
+        .attr("fill", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+         })
+     d3.selectAll(".authlLine")
+        .transition().duration(200)
+        .style("stroke", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+         })
 }
 
 function dragended(d) {
   if (!d3.event.active) simulation.stop();
   d.fx = null;
   d.fy = null;
+
+    popText.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    popRect.attr("x", -5000)
+        .attr("width", 0)
+        .attr("opacity", 0);
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 6);
+    d3.selectAll(".plink")
+        .style("opacity", 0.8)
+    d3.selectAll(".authNode")
+        .transition().duration(200)
+        .attr("fill", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
+    d3.selectAll(".authlLine")
+        .transition().duration(200)
+        .style("stroke", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
+    
 }
 
 function add_labels(){
@@ -1138,6 +1211,22 @@ $(function (){
     getPaperSvg()
     getAGSvg()
     document.getElementById("svgAxis").style.visibility = "hidden";
+    popRectAx = d3.select("#svgAxis").append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popTextAx = d3.select("#svgAxis").append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
     //M150 0 L75 200 L225 200 Z
     simulation = setSimulation()
     simulationA = setAGSimulation()

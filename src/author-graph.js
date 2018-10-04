@@ -111,7 +111,7 @@ function authorGraph() {
         .attr("stroke", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return "#6ba8ff"//return "#ffb689"//"#ff5405"
-            else return "rgba( 178, 178, 178, 0.55 )"})
+            else return "rgba( 178, 178, 178, 0.45 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return d.value*0.15
@@ -141,7 +141,7 @@ function authorGraph() {
             })
         .attr("stroke-width", "1px")
         .attr("fill",  function (d){
-            if(!idAs.includes(d.id)) return "rgba( 114, 114, 114, 0.26 )";
+            if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
             else if(authColor(d)) return "#db0000";
             else if(authColor_r(d)) return "rgba( 188, 188, 188, 0.954 )";
             else if(authsReview.includes(d.id)) return "#5263fe";
