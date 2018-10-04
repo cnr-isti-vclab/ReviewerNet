@@ -205,7 +205,8 @@ function handlerMouseOverA(d){
                 return "#d08701";
             else
                 if(idPs.includes(d1.id))                    
-                    return "#6d10ca";
+                    return "#4238ff"
+                    //return "#6d10ca";
                 else
                     return "#999";
             })
@@ -256,7 +257,8 @@ function handlerMouseOutA(d){
                     .attr("y", -1000)
                     .attr("opacity", 0)  
             if(idPs.includes(d1.id))
-                return "#6d10ca";
+                return "#4238ff"
+                //return "#6d10ca";
             else return "#999";
             })
         .attr("stroke-width", function(d1){
@@ -354,8 +356,9 @@ function handlerMouseOverAG(d){
             if(d1.authsId.includes(d.id))
                 return "#d08701";
             else
-                if(idPs.includes(d1.id))                    
-                    return "#6d10ca";
+                if(idPs.includes(d1.id))
+                    return "#4238ff"
+                    //return "#6d10ca";
                 else
                     return "#999";
             })
@@ -407,7 +410,8 @@ function handlerMouseOutAG(d){
                     .attr("y", -1000)
                     .attr("opacity", 0)  
             if(idPs.includes(d1.id))
-                return "#6d10ca";
+                return "#4238ff"
+                //return "#6d10ca";
             else return "#999";
             })
         .attr("stroke-width", function(d1){
@@ -818,8 +822,9 @@ function ListMouseOver(event){
                         return "#d08701";
                 }
                 else
-                    if(idPs.includes(d1.id))                    
-                        return "#6d10ca";
+                    if(idPs.includes(d1.id)) 
+                        return "#4238ff"
+                        //return "#6d10ca";
                     else
                         return "#999";
                 })
@@ -877,7 +882,8 @@ function ListMouseOut(event){
                         return "#d08701";
                 }
                 if(idPs.includes(d1.id))
-                    return "#6d10ca";
+                    return "#4238ff"
+                    //return "#6d10ca";
                 else return "#999";
                 })
             .attr("stroke-width", function(d1){
@@ -937,14 +943,15 @@ function authDblc(event){
                     .attr("y", -1000)
                     .attr("opacity", 0)  
             if(idPs.includes(d1.id))
-                return "#6d10ca";
+                return "#4238ff"
+                //return "#6d10ca";
             else return "#999";
             })
         .attr("stroke-width", function(d1){
             if(idPs.includes(d1.id))
                 return 2.5;
             })
-
+    reset_texts()
     authorBars()
     authorGraph()
 }
@@ -956,6 +963,7 @@ function r_authDblc(event){
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
     
     $('#rauthList').html("")
+
     authsReview.splice(index, 1);
     authsReview_obj.splice(elementPos, 1);
     //console.log(authsReview_obj)
@@ -966,6 +974,29 @@ function r_authDblc(event){
             $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
    }
+        d3.selectAll(".plink")
+        .transition().duration(200)
+        .style("opacity", checkThetaLink)
+    d3.selectAll(".papersNode")
+        .transition().duration(200)
+        .attr("r", "6")
+        .style("opacity", checkThetaNode)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(idClick))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#4238ff"
+                //return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+    reset_texts()
     authorBars()
     authorGraph()
     

@@ -110,8 +110,8 @@ function authorGraph() {
         .attr("class", "aglink")       
         .attr("stroke", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return "#ffb689"//"#ff5405"
-            else return "rgba( 178, 178, 178, 0.65 )"})
+                return "#6ba8ff"//return "#ffb689"//"#ff5405"
+            else return "rgba( 178, 178, 178, 0.55 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return d.value*0.15
@@ -134,16 +134,16 @@ function authorGraph() {
 //            else return 2.5;
           //  })
         .attr("stroke", function(d){
-           if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.432 )";
+           if(!idAs.includes(d.id)) return "rgba( 114, 114, 114, 0 )";
             else if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id)) return "#be27be";
-            else return "rgba( 114, 114, 114, 0.726 )";
+            else return "rgba( 221, 167, 109, 0.942 )";
             })
         .attr("stroke-width", "1px")
         .attr("fill",  function (d){
-            if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.332 )";
-            else if(authColor_r(d)) return "#db0000";
-            else if(authColor(d)) return "rgba( 188, 188, 188, 0.954 )";
+            if(!idAs.includes(d.id)) return "rgba( 114, 114, 114, 0.26 )";
+            else if(authColor(d)) return "#db0000";
+            else if(authColor_r(d)) return "rgba( 188, 188, 188, 0.954 )";
             else if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id))return "#be27be";
             else return "rgba( 221, 167, 109, 0.942 )";
@@ -202,7 +202,7 @@ function dragstartedA(d) {
   if (!d3.event.active) simulationA.alphaTarget(0.2).restart();
   d.fx = d.x;
   d.fy = d.y;
-    d3.selectAll(".authors-dot")
+/*    d3.selectAll(".authors-dot")
         .on("mouseover", function(d){})
         .on("mouseout", function(d){})
     
@@ -250,7 +250,7 @@ function dragstartedA(d) {
         .attr("stroke-width", function(d1){
             if(idPs.includes(d1.id))
                 return 2.5;
-            })
+            })*/
     popTextA.style("opacity", 0)
     
     popRectA.style("opacity",0)
@@ -264,13 +264,13 @@ function draggedA(d) {
 
 function dragendedA(d) {
   if (!d3.event.active) simulationA.stop()
-    d3.selectAll(".authors-dot")
+/*    d3.selectAll(".authors-dot")
         .on("mouseover", handlerMouseOverAG)
         .on("mouseout", handlerMouseOutAG)
     d3.selectAll(".agline")
         .on("mouseover", handlerMouseOverLinkAG)
-        .on("mouseout", handlerMouseOutLinkAG)
-    handlerMouseOutAG(d)
+        .on("mouseout", handlerMouseOutLinkAG)*/
+    //handlerMouseOutAG(d)
       d.fx = null;
      d.fy = null;
 }
