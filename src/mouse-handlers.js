@@ -747,7 +747,8 @@ function handleMouseOutPB(d){
     if(!click){
         d3.select(this).transition()
             .duration(200)
-            .attr("r", 3);
+            .attr("r",function (d){
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
         popText.attr("width", 0)
             .attr("x", -5000)
             .attr("opacity", 0);
