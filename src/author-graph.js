@@ -145,11 +145,11 @@ function authorGraph() {
             })
         .attr("stroke-width", "1px")*/
         .attr("fill",  function (d){
-            if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
-            else if(authColor(d)) return "#db0000";
-            else if(authColor_r(d)) return "rgba( 188, 188, 188, 0.954 )";
-            else if(authsReview.includes(d.id)) return "#5263fe";
+            if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id))return "#be27be";
+            else if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
+            else if(authColor_r(d)) return "rgba( 188, 188, 188, 0.954 )";
+            else if(authColor(d)) return "#db0000";
             else return "rgba( 221, 167, 109, 0.942 )";
             }
         )

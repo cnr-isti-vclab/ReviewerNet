@@ -546,7 +546,9 @@ function printCits(){
 function paperInfo(suggestion){
     
     idInfo = suggestion.id;
-    var thehtml = "<tr class =\"trP\"><th class =\"thP id=\"p"+idInfo+"\">Title</th><td>" + suggestion.value + "</td></tr><tr class =\"trP outCits\><th class =\"thP\" >Year</th><td>" + suggestion.year+"</td></tr>"
+/*    var title = "Paper Info: "+suggestion.year+", "+suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..."*/
+    
+    var thehtml =   "<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"
     function isAuth(item){
         return suggestion.authsId.includes(item.id);
     }
@@ -1004,7 +1006,7 @@ function setup_searchbars(){
             else{
                 authsReview.push(idA_rev)
                 authsReview_obj.push(suggestion)
-                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
                 authorGraph()
             }
@@ -1043,7 +1045,7 @@ function setup_searchbars(){
                 isIn = true
             else{
                 authsExclude[authsExclude.length] = idA
-                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
+                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
                 authorGraph()
             }
@@ -1067,6 +1069,9 @@ function setup_searchbars(){
                resultset.push(this)
 
           });
+            $('#area-paper-badge').html(resultset.length)
+            resultset = resultset.length > 300 ? resultset.slice(0,300) : resultset;
+            
          response(resultset);
 
         },
@@ -1077,8 +1082,7 @@ function setup_searchbars(){
             ui.content.sort(function (a, b) {
                 return b.year-a.year/*a.year <= b.year*/;});
 //            console.log("ui.content sort");
-//            console.log(ui.content);
-            $('#area-paper-badge').html(ui.content.length)
+//
         },
 //        beforeRender: function(container, suggestions){
 //            var $divs = $(".autocomplete-suggestion")
@@ -1104,9 +1108,14 @@ function setup_searchbars(){
        let name = item.label
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
-      return $( "<li>" )
-        .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
-        .appendTo( ul );
+        if(idPs.includes(item.id)){
+          return $( "<li>" )
+            .append( "<div style = \"background-color: "+color_n(item.color)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+            .appendTo( ul );
+        }else 
+             return $( "<li>" )
+            .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
+            .appendTo( ul );
     };
     
     $('#papers-autocomplete').on("focus", function(){$('#area-paper-badge').html("")})
