@@ -849,7 +849,7 @@ function handleMouseOver(d){
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+                else if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
                 else
                     return "rgba( 221, 167, 109, 0.342 )"
@@ -859,7 +859,7 @@ function handleMouseOver(d){
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+                else if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
