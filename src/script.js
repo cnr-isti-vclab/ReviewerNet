@@ -251,8 +251,8 @@ function addId(name, year){
       papersCit[idP] = [[], []];
 
       $("#papList").append("<li id=\""+"p"+idP+
-                           "\" class=\"paplist list-group-item pAuth\">"
-                           +idPs.length+".</strong> "+name+", "+year+"</li>")
+                           "\" class=\"paplist list-group-item pAuth\"><strong>"
+                           +idPs.length+".</strong> "+year+", "+name+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -354,7 +354,7 @@ function deleteP(idCk){
         setTimeout(function(){ 
             authorBars()
             authorGraph()
-        }, 600);
+        }, 1000);
         }
 }
 
@@ -479,7 +479,7 @@ function addPaper(suggestion){
         setTimeout(function(){ 
             authorBars()
             authorGraph()
-        }, 600);
+        }, 1000);
         
     }
 }
