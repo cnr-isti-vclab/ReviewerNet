@@ -51,9 +51,9 @@ function setAGSimulation(){
         .force("center", d3.forceCenter(wi, he))
         .force('collision', d3.forceCollide().radius(1))
         simulationA.alpha(1)
-     simulationA.alphaMin(0.022)
+     simulationA.alphaMin(0.6)
      //simulationA.alphaDecay(0.01)
-     simulationA.alphaDecay(0.0025)
+     simulationA.alphaDecay(0.025)
     
     return simulationA;
     
@@ -137,13 +137,13 @@ function authorGraph() {
 //                return 4.5;
 //            else return 2.5;
           //  })
-        .attr("stroke", function(d){
+/*        .attr("stroke", function(d){
            if(!idAs.includes(d.id)) return "rgba( 114, 114, 114, 0 )";
             else if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id)) return "#be27be";
             else return "rgba( 221, 167, 109, 0.942 )";
             })
-        .attr("stroke-width", "1px")
+        .attr("stroke-width", "1px")*/
         .attr("fill",  function (d){
             if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
             else if(authColor(d)) return "#db0000";
@@ -205,7 +205,7 @@ function authorGraph() {
 }
 
 function dragstartedA(d) {
-  if (!d3.event.active) simulationA.alpha(0.7).restart();
+  if (!d3.event.active) simulationA.alpha(1).restart();
   d.fx = d.x;
   d.fy = d.y;
 /*    d3.selectAll(".authors-dot")

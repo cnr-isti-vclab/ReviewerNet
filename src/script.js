@@ -49,7 +49,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     maxInCits = 0,
     maxYear = 2018,
     checkboxTP = $('#MNP'),
-    checkboxTOC = $('#MNoC'),
+    //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
     checkboxTC = $('#C'),
     checkboxTY = $('#lastYearOfP'),
@@ -546,7 +546,7 @@ function printCits(){
 function paperInfo(suggestion){
     
     idInfo = suggestion.id;
-    var thehtml = "<tr class =\"trP\"><th class =\"thP\">Title</th><td>" + suggestion.value + "</td></tr><tr class =\"trP\"><th class =\"thP\" >Year</th><td>" + suggestion.year+"</td></tr>"
+    var thehtml = "<tr class =\"trP\"><th class =\"thP id=\"p"+idInfo+"\">Title</th><td>" + suggestion.value + "</td></tr><tr class =\"trP outCits\><th class =\"thP\" >Year</th><td>" + suggestion.year+"</td></tr>"
     function isAuth(item){
         return suggestion.authsId.includes(item.id);
     }
@@ -564,7 +564,6 @@ function paperInfo(suggestion){
     }else{
         thehtml += "<tr class=\"trP\"><th class =\"thP\" >Author</th><td class=\"authsPap\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + ';</td></tr>'
     }
-    
     if(suggestion.jN.length > 0)
       thehtml += "<tr class =\"trP\"><th class =\"thP\" >Journal Name</th><td>"+suggestion.jN+"</td></tr>";
     else if(suggestion.venue.length > 0)
@@ -708,8 +707,8 @@ function setSimulation(){
         //.force("y", d3.forceY(-180))
         //.force("x", d3.forceX())
     simulation.alpha(1)
-     simulation.alphaMin(0.0198)
-     simulation.alphaDecay(0.007)
+     simulation.alphaMin(0.02)
+     simulation.alphaDecay(0.02)
     
     return simulation;
 
@@ -820,7 +819,6 @@ popRect = svgP.append("rect")
             .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
             .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
-            .style("opacity", checkThetaLink)
            .attr("stroke", function(d){
                 if(d.source.year != d.target.year)
                     return "url(#gradxX)";
@@ -832,7 +830,6 @@ popRect = svgP.append("rect")
             var nX = xConstrained(d.year);
             return nX; })
             .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
-            .style("opacity", checkThetaNode)
     }
     if(simulation){
         
@@ -847,23 +844,6 @@ popRect = svgP.append("rect")
 }
 
 //rgba( 223, 225, 225, 0.604 )
-function checkThetaLink(d){
-    if(!checkboxTOC.spinner( "option", "disabled" ))   
-        if(d.source.nOc >= thetaCit && d.target.nOc >= thetaCit)
-                return 1;
-            else
-                return 0.1;
-    else return 1;
-}
-
-function checkThetaNode(d1){
-  if(!checkboxTOC.spinner( "option", "disabled" ))
-        if(d1.nOc >= thetaCit)
-            return 1;
-        else
-            return 0.2;
-    else return 1;  
-}
 
 function dragstarted(d) {
     unclick_auth()
