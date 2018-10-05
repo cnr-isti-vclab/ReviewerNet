@@ -92,7 +92,7 @@ function createSliders(){
     });
     sliderTOC.setAttribute('disabled', true);
     */
-    d3.select('#input-numberTOC').value = 0;
+/*    d3.select('#input-numberTOC').value = 0;
     inputNumberTOC.addEventListener('change', function(){
         if(this.value>100)
             this.value = 100
@@ -107,7 +107,7 @@ function createSliders(){
         checkboxTOC.checked = false;
         if(papersFiltered.length>0)
             paperGraph(papersFiltered, citPrint, idPs, simulation)
-    }
+    }*/
 }
 
 function updateColorMap(){

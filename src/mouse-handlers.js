@@ -3,7 +3,7 @@
 //problema grafi
 
 var texts = [],
-    clickAG = false, idClickedA, clkIds = [], clkA;
+    clickAG = false, idClickedA, clkIds = [], clkA, clkRect, clkLine;
 
 function author_dblclick_ABG(d){
     suggestion = d
@@ -15,7 +15,7 @@ function author_dblclick_ABG(d){
     else{
         authsReview.push(idA_rev)
         authsReview_obj.push(suggestion)
-        $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+        $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
         authorBars()
         authorGraph()
     }
@@ -27,9 +27,9 @@ function author_dblclick_ABG(d){
 function unclick_auth(d){
     click = false;
     reset_texts()
-    d3.selectAll(".plink").style("opacity", checkThetaLink)
+    d3.selectAll(".plink").style("opacity", 1)
     d3.selectAll(".papersNode")
-        .style("opacity", checkThetaNode)
+        .style("opacity", 1)
         .attr("r", 6)
         .attr("stroke", function(d){
                     if(idPs.includes(d.id))
@@ -52,21 +52,21 @@ function unclick_auth(d){
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".authlLine")
-        .style('stroke',function (d1){
-                if(authColor(d1))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else
-                    return "rgba( 221, 167, 109, 0.342 )"
-            })
+        .style('stroke',function (d){
+                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".authNode")
         .attr('fill', function (d){
-            if(authColor(d))
-                return "rgba( 188, 188, 188, 0.454 )"
-            else
-                return "rgba( 221, 167, 109, 0.342 )"
-        })
+                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".auth-name")
@@ -150,42 +150,14 @@ function authClickHandler(d){
         clkIds= [];
         clkA = null;
         unclick_auth(d)
-        simulation.alpha(0.3).restart()
-        simulationA.alpha(0.3).restart()
-        /*click = false;
-        reset_texts()
-        d3.selectAll(".plink").style("opacity", checkThetaLink)
-        d3.selectAll(".papersNode")
-            .style("opacity", checkThetaNode)
-            .attr("r", 6)
-        popRectA.attr("opacity", 0)
-        popTextA.attr("opacity", 0)
-        d3.select(".txtspan").remove()
-        d3.selectAll(".aglink")
-            .attr("opacity", 1)
-        d3.selectAll(".authors-dot")
-            .attr("r", function(d1){ return idAs.includes(d1.id) ?  4.5 : 2.5; })
-            .attr("opacity", 1)
-        d3.selectAll(".authlLine")
-            .style('stroke',function (d1){
-                    if(authColor(d1))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
-            .attr("opacity", 1)
-        d3.selectAll(".authNode")
-            .attr('fill', function (d){
-                if(authColor(d))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else
-                    return "rgba( 221, 167, 109, 0.342 )"
-            })
-            .attr("opacity", 1)
-        d3.selectAll(".auth-name")
-            .attr("opacity", 1)*/
+        clkRect.attr("stroke-width",0)
+        clkRect = null;
+        clkLine = null;
     }else{
         //console.log("clickA")
+        clkRect = d3.select("#aa"+d.id)
+            .attr("stroke", "rgba( 27, 222, 252, 1 )")
+            .attr("stroke-width", 2)
         reset_texts()
         simulation.stop()
         simulationA.stop()
@@ -229,6 +201,7 @@ function authClickHandler(d){
                 }else{
                     d3.selectAll(".p"+d1.id).style("visibility", "hidden")
                     return 0;} })
+            .attr("r", a_radius)
         //DA SISTEMARE ANCHE IN ALTRI HANDLER
         d3.selectAll(".paper_in_bars").style("visibility", function(d1){
                 let found = (clkIds.filter(function(n) {
@@ -240,6 +213,7 @@ function authClickHandler(d){
             .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
             .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
         d3.selectAll(".authNode")
+            
             .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
             .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
 //        d3.selectAll(".auth-name")
@@ -385,18 +359,19 @@ function handlerMouseOutA(d){
    if(!click){     
     reset_texts()
     //if(click) unclick_auth();
-    d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
+    d3.select("#aa"+d.id).transition().duration(200).attr('fill', function (d){
+                
+                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
     
    d3.select("#ag"+d.id)
         .transition().duration(200)
         .attr("r", a_radius) 
     d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
-                    if(authColor(d))
+                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
@@ -404,11 +379,11 @@ function handlerMouseOutA(d){
 
     d3.selectAll(".plink")
         .transition().duration(200)
-        .style("opacity", checkThetaLink)
+        .style("opacity", 1)
     d3.selectAll(".papersNode")
         .transition().duration(200)
         .attr("r", "6")
-        .style("opacity", checkThetaNode)
+        .style("opacity", 1)
         .attr("stroke", function(d1){
             if(d1.authsId.includes(d.id))
                 d3.select($("#txt"+d1.id)[0])
@@ -623,29 +598,30 @@ function handlerMouseOutAG(d){
             .duration(200)
             .attr("r", a_radius);
         d3.selectAll(".plink")
-            .style("opacity", checkThetaLink)
+            .style("opacity", 1)
         popTextA.attr("width", 0)
             .attr("x", -5000)
             .style("opacity", 0);
         popRectA.attr("x", function(){return - 5000})
             .style('opacity',0)
-        d3.select("#aa"+d.id).transition().duration(200).attr('fill',function (d){
-                        if(authColor(d))
-                            return "rgba( 188, 188, 188, 0.454 )"
-                        else
-                            return "rgba( 221, 167, 109, 0.342 )"
-                    })
-        d3.select("#aaline"+d.id).transition().duration(200).style('stroke',function (d){
-            if(authColor(d))
-                return "rgba( 188, 188, 188, 0.454 )"
-            else
-                return "rgba( 221, 167, 109, 0.342 )"
-        })
+        d3.select("#aa"+d.id).transition().duration(200).attr('fill', function (d){
+                
+                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+        d3.select("#aaline"+d.id).transition().duration(200)            .style('stroke',function (d){
+                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
         reset_texts()
          d3.selectAll(".papersNode")
             .transition().duration(200)
             .attr("r", "6")
-            .style("opacity", checkThetaNode)
+            .style("opacity", 1)
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(d.id))
                     d3.select($("#txt"+d1.id)[0])
@@ -684,10 +660,10 @@ function handlerMouseOutAG(d){
 //        .attr("width", 500);
 //        */
 //    d3.selectAll(".plink")
-//        .style("opacity", checkThetaLink)
+//        .style("opacity", 1)
 //    d3.selectAll(".papersNode")
 //        .attr("r", "6")
-//        .style("opacity", checkThetaNode)
+//        .style("opacity", 1)
 //        .attr("stroke", function(d1){
 //            if(d1.authsId.includes(d.id))
 //                d3.select($("#txt"+d1.id)[0])
@@ -830,9 +806,9 @@ function handlerMouseOutLinkAG(d){
                     return d.value*0.15
                 else return d.value*0.1})
         d3.select(".txtspan").remove()
-        d3.selectAll(".plink").style("opacity", checkThetaLink)
+        d3.selectAll(".plink").style("opacity", 1)
         d3.selectAll(".papersNode")
-            .style("opacity", checkThetaNode)
+            .style("opacity", 1)
             .attr("r", 6)
     }
 }
@@ -873,15 +849,21 @@ function handleMouseOver(d){
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else return "rgba( 221, 167, 109, 0.342 )"
-             })
+                else if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
          d3.selectAll(".authlLine")
             .transition().duration(200)
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else return "rgba( 221, 167, 109, 0.342 )"
-             })
+                else if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
     }
 }
 
@@ -900,20 +882,21 @@ function handleMouseOut(d){
             .style("opacity", 0.8)
         d3.selectAll(".authNode")
             .transition().duration(200)
-            .attr("fill", function (d){
-                        if(authColor(d))
-                            return "rgba( 188, 188, 188, 0.454 )"
-                        else
-                            return "rgba( 221, 167, 109, 0.342 )"
+                        .attr('fill', function (d){
+                
+                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+                    return "rgba( 188, 188, 188, 0.454 )"
+                else
+                    return "rgba( 221, 167, 109, 0.342 )"
             })
         d3.selectAll(".authlLine")
             .transition().duration(200)
-            .style("stroke", function (d){
-                        if(authColor(d))
-                            return "rgba( 188, 188, 188, 0.454 )"
-                        else
-                            return "rgba( 221, 167, 109, 0.342 )"
-            })
+                       .style('stroke',function (d){
+                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+                })
     }
 }
 
@@ -1027,14 +1010,17 @@ function addFromList(event){
             addPaper(paper)
     }else{
         idClick = idClick.substring(1,idClick.length);
-        if(!authsExclude.includes(idClick)){
+        if(idAs.includes(idClick))
+            authClickHandler((authsDef.filter(function (el){return el.id === idClick}))[0])
+            
+/*        if(!authsExclude.includes(idClick)){
             var author = authors.filter(function (item){ return item.id === idClick})[0];
             authsExclude[authsExclude.length] = idClick
             $("#authList").append("<li  id=\"a"+idClick+"\"class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+author.value+"</li>")
             //prettyPrintAuthor(suggestion)
             authorBars()
             authorGraph()
-        }
+        }*/
     }
 }   
 
@@ -1136,11 +1122,11 @@ function ListMouseOut(event){
             .style("background-color", "rgba( 71, 66, 66, 0)") 
         d3.selectAll(".plink")
             .transition().duration(200)
-            .style("opacity", checkThetaLink)
+            .style("opacity", 1)
         d3.selectAll(".papersNode")
             .transition().duration(200)
             .attr("r", "6")
-            .style("opacity", checkThetaNode)
+            .style("opacity", 1)
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(idClick)){
                     d3.select($("#txt"+d1.id)[0])
@@ -1193,17 +1179,17 @@ function authDblc(event){
                 aName = suggestion.value;
             idA = suggestion.id
                 authsExclude[authsExclude.length] = idA
-                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
+                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item  pAuth pAuthe\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
     }
     
     d3.selectAll(".plink")
         .transition().duration(200)
-        .style("opacity", checkThetaLink)
+        .style("opacity", 1)
     d3.selectAll(".papersNode")
         .transition().duration(200)
         .attr("r", "6")
-        .style("opacity", checkThetaNode)
+        .style("opacity", 1)
         .attr("stroke", function(d1){
             if(d1.authsId.includes(idClick))
                 d3.select($("#txt"+d1.id)[0])
@@ -1239,16 +1225,16 @@ function r_authDblc(event){
         var al = authsReview_obj.length;
         for(var i = 0; i < al; i++){
             let suggestion = authsReview_obj[i];
-            $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
+            $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
         } 
    }
         d3.selectAll(".plink")
         .transition().duration(200)
-        .style("opacity", checkThetaLink)
+        .style("opacity", 1)
     d3.selectAll(".papersNode")
         .transition().duration(200)
         .attr("r", "6")
-        .style("opacity", checkThetaNode)
+        .style("opacity", 1)
         .attr("stroke", function(d1){
             if(d1.authsId.includes(idClick))
                 d3.select($("#txt"+d1.id)[0])
@@ -1290,11 +1276,11 @@ function r_authDblc(event){
 //                })
 //    d3.selectAll(".plink")
 //        .transition().duration(200)
-//        .style("opacity", checkThetaLink)
+//        .style("opacity", 1)
 //    d3.selectAll(".papersNode")
 //        .transition().duration(200)
 //        .attr("r", "6")
-//        .style("opacity", checkThetaNode)
+//        .style("opacity", 1)
 //        .attr("stroke", function(d1){
 //            if(d1.authsId.includes(idClick))
 //                d3.select($("#txt"+d1.id)[0])

@@ -191,8 +191,11 @@ function printPapers(auths){
         //console.log(authors.filter(function (el){return el.id === id_a;}))
         //console.log(authDict[id_a])
         
+        let last = authDict[id_a][2].filter(function(el){return papersPrint.includes(el.id)}),
+            first = authDict[id_a][2].filter(function(el){return !last.includes(el.id)})
+        
         d3.select("#svgA"+ id_a).selectAll("circle")
-            .data(authDict[id_a][2]).enter()
+            .data(first).enter()
             .append("circle")
             .attr("class", "paper_in_bars p"+id_a)
             .attr("cx", function (d){
@@ -206,7 +209,38 @@ function printPapers(auths){
                 if(idPs.includes(d.id))
                     return "#4238ff"
                     //return "#6d10ca";
-                else if(papersPrint.includes(d.id)) return "black";
+                else if(papersPrint.includes(d.id)) return "rgba( 109, 109, 109, 0.619 )";
+                else return "rgba( 197, 197, 197, 1 )";
+            })
+            .attr("stroke-width", "1.5px")
+            .attr("fill", function (d){
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
+                /*
+                if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
+                else return "rgba( 64, 145, 215, 0.519 )";}*/
+            )
+            .on("click", clickHandlerPB)
+            .on("mouseover", handleMouseOverPB)
+            .on("mouseout", handleMouseOutPB)
+            .on("dblclick", function(d) {
+                addPaper(d)
+            })
+        d3.select("#svgA"+ id_a).selectAll("circle")
+            .data(last).enter()
+            .append("circle")
+            .attr("class", "paper_in_bars p"+id_a)
+            .attr("cx", function (d){
+                //console.log(d)
+                return xConstrained(d.year + d.x_bar - 0.5)
+            })
+            .attr("cy", 15)
+            .attr("r",function (d){
+                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
+            .attr("stroke", function(d){
+                if(idPs.includes(d.id))
+                    return "#4238ff"
+                    //return "#6d10ca";
+                else if(papersPrint.includes(d.id)) return "rgba( 109, 109, 109, 0.619 )";
                 else return "rgba( 197, 197, 197, 1 )";
             })
             .attr("stroke-width", "1.5px")
@@ -391,7 +425,7 @@ function authorBars(){
             })
             .attr('y2',15)
             .style('stroke',function (d){
-                    if(authColor(d) || authColor_r(d))
+                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
@@ -419,7 +453,8 @@ function authorBars(){
             })
             .attr('height', "10px")
             .attr('fill', function (d){
-                if(authColor(d) || authColor_r(d))
+ /*               console.log(d.value+" is "+(authsExclude.includes(d.id) || authsReview.includes(d.id)))*/
+                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
                 else
                     return "rgba( 221, 167, 109, 0.342 )"
@@ -451,11 +486,12 @@ function authorBars(){
             .style("font-size", "12px")
             .text(function (d){ return d.value })
             .style("font-style", function (d){ 
-                if( authColor(d) )
+                if(authColor(d) && !(authsReview.includes(d.id) || authsExclude.includes(d.id)))
                     return "italic"
             })
             .style("font-weight", function (d){ 
-                if(!authColor(d) && !authColor_r(d)) 
+                if(!authColor(d) && !authColor_r(d) && 
+                   !(authsReview.includes(d.id) || authsExclude.includes(d.id))) 
                    return "bold"; })
             .attr("fill",  function (d){
 /*                if(authColor_r(d))
@@ -465,11 +501,10 @@ function authorBars(){
                 else if(authsExclude.includes(d.id))
                      return "#be27be"
                 else return "#474747";*/
-                if(authColor(d)) return "#db0000";
-                else if(authColor_r(d)) return "gray"
-                else if(authsReview.includes(d.id)) return "#5263fe";
+                if(authsReview.includes(d.id)) return "#5263fe";
                 else if(authsExclude.includes(d.id)) return "#be27be";
-                else return "black";
+                else if(authColor_r(d)) return "gray";
+                else if(authColor(d)) return "#db0000";
             })
             .attr("x", function(d){
                 let nw = xConstrained(authDict[d.id][1] + 0.3),

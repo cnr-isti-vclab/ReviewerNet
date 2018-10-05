@@ -49,7 +49,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     maxInCits = 0,
     maxYear = 2018,
     checkboxTP = $('#MNP'),
-    checkboxTOC = $('#MNoC'),
+    //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
     checkboxTC = $('#C'),
     checkboxTY = $('#lastYearOfP'),
@@ -251,8 +251,8 @@ function addId(name, year){
       papersCit[idP] = [[], []];
 
       $("#papList").append("<li id=\""+"p"+idP+
-                           "\" class=\"paplist list-group-item pAuth\">"
-                           +idPs.length+".</strong> "+name+", "+year+"</li>")
+                           "\" class=\"paplist list-group-item pAuth\"><strong>"
+                           +idPs.length+".</strong> "+year+", "+name+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -354,7 +354,7 @@ function deleteP(idCk){
         setTimeout(function(){ 
             authorBars()
             authorGraph()
-        }, 600);
+        }, 1000);
         }
 }
 
@@ -479,7 +479,7 @@ function addPaper(suggestion){
         setTimeout(function(){ 
             authorBars()
             authorGraph()
-        }, 600);
+        }, 1000);
         
     }
 }
@@ -546,7 +546,9 @@ function printCits(){
 function paperInfo(suggestion){
     
     idInfo = suggestion.id;
-    var thehtml = "<tr class =\"trP\"><th class =\"thP\">Title</th><td>" + suggestion.value + "</td></tr><tr class =\"trP\"><th class =\"thP\" >Year</th><td>" + suggestion.year+"</td></tr>"
+/*    var title = "Paper Info: "+suggestion.year+", "+suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..."*/
+    
+    var thehtml =   "<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"
     function isAuth(item){
         return suggestion.authsId.includes(item.id);
     }
@@ -564,7 +566,6 @@ function paperInfo(suggestion){
     }else{
         thehtml += "<tr class=\"trP\"><th class =\"thP\" >Author</th><td class=\"authsPap\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + ';</td></tr>'
     }
-    
     if(suggestion.jN.length > 0)
       thehtml += "<tr class =\"trP\"><th class =\"thP\" >Journal Name</th><td>"+suggestion.jN+"</td></tr>";
     else if(suggestion.venue.length > 0)
@@ -708,8 +709,8 @@ function setSimulation(){
         //.force("y", d3.forceY(-180))
         //.force("x", d3.forceX())
     simulation.alpha(1)
-     simulation.alphaMin(0.0198)
-     simulation.alphaDecay(0.007)
+     simulation.alphaMin(0.02)
+     simulation.alphaDecay(0.02)
     
     return simulation;
 
@@ -820,7 +821,6 @@ popRect = svgP.append("rect")
             .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
             .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
-            .style("opacity", checkThetaLink)
            .attr("stroke", function(d){
                 if(d.source.year != d.target.year)
                     return "url(#gradxX)";
@@ -832,7 +832,6 @@ popRect = svgP.append("rect")
             var nX = xConstrained(d.year);
             return nX; })
             .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
-            .style("opacity", checkThetaNode)
     }
     if(simulation){
         
@@ -847,23 +846,6 @@ popRect = svgP.append("rect")
 }
 
 //rgba( 223, 225, 225, 0.604 )
-function checkThetaLink(d){
-    if(!checkboxTOC.spinner( "option", "disabled" ))   
-        if(d.source.nOc >= thetaCit && d.target.nOc >= thetaCit)
-                return 1;
-            else
-                return 0.1;
-    else return 1;
-}
-
-function checkThetaNode(d1){
-  if(!checkboxTOC.spinner( "option", "disabled" ))
-        if(d1.nOc >= thetaCit)
-            return 1;
-        else
-            return 0.2;
-    else return 1;  
-}
 
 function dragstarted(d) {
     unclick_auth()
@@ -1024,7 +1006,7 @@ function setup_searchbars(){
             else{
                 authsReview.push(idA_rev)
                 authsReview_obj.push(suggestion)
-                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
                 authorGraph()
             }
@@ -1063,7 +1045,7 @@ function setup_searchbars(){
                 isIn = true
             else{
                 authsExclude[authsExclude.length] = idA
-                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
+                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
                 authorBars()
                 authorGraph()
             }
@@ -1087,6 +1069,9 @@ function setup_searchbars(){
                resultset.push(this)
 
           });
+            $('#area-paper-badge').html(resultset.length)
+            resultset = resultset.length > 300 ? resultset.slice(0,300) : resultset;
+            
          response(resultset);
 
         },
@@ -1097,8 +1082,7 @@ function setup_searchbars(){
             ui.content.sort(function (a, b) {
                 return b.year-a.year/*a.year <= b.year*/;});
 //            console.log("ui.content sort");
-//            console.log(ui.content);
-            $('#area-paper-badge').html(ui.content.length)
+//
         },
 //        beforeRender: function(container, suggestions){
 //            var $divs = $(".autocomplete-suggestion")
@@ -1124,9 +1108,14 @@ function setup_searchbars(){
        let name = item.label
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
-      return $( "<li>" )
-        .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
-        .appendTo( ul );
+        if(idPs.includes(item.id)){
+          return $( "<li>" )
+            .append( "<div style = \"background-color: "+color_n(item.color)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+            .appendTo( ul );
+        }else 
+             return $( "<li>" )
+            .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
+            .appendTo( ul );
     };
     
     $('#papers-autocomplete').on("focus", function(){$('#area-paper-badge').html("")})
