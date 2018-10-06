@@ -31,6 +31,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     heightAG = $(".ag").height(),
     h = height,
     w = width,
+    oldw = w,
     thetaPap = 0, thetaN = 10, thetaC = 7, thetaY = 7,
     inputNumberTP = document.getElementById('input-numberTP'),
     sliderTP = document.getElementById('thetaPap'),
@@ -548,31 +549,46 @@ function printCits(){
 function paperInfo(suggestion){
     
     idInfo = suggestion.id;
-/*    var title = "Paper Info: "+suggestion.year+", "+suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..."*/
+    var title = suggestion.year+", "+(suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..." : suggestion.value)
     
-    var thehtml =   "<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"
+    d3.select(".td2title").attr("id", ("p"+idInfo)).attr("class", "outCits td2title").text(title)
+    document.getElementsByClassName("td2title").innerHTML = title
+    var thehtml =  ""
+    
+/*"<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"*/
     function isAuth(item){
         return suggestion.authsId.includes(item.id);
     }
-    var aPrint = authors.filter(isAuth)  
-    aPrint.sort(function(a, b) {
-            return (parseInt(a.year) - parseInt(b.year));
-        });
-    if(aPrint.length > 1){
+    var aPrint = authors.filter(isAuth), ia = 0;  
+    if(aPrint.length > 4){
         //id = \"authsPap\"
-        thehtml += "<tr class =\"trP\"><th class =\"thP\"rowspan=\""+aPrint.length+"\">Authors</th>"
-
-        thehtml += "<td id=\"a"+aPrint[0].id+"\" class = \"authsPap\" >"+ aPrint[0].value + ';</td></tr>'
-        for (var i = 1; i < aPrint.length; i++)
-            thehtml += "<tr class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\"><td>"+ aPrint[i].value + ';</td></tr>'
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"trPj\"><th class =\"thP\"rowspan=\""+(extra > 0 ? rspan+1: rspan)+"\">Authors</th>"
+        for(var j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (var i = 0; i < 4; i++){
+                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[ia].id+"\">"+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (var i = ia; i < aPrint.length; i++){
+                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
     }else{
-        thehtml += "<tr class=\"trP\"><th class =\"thP\" >Author</th><td class=\"authsPap\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + ';</td></tr>'
+        thehtml += "<tr  class=\"trPj\"><th class =\"thP\" >Authors</th><td class=\"authsPap trP\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + '</td>'
+        for (var i = 1; i < aPrint.length; i++)
+            thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
+        thehtml += "</tr>"
     }
     if(suggestion.jN.length > 0)
-      thehtml += "<tr class =\"trP\"><th class =\"thP\" >Journal Name</th><td>"+suggestion.jN+"</td></tr>";
-    else if(suggestion.venue.length > 0)
-        thehtml += "<tr class =\"trP\"><th class =\"thP\" >Venue</th><td>"+suggestion.venue+"</td></tr>";
-
+          thehtml += "<tr class=\"trPj\"><th class =\"thP\">Journal Name</th><td colspan=\"4\" class =\"tdj\">"+suggestion.jN+"</td></tr>";
+        else if(suggestion.venue.length > 0)
+            thehtml += "<tr  class=\"trPj\"><th class =\"thP\">Venue</th><td colspan=\"4\" class =\"tdj\" >"+suggestion.venue+"</td></tr>";
     idP = suggestion.id
     //thehtml += printCits()
     return thehtml
@@ -1165,14 +1181,7 @@ $(function (){
             document.getElementById('aut_table').clientHeight = heightA;
             let delta =  oldH - heightA,
                 newH = _docHeight - heightA;
-            //console.log("resize resizable")
-    //                console.log("clientH  before" + document.getElementById('row21').clientHeight)
-
-            //console.log("newH "+newH+" heightA "+ heightA)
-    //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
             document.getElementById('row21').style.height = newH.toString()+"px";
-            
-    //                console.log("clientH after " + document.getElementById('row21').clientHeight)
             oldH = heightA;
 
             event.stopPropagation()
@@ -1198,9 +1207,9 @@ $(function (){
             document.getElementById('row22').style.height = newH.toString()+"px";
             oldHAG = heightAG;
             
-            document.getElementById('aut_table').clientHeight = heightA;
+/*            document.getElementById('aut_table').clientHeight = heightA;
             newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
+            document.getElementById('row21').style.height = newH.toString()+"px";*/
 
             
             event.stopPropagation()
@@ -1211,25 +1220,20 @@ $(function (){
 
     window.onresize = function(e) {
         
+        
         width = $(".ap").width()
         _docHeight = document.documentElement.clientHeight - 40
         height = document.documentElement.clientHeight - 40
-        
+
         w = width
         h = height
         
-        
-        if(heightA < 200)
-            heightA = 200
-        if(heightA > 600)
-            heightA = 600
-        
-        document.getElementById('aut_table').clientHeight = heightA;
-        let delta =  oldH - heightA,
-            newH = _docHeight - heightA;
+        let newH = _docHeight - heightA;
         document.getElementById('row21').style.height = newH.toString()+"px";
-        oldH = heightA;
         updateWidth()
+        
+        newH = _docHeight - heightAG;
+        document.getElementById('row22').style.height = newH.toString()+"px";
         
 /*
         if(ui.size.height < 300){
@@ -1249,7 +1253,8 @@ $(function (){
 
             oldHAG = heightAG;
         */
-         if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
+
+         if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
              simulationA.stop()
              paperGraph(papersFiltered, citPrint, idPs, simulation)
                 setTimeout(function(){ 
@@ -1258,6 +1263,7 @@ $(function (){
              authorBars()
                 //authorGraph()
             }
+        oldw = width
     }
     document.getElementById("svgAxis").style.visibility = "visible";
     
@@ -1293,8 +1299,6 @@ $(function (){
             var graph = JSON.parse(text);
             getArrays(graph)       
     });
-    
-   
      
     setup_searchbars()
                                

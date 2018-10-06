@@ -191,8 +191,9 @@ function printPapers(auths){
         //console.log(authors.filter(function (el){return el.id === id_a;}))
         //console.log(authDict[id_a])
         
-        let last = authDict[id_a][2].filter(function(el){return papersPrint.includes(el.id)}),
-            first = authDict[id_a][2].filter(function(el){return !last.includes(el.id)})
+        let last = authDict[id_a][2].filter(function(el){return     papersPrint.includes(el.id)}),
+            first = authDict[id_a][2].filter(function(el){return !papersPrint.includes(el.id)})
+        
         
         d3.select("#svgA"+ id_a).selectAll("circle")
             .data(first).enter()
@@ -215,7 +216,7 @@ function printPapers(auths){
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
                 return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
-                /*
+   /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/
             )
@@ -225,7 +226,7 @@ function printPapers(auths){
             .on("dblclick", function(d) {
                 addPaper(d)
             })
-        d3.select("#svgA"+ id_a).selectAll("circle")
+    d3.select("#svgA"+ id_a).append("g").selectAll("circle")
             .data(last).enter()
             .append("circle")
             .attr("class", "paper_in_bars p"+id_a)
@@ -234,18 +235,16 @@ function printPapers(auths){
                 return xConstrained(d.year + d.x_bar - 0.5)
             })
             .attr("cy", 15)
-            .attr("r",function (d){
-                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
+            .attr("r",3)
             .attr("stroke", function(d){
                 if(idPs.includes(d.id))
                     return "#4238ff"
                     //return "#6d10ca";
-                else if(papersPrint.includes(d.id)) return "rgba( 109, 109, 109, 0.619 )";
-                else return "rgba( 197, 197, 197, 1 )";
+                else return "rgba( 109, 109, 109, 0.619 )";
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
+                return color_n(d.color) }
                 /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/

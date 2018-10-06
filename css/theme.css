@@ -292,16 +292,38 @@ td.list-group-item {
 .trP{
     border: 1px solid rgba( 122, 122, 122, 0.533 );
     border-right: 0px;
+    padding:1px;
     border-left: 0px;
     cursor: pointer;
-    
+    width: 20%;
+    text-align: center;
+    font-size: 0.9em
+}
+
+.trPj{
+    width: 100%;
+    border: 1px solid rgba( 122, 122, 122, 0.533 );
+    border-right: 0px;
+    padding:1px;
+    border-left: 0px;
+    text-align: center;
+    font-size: 0.9em
+}
+
+.tdj{
+    width: auto;
+    text-align: center
 }
 
 .thP{
     padding-left: 2px;
     padding-right: 4px;
-    width: 100px;
     font-size: 0.9em
+}
+
+th{
+    text-align: left;
+width: 15%;
 }
 
 .paper_in_bars{
@@ -408,12 +430,14 @@ td.list-group-item {
   color: #858585;
 }
 
-#ui-id-2, #ui-id-1, #ui-id-3{ border: 1px solid #999; max-height: 250px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
+#ui-id-2, #ui-id-1, #ui-id-3{
+    border: 1px solid #999; max-height: 160px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
 
 .links line {
   stroke: #999;
   stroke-opacity: 0.6;
 }
+
 
 .nodes circle {
   stroke-width: 1px;
@@ -451,7 +475,8 @@ hr {
 }
 
 .links {
-   cursor: help 
+   cursor: help;
+    font-style: oblique
 }
 
 .badge {
@@ -703,3 +728,29 @@ hr {
 	margin-left: auto;
 }
 
+
+.td1 {
+    width: 30%;
+    padding-bottom: 2%;
+}
+
+.td2 {
+    width: 70%
+}
+form{
+    width: 100%
+}
+
+.td2title {
+    width: 80%;
+    font-size: 0.8em;
+    cursor: pointer
+}
+
+.td1pi {
+    width: 18%;
+}
+
+.side-tab{
+    height: auto
+}
