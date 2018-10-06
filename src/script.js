@@ -62,7 +62,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
     color = d3.scaleLinear()
-        .domain([0,100])
+        .domain([0,100])//#ffff99
 .range(["#00cc99","#ffff99"]),
 //        .range(["#f90000", "#ffffff" , "#0019ff"]),
     rscale = d3.scaleLinear()
@@ -301,7 +301,7 @@ function getAuths() {
             }
             document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
             citations.length+" citations<br>"+
-            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">computer graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
+            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">Computer Graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
             d3.select("#loading").style("pointer-events", "all")
             d3.select("#loading").on("click", start_click_handler);
         })
@@ -1034,7 +1034,7 @@ function setup_searchbars(){
         $('#rauthors-badge').html("")
             this.value = ""
         }
-    });
+    })
     
     $('#authors-autocomplete').autocomplete({
         source: authors,
@@ -1077,6 +1077,12 @@ function setup_searchbars(){
         }
     });
      
+    $('.biginput').keypress(function(e) {
+        if (e.keyCode === 13) {
+            e.preventDefault()
+        }
+    });
+    
     $('#papers-autocomplete').autocomplete({
         source: function(request, response) {
           
@@ -1093,8 +1099,9 @@ function setup_searchbars(){
 
           });
             $('#area-paper-badge').html(resultset.length)
-            resultset = resultset.length > 300 ? resultset.slice(0,300) : resultset;
+            resultset = resultset.length > 200 ? resultset.slice(0,200) : resultset;
             
+            //$('#area-paper-badge').html(resultset.length)
          response(resultset);
 
         },
@@ -1131,10 +1138,15 @@ function setup_searchbars(){
        let name = item.label
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
-        if(idPs.includes(item.id)){
-          return $( "<li>" )
-            .append( "<div style = \"background-color: "+color_n(item.color)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
-            .appendTo( ul );
+        if(papersPrint.includes(item.id)){
+            if(idPs.includes(item.id)){
+              return $( "<li>" )
+                .append( "<div style = \"background-color: "+color_n(item.color)+"; color:blue; font-weight: bold;\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+                .appendTo( ul );
+            }else
+                return $( "<li>" )
+                .append( "<div style = \"background-color: "+color_n(item.color)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+                .appendTo( ul );
         }else 
              return $( "<li>" )
             .append( "<div><strong>" + item.year+ "</strong> " + name + "</div>" )
@@ -1186,7 +1198,8 @@ $(function (){
                 newH = _docHeight - heightA;
             document.getElementById('row21').style.height = newH.toString()+"px";
             oldH = heightA;
-
+            d3.select("#main-span").attr("dy",function(){
+            return heightA-100}) 
             event.stopPropagation()
         }
     });
@@ -1237,7 +1250,8 @@ $(function (){
         
         newH = _docHeight - heightAG;
         document.getElementById('row22').style.height = newH.toString()+"px";
-        
+        d3.select("#main-span").attr("dy",function(){
+            return heightA-100}) 
 /*
         if(ui.size.height < 300){
                 heightAG = 300
