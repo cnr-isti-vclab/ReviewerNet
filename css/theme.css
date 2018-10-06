@@ -10,11 +10,23 @@
     cursor: help
 }
 
+.ui-resizable-handle{
+    background-color: rgba( 111, 115, 118, 0.1);
+    height: 2.5px;
+    opacity: 0;
+}
+
 #resizable { 
-    width:inherit; 
     min-height: 200px;
-    height: 200px;
-    max-height: 500px;
+    height: 250px;
+    max-height: 600px;
+    background-color: #efefef;
+}
+
+#resizable1 { 
+    min-height: 300px;
+    height: 350px;
+    max-height: 600px;
     background-color: #efefef;
 }
 
@@ -66,7 +78,7 @@
 }
 
 .graph {
-    background-color:  #efefef;
+    background-color: #efefef;
     border: 0px;
     max-height: inherit;
     height: inherit;
@@ -76,7 +88,8 @@
 .my-container-resize{
     height: inherit;
     overflow-y: auto;
-    padding: 0
+    padding-right: 0;
+    background-color: #efefef;
 }
 
 .sidebar-nav {
@@ -363,6 +376,8 @@ td.list-group-item {
 
 .row {
     padding 2px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 #searchfield form {
@@ -416,11 +431,13 @@ footer {
 }
 
 #startMsg {
-    position: absolute;
-    background-color: #efefef;
-    height: inherit;
-    overflow-y: inherit;
-    overflow-x: hidden
+	position: absolute;
+	background-color: #efefef;
+	height: inherit;
+	overflow-y: hidden;
+	overflow-x: hidden;
+	width: 95%;
+	padding: 3px;
 }
 
 hr {
@@ -457,7 +474,7 @@ hr {
     height: inherit;
     min-height: inherit;
     overflow-y: hidden;
-    padding: 0
+    padding: 0;
 }
 
 #AG-col {
@@ -671,3 +688,18 @@ hr {
 .pAuthr {
     color: #5263fe;
 }
+.aa {
+    
+}
+
+#row22 {
+    height: auto;
+}
+
+.container-fluid {
+	padding-right: 0px;
+	padding-left: 0;
+	margin-right: auto;
+	margin-left: auto;
+}
+
