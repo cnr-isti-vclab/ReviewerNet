@@ -1141,7 +1141,7 @@ function setup_searchbars(){
         if(papersPrint.includes(item.id)){
             if(idPs.includes(item.id)){
               return $( "<li>" )
-                .append( "<div style = \"background-color: "+color_n(item.color)+"; color:blue; font-weight: bold;\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+                .append( "<div style = \"background-color: "+color_n(item.color)+"; color:blue; font-weight: bold;\" >--<strong>" + item.year+ "</strong> " + name + "</div>" )
                 .appendTo( ul );
             }else
                 return $( "<li>" )
