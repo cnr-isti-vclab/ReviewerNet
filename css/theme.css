@@ -82,7 +82,7 @@
     border: 0px;
     max-height: inherit;
     height: inherit;
-    overflow-y: auto;
+    overflow-y: hidden;
 }
 
 .my-container-resize{
@@ -461,6 +461,7 @@ footer {
 	overflow-y: hidden;
 	overflow-x: hidden;
 	width: 95%;
+    height: auto;
 	padding: 3px;
 }
 

@@ -465,6 +465,7 @@ function addPaper(suggestion){
         document.getElementById("startMsg").style.visibility = "hidden";
         document.getElementById("svgAxis").style.visibility = "visible";
         d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+        d3.selectAll(".graph").style("overflow-y", "auto")
         add_labels()
         start = false;
     }
@@ -1012,6 +1013,7 @@ function setup_searchbars(){
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
                  document.getElementById("svgAxis").style.visibility = "visible";
+                d3.selectAll(".graph").style("overflow-y", "auto")
                 d3.selectAll(".ui-resizable-handle").style("opacity", 1)
                 add_labels()
                 start = false;
@@ -1054,6 +1056,7 @@ function setup_searchbars(){
                 document.getElementById("startMsg").style.visibility = "hidden";
                  document.getElementById("svgAxis").style.visibility = "visible";
                 d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+                d3.selectAll(".graph").style("overflow-y", "auto")
                 add_labels()
                 start = false;
             }
@@ -1206,11 +1209,11 @@ $(function (){
                 newH = _docHeight - heightAG;
             document.getElementById('row22').style.height = newH.toString()+"px";
             oldHAG = heightAG;
-            
-/*            document.getElementById('aut_table').clientHeight = heightA;
+           console.log("H "+document.getElementById('row21').height)
+            document.getElementById('aut_table').clientHeight = heightA;
             newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";*/
-
+            document.getElementById('row21').style.height = newH.toString()+"px";
+ console.log("nH "+newH)
             
             event.stopPropagation()
         }
