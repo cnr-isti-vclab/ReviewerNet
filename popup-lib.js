@@ -1,9 +1,7 @@
 function setup_popups(){
     $( ".pop-up" ).tooltip({
-      show: {
-        effect: "slideDown",
-        delay: 50
-      }
+        trigger: "click",
+        animation: true
     });
 }
 

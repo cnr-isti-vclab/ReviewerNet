@@ -324,6 +324,43 @@ function reset_ABG(){
         //printPapers(authsDef)    
 }
 
+function print_legend(txt_el){
+    d3.selectAll(".label-txtspanL").remove()
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("x", 10)
+        .attr('dy', 45)
+        .attr("fill", "#be27be")
+        .text("Submitting authors")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("x", 10)
+        .attr('dy', 15)
+        .attr("fill", "#5263fe")
+        .text("Selected reviewers")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("x", 10)
+        .attr('dy', 15)
+        .attr("fill", "#db0000")
+        .style("font-style", "italic")
+        .text("Conflicted with submitting")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("x", 10)
+        .attr('dy', 15)
+        .attr("fill", "rgba( 188, 188, 188, 0.754 )")
+        .text("Conflicted with reviewer")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("x", 10)
+        .attr('dy', 15)
+        .style("font-style", "bolder")
+        .attr("fill", "black")
+        .text("Available")
+
+}
+
 function authorBars(){
     //var authsDef = null;
     //authsFiltered = [];
@@ -348,6 +385,8 @@ function authorBars(){
       .attr('dy', 15)
       .text("A(N(P)) = "+ANP.length)
 
+    print_legend(d3.select("#area-name-RT"))
+    
     if(authsDef){
         if(!checkboxTP.spinner( "option", "disabled" ))
             authsDef = authsDef.filter(thetaPapFilter) 
