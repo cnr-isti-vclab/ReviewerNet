@@ -131,19 +131,7 @@ function authorGraph() {
         .enter().append("circle")
         .attr("class", "authors-dot")
         .attr("id", function(d){return "ag"+d.id})
-        .attr("r", a_radius)//function(d){
-           
-//            if(idAs.includes(d.id))
-//                return 4.5;
-//            else return 2.5;
-          //  })
-/*        .attr("stroke", function(d){
-           if(!idAs.includes(d.id)) return "rgba( 114, 114, 114, 0 )";
-            else if(authsReview.includes(d.id)) return "#5263fe";
-            else if(authsExclude.includes(d.id)) return "#be27be";
-            else return "rgba( 221, 167, 109, 0.942 )";
-            })
-        .attr("stroke-width", "1px")*/
+        .attr("r", a_radius)
         .attr("fill",  function (d){
             if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id))return "#be27be";
