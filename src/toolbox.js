@@ -5,6 +5,15 @@ var fS = "#ff433d", sS = "#ffffff", tS = "#248bda";
         .range(["#f90000", "#ffffff" , "#0019ff"]),
 */
 
+function setup_popups(){
+    $( ".pop-up" ).tooltip({
+      show: {
+        effect: "slideDown",
+        delay: 50
+      }
+    });
+}
+
 function foo(){console.log(papersFiltered.length)}
 
 /*

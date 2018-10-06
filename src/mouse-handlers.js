@@ -207,7 +207,9 @@ function authClickHandler(d){
                     all = al.length, found = false, i = 0;
                 if(!al.includes(d.id)) return 0;
                 while( !found && i < all ){
-                    found = ( al[i]!= d.id && idAs.includes(al[i])) ? true : false;
+                    var t = authsDef.filter(function(el){return el.id === al[i]})
+                    found = ( al[i]!= d.id && t.length > 0) ? true : false;
+                    if(found) console.log(d1.value+" "+al[i]+" "+d.id + " "+d1.id)
                     i++
                 }
             return found ? 1: 0;

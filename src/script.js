@@ -301,7 +301,7 @@ function getAuths() {
             }
             document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
             citations.length+" citations<br>"+
-            authors.length+" authors successfully loaded.<br><hr>Click to start using SemanticBrowser!" 
+            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">computer graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
             d3.select("#loading").style("pointer-events", "all")
             d3.select("#loading").on("click", start_click_handler);
         })
