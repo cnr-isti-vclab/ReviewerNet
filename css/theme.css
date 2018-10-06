@@ -551,6 +551,10 @@ hr {
     font-style: italic;
     font-variant-caps: all-petite-caps
 }
+.label-txtspanL{
+    font-size: 0.6em;
+    font-variant-caps:normal
+}
 
 #loading {
     width: 100%;
