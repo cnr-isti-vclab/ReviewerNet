@@ -905,7 +905,7 @@ function clickHandler(d){
     setPapHandlers()
 }
 
-function handleMouseOverPB(d){ 
+function handleMouseOverPB(d, event){ 
     if(!click){
         d3.select(this).transition()
             .duration(200)

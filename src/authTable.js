@@ -490,8 +490,7 @@ function authorBars(){
                     return "italic"
             })
             .style("font-weight", function (d){ 
-                if(!authColor(d) && !authColor_r(d) && 
-                   !(authsReview.includes(d.id) || authsExclude.includes(d.id))) 
+                if((!authColor(d) && !authColor_r(d)) ||(authsReview.includes(d.id) || authsExclude.includes(d.id)) ) 
                    return "bold"; })
             .attr("fill",  function (d){
 /*                if(authColor_r(d))

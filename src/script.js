@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
+var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
     loader_str = "<div class=\"loader text-center\"></div>",
     auths_in_g = new Set([]),
     start = true,
@@ -28,6 +28,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 200, _docHeight,
     outSz = 100,
     height = $(".ap").height(),
     heightA = $(".aa").height(),
+    heightAG = $(".ag").height(),
     h = height,
     w = width,
     thetaPap = 0, thetaN = 10, thetaC = 7, thetaY = 7,
@@ -462,6 +463,7 @@ function addPaper(suggestion){
         svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
         document.getElementById("svgAxis").style.visibility = "visible";
+        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
         add_labels()
         start = false;
     }
@@ -994,6 +996,7 @@ function setup_searchbars(){
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
                  document.getElementById("svgAxis").style.visibility = "visible";
+                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
                 add_labels()
                 start = false;
             }
@@ -1034,6 +1037,7 @@ function setup_searchbars(){
                 svgAxis.append("g").attr("id", "axis").call(xaxis);
                 document.getElementById("startMsg").style.visibility = "hidden";
                  document.getElementById("svgAxis").style.visibility = "visible";
+                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
                 add_labels()
                 start = false;
             }
@@ -1128,10 +1132,11 @@ function setup_searchbars(){
 }
 
 $(function (){
-    
-    _docHeight = /*window.screen.height - 170 */ document.documentElement.clientHeight - 45;
+    d3.selectAll(".ui-resizable-handle").style("opacity", 0)
+    _docHeight = document.documentElement.clientHeight - 45;/*window.screen.height - 170 */ 
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
-    document.getElementById('pg-row').style.height =(_docHeight - heightA).toString()+"px";
+    document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
+    document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
     $( window ).on("load", function(){
         height = this.height
         heightA = this.height * 0.3
@@ -1147,55 +1152,104 @@ $(function (){
     $( "#resizable" ).resizable({
         handles: "s",
         resize: function( event, ui ) {
+             onlyag = false
             if(ui.size.height < 200){
                 heightA = 200
                 ui.size.height = 200
             }
-            else if(ui.size.height > 500){
-                heightA = 500
-                ui.size.height = 500
+            else if(ui.size.height > 600){
+                heightA = 600
+                ui.size.height = 600
             }
             else heightA = ui.size.height
             document.getElementById('aut_table').clientHeight = heightA;
             let delta =  oldH - heightA,
                 newH = _docHeight - heightA;
             //console.log("resize resizable")
-    //                console.log("clientH  before" + document.getElementById('pg-row').clientHeight)
+    //                console.log("clientH  before" + document.getElementById('row21').clientHeight)
 
             //console.log("newH "+newH+" heightA "+ heightA)
     //                console.log("oldH "+ oldH + " - newH " + heightA + "delta "+ delta +" expected "+ newH.toString())
-            document.getElementById('pg-row').style.height = newH.toString()+"px";
-    //                console.log("clientH after " + document.getElementById('pg-row').clientHeight)
+            document.getElementById('row21').style.height = newH.toString()+"px";
+            
+    //                console.log("clientH after " + document.getElementById('row21').clientHeight)
             oldH = heightA;
 
+            event.stopPropagation()
+        }
+    });
+    
+    $( "#resizable1" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+            onlyag = true
+            if(ui.size.height < 300){
+                heightAG = 300
+                ui.size.height = 300
+            }
+            else if(ui.size.height > 600){
+                heightAG= 600
+                ui.size.height = 600
+            }
+            else heightAG = ui.size.height
+            document.getElementById('AG-container').clientHeight = heightAG;
+            let delta =  oldHAG - heightAG,
+                newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            oldHAG = heightAG;
+            
+            document.getElementById('aut_table').clientHeight = heightA;
+            newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+
+            
+            event.stopPropagation()
         }
     });
     
     setMouseHandlers()
 
     window.onresize = function(e) {
-        //console.log("res")
+        
         width = $(".ap").width()
         _docHeight = document.documentElement.clientHeight - 40
         height = document.documentElement.clientHeight - 40
-        heightA = height * 0.3
+        
         w = width
         h = height
         
         
         if(heightA < 200)
             heightA = 200
-        if(heightA > 500)
-            heightA = 500
+        if(heightA > 600)
+            heightA = 600
         
         document.getElementById('aut_table').clientHeight = heightA;
         let delta =  oldH - heightA,
             newH = _docHeight - heightA;
-        document.getElementById('pg-row').style.height = newH.toString()+"px";
+        document.getElementById('row21').style.height = newH.toString()+"px";
         oldH = heightA;
-        document.getElementById('aut_table').clientHeight = heightA;
         updateWidth()
-         if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0){
+        
+/*
+        if(ui.size.height < 300){
+                heightAG = 300
+                ui.size.height = 300
+            }
+            else if(ui.size.height > 600){
+                heightA = 600
+                ui.size.height = 600
+            }
+            else heightAG = ui.size.height
+            document.getElementById('AG-container').clientHeight = heightAG;
+            let delta =  oldHAG - heightAG,
+                newH = _docHeight - heightAG;
+
+            document.getElementById('row22').style.height = newH.toString()+"px";
+
+            oldHAG = heightAG;
+        */
+         if(papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
              simulationA.stop()
              paperGraph(papersFiltered, citPrint, idPs, simulation)
                 setTimeout(function(){ 
