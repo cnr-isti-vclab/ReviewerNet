@@ -78,6 +78,7 @@ function updateADpapers(){
 
 function prune_auth(d1){
     let exclude = false;
+    if(authsReview.includes(d1.id) || authsExclude.includes(d1.id)) return true;
     if((checkboxC[0].checked) && (authsExclude.length > 0 || authsReview.length >0)){
         authsExclude.map(function (el){
             if(d1.coAuthList[el] && checkThetaNC(d1, el))
@@ -391,7 +392,8 @@ function authorBars(){
     
     if(authsDef){
         if(!checkboxTP.spinner( "option", "disabled" ))
-            authsDef = authsDef.filter(thetaPapFilter) 
+            authsDef = authsDef.filter(thetaPapFilter)
+        
         var na = authsDef.length
         authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {
@@ -547,15 +549,24 @@ function authorBars(){
                 else if(authColor(d)) return "#db0000";
             })
             .attr("x", function(d){
-                let nw = xConstrained(authDict[d.id][1] + 0.3),
-                    od = (xConstrained(authDict[d.id][0] - 0.5) < 0 ? 0 : xConstrained(authDict[d.id][0] - 0.5)),
-                    delta = nw-od,
-                    rW = d3.select(this).node().getBBox().width,
-                    rH = d3.select(this).node().getBBox().height,
-                    nX = od+(delta-rW)/2;
-                if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
-                else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
-            })
+                 var plset = new Set(papersPrint), 
+                     rW = d3.select(this).node().getBBox().width,
+                     rH = d3.select(this).node().getBBox().height,
+                     pl = authDict[d.id][2], M = xConstrained(pl[pl.length-1].year + 0.3),
+                     m = xConstrained(authDict[d.id][2][0].year -0.5), nX = m+((M-m)-rW)/2;
+                    
+                    let commonValues = d.paperList.filter(x => plset.has(x));
+                    //console.log(item.value+" "+commonValues.length)
+                if (commonValues.length > 0){            
+                    let nw = xConstrained(authDict[d.id][1] + 0.3),
+                        od = (xConstrained(authDict[d.id][0] - 0.5) < 0 ? 0 : xConstrained(authDict[d.id][0] - 0.5)),
+                        delta = nw-od,
+                        nX = od+(delta-rW)/2;
+                    if(delta > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
+                    else return Math.max(5, Math.min(nX + 1, $(".ap").width()-rW-40));
+                }
+                else if((M-m) > rW) return Math.min(nX+1, $(".ap").width()-rW-40 );
+        else return nX;})
             .style("pointer-events", "none")
         /*
             .on("click", authClickHandler)
@@ -565,6 +576,9 @@ function authorBars(){
         */
         printPapers(authsDef)
         print_legend(d3.select("#area-name-RT"))
+    
+    
+        print_rew()
     }
     
 }

@@ -449,6 +449,12 @@ width: 15%;
 #ui-id-2, #ui-id-1, #ui-id-3{
     border: 1px solid #999; max-height: 150px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
 
+.replacement{
+    font-size: 0.8em;
+    font-style: italic;
+    cursor: pointer;
+}
+
 .links line {
   stroke: #999;
   stroke-opacity: 0.6;

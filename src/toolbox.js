@@ -383,7 +383,7 @@ function checkboxesInit(){
       }
     });
     $( "#N" ).spinner("value", 10)
-    $( "#C" ).spinner("value", 3)
+    $( "#C" ).spinner("value", 12)
     $( "#lastYearOfP" ).spinner("value", 7)
     $( "#MNoC" ).spinner("value", 8)
     $( "#MNP" ).spinner("value", 1)
