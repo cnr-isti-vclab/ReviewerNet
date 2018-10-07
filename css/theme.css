@@ -4,6 +4,7 @@
     font-size: 0.8em; 
     font-weight: bold;
     color: #1e9476;
+    transform: translateY(60%);
 }
 
 .pop-up{
@@ -42,7 +43,11 @@
     height: 30px;
     padding: 2px;
     font-size: 0.9em;
-    transform: translate(5%,-30%);
+    transform: translate(5%, 30%);
+}
+
+#bnt-table.td{
+    padding: 0px;
 }
 
 .ui-icon{
@@ -419,13 +424,15 @@ width: 15%;
 }
 
 .checkbox-inline, .radio-inline {
-	transform: translate(42%, 30%);
-    float: left
+	transform: translate(5%, -12%);
+    padding: 0;
+    font-size: 0.7em
 }
 
 #bnt-table{
     text-align: left;
-    transform:translateX(5%)
+    transform:translateX(5%);
+    margin: 0px;
 }
 
 #searchfield form .biginput {
@@ -792,4 +799,13 @@ form{
     width: 30px;
     height: 30px;
     transform: translateY(-20%)
+}
+
+#tbRow1 {
+    height: auto;
+    margin-bottom: 0px;
+}
+
+.tdp {
+    transform: translateX(-15%)
 }
