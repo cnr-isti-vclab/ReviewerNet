@@ -1246,7 +1246,7 @@ $(function (){
         
         let newH = _docHeight - heightA;
         document.getElementById('row21').style.height = newH.toString()+"px";
-        updateWidth()
+
         
         newH = _docHeight - heightAG;
         document.getElementById('row22').style.height = newH.toString()+"px";
@@ -1272,6 +1272,7 @@ $(function (){
         */
 
          if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
+            updateWidth()
              simulationA.stop()
              paperGraph(papersFiltered, citPrint, idPs, simulation)
                 setTimeout(function(){ 
