@@ -759,3 +759,14 @@ form{
 .side-tab{
     height: auto
 }
+
+#ghl {
+    width: 15px;
+    height: 15px
+}
+
+#ghs {
+    width: 30px;
+    height: 30px;
+    transform: translateY(-20%)
+}
