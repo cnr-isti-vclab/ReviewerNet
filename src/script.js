@@ -32,7 +32,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     h = height,
     w = width,
     oldw = w,
-    thetaPap = 1, thetaN = 10, thetaC = 3, thetaY = 7,
+    thetaPap = 1, thetaN = 10, thetaC = 12, thetaY = 7,
     inputNumberTP = document.getElementById('input-numberTP'),
     sliderTP = document.getElementById('thetaPap'),
     thetaCit = 8,
@@ -483,6 +483,7 @@ function addPaper(suggestion){
         setTimeout(function(){ 
             authorBars()
             authorGraph()
+            print_rew()
         }, 1000);
         
     }
@@ -740,7 +741,7 @@ function thetaPapFilter(item){
         plset = new Set(papersPrint),
         commonValues = item.paperList.filter(x => plset.has(x));
     //console.log(item.value+" "+commonValues.length)
-    return commonValues.length >= thetaPap;
+    return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
 }
 
 function paperGraph(papers1, citations1, idPs, simulation) {
@@ -980,6 +981,44 @@ function add_labels(){
     d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
 }
 
+function replacement(sid, cal){
+    let i = 0, lim = cal.length, found = false, txt = ">no replacement found";
+    let a_obj = authsDef.filter(function(el){return el.id != sid && (authsReview.includes(el.id) || authsExclude.includes(el.id))})
+    while(i<lim && !found){
+        id_test = cal[i][0]
+        let exclude = false;
+        a_obj.map(function (el){
+            if(el.coAuthList[id_test])
+                exclude = true;
+        })
+        if(!exclude){
+            found = true
+            txt = "id=\"rep"+sid+"-"+id_test+"\">"+authors.filter(function(el){return el.id == id_test})[0].value
+        }
+        i++
+    }
+    return txt
+}
+
+function print_rew(){
+    $('#rauthList').html("")
+    var al = authsReview_obj.length;
+    for(var i = 0; i < al; i++){
+        let suggestion = authsReview_obj[i];
+        let found = false, cal = [];
+        for(var key in suggestion.coAuthList) {
+            if(!(authsExclude.includes(key) || authsReview.includes(key)))
+                cal.push([key, suggestion.coAuthList[key][0]])
+        }
+        cal.sort(function(a, b){return b[1]-a[1];})
+        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a> - <a class=\"replacement\""+replacement(suggestion.id, cal)+"</a></li>")
+    }
+    $(".replacement").on("click", repl_click);
+    $(".replacement").on("mouseover", repl_over);
+    $(".replacement").on("mouseout", repl_out);
+    
+}
+
 function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -1028,7 +1067,6 @@ function setup_searchbars(){
             else{
                 authsReview.push(idA_rev)
                 authsReview_obj.push(suggestion)
-                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a></li>")
                 authorBars()
                 authorGraph()
             }
@@ -1092,7 +1130,7 @@ function setup_searchbars(){
     $('#papers-autocomplete').autocomplete({
         open : function(){
             let d = $("#ui-id-3").height() + 25
-            if(_docHeight-heightAG-100 < 200)
+            if(_docHeight-heightAG-100 < 210)
                 $(".ui-autocomplete:visible").css({top:"-="+d});
         },
         source: function(request, response) {
@@ -1125,20 +1163,6 @@ function setup_searchbars(){
 //            console.log("ui.content sort");
 //
         },
-//        beforeRender: function(container, suggestions){
-//            var $divs = $(".autocomplete-suggestion")
-//            console.log(container)
-//            var alphabeticallyOrderedDivs = $divs.sort(function (a, b) {
-//                var afields = a.innerText.split(','),
-//                    al = afields.length,
-//                    bfields = b.innerText.split(','),
-//                    bl = bfields.length;
-//                return afields[al-1] <= bfields[bl-1];
-//            });
-//            container.html(alphabeticallyOrderedDivs);
-//            suggestions.sort(function(a, b){return a.year <= b.year});
-//            
-//        },
         select: function (event, ui) {
             addPaper(ui.item)
             this.value = ""
