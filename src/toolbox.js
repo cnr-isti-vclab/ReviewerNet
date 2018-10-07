@@ -198,10 +198,20 @@ function checkboxesInit(){
         }
     });
     
+    $.widget( "ui.pcntspinner", $.ui.spinner, {
+ 
+    _format: function( value ) { 
+        var suffix = this.options.suffix;
+        return value +" "+ suffix; 
+    },
+    
+});
+    
     let spinnerY = $( "#lastYearOfP" ).spinner({
             min: 0,
             disabled: false,
             max: 20,
+            suffix:"y",
             spin: function( event, ui ) {
                     thetaY = ui.value;
                     if(papersFiltered.length > 0){
@@ -242,6 +252,7 @@ function checkboxesInit(){
         });
     let spinnerC = $( "#C" ).spinner({
             min: 0,
+            suffix:"y",
             disabled: false,
             max: 20,
             spin: function( event, ui ) {
@@ -283,6 +294,7 @@ function checkboxesInit(){
     let spinnerMNP = $( "#MNP" ).spinner({
             min: 0,
             disabled: false,
+            suffix:"p",
             max: 20,
             spin: function( event, ui ) {
                     thetaPap = ui.value;
