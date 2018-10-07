@@ -32,7 +32,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     h = height,
     w = width,
     oldw = w,
-    thetaPap = 0, thetaN = 10, thetaC = 7, thetaY = 7,
+    thetaPap = 1, thetaN = 10, thetaC = 3, thetaY = 7,
     inputNumberTP = document.getElementById('input-numberTP'),
     sliderTP = document.getElementById('thetaPap'),
     thetaCit = 8,
@@ -254,7 +254,7 @@ function addId(name, year){
 
       $("#papList").append("<li id=\""+"p"+idP+
                            "\" class=\"paplist list-group-item pAuth\"><strong>"
-                           +idPs.length+".</strong> "+year+", "+name+"</li>")
+                           +idPs.length+".</strong> "+year+" "+name+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -301,7 +301,7 @@ function getAuths() {
             }
             document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
             citations.length+" citations<br>"+
-            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">Computer Graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
+            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">Computer Graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
             d3.select("#loading").style("pointer-events", "all")
             d3.select("#loading").on("click", start_click_handler);
         })
@@ -739,7 +739,7 @@ function thetaPapFilter(item){
     var paps = 0, lp = papersFiltered.length,
         plset = new Set(papersPrint),
         commonValues = item.paperList.filter(x => plset.has(x));
-
+    //console.log(item.value+" "+commonValues.length)
     return commonValues.length >= thetaPap;
 }
 
@@ -860,15 +860,16 @@ popRect = svgP.append("rect")
 
         simulation.force("link")
             .links(citations1);
-        simulation.alpha(1).restart()
+        simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
     }
 }
 
 //rgba( 223, 225, 225, 0.604 )
 
 function dragstarted(d) {
-    unclick_auth()
-  if (!d3.event.active) simulation.alpha(0.6).restart();
+    //console.log("started")
+    if(click) unclick_auth()
+  /*if (!d3.event.active) */simulation.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
   d.fx = d.x;
   d.fy = d.y;
 }
@@ -877,8 +878,7 @@ function dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
     
-     d3.select(this).transition()
-        .duration(200)
+     d3.select(this)
         .attr("r", 10);
     var txt = d.value
     /*
@@ -907,14 +907,12 @@ function dragged(d) {
         .attr("opacity", 1)
 
     d3.selectAll(".authNode")
-        .transition().duration(200)
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
                 return color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
      d3.selectAll(".authlLine")
-        .transition().duration(200)
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
                 return color_n(d.color);
@@ -939,7 +937,6 @@ function dragended(d) {
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     d3.selectAll(".authNode")
-        .transition().duration(200)
         .attr("fill", function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -947,7 +944,6 @@ function dragended(d) {
                         return "rgba( 221, 167, 109, 0.342 )"
         })
     d3.selectAll(".authlLine")
-        .transition().duration(200)
         .style("stroke", function (d){
                     if(authColor(d))
                         return "rgba( 188, 188, 188, 0.454 )"
@@ -1027,7 +1023,7 @@ function setup_searchbars(){
             else{
                 authsReview.push(idA_rev)
                 authsReview_obj.push(suggestion)
-                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+                $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a></li>")
                 authorBars()
                 authorGraph()
             }
@@ -1163,8 +1159,9 @@ function setup_searchbars(){
 }
 
 $(function (){
+    d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
-    _docHeight = document.documentElement.clientHeight - 45;/*window.screen.height - 170 */ 
+    _docHeight = document.documentElement.clientHeight - 30;/*window.screen.height - 170 */ 
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
@@ -1222,11 +1219,11 @@ $(function (){
                 newH = _docHeight - heightAG;
             document.getElementById('row22').style.height = newH.toString()+"px";
             oldHAG = heightAG;
-           console.log("H "+document.getElementById('row21').height)
-            document.getElementById('aut_table').clientHeight = heightA;
+/*            console.log("H "+document.getElementById('row21').clientHeight)*/
+            heightA = document.getElementById('aut_table').clientHeight    
             newH = _docHeight - heightA;
             document.getElementById('row21').style.height = newH.toString()+"px";
- console.log("nH "+newH)
+/*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
             
             event.stopPropagation()
         }
@@ -1237,13 +1234,13 @@ $(function (){
     window.onresize = function(e) {
         
         
-        width = $(".ap").width()
-        _docHeight = document.documentElement.clientHeight - 40
-        height = document.documentElement.clientHeight - 40
+        width = $("#aut_table").width()
+        _docHeight = document.documentElement.clientHeight - 30
+        height = document.documentElement.clientHeight - 30
 
         w = width
         h = height
-        
+        heightA = document.getElementById('aut_table').clientHeight    
         let newH = _docHeight - heightA;
         document.getElementById('row21').style.height = newH.toString()+"px";
 
@@ -1252,24 +1249,6 @@ $(function (){
         document.getElementById('row22').style.height = newH.toString()+"px";
         d3.select("#main-span").attr("dy",function(){
             return heightA-100}) 
-/*
-        if(ui.size.height < 300){
-                heightAG = 300
-                ui.size.height = 300
-            }
-            else if(ui.size.height > 600){
-                heightA = 600
-                ui.size.height = 600
-            }
-            else heightAG = ui.size.height
-            document.getElementById('AG-container').clientHeight = heightAG;
-            let delta =  oldHAG - heightAG,
-                newH = _docHeight - heightAG;
-
-            document.getElementById('row22').style.height = newH.toString()+"px";
-
-            oldHAG = heightAG;
-        */
 
          if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
             updateWidth()

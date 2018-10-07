@@ -331,7 +331,7 @@ function print_legend(txt_el){
         .attr("id", "main-span")
         .attr("x", 10)
         .attr('dy',function(){
-        return heightA-100})
+        return $("#svgRT").height()-100})
         /*.attr("fill", "#be27be")
         .text("Submitting authors")
     txt_el.append('tspan')
@@ -374,7 +374,7 @@ function authorBars(){
         authsDef = authsDef.filter(anpFilter)
     else
         authsDef = authsDef.filter(apFilter)
-    //console.log(authsDef)
+    
 
     //console.log(idAs)
     
@@ -387,7 +387,7 @@ function authorBars(){
       .attr('dy', 15)
       .text("A(N(P)) = "+ANP.length)
 
-    print_legend(d3.select("#area-name-RT"))
+    
     
     if(authsDef){
         if(!checkboxTP.spinner( "option", "disabled" ))
@@ -397,7 +397,8 @@ function authorBars(){
         authsDef.sort(function(a, b) {
             return -(a.score - b.score);
         });
-        
+        idAs = []
+        authsDef.map(function(el){idAs.push(el.id)})
         authTable.selectAll("tr")
             .data(authsDef)
             .enter().append("tr")
@@ -562,7 +563,8 @@ function authorBars(){
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
         */
-        printPapers(authsDef)        
+        printPapers(authsDef)
+        print_legend(d3.select("#area-name-RT"))
     }
     
 }

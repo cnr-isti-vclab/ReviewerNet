@@ -11,7 +11,7 @@ function author_dblclick_ABG(d){
     else{
         authsReview.push(idA_rev)
         authsReview_obj.push(suggestion)
-        $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+"</li>")
+        $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a></li>")
         authorBars()
         authorGraph()
     }
@@ -24,7 +24,7 @@ function unclick_auth(d){
     idClickedA = 0;
         clkIds= [];
         clkA = null;
-clkRect.attr("stroke-width",0)
+        clkRect.attr("stroke-width",0)
         clkRect = null;
         clkLine = null;
     click = false;
@@ -239,18 +239,6 @@ function handlerMouseOverA(d){
     if(!click){
     reset_texts()
     //if(click) unclick_auth();
-    d3.select("#aa"+d.id)
-        .transition().duration(200)
-        .attr('fill',"rgba( 138, 223, 223, 0.569 )")
-
-    d3.select("#aaline"+d.id)
-        .transition().duration(200)
-        .style('stroke',"rgba( 138, 223, 223, 0.569 )")
-    
-    d3.select("#ag"+d.id)
-        .transition().duration(200)
-        .attr("r", 7)
-    
     d3.selectAll(".plink")
         .style("opacity", 0.2)
     
@@ -285,6 +273,17 @@ function handlerMouseOverA(d){
                 if(idPs.includes(d1.id))                    
                     return 2.5;
             })
+         d3.select("#aa"+d.id)
+        .transition().duration(200)
+        .attr('fill',"rgba( 138, 223, 223, 0.569 )")
+
+    d3.select("#aaline"+d.id)
+        .transition().duration(200)
+        .style('stroke',"rgba( 138, 223, 223, 0.569 )")
+    
+    d3.select("#ag"+d.id)
+        .transition().duration(200)
+        .attr("r", 7)
     }
     else if(d.id != idClickedA && clkIds.includes(d.id)){
         reset_texts()
@@ -372,13 +371,12 @@ function handlerMouseOutA(d){
     reset_texts()
     //if(click) unclick_auth();
     d3.select("#aa"+d.id).transition().duration(200).attr('fill', function (d){
-                
-                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else
-                    return "rgba( 221, 167, 109, 0.342 )"
-            })
-    
+        if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+            return "rgba( 188, 188, 188, 0.454 )"
+        else
+            return "rgba( 221, 167, 109, 0.342 )"
+    })
+
    d3.select("#ag"+d.id)
         .transition().duration(200)
         .attr("r", a_radius) 
@@ -422,7 +420,6 @@ function handlerMouseOutA(d){
 function handlerMouseOverAG(d){
     if(!click){
         reset_texts()
-        if(clickAG) unclick_auth();
         d3.select(this).transition()
             .duration(200)
             .attr("r", 7);
@@ -609,7 +606,7 @@ function handlerMouseOverAG(d){
 
 function handlerMouseOutAG(d){
     if(!click){
-       unclick_auth();
+       //unclick_auth();
         d3.select(this).transition()
             .duration(200)
             .attr("r", a_radius);
@@ -699,7 +696,7 @@ function handlerMouseOutAG(d){
 
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
-    if(clickAG){
+    if(!click){if(clickAG){
         reset_texts()
         clickAG = false;
         d3.selectAll(".plink").style("opacity", 1)
@@ -723,7 +720,7 @@ function linkAGClickHandler(d){
                     return "9";}
                 else return "6";
         })
-    }
+    }}
 }
 
 function handlerMouseOverLinkAG(d){
@@ -1391,7 +1388,7 @@ function r_authDblc(event){
         var al = authsReview_obj.length;
         for(var i = 0; i < al; i++){
             let suggestion = authsReview_obj[i];
-            $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
+            $("#rauthList").append("<li id=\"a"+idA_rev+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+authsReview.length+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a></li>")  
         } 
    }
         d3.selectAll(".plink")

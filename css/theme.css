@@ -42,6 +42,7 @@
     height: 30px;
     padding: 2px;
     font-size: 0.9em;
+    transform: translate(5%,-30%);
 }
 
 .ui-icon{
@@ -65,6 +66,7 @@
 
 .ui-widget-content {
     border-right-width: none;
+    background-color: #efefef;
 }
 
 .panel-default {
@@ -85,12 +87,14 @@
     overflow-y: hidden;
 }
 
-.my-container-resize{
-    height: inherit;
+.my-container-resize {
+    height: 85%;
     overflow-y: auto;
     padding-right: 0;
     background-color: #efefef;
 }
+
+
 
 .sidebar-nav {
     height: inherit;
@@ -370,7 +374,9 @@ width: 15%;
 
 #toolbox {
     overflow-y: auto;
-    overflow-x: hidden
+    overflow-x: hidden;
+    padding: 0px;
+    background-color: #efefef;
 }
 
 .line{
@@ -410,6 +416,15 @@ width: 15%;
   padding: 5px;
   border-radius: 3px;
   margin: 5px 0 0 0;
+}
+
+.checkbox-inline, .radio-inline {
+	transform: translate(-10%,-15%);
+}
+
+#bnt-table{
+    text-align: left;
+    transform:translateX(5%)
 }
 
 #searchfield form .biginput {
@@ -476,8 +491,8 @@ hr {
 }
 
 .links {
-   cursor: help;
-    font-style: oblique
+   cursor: pointer;
+    font-style: oblique;
 }
 
 .badge {
@@ -761,8 +776,9 @@ form{
 }
 
 #ghl {
-    width: 15px;
-    height: 15px
+    width: 10px;
+    height: 10px;
+    transform: translateX(5%)
 }
 
 #ghs {
