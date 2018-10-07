@@ -991,6 +991,11 @@ function setup_searchbars(){
     this.value=""
     });
     $('#rauthors-autocomplete').autocomplete({
+        open : function(){
+            let d = $("#ui-id-1").height() + 25
+            if(_docHeight-heightAG-100 < 160)
+                $(".ui-autocomplete:visible").css({top:"-="+d});
+        },
         source: authors,
         minLength: 3,
         showNoSuggestionNotice: true,
@@ -1033,6 +1038,11 @@ function setup_searchbars(){
     })
     
     $('#authors-autocomplete').autocomplete({
+        open : function(){
+            let d = $("#ui-id-2").height() + 25
+            if(_docHeight-heightAG-100 < 150)
+                $(".ui-autocomplete:visible").css({top:"-="+d});
+        },
         source: authors,
         minLength: 3,
         showNoSuggestionNotice: true,
@@ -1080,6 +1090,11 @@ function setup_searchbars(){
     });
     
     $('#papers-autocomplete').autocomplete({
+        open : function(){
+            let d = $("#ui-id-3").height() + 25
+            if(_docHeight-heightAG-100 < 200)
+                $(".ui-autocomplete:visible").css({top:"-="+d});
+        },
         source: function(request, response) {
           
             var terms = request.term.split(' '),
