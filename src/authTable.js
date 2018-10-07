@@ -360,7 +360,7 @@ function print_legend(txt_el){
         .attr('dy', 15)
         .style("font-weight", "bold")
         .attr("fill", "black")
-        .text("Conflicting with nobody")
+        .text("Conflicted with nobody")
 
 }
 
