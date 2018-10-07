@@ -447,7 +447,7 @@ width: 15%;
 }
 
 #ui-id-2, #ui-id-1, #ui-id-3{
-    border: 1px solid #999; max-height: 100px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
+    border: 1px solid #999; max-height: 150px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
 
 .links line {
   stroke: #999;
