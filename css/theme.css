@@ -419,7 +419,8 @@ width: 15%;
 }
 
 .checkbox-inline, .radio-inline {
-	transform: translate(-10%,-15%);
+	transform: translate(42%, 30%);
+    float: left
 }
 
 #bnt-table{
