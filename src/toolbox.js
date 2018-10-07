@@ -192,7 +192,7 @@ function checkboxesInit(){
         }
     });
     checkboxC.on('click', function(){
-        if(papersFiltered.length > 0){
+        if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
             authorBars()
             authorGraph()
         }
@@ -200,7 +200,7 @@ function checkboxesInit(){
     
     let spinnerY = $( "#lastYearOfP" ).spinner({
             min: 0,
-            disabled: true,
+            disabled: false,
             max: 20,
             spin: function( event, ui ) {
                     thetaY = ui.value;
@@ -221,11 +221,11 @@ function checkboxesInit(){
         });
     let spinnerN = $( "#N" ).spinner({
             min: 0,
-            disabled: true,
+            disabled: false,
             max: 50,
             spin: function( event, ui ) {
                     thetaN = ui.value;
-                    if(papersFiltered.length > 0){
+                    if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
                     authorBars()
                     authorGraph()
                 }
@@ -234,7 +234,7 @@ function checkboxesInit(){
                 this.value = this.value > 50 ? 50 : this.value;
                 this.value = this.value < 0 ? 0 : this.value;
                 thetaN = this.value;
-                if(papersFiltered.length > 0){
+                if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
                     authorBars()
                     authorGraph()
                 }
@@ -242,7 +242,7 @@ function checkboxesInit(){
         });
     let spinnerC = $( "#C" ).spinner({
             min: 0,
-            disabled: true,
+            disabled: false,
             max: 20,
             spin: function( event, ui ) {
                     thetaC = ui.value;
@@ -262,7 +262,7 @@ function checkboxesInit(){
             }
         });
     
-    let spinnerMNoC = $( "#MNoC" ).spinner({
+   /* let spinnerMNoC = $( "#MNoC" ).spinner({
             min: 0,
             disabled: true,
             max: 100,
@@ -279,10 +279,10 @@ function checkboxesInit(){
                 if(papersFiltered.length>0)
                     paperGraph(papersFiltered, citPrint, idPs, simulation)
                 }
-        });
+        });*/
     let spinnerMNP = $( "#MNP" ).spinner({
             min: 0,
-            disabled: true,
+            disabled: false,
             max: 20,
             spin: function( event, ui ) {
                     thetaPap = ui.value;
@@ -383,10 +383,10 @@ function checkboxesInit(){
       }
     });
     $( "#N" ).spinner("value", 10)
-    $( "#C" ).spinner("value", 7)
+    $( "#C" ).spinner("value", 3)
     $( "#lastYearOfP" ).spinner("value", 7)
     $( "#MNoC" ).spinner("value", 8)
-    $( "#MNP" ).spinner("value", 0)
+    $( "#MNP" ).spinner("value", 1)
     $( "button" ).button();
 }
 

@@ -146,8 +146,8 @@ function authorGraph() {
             .on("drag", draggedA)
             .on("end", dragendedA))
         .on("click", authClickHandler)
-        .on("mouseover", handlerMouseOverA)
-        .on("mouseout", handlerMouseOutA)
+        .on("mouseover", handlerMouseOverAG)
+        .on("mouseout", handlerMouseOutAG)
         .on("dblclick", author_dblclick_ABG)
         /*
         .on("click", clickHandler)
@@ -171,7 +171,7 @@ function authorGraph() {
         } catch (e) {
             console.log(e)
         }
-        simulationA.alpha(1).restart()
+        simulationA.alpha(1).alphaMin(0.6).alphaDecay(0.025).restart()
     }
     
         //.style("stroke","url(#gradxX)"
@@ -193,7 +193,8 @@ function authorGraph() {
 }
 
 function dragstartedA(d) {
-  if (!d3.event.active) simulationA.alpha(1).restart();
+  /*if (!d3.event.active)*/ simulationA.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
+    simulation.stop()
   d.fx = d.x;
   d.fy = d.y;
 /*    d3.selectAll(".authors-dot")
