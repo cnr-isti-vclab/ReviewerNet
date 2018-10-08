@@ -51,7 +51,6 @@
                     <h3 style="transform: font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">SemanticBrowser.org</h3>
                 <p>
                     A <a class="links" href="https://d3js.org/">D3js</a>-based-browser on a filtered version of the <a class="links" href="https://labs.semanticscholar.org/corpus/" title="SemanticScholar lastest corpus link">Semantic Scholar corpus.</a>
-                    <br>The user can search for papers and build its own cluster of interesting papers including in and out-citations. <br> Above the paper graph the one referred to the authors is displayed. <br> With this tool we hope to simplify the <strong>process of choosing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.
                 </p>
                 <hr>
                <!-- <h4>Usage:</h4>
@@ -63,7 +62,7 @@
                 <br>For further information visit <a class="links" href="https://github.com/hybrs/hybrs.github.io" style=" color: #275d58; font-style: oblique; font-size: 0.6em"><img class = "links" id="ghs" src="imgs/gh.png" alt="the GitHub page"></a>
                 </span>
                 <!-- Paper Graph -->
-                <svg id = "svgAxis" class = "svg" style="width: inherit; height: 800px"  >
+                <svg id = "svgAxis" class = "svg" style="width: inherit; height: 800px">
                     <defs>
                             <linearGradient id="grad_v" x1="0%" y1="0%" x2="0%" y2="100%">
                               <stop id = "firstStopS" offset="0%" style="stop-color:#ffff99;stop-opacity:1"/>
@@ -279,6 +278,15 @@
     <footer class="text-center" id = "my-foot">
      <table style="width:100%; height: 100%">
       <tr>
+          <td>
+          <div class="dropup">
+            <button id="tutorial" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Tutorial
+            <span class="caret"></span></button>
+            <ul id="tutorial-list" class="dropdown-menu">
+              <li class="tli">The user can search for papers and build its own cluster of interesting papers including in and out-citations. Above the paper graph the one referred to the authors is displayed. With this tool we hope to simplify the <strong>process of choosing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.</li>
+            </ul>
+          </div>
+          </td>
         <td>
       <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">Semantic Browser </span> 
     </td>
@@ -286,7 +294,7 @@
       <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Computer Graphics instance: ACM TG, CGF, IEEE TVCG, SIGGRAPH, Visual Computer, CG, IEEE Vis, IEEE CGA </span> 
     </td>
           <td>
-        <a class="links" href="http://labs.semanticscholar.org/corpus/" style="height: 9px; cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.5em">(data courtesy of semanticScholar)</a><a class="links" href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.6em"><img class = "links" id="ghl" src="imgs/gh.png" alt="(about)"></a>
+        <a class="links" href="http://labs.semanticscholar.org/corpus/" style="height: 9px; cursor:zoom-in; color: #275d58; font-style: oblique; font-size: 0.7em">data courtesy of semanticScholar </a><a class="links" href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique;"><img class = "links" id="ghl" src="imgs/gh.png" alt="(about)"></a>
           </td>
       </tr>
     </table> 

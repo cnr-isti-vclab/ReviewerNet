@@ -801,9 +801,9 @@ form{
 }
 
 #ghl {
-    width: 10px;
-    height: 10px;
-    transform: translateX(5%)
+    width: 20px;
+    height: 20px;
+    transform: translate(5%, -5%)
 }
 
 #ghs {
@@ -829,4 +829,24 @@ form{
 table#bnt-table td {
     padding: 1px;
     transform: translateX(1%)
+}
+
+#tutorial {
+	height: 19px;
+	/* padding: 5px; */
+	/* padding-right: 8px; */
+	width: 45px;
+}
+
+#tutorial-list {
+	width: 560px;
+	transform: translateX(3%);
+    background-color: #efefef;
+}
+
+.tli{
+    width: inherit;
+    padding: 10px;
+    text-align: left;
+    background-color: inherit
 }
