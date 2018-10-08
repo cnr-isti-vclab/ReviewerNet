@@ -982,9 +982,9 @@ function add_labels(){
 }
 
 function replacement(sid, cal){
-    let i = 0, lim = cal.length, found = false, txt = ">no replacement found";
+    let i = 0, lim = cal.length, found = 0, txt = ">no replacement found", txt1="";
     let a_obj = authsDef.filter(function(el){return el.id != sid && (authsReview.includes(el.id) || authsExclude.includes(el.id))})
-    while(i<lim && !found){
+    while(i<lim && found < 4){
         id_test = cal[i][0]
         let exclude = false;
         a_obj.map(function (el){
@@ -992,12 +992,14 @@ function replacement(sid, cal){
                 exclude = true;
         })
         if(!exclude){
-            found = true
-            txt = "id=\"rep"+sid+"-"+id_test+"\">"+authors.filter(function(el){return el.id == id_test})[0].value
+            found++
+            let name = authors.filter(function(el){return el.id == id_test})[0].value;
+            name = name.length > 17 ? name.substring(0, 17)+"..." : name;
+            txt1 += "<span class=\"replacement\" id=\"rep"+sid+"-"+id_test+"\"> "+name+" |</span>"
         }
         i++
     }
-    return txt
+    return found > 0 ? txt1 : txt;
 }
 
 function print_rew(){
@@ -1011,9 +1013,9 @@ function print_rew(){
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - <a class=\"replacement\""+replacement(suggestion.id, cal)+"</a></li>")
+        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
     }
-    $(".replacement").on("click", repl_click);
+    $(".replacement").on("dblclick", repl_click);
     $(".replacement").on("mouseover", repl_over);
     $(".replacement").on("mouseout", repl_out);
     
@@ -1047,7 +1049,6 @@ function print_submitting(){
         for (var i = 0; i < aPrint.length; i++)
             thehtml += "<td class=\"pAuthe pAuth\" id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
         thehtml += "</tr>"
-        
     }
     $("#authList").append(thehtml);
 }
