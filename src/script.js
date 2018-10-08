@@ -1074,6 +1074,22 @@ function setup_searchbars(){
             this.value = ""
         }
     })
+        .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let fw = ((!authColor(item) && !authColor_r(item)) ||
+                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
+                col = "black",
+                fs = (authColor(item) && !(authsReview.includes(item.id) || 
+                    authsExclude.includes(item.id))) ? "italic" : "normal";
+            if(idAs)
+                if(!idAs.includes(item.id)) fw = "normal"
+            if(authsReview.includes(item.id)) col = "#5263fe";
+            else if(authsExclude.includes(item.id)) col = "#be27be";
+            else if(authColor(item)) col =  "#db0000";
+            
+              return $( "<li>" )
+                .append( "<div style = \"color:"+col+"; font-style="+fs+"; font-weight:"+fw+";\">" + item.value+"</div>" )
+                .appendTo( ul );
+    };
     
     $('#authors-autocomplete').autocomplete({
         open : function(){
@@ -1083,7 +1099,6 @@ function setup_searchbars(){
         },
         source: authors,
         minLength: 3,
-        showNoSuggestionNotice: true,
         response: function(event, ui){
             ui.content.sort(function (a, b) {return a.value >= b.value;});
             $('#authors-badge').html(ui.content.length)
@@ -1119,7 +1134,22 @@ function setup_searchbars(){
         $('#authors-badge').html("")
             this.value = ""
         }
-    });
+    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let fw = ((!authColor(item) && !authColor_r(item)) ||
+                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
+                col = "black",
+                fs = (authColor(item) && !(authsReview.includes(item.id) || 
+                    authsExclude.includes(item.id))) ? "italic" : "normal";
+            if(idAs)
+                if(!idAs.includes(item.id)) fw = "normal"
+            if(authsReview.includes(item.id)) col = "#5263fe";
+            else if(authsExclude.includes(item.id)) col = "#be27be";
+            else if(authColor_r(item)) col =  "gray";
+            
+              return $( "<li>" )
+                .append( "<div style = \"color:"+col+"; font-style="+fs+"; font-weight:"+fw+";\">" + item.value+"</div>" )
+                .appendTo( ul );
+    };
      
     $('.biginput').keypress(function(e) {
         if (e.keyCode === 13) {
