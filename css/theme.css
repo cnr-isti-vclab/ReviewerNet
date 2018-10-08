@@ -46,7 +46,7 @@
     transform: translate(5%,-10%);
 }
 
-#bnt-table.td{
+#bnt-table.td {
     padding: 0px;
 }
 
@@ -325,8 +325,6 @@ td.list-group-item {
 }
 
 .thP{
-    padding-left: 2px;
-    padding-right: 4px;
     font-size: 0.9em
 }
 
@@ -370,7 +368,8 @@ width: 15%;
 }
 
 .element {
-    border-top: 1px solid rgba( 122, 122, 122, 0.449 );}
+    border-top: 1px solid rgba( 122, 122, 122, 0.449 );
+}
 
 #pi {   
     max-height: 245px;
@@ -820,10 +819,7 @@ form{
     margin-bottom: 0px;
 }
 
-.tdp {
-    transform: translateX(-15%);
-    padding: 0px;
-}
+
 
 #raal{
     max-height: 90px;
@@ -857,4 +853,9 @@ table#bnt-table td {
 #hlp {
     width: 20px;
     height: 20px;
+}
+.tdp {
+    transform: translateX(-15%);
+    padding: 0px;
+    border: 0px;
 }
