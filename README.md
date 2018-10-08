@@ -1,4 +1,4 @@
-# Semantic Browser
+# ReviewerNet 
 This website is a D3.js-based browser on a filtered version of the <a href="http://labs.semanticscholar.org/corpus/">Semantic
 Scholar</a> corpus. The user can search for papers and build its own cluster of interesting papers that we call *P*, from which is 
 generated *N(P)*, the neighbors of *P*, that are the in and out citations. Above the paper graph the one referred 
