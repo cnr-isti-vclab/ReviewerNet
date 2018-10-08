@@ -994,7 +994,7 @@ function add_labels(){
 }
 
 function replacement(sid, cal){
-    let i = 0, lim = cal.length, found = 0, txt = ">no replacement found", txt1="";
+    let i = 0, lim = cal.length, found = 0, txt = "no replacement found", txt1="";
     let a_obj = authsDef.filter(function(el){return el.id != sid && (authsReview.includes(el.id) || authsExclude.includes(el.id))})
     while(i<lim && found < 4){
         id_test = cal[i][0]
@@ -1126,8 +1126,6 @@ function setup_searchbars(){
                 col = "black",
                 fs = (authColor(item) && !(authsReview.includes(item.id) || 
                     authsExclude.includes(item.id))) ? "italic" : "normal";
-            if(idAs)
-                if(!idAs.includes(item.id)) fw = "normal"
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
@@ -1188,8 +1186,6 @@ function setup_searchbars(){
                 col = "black",
                 fs = (authColor(item) && !(authsReview.includes(item.id) || 
                     authsExclude.includes(item.id))) ? "italic" : "normal";
-            if(idAs)
-                if(!idAs.includes(item.id)) fw = "normal"
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor_r(item)) col =  "gray";
