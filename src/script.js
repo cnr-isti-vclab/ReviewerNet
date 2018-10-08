@@ -1011,7 +1011,7 @@ function print_rew(){
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+".</strong> "+suggestion.value+" <a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\">dblp</a> - <a class=\"replacement\""+replacement(suggestion.id, cal)+"</a></li>")
+        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - <a class=\"replacement\""+replacement(suggestion.id, cal)+"</a></li>")
     }
     $(".replacement").on("click", repl_click);
     $(".replacement").on("mouseover", repl_over);

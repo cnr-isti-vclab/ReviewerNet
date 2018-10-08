@@ -197,7 +197,7 @@ function checkboxesInit(){
             authorGraph()
         }
     });
-    
+    $(".tdp").css("padding", "0px")
     $.widget( "ui.pcntspinner", $.ui.spinner, {
  
     _format: function( value ) { 

@@ -4,7 +4,7 @@
     font-size: 0.8em; 
     font-weight: bold;
     color: #1e9476;
-    transform: translateY(60%);
+    transform: translateY(15%);
 }
 
 .pop-up{
@@ -43,7 +43,7 @@
     height: 30px;
     padding: 2px;
     font-size: 0.9em;
-    transform: translate(5%, 30%);
+    transform: translate(5%,-10%);
 }
 
 #bnt-table.td{
@@ -357,7 +357,7 @@ width: 15%;
 }
 
 #papL {
-    max-height: 80px;
+    max-height: 120px;
     overflow-y: auto;
     overflow-x: auto;
     font-size: 0.9em;
@@ -393,7 +393,9 @@ width: 15%;
     width: 90.5%
 }
 
-
+#rauthList{
+    max-height: inherit;
+}
 #MNP, #MNoC   {
     cursor: help
 }
@@ -424,7 +426,7 @@ width: 15%;
 }
 
 .checkbox-inline, .radio-inline {
-	transform: translate(10%, 0%);
+    transform: translate(10%, -20%);
     padding: 0;
     font-size: 0.7em
 }
@@ -436,7 +438,7 @@ width: 15%;
 }
 
 .checkB{
-    transform: translateY(5%);
+    transform: translate(30%, 5%);
 }
 
 #searchfield form .biginput {
@@ -485,6 +487,11 @@ width: 15%;
 
 footer {
     height: 30px
+}
+
+.dblp-ico{
+    width: 20px;
+    height: 20px;
 }
 
 #startMsg {
@@ -811,5 +818,15 @@ form{
 }
 
 .tdp {
-    transform: translateX(-15%)
+    transform: translateX(-15%);
+    padding: 0px;
+}
+
+#raal{
+    max-height: 90px;
+}
+
+table#bnt-table td {
+    padding: 1px;
+    transform: translateX(1%)
 }
