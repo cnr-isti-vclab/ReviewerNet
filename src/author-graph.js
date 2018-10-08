@@ -189,6 +189,15 @@ function authorGraph() {
             .attr("cy", function(d) { return d.y; })
             //.style("opacity", checkThetaNode)
     }
+    d3.select("#svgAG").on("click", function(){
+        if(click) unclick_auth(clkA);
+    })
+    d3.select("#authTable").on("click", function(){
+        if(click) unclick_auth(clkA);
+    })
+    d3.select("#svgP").on("click", function(){
+        if(click) unclick_auth(clkA);
+    })
     
 }
 

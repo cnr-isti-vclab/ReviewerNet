@@ -233,6 +233,7 @@ function authClickHandler(d){
                     d3.selectAll(".p"+d1.id).style("opacity", 0)
                     return 0;} })   
     }}
+    d3.event.stopPropagation()
 }
 
 function handlerMouseOverA(d){ 
