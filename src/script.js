@@ -285,6 +285,18 @@ function getArrays(graph) {
     for (i = 0; i < n1; i++)
         citations[i]=c[i]
         // empty f
+     var ele = $("#ldr-val");
+      var clr = null;
+      var rand = 49;
+      (loop = function() {
+        clearTimeout(clr);
+        (inloop = function() {
+          ele.html(rand += 1);
+            if(rand == 98) return;
+          clr = setTimeout(inloop, 100);
+        })();
+        //setTimeout(loop, 2500);
+      })();
     getAuths()
   }
 
@@ -1395,13 +1407,24 @@ $(function (){
     simulation = setSimulation()
     simulationA = setAGSimulation()
     
+      var ele = $("#ldr-val");
+      var clr = null;
+      var rand = 0;
+      (loop = function() {
+        clearTimeout(clr);
+        (inloop = function() {
+          ele.html(rand += 1);
+            if(rand == 49) return;
+          clr = setTimeout(inloop, 100);
+        })();
+        //setTimeout(loop, 2500);
+      })();
     var graphTxt = fetch('datasets/p_v0518f.txt')
         .then(response => response.text())
         .then(function(text) {
             var graph = JSON.parse(text);
             getArrays(graph)       
     });
-     
     setup_searchbars()
                                
     
