@@ -364,7 +364,7 @@ width: 15%;
 }
 
 #aal, #raal {
-    max-height: 60px;
+    max-height: 120px;
     overflow-y: auto;
     font-size: 0.9em;
 }
@@ -752,6 +752,8 @@ hr {
 
 .pAuthe {
     color:  #be27be;
+    cursor: pointer;
+    font-size: 0.9em;
     
 }
 

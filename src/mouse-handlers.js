@@ -1346,24 +1346,12 @@ function authDblc(event){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length),
         index = authsExclude.indexOf(idClick),
-        lp = authsExclude.length-1;
-    $('#authList').html("")
+        elementPos = authsExclude_obj.map(function(x) {return x.id; }).indexOf(idClick);
     authsExclude.splice(index, 1);
+    authsExclude_obj.splice(elementPos, 1);
     //console.log(authsExclude)
-    if(authsExclude.length > 0){
-        var new_auths = authors.filter(function (item){
-                return authsExclude.includes(item.id)}),
-            al = new_auths.length;
-        authsExclude = []
-        for(var i = 0; i < al; i++){
-            let suggestion = new_auths[i],
-                aName = suggestion.value;
-            idA = suggestion.id
-                authsExclude[authsExclude.length] = idA
-                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item  pAuth pAuthe\"><strong>"+(i+1)+".</strong> "+suggestion.value+"</li>")      
-        } 
-    }
-    
+    print_submitting()
+        
     d3.selectAll(".plink")
         .transition().duration(200)
         .style("opacity", 1)

@@ -9,7 +9,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     ANP = [],
     lines = [],
     authsReview = [], authsReview_obj = [], idA_rev,
-    authsExclude = [],
+    authsExclude = [], authsExclude_obj = [],
     authsDef = [],
     papers = [],
     papersPrint = [],
@@ -380,9 +380,9 @@ function setMouseHandlers(){
         event.stopPropagation();
     })
     $("#authList")
-        .on("mouseover", "li", ListMouseOver)
-        .on("mouseout", "li", ListMouseOut)
-        .on("dblclick", "li", authDblc);
+        .on("mouseover", "td", ListMouseOver)
+        .on("mouseout", "td", ListMouseOut)
+        .on("dblclick", "td", authDblc);
     $("#rauthList")
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
@@ -1019,6 +1019,39 @@ function print_rew(){
     
 }
 
+function print_submitting(){
+    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
+    d3.select("#authList").selectAll("tr").remove()
+    if(aPrint.length > 4){
+        //id = \"authsPap\"
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"tr-submitting\">"
+        for(var j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (var i = 0; i < 4; i++){
+                thehtml += "<td class=\"pAuthe pAuth\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (var i = ia; i < aPrint.length; i++){
+                thehtml += "<td class =\"pAuthe pAuth\" id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
+    }else{
+        
+        thehtml += "<tr class=\"tr-submitting\">"
+        for (var i = 0; i < aPrint.length; i++)
+            thehtml += "<td class=\"pAuthe pAuth\" id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+        thehtml += "</tr>"
+        
+    }
+    $("#authList").append(thehtml);
+}
+
 function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -1074,7 +1107,7 @@ function setup_searchbars(){
             this.value = ""
         }
     })
-        .autocomplete( "instance" )._renderItem = function( ul, item ) {
+    .autocomplete( "instance" )._renderItem = function( ul, item ) {
         let fw = ((!authColor(item) && !authColor_r(item)) ||
                       (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
                 col = "black",
@@ -1126,10 +1159,12 @@ function setup_searchbars(){
             if(authsExclude.includes(idA))
                 isIn = true
             else{
-                authsExclude[authsExclude.length] = idA
-                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")
+                authsExclude.push(idA)
+                authsExclude_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
+/*                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")*/
                 authorBars()
                 authorGraph()
+                print_submitting()
             }
         $('#authors-badge').html("")
             this.value = ""
