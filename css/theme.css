@@ -835,15 +835,15 @@ table#bnt-table td {
 }
 
 #tutorial {
-	height: 19px;
+	height: 25px;
 	/* padding: 5px; */
 	/* padding-right: 8px; */
-	width: 45px;
+	width: 25px;
+	border-radius: 15px;
 }
 
 #tutorial-list {
 	width: 560px;
-	transform: translateX(3%);
     background-color: #efefef;
 }
 
@@ -852,4 +852,9 @@ table#bnt-table td {
     padding: 10px;
     text-align: left;
     background-color: inherit
+}
+
+#hlp {
+    width: 20px;
+    height: 20px;
 }
