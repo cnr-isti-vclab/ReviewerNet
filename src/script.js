@@ -293,7 +293,7 @@ function getArrays(graph) {
         (inloop = function() {
           ele.html(rand += 1);
             if(rand >= 98) return;
-          clr = setTimeout(inloop, 100);
+          clr = setTimeout(inloop, 125);
         })();
         //setTimeout(loop, 2500);
       })();
@@ -1415,7 +1415,7 @@ $(function (){
         (inloop = function() {
           ele.html(rand += 1);
             if(rand >= 49) return;
-          clr = setTimeout(inloop, 100);
+          clr = setTimeout(inloop, 125);
         })();
         //setTimeout(loop, 2500);
       })();
