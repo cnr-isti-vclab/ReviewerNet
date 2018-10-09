@@ -1168,7 +1168,7 @@ function setup_searchbars(){
         let /*fw = ((!authColor(item) && !authColor_r(item)) ||
                       (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",*/
                 col = "black",
-            fs = (authColor(item) || authColor_r(item)) ? "italic" : "normal";
+            fs = (authColor(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
