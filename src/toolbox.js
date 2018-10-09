@@ -192,7 +192,7 @@ function checkboxesInit(){
         }
     });
     checkboxC.on('click', function(){
-        if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
+        if(authsExclude.length > 0 || authsReview.length > 0){
             authorBars()
             authorGraph()
         }
