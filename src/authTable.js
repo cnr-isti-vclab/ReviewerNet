@@ -226,6 +226,18 @@ function printPapers(auths){
             .on("mouseout", handleMouseOutPB)
             .on("dblclick", function(d) {
                 addPaper(d)
+                popText.attr("width", 0)
+                    .attr("x", -5000)
+                    .attr("opacity", 0);
+                popRect.attr("x", -5000)
+                    .attr("width", 0)
+                    .attr("opacity", 0);
+                popTextAx.attr("width", 0)
+                    .attr("x", -5000)
+                    .attr("opacity", 0);
+                popRectAx.attr("x", -5000)
+                    .attr("width", 0)
+                    .attr("opacity", 0);
             })
     d3.select("#svgA"+ id_a).append("g").selectAll("circle")
             .data(last).enter()
@@ -290,20 +302,21 @@ function reset_ABG(){
             .style("font-size", "12px")
             .text(function (d){ return d.value })
             .style("font-style", function (d){ 
-                if( authColor(d) )
+                if( authColor(d) || authColor_r(d) )
                     return "italic"
             })
             .style("font-weight", function (d){ 
                 if(!authColor(d)) 
                    return "bold"; })
             .attr("fill",  function (d){
-                if(authColor_r(d))
-                    return "#db0000";
-                else if(authsReview.includes(d.id))
+                if(authsReview.includes(d.id))
                     return "#5263fe";
                 else if(authsExclude.includes(d.id))
                      return "#be27be"
-                else return "#474747";
+                else if(authColor_r(d))
+                    return "#db0000";
+                else if(authColor(d)) return "#474747";
+                else return "black;"
             })
     
         d3.selectAll(".authors-dot")
@@ -381,12 +394,15 @@ function authorBars(){
     
     $("#authTable").html("")
     
-    d3.select("#apn").text("A(P) = "+AP.length)
-     .append('tspan')
+    
+    //append_ico("#svgRT", anp_ico, 20, 65)
+    
+    
+    /* .append('tspan')
     .attr("class", "label-txtspan").attr("id", "anpn")
-      .attr("x", 5)
-      .attr('dy', 15)
-      .text("A(N(P)) = "+ANP.length)
+      .attr("x", 65)
+      .attr('dy', 30)
+      .text(ANP.length)*/
 
     
     
@@ -397,10 +413,11 @@ function authorBars(){
         var na = authsDef.length
         authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {
-            return -(a.score - b.score);
+            return -(a.score - b.score) == 0 ? a.value.localeCompare(b.value) : -(a.score - b.score);
         });
         idAs = []
         authsDef.map(function(el){idAs.push(el.id)})
+        d3.select("#apn").text(authsDef ? authsDef.length : 0)
         authTable.selectAll("tr")
             .data(authsDef)
             .enter().append("tr")

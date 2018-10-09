@@ -866,3 +866,12 @@ table#bnt-table td {
     height: 20px;
     width: auto;
 }
+
+.my-ico{
+    width: 40px;
+    height: 40px
+}
+.cmpClass {
+    transform: translateY(5%)scaleY(0.8);
+    
+}

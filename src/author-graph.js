@@ -86,6 +86,7 @@ function a_radius(d){
 function authorGraph() {
     co_authoring = extract_coauthoring()
     var a_nodes = authors.filter(auths_in_g_filter)
+     d3.select("#anpn").text(a_nodes ? a_nodes.length : 0)
     /*    
     console.log("nodes")
     console.log(a_nodes)

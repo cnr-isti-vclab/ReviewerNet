@@ -1,4 +1,8 @@
 var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
+    p_ico = "imgs/key1.png",
+    np_ico = "imgs/np.png",
+    a_ico = "imgs/omini.png",
+    anp_ico = "imgs/anp.png",
     loader_str = "<div class=\"loader text-center\"></div>",
     auths_in_g = new Set([]),
     start = true,
@@ -251,10 +255,10 @@ function addId(name, year){
       AP = []
       ANP = []
       papersCit[idP] = [[], []];
-
-      $("#papList").append("<li id=\""+"p"+idP+
-                           "\" class=\"paplist list-group-item pAuth\"><strong>"
-                           +idPs.length+".</strong> "+year+" "+name+"</li>")
+        
+        $("#papList").append("<li id=\""+"p"+idP+
+        "\" class=\"paplist list-group-item pAuth\"><strong>"
+         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -328,7 +332,8 @@ function str_match(matchers, t){
 }
 
 function deleteP(idCk){
-    var index = idPs.indexOf(idCk), idsT = [], lp = idPs.length-1;
+    $('#papList').html("")
+    var index = idPs.indexOf(idCk), idsT = [];
     AP = []
     ANP = []
     if (index > -1) {
@@ -336,8 +341,7 @@ function deleteP(idCk){
         maxInCits = 0       
         
         idPs.splice(index, 1);
-        idsT = idPs
-        
+        let idT = idPs
         var n = authors.length
         for (var i = 0; i < n; i++){
             authDict[authors[i].id][0]= 2019
@@ -345,17 +349,16 @@ function deleteP(idCk){
         }
             
         var pT = papersFiltered.filter(function (item){
-                return idsT.includes(item.id)})
-            
+                return idT.includes(item.id)})
         idPs = []
         papersFiltered = []
         papersPrint = []
         citPrint = []
         papersCit = {}
 
-        if(idsT.length > 0)
-            for(var i = 0; i < lp; i++){
-                var pap = pT[i];
+        if(idT.length > 0)
+            for(var i = 0; i < idT.length; i++){
+                var pap = pT.filter(function (item){return item.id === idT[i]})[0]
                 idP = pap.id
                 if(!addId(pap.value, pap.year)){
                   //updateYear(pap.year)
@@ -374,11 +377,11 @@ function deleteP(idCk){
 
 function setPapHandlers(){
     $(".inCits")
-        .on("click", addFromList)
+        .on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".outCits")
-        .on("click", addFromList)
+        .on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".authsPap")
@@ -392,10 +395,12 @@ function setMouseHandlers(){
         event.stopPropagation();
     })
     $("#authList")
+        .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
         .on("dblclick", "td", authDblc);
     $("#rauthList")
+        .on("click", addFromList)
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", r_authDblc);
@@ -756,6 +761,17 @@ function thetaPapFilter(item){
     return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
 }
 
+function append_ico(svgN, url, x, y){
+        var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
+        svgimg.setAttributeNS(null,'height','35');
+        svgimg.setAttributeNS(null,'width','35');
+        svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', url);
+        svgimg.setAttributeNS(null,'x',x);
+        svgimg.setAttributeNS(null,'y',y);
+        svgimg.setAttributeNS(null, 'opacity', '0.5');
+        $(svgN).append(svgimg);
+}
+
 function paperGraph(papers1, citations1, idPs, simulation) {
     simulation.stop()
     d3.select("#svgP").remove()
@@ -765,11 +781,11 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     svg.attr("y", "120")
     svg.attr("width", "100%")
     d3.select("#gP").attr("width", "100%")
-    
-    d3.select("#pn").text("P = "+idPs.length).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
-      .attr("x", 20)
-      .attr('dy', 15)
-      .text("N(P) = "+papersFiltered.length)
+    d3.select("#pn").text(idPs.length).attr("x", 65)
+      .attr('dy', 25).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 65)
+      .attr('dy', 30)
+      .text(papersFiltered.length)
     
     
     var link = svg.append("g")
@@ -815,7 +831,8 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
-            addPaper(d)
+            if(idPs.includes(d.id)) deleteP(d.id)
+                else addPaper(d)
         })
 
 
@@ -875,6 +892,7 @@ popRect = svgP.append("rect")
             .links(citations1);
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
     }
+    d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
 }
 
 //rgba( 223, 225, 225, 0.604 )
@@ -968,29 +986,35 @@ function dragended(d) {
 
 function add_labels(){
     //Paper Network
-    d3.select("#svgAxis").append("text").attr("class","area-labels").attr("id", "area-name-PN").text("Paper Network").attr("y", 50).attr("x", 20).attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    append_ico("#svgAxis", p_ico, 20, 55)
+    append_ico("#svgAxis", np_ico, 20, 85)
+    d3.select("#svgAxis").append("text").attr("class","area-labels").attr("id", "area-name-PN").text("Paper Network").attr("y", 50).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
     .append("tspan").attr("class", "label-txtspan")
         .attr("id", "pn")
-      .attr("x", 22)
-      .attr('dy', 20)
-      .text("P = 0")
+      .attr("x", 65)
+      .attr('dy', 25)
+      .text("0")
     .append('tspan').attr("class", "label-txtspan").attr("id", "npn")
-      .attr("x", 20)
-      .attr('dy', 15)
-      .text("N(P) = 0")
+      .attr("x", 65)
+      .attr('dy', 30)
+      .text("0")
     //Researcher Timeline
+    
     d3.select("#svgRT").append("text").attr("class","area-labels").attr("id", "area-name-RT").text("Researcher Timeline").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )").append("tspan").attr("class", "label-txtspan")
       .attr("id", "apn")
-        .attr("x", 5)
-      .attr('dy', 22)
-      .text("A = 0")
+      .attr("x", 65)
+      .attr('dy', 25)
+      .text("0")
+    append_ico("#svgRT", a_ico, 20, 30)
+    /**/
+    //Researcher Network
+    append_ico("#svgAG_names", anp_ico, 15, 35)
+    d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
     .append('tspan')
     .attr("class", "label-txtspan").attr("id", "anpn")
-      .attr("x", 5)
-      .attr('dy', 15)
-      .text("A(N(P)) = 0")
-    //Researcher Network
-    d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
+      .attr("x", 65)
+      .attr('dy', 30)
+      .text("0")
 }
 
 function replacement(sid, cal){
@@ -1011,6 +1035,7 @@ function replacement(sid, cal){
         }
         i++
     }
+     
     return found > 0 ? txt1 : txt;
 }
 
@@ -1027,9 +1052,11 @@ function print_rew(){
         cal.sort(function(a, b){return b[1]-a[1];})
         $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
     }
-    $(".replacement").on("dblclick", repl_click);
-    $(".replacement").on("mouseover", repl_over);
-    $(".replacement").on("mouseout", repl_out);
+    $(".replacement")
+        .on("click", repl_clk)
+        .on("dblclick", repl_click)
+        .on("mouseover", repl_over)
+        .on("mouseout", repl_out)
     
 }
 
@@ -1124,8 +1151,7 @@ function setup_searchbars(){
         let fw = ((!authColor(item) && !authColor_r(item)) ||
                       (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
                 col = "black",
-                fs = (authColor(item) && !(authsReview.includes(item.id) || 
-                    authsExclude.includes(item.id))) ? "italic" : "normal";
+            fs = (authColor(item) && authColor_r(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
