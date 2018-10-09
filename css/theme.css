@@ -832,7 +832,15 @@ table#bnt-table td {
     transform: translateX(1%)
 }
 
-#tutorial {
+#tutorial, #done_submit{
+	height: 25px;
+	/* padding: 5px; */
+	/* padding-right: 8px; */
+	width: 25px;
+	border-radius: 15px;
+}
+
+#done_submit{
 	height: 25px;
 	/* padding: 5px; */
 	/* padding-right: 8px; */
@@ -874,4 +882,8 @@ table#bnt-table td {
 .cmpClass {
     transform: translateY(5%)scaleY(0.8);
     
+}
+
+.hiddenSB{
+    background-color: lightgray
 }

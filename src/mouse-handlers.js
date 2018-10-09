@@ -709,10 +709,11 @@ function handlerMouseOverLinkAG(d){
         d3.selectAll(".aglink").style("opacity", 0.2)
 
         d3.select("#ag"+d.source.id)
-            .attr("r", 7)
+            .attr("r", function() {return $("#ag"+d.source.id)[0].r.baseVal.value  * 2.3})
             .style("opacity", 1)
         d3.select("#ag"+d.target.id)
-            .attr("r", 7).style("opacity", 1)
+            .attr("r", function() {return $("#ag"+d.target.id)[0].r.baseVal.value  * 2.3})
+            .style("opacity", 1)
         d3.select(this)
             .attr("stroke-width", 5).style("opacity", 1)
 

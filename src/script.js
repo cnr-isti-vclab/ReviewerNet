@@ -1103,6 +1103,7 @@ function setup_searchbars(){
     this.value=""
     });
     $('#rauthors-autocomplete').autocomplete({
+        disabled: true,
         open : function(){
             let d = $("#ui-id-1").height() + 25
             if(_docHeight-heightAG-100 < 160)
@@ -1160,7 +1161,7 @@ function setup_searchbars(){
                 .append( "<div style = \"color:"+col+"; font-style="+fs+"; font-weight:"+fw+";\">" + item.value+"</div>" )
                 .appendTo( ul );
     };
-    
+
     $('#authors-autocomplete').autocomplete({
         open : function(){
             let d = $("#ui-id-2").height() + 25
@@ -1206,7 +1207,8 @@ function setup_searchbars(){
         $('#authors-badge').html("")
             this.value = ""
         }
-    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+    })
+        .autocomplete( "instance" )._renderItem = function( ul, item ) {
         let fw = ((!authColor(item) && !authColor_r(item)) ||
                       (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
                 col = "black",
@@ -1228,6 +1230,7 @@ function setup_searchbars(){
     });
     
     $('#papers-autocomplete').autocomplete({
+        disabled: true,
         open : function(){
             let d = $("#ui-id-3").height() + 25
             if(_docHeight-heightAG-100 < 210)
@@ -1294,6 +1297,20 @@ function setup_searchbars(){
     $('.biginput').on("input", function(key){
         if(this.value.length < 3) 
             $(".badge").html("")
+    })
+    d3.selectAll(".hiddenSB").style("background-color", "lightgray")
+    $( "#rauthors-autocomplete" ).autocomplete( "option", "disabled", true );
+    $( "#papers-autocomplete" ).autocomplete( "option", "disabled", true );
+    $( "#done_submit").on("click", function(){
+        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+        else{
+            $( ".hiddenSB" ).autocomplete({disabled:false});
+            d3.selectAll(".hiddenSB").style("background-color", "white")
+            d3.select("#aform").style("width", "100%")
+            d3.select("#done_submit").remove()
+        }
+        
+    
     })
 }
 

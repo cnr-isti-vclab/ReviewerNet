@@ -198,10 +198,11 @@
                             <table>
                               <tr>
                                 <td class="td1">
-                                  <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Submitting Authors <span id="authors-badge"class="badge"></span> </a>
+                                  <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Submitting Authors <span id="authors-badge"class="badge"></span></a>
                                   </td>
                                 <td class ="td2">
-                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="authoSearchBar" class="biginput" id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                    <button id="done_submit" class="btn btn-default"><img id="hlp" src="imgs/done.png" alt="Done"></button>
+                                    <form id="aform" style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 ); width: 90%"><input name="authoSearchBar" class="biginput " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                               </tr>
                             </table>
@@ -216,10 +217,10 @@
                              <table>
                               <tr>
                                 <td class="td1">
-                                 <a id="review-a" title = "This area allows the user to serach for authors and elect them as candidate reviewers. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by double-clicking on it in the graphs." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Selected Reviewers<span id="rauthors-badge"class="badge"></span> </a>
+                                 <a id="review-a" title = "This area allows the user to serach for authors and elect them as candidate reviewers. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by double-clicking on it in the graphs." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Selected Reviewers<span id="rauthors-badge"class="badge"></span></a>
                                     </td>
                                 <td class ="td2">
-                            <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="rauthoSearchBar" class="biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                            <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                                  </tr>
                             </table>
@@ -237,7 +238,7 @@
                                   <a id="area-paper-a" title = "This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Key Papers<span id="area-paper-badge"class="badge"></span> </a>
                                   </td>
                                 <td class ="td2">
-                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class="biginput" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%"></form>
+                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
                                   </td>
                               </tr>
                             </table>  
