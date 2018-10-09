@@ -1306,11 +1306,9 @@ function setup_searchbars(){
         else{
             $( ".hiddenSB" ).autocomplete({disabled:false});
             d3.selectAll(".hiddenSB").style("background-color", "white")
-            d3.select("#aform").style("width", "100%")
-            d3.select("#done_submit").remove()
+            d3.select("#td1").style("font-size", "0.8em")
+            d3.select("#td2").remove()
         }
-        
-    
     })
 }
 
