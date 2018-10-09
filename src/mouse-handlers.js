@@ -55,18 +55,18 @@ function unclick_auth(d){
         .style("pointer", "cursor")
     d3.selectAll(".authlLine")
         .style('stroke',function (d){
-                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+/*                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".authNode")
         .attr('fill', function (d){
-                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
+/*                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
         .style("opacity", 1)
@@ -137,10 +137,10 @@ function reclick_auth(d){
     d3.selectAll(".aglink")
         .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && ($("#ag"+d1.source.id)[0].style.opacity ==1 && $("#ag"+d1.target.id)[0].style.opacity ==1 ) && checkThetaNC(d1.source, d1.target.id)) ?  1 : 0; })
     d3.selectAll(".authlLine")
-        .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+        .style('stroke', function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
         .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
     d3.selectAll(".authNode")
-        .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+        .attr("fill", function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
         .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
 //        d3.selectAll(".auth-name")
 //            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })   
@@ -220,10 +220,10 @@ function authClickHandler(d){
             return found ? 1: 0;
         })
         d3.selectAll(".authlLine")
-            .style('stroke', function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .style('stroke', function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
             .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
         d3.selectAll(".authNode")   
-            .attr("fill", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : "rgba( 251, 197, 125, 0.83 )"; })
+            .attr("fill", function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
             .style("opacity", function(d1){ 
                 if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
                     return 1;
@@ -381,20 +381,20 @@ function handlerMouseOutA(d){
    if(!click){ 
     reset_texts()
     //if(click) unclick_auth();
-    d3.select("#aa"+d.id).attr('fill', function (d){
+    d3.select("#aa"+d.id).attr('fill', function (d){/*
         if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
             return "rgba( 188, 188, 188, 0.454 )"
-        else
+        else*/
             return "rgba( 221, 167, 109, 0.342 )"
     })
 
    d3.select("#ag"+d.id)
         .attr("r", a_radius) 
     
-       d3.select("#aaline"+d.id).style('stroke',function (d){
+       d3.select("#aaline"+d.id).style('stroke',function (d){/*
                     if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
 
@@ -595,21 +595,20 @@ function handlerMouseOutAG(d){
         popRectA.attr("x", function(){return - 5000})
             .style('opacity',0)
         d3.select("#aa"+d.id).attr('fill', function (d){
-                
+                /*
                 if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
-        d3.select("#aaline"+d.id)            .style('stroke',function (d){
+        d3.select("#aaline"+d.id)            .style('stroke',function (d){/*
                     if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
         reset_texts()
-         d3.selectAll(".papersNode")
-            
+         d3.selectAll(".papersNode") 
             .attr("r", "6")
             .style("opacity", 1)
             .attr("stroke", function(d1){
@@ -838,9 +837,9 @@ function handleMouseOver(d){
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
+                else /*if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
         
@@ -866,9 +865,9 @@ function handleMouseOver(d){
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
                     return color_n(d.color);
-                else if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
+                else/* if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
     }
@@ -888,19 +887,19 @@ function handleMouseOut(d){
         d3.selectAll(".plink")
             .style("opacity", 0.8)
         d3.selectAll(".authNode")
-                        .attr('fill', function (d){
+                        .attr('fill', function (d){/*
                 
                 if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
         d3.selectAll(".authlLine")
             
-                       .style('stroke',function (d){
+                       .style('stroke',function (d){/*
                     if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
         
@@ -1246,19 +1245,19 @@ function ListMouseOut(event){
                     return color_n(d.color) 
                 }) 
             d3.selectAll(".authlLine")
-                .style('stroke',function (d){
+                .style('stroke',function (d){/*
                             if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                                 return "rgba( 188, 188, 188, 0.454 )"
-                            else
+                            else*/
                                 return "rgba( 221, 167, 109, 0.342 )"
                         })
                 .style("opacity", 1)
                 .style("pointer", "cursor")
             d3.selectAll(".authNode")
-                .attr('fill', function (d){
+                .attr('fill', function (d){/*
                         if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                             return "rgba( 188, 188, 188, 0.454 )"
-                        else
+                        else*/
                             return "rgba( 221, 167, 109, 0.342 )"
                     })
                 .style("opacity", 1)
@@ -1277,21 +1276,21 @@ function ListMouseOut(event){
            if(!click){     
     reset_texts()
     //if(click) unclick_auth();
-    d3.select("#aa"+idClick).attr('fill', function (d){
+    d3.select("#aa"+idClick).attr('fill', function (d){/*
                 
                 if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(idClick) || authsReview.includes(idClick) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
     
    d3.select("#ag"+idClick)
         
         .attr("r", a_radius) 
-    d3.select("#aaline"+idClick).style('stroke',function (d){
+    d3.select("#aaline"+idClick).style('stroke',function (d){/*
                     if(!(authsExclude.includes(idClick) || authsReview.includes(idClick)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
 
@@ -1378,6 +1377,21 @@ function authDblc(event){
     reset_texts()
     authorBars()
     authorGraph()
+    if(authsExclude.length == 0){
+        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
+        d3.select("#td1").style("font-size", "1em")
+        document.getElementById("td2").style.display = "inline";
+        $( ".hiddenSB" ).autocomplete({disabled:true});
+        $( "#done_submit").on("click", function(){
+            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+            else{
+                $( ".hiddenSB" ).autocomplete({disabled:false});
+                d3.selectAll(".hiddenSB").style("background-color", "white")
+                d3.select("#td1").style("font-size", "0.8em")
+                document.getElementById("td2").style.display = "none";
+            }
+        })
+    } 
     print_rew()
 }
 
@@ -1631,21 +1645,21 @@ function repl_out(event){
            if(!click){     
     reset_texts()
     //if(click) unclick_auth();
-    d3.select("#aa"+id2).attr('fill', function (d){
+    d3.select("#aa"+id2).attr('fill', function (d){/*
                 
                 if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(id2) || authsReview.includes(id2) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
     
    d3.select("#ag"+id2)
         
         .attr("r", a_radius) 
-    d3.select("#aaline"+id2).style('stroke',function (d){
+    d3.select("#aaline"+id2).style('stroke',function (d){/*
                     if(!(authsExclude.includes(id2) || authsReview.includes(id2)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
 

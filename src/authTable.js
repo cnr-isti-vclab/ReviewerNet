@@ -485,9 +485,9 @@ function authorBars(){
             })
             .attr('y2',15)
             .style('stroke',function (d){
-                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
+/*                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
-                    else
+                    else*/
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
             .style("z-index", "1")
@@ -513,10 +513,10 @@ function authorBars(){
             })
             .attr('height', "10px")
             .attr('fill', function (d){
- /*               console.log(d.value+" is "+(authsExclude.includes(d.id) || authsReview.includes(d.id)))*/
+ /*               console.log(d.value+" is "+(authsExclude.includes(d.id) || authsReview.includes(d.id)))
                 if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
                     return "rgba( 188, 188, 188, 0.454 )"
-                else
+                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
             .style("border-radius", "30px")
@@ -546,12 +546,12 @@ function authorBars(){
             .style("font-size", "12px")
             .text(function (d){ return d.value })
             .style("font-style", function (d){ 
-                if(authColor(d) && !(authsReview.includes(d.id) || authsExclude.includes(d.id)))
+                if(authColor(d) || authColor_r(d))
                     return "italic"
             })
-            .style("font-weight", function (d){ 
+/*            .style("font-weight", function (d){ 
                 if((!authColor(d) && !authColor_r(d)) ||(authsReview.includes(d.id) || authsExclude.includes(d.id)) ) 
-                   return "bold"; })
+                   return "bold"; })*/
             .attr("fill",  function (d){
 /*                if(authColor_r(d))
                     return "#db0000";
@@ -564,6 +564,7 @@ function authorBars(){
                 else if(authsExclude.includes(d.id)) return "#be27be";
                 else if(authColor_r(d)) return "gray";
                 else if(authColor(d)) return "#db0000";
+                else return "black"
             })
             .attr("x", function(d){
                  var plset = new Set(papersPrint), 

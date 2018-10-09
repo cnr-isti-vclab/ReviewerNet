@@ -7,7 +7,7 @@ var f = d3.forceManyBody()
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
         .style("width", "100%")
-        .attr("height", "450px")
+        .attr("height", "600px")
         .call(d3.zoom()
               .on("zoom", function () {
                 svgAG.attr("transform", d3.event.transform)
@@ -17,7 +17,7 @@ function getAGSvg(){
     
     svgAGn = d3.select("#svgAG_names")
         .style("width", "100%")
-        .attr("height", "450px")
+        .attr("height", "600px")
         
     popTextA = svgAGn.append("text")
         .attr("x", 0)             
@@ -134,12 +134,19 @@ function authorGraph() {
         .attr("id", function(d){return "ag"+d.id})
         .attr("r", a_radius)
         .attr("fill",  function (d){
-            if(authsReview.includes(d.id)) return "#5263fe";
+             if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id)) return "#be27be";
+            else if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
+            else if(authColor_r(d)) return "gray";
+            else if(authColor(d)) return "#db0000";
+            else return "black"
+            
+/*            if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id))return "#be27be";
             else if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
             else if(authColor_r(d)) return "rgba( 188, 188, 188, 0.954 )";
             else if(authColor(d)) return "#db0000";
-            else return "rgba( 221, 167, 109, 0.942 )";
+            else return "rgba( 221, 167, 109, 0.942 )";*/
             }
         )
         .call(d3.drag()

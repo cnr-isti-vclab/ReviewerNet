@@ -1028,15 +1028,59 @@ function replacement(sid, cal){
                 exclude = true;
         })
         if(!exclude){
+            let test_obj = authors.filter(function(el){return el.id === id_test })[0],
+                fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal",
+                name = test_obj.value;
             found++
-            let name = authors.filter(function(el){return el.id == id_test})[0].value;
             name = name.length > 17 ? name.substring(0, 17)+"..." : name;
-            txt1 += "<span class=\"replacement\" id=\"rep"+sid+"-"+id_test+"\"> "+name+" |</span>"
+            txt1 += "<span class=\"replacement\" id=\"rep"+sid+"-"+id_test+"\" style=\"font-style:"+fs+";\"> "+name+" |</span>"
         }
         i++
     }
      
     return found > 0 ? txt1 : txt;
+}
+
+function print_submitting(){
+    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
+    d3.select("#authList").selectAll("tr").remove()
+    if(aPrint.length > 4){
+        //id = \"authsPap\"
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"tr-submitting\">"
+        for(var j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (var i = 0; i < 4; i++){
+                 let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (var i = ia; i < aPrint.length; i++){
+                let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
+    }else{
+        
+        thehtml += "<tr class=\"tr-submitting\">"
+        for (var i = 0; i < aPrint.length; i++){
+            let test_obj = aPrint[i],
+                fs = (authColor_r(test_obj)) ? "italic" : "normal";
+        
+            thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+        }
+        thehtml += "</tr>"
+    }
+    $("#authList").append(thehtml);
 }
 
 function print_rew(){
@@ -1050,7 +1094,9 @@ function print_rew(){
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
+        
+        let fs = (authColor(suggestion)) ? "italic" : "normal";
+        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs+";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
     }
     $(".replacement")
         .on("click", repl_clk)
@@ -1058,38 +1104,8 @@ function print_rew(){
         .on("mouseover", repl_over)
         .on("mouseout", repl_out)
     
-}
-
-function print_submitting(){
-    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
-    d3.select("#authList").selectAll("tr").remove()
-    if(aPrint.length > 4){
-        //id = \"authsPap\"
-        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
-        thehtml += "<tr class=\"tr-submitting\">"
-        for(var j = 0; j < rspan; j++){
-            if (j!=0) thehtml += "<tr>"
-            for (var i = 0; i < 4; i++){
-                thehtml += "<td class=\"pAuthe pAuth\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
-                ia++
-            }
-            thehtml += "</tr>"
-        }
-        if(extra > 0){
-            thehtml += "<tr>"
-            for (var i = ia; i < aPrint.length; i++){
-                thehtml += "<td class =\"pAuthe pAuth\" id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
-            }
-            thehtml += "</tr>"
-        }
-    }else{
-        
-        thehtml += "<tr class=\"tr-submitting\">"
-        for (var i = 0; i < aPrint.length; i++)
-            thehtml += "<td class=\"pAuthe pAuth\" id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
-        thehtml += "</tr>"
-    }
-    $("#authList").append(thehtml);
+    print_submitting()
+    
 }
 
 function setup_searchbars(){
@@ -1145,20 +1161,21 @@ function setup_searchbars(){
                 authorGraph()
             }
         $('#rauthors-badge').html("")
-            this.value = ""
+         setTimeout(function(){$('#rauthors-autocomplete')[0].value = ""}, 200)
         }
     })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let fw = ((!authColor(item) && !authColor_r(item)) ||
-                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
+        let /*fw = ((!authColor(item) && !authColor_r(item)) ||
+                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",*/
                 col = "black",
-            fs = (authColor(item) && authColor_r(item)) ? "italic" : "normal";
+            fs = (authColor(item) || authColor_r(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
+            else if(authColor_r(d)) return "gray";
             
               return $( "<li>" )
-                .append( "<div style = \"color:"+col+"; font-style="+fs+"; font-weight:"+fw+";\">" + item.value+"</div>" )
+                .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )
                 .appendTo( ul );
     };
 
@@ -1190,7 +1207,6 @@ function setup_searchbars(){
                 add_labels()
                 start = false;
             }
-          this.value = null
           var isIn = false
           idA = suggestion.id
           var aName = suggestion.value
@@ -1205,24 +1221,10 @@ function setup_searchbars(){
                 print_submitting()
             }
         $('#authors-badge').html("")
-            this.value = ""
+            setTimeout(function(){$('#authors-autocomplete')[0].value = ""}, 200)
         }
     })
-        .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let fw = ((!authColor(item) && !authColor_r(item)) ||
-                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",
-                col = "black",
-                fs = (authColor(item) && !(authsReview.includes(item.id) || 
-                    authsExclude.includes(item.id))) ? "italic" : "normal";
-            if(authsReview.includes(item.id)) col = "#5263fe";
-            else if(authsExclude.includes(item.id)) col = "#be27be";
-            else if(authColor_r(item)) col =  "gray";
-            
-              return $( "<li>" )
-                .append( "<div style = \"color:"+col+"; font-style="+fs+"; font-weight:"+fw+";\">" + item.value+"</div>" )
-                .appendTo( ul );
-    };
-     
+
     $('.biginput').keypress(function(e) {
         if (e.keyCode === 13) {
             e.preventDefault()
@@ -1268,7 +1270,7 @@ function setup_searchbars(){
         },
         select: function (event, ui) {
             addPaper(ui.item)
-            this.value = ""
+            setTimeout(function(){$('#papers-autocomplete')[0].value = ""}, 200)
             $('#area-paper-badge').html("")
         }
       })
@@ -1307,7 +1309,7 @@ function setup_searchbars(){
             $( ".hiddenSB" ).autocomplete({disabled:false});
             d3.selectAll(".hiddenSB").style("background-color", "white")
             d3.select("#td1").style("font-size", "0.8em")
-            d3.select("#td2").remove()
+            document.getElementById("td2").style.display = "none";
         }
     })
 }
