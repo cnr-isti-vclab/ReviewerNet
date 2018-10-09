@@ -846,6 +846,7 @@ table#bnt-table td {
 	/* padding-right: 8px; */
 	width: 25px;
 	border-radius: 15px;
+    transform: translateX(40%)scale(0.8)
 }
 
 #tutorial-list {
