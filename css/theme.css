@@ -839,15 +839,15 @@ table#bnt-table td {
 	width: 25px;
 	border-radius: 15px;
 }
-
-#done_submit{
-	height: 25px;
+#done_submit {
+	height: 6%;
 	/* padding: 5px; */
 	/* padding-right: 8px; */
-	width: 25px;
-	border-radius: 15px;
-    transform: translateX(40%)scale(0.8)
+	width: 6%;
+	border-radius: 50%;
+	transform: translateX(40%)scale(0.8);
 }
+
 
 #tutorial-list {
 	width: 560px;
@@ -862,8 +862,8 @@ table#bnt-table td {
 }
 
 #hlp {
-    width: 20px;
-    height: 20px;
+    width: 100%;
+    height: 100%;
 }
 .tdp {
     transform: translateX(-15%);
