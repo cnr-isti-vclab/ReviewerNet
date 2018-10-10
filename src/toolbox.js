@@ -1,4 +1,4 @@
-var fS = "#ff433d", sS = "#ffffff", tS = "#248bda";
+var fS = "#ff433d", sS = "#ffffff", tS = "#248bda", last_val = 1; 
 /*
         color = d3.scaleLinear()
         .domain([0, 30, 100])
@@ -186,6 +186,10 @@ function checkboxesInit(){
 //        }
 //    });
     checkboxA.on('click', function(){
+        if(checkboxA[0].checked){
+            last_val = $( "#MNP" )[0].value;
+            $( "#MNP" ).spinner("value", last_val*2)
+        }else $( "#MNP" ).spinner("value", last_val)
         if(papersFiltered.length > 0){
             authorBars()
             authorGraph()
