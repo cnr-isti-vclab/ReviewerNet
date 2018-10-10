@@ -1090,7 +1090,7 @@ function print_rew(){
         let suggestion = authsReview_obj[i];
         let found = false, cal = [];
         for(var key in suggestion.coAuthList) {
-            if(!(authsExclude.includes(key) || authsReview.includes(key)))
+            if(!(authsExclude.includes(key) || authsReview.includes(key)) && idAs.includes(key))
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
