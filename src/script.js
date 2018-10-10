@@ -1172,7 +1172,7 @@ function setup_searchbars(){
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
-            else if(authColor_r(d)) return "gray";
+            else if(authColor_r(item)) return "#8d585a";
             
               return $( "<li>" )
                 .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )

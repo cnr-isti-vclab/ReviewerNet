@@ -110,14 +110,14 @@
                                 <button id="disableN">Filter<br>authors</button>
                             </td>
 -->
-                            <td rowspan="2" style="border:0px">
+                                <td rowspan="2" style="border:0px">
+                                <label for="lastYearOfP" title = "If enabled, a researcher is displayed in the RT and RN only if has published a paper in the last y years." class="pop-up gui-menu-item">Researcher<br>Freshness</label>
+                        <input id="lastYearOfP" class = "spinner" name="value">
+                                   <td rowspan="2" style="border:0px">
                                 <label for="C" title = "Two researchers are considered as co-authors if they have at least a paper in common published in the last n years" class="pop-up gui-menu-item">Co-authors<br>Expiration</label>
                                 <input id="C" class = "spinner" name="val">
 <!--                                <button id="disableC">Filter authors</button>-->
                             </td>
-                              <td rowspan="2" style="border:0px">
-                                <label for="lastYearOfP" title = "If enabled, a researcher is displayed in the RT and RN only if has published a paper in the last y years." class="pop-up gui-menu-item">Researcher<br>Freshness</label>
-                        <input id="lastYearOfP" class = "spinner" name="value">
 <!--                        <button id="disableY">Filter authors</button>-->
 
                             <!--<td>
@@ -125,6 +125,8 @@
                                 <input id="MNoC" class = "spinner" name="value">
                                 <button id="disableMNoC">Filter papers</button>
                             </td>-->
+                              
+                              
                                 <td class="tdp" style="border:0px;transform:translateX(-5%)">
                                 <input id = "cb-av" class="checkB" type="checkbox" value="false"><label class="checkbox-inline pop-up gui-menu-item" title="If enabled, all authors of all the visualized papers will be displayed. Can be computationally expansive.">Expand RT & RN</label> 
                             </td>

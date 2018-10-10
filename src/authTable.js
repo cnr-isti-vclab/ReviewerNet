@@ -366,7 +366,7 @@ function print_legend(txt_el){
         .attr("x", 10)
         .attr('dy', 15)
         .style("font-style", "italic")
-        .attr("fill", "#757575")
+        .attr("fill", "#8d585a")
         .text("Conflicted with reviewer")
     txt_el.append('tspan')
         .attr("class", "label-txtspanL")
@@ -549,9 +549,7 @@ function authorBars(){
                 if(authColor(d) || authColor_r(d))
                     return "italic"
             })
-/*            .style("font-weight", function (d){ 
-                if((!authColor(d) && !authColor_r(d)) ||(authsReview.includes(d.id) || authsExclude.includes(d.id)) ) 
-                   return "bold"; })*/
+            .style("font-weight", "bold")
             .attr("fill",  function (d){
 /*                if(authColor_r(d))
                     return "#db0000";
@@ -562,7 +560,7 @@ function authorBars(){
                 else return "#474747";*/
                 if(authsReview.includes(d.id)) return "#5263fe";
                 else if(authsExclude.includes(d.id)) return "#be27be";
-                else if(authColor_r(d)) return "gray";
+                else if(authColor_r(d)) return "#8d585a";
                 else if(authColor(d)) return "#db0000";
                 else return "black"
             })

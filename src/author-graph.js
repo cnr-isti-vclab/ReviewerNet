@@ -137,7 +137,7 @@ function authorGraph() {
              if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id)) return "#be27be";
             else if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
-            else if(authColor_r(d)) return "gray";
+            else if(authColor_r(d)) return "#8d585a";
             else if(authColor(d)) return "#db0000";
             else return "black"
             
