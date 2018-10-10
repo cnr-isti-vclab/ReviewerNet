@@ -292,7 +292,7 @@ function checkboxesInit(){
                 }
         });*/
     let spinnerMNP = $( "#MNP" ).spinner({
-            min: 0,
+            min: 1,
             disabled: false,
             suffix:"p",
             max: 20,
@@ -305,7 +305,7 @@ function checkboxesInit(){
             },
             change: function( event, ui ) {
                 this.value = this.value > 20 ? 20 : this.value;
-                this.value = this.value < 0 ? 0 : this.value;
+                this.value = this.value < 1 ? 1 : this.value;
                 thetaPap = this.value;
                 if(papersFiltered.length > 0){
                     authorBars()
