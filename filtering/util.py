@@ -25,8 +25,7 @@ journals = ['ACM Transactions on Graphics', 'ACM Trans. on Graph.','ACM Trans. G
             'ACM TOG','Computer Graphics Forum', 'Comp. Graph. Forum', \
             'IEEE Transactions on Visualization and Computer Graphics', \
             'IEEE Trans. Vis. Comput. Graph.', 'IEEE TVCG',\
-           'Comput. Graphics Forum', 'Comput. Graph. Forum', 'SIGGRAPH' \
-           'Visual Computer', 'Computer & Graphics','IEEE Visualization', \
+            'SIGGRAPH', 'Visual Computer', 'Computer & Graphics','IEEE Visualization', \
            'IEEE Computer Graphics & Applications', 'IEEE Comp Graph & Apps', 'IEEE CGA']
 
 def start():
@@ -232,10 +231,13 @@ def fuzzy_search(corpus_path, journals):
             v = p['venue']
             sv = 0
             sj = 0
-            if not(jn == ''):
-                sj = process.extractOne(jn, journals, scorer=fuzz.token_sort_ratio)[1]
-            if (not(v == '') and (sj < 80)):
-                sv = process.extractOne(v, journals, scorer=fuzz.token_sort_ratio)[1]
+            try:
+                if (p['year'] > 1994 and not(jn == '')):
+                    sj = process.extractOne(jn, journals, scorer=fuzz.token_sort_ratio)[1]
+                if (p['year'] > 1994 and not(v == '') and (sj < 80)):
+                    sv = process.extractOne(v, journals, scorer=fuzz.token_sort_ratio)[1]
+            except Exception:
+                continue;
             score = max(sv, sj)
             if score > 80:
                 scoreTot += score
@@ -248,11 +250,12 @@ def fuzzy_search(corpus_path, journals):
                 tm = time.asctime()
                 tm = tm.split(' ')
                 tm = tm[3]
-                print('['+tm+'] Processed '+str(perc)+'% - '+str(i)+' papers - ')
+                print('['+tm+'] Processed '+str(perc)+'% - '+str(i)+' papers - added '+str(add))
             i+=1
     avgScore = scoreTot/add 
     end()
     print('Average score: '+str(avgScore)+' - Passed: '+str(add))
+    return fuzzyP
 
 ############################
 #  authorsGraph functions  #
@@ -276,17 +279,18 @@ def authorsForSearchFile(path, authJson1):
 
 # function that updates an authorDict entry 
 # according to the employed model:
-# {id, value(name) , coAuthList : [idACo, #pubs, year], paperIdList, lastPub : [year, idP] },
-#           0              1                  0      1     2             3          0   1 
-def updateCoAuth(auths, idA, aL, year):
+# {id, value(name) , coAuthList : [idACo, #pubs, lastYear, [papList]], paperIdList, lastPub : [year, idP] },
+#           0              1                  0      1          2             2          3       0   1 
+def updateCoAuth(auths, idA, aL, year, id_shared_pap):
     for a in aL:
         if a != idA:
             if not(a in auths[idA][1]):
                 if a in auths:
                     #name = auths[a][0] [Redundancy removed:search for name by id]
-                    auths[idA][1][a]=[1, year]
+                    auths[idA][1][a]=[1, year, [id_shared_pap]]
             else:
                 auths[idA][1][a][0] += 1
+                auths[idA][1][a][2].append(id_shared_pap)
                 if auths[idA][1][a][1] < year:
                     auths[idA][1][a][1] = year
 
@@ -363,7 +367,7 @@ def authorsJSONObj(papers, authJson1):
         for ap in authors:   
             if ((len(ap['ids']) > 0) and (ap['ids'][0] in authJson1)):
                 idA = ap['ids'][0]
-                updateCoAuth(authJson1, idA, paperAuths, year)
+                updateCoAuth(authJson1, idA, paperAuths, year, idP)
                 authJson1[idA][2].append(idP)
                 if year > authJson1[idA][3][0]:
                     authJson1[idA][3] = [year, idP]
