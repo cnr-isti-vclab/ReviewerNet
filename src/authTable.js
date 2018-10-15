@@ -207,6 +207,9 @@ function printPapers(auths){
             .attr("cy", 15)
             .attr("r",function (d){
                 return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
+            .attr("id", function (d){
+                return "pb"+d.id;
+            })
             .attr("stroke", function(d){
                 if(idPs.includes(d.id))
                     return "#4238ff"
@@ -242,6 +245,9 @@ function printPapers(auths){
     d3.select("#svgA"+ id_a).append("g").selectAll("circle")
             .data(last).enter()
             .append("circle")
+             .attr("id", function (d){
+                return "pb"+d.id;
+            }) 
             .attr("class", "paper_in_bars p"+id_a)
             .attr("cx", function (d){
                 //console.log(d)
@@ -271,22 +277,15 @@ function printPapers(auths){
     }
 }
 
-function reset_ABG(){
+/*function reset_ABG(){
      d3.selectAll(".authlLine")
             .style('stroke',function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
                         return "rgba( 221, 167, 109, 0.342 )"
                 })
 
         
         d3.selectAll(".authNode")
-            .attr('fill', function (d){
-                if(authColor(d))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else
-                    return "rgba( 221, 167, 109, 0.342 )"
+            .attr('fill', function (d){return "rgba( 221, 167, 109, 0.342 )"
             })
             .style("border-radius", "30px")
             .style("stroke-width", function (d){
@@ -305,38 +304,27 @@ function reset_ABG(){
                 if( authColor(d) || authColor_r(d) )
                     return "italic"
             })
-            .style("font-weight", function (d){ 
-                if(!authColor(d)) 
-                   return "bold"; })
+            .style("font-weight", "bold")
             .attr("fill",  function (d){
-                if(authsReview.includes(d.id))
-                    return "#5263fe";
-                else if(authsExclude.includes(d.id))
-                     return "#be27be"
-                else if(authColor_r(d))
-                    return "#db0000";
-                else if(authColor(d)) return "#474747";
-                else return "black;"
+                if(authsReview.includes(d.id)) return "#5263fe";
+                else if(authsExclude.includes(d.id)) return "#be27be";
+                else if(authColor_r(d)) return "#8d585a";
+                else if(authColor(d)) return "#db0000";
+                else return "black"
             })
     
         d3.selectAll(".authors-dot")
         .attr("fill",  function (d){
-            if(!idAs.includes(d.id)) return "rgba( 119, 191, 188, 0.332 )";
-            else if(authColor_r(d)) return "#db0000";
-            else if(authColor(d)) return "rgba( 188, 188, 188, 0.954 )";
-            else if(authsReview.includes(d.id)) return "#5263fe";
-            else if(authsExclude.includes(d.id))return "#be27be";
-            else return "rgba( 221, 167, 109, 0.942 )";
-            }
-        )
-        /*
-            .on("click", authClickHandler)
-            .on("mouseover", handlerMouseOverA)
-            .on("mouseout", handlerMouseOutA)
-            .on("dblclick", author_dblclick_ABG)
-        */
-        //printPapers(authsDef)    
-}
+            if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id)) 
+                return "#be27be";
+            else if(!idAs.includes(d.id))
+                return "rgba( 153, 212, 234, 0.541 )";
+            else if(authColor_r(d)) return "#8d585a";
+            else if(authColor(d)) return "#db0000";
+            else return "black"
+        })
+}*/
 
 function print_legend(txt_el){
     d3.selectAll(".label-txtspanL").remove()
@@ -513,10 +501,6 @@ function authorBars(){
             })
             .attr('height', "10px")
             .attr('fill', function (d){
- /*               console.log(d.value+" is "+(authsExclude.includes(d.id) || authsReview.includes(d.id)))
-                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else*/
                     return "rgba( 221, 167, 109, 0.342 )"
             })
             .style("border-radius", "30px")

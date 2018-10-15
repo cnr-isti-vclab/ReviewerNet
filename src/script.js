@@ -255,10 +255,10 @@ function addId(name, year){
       AP = []
       ANP = []
       papersCit[idP] = [[], []];
-        
+        name = 
         $("#papList").append("<li id=\""+"p"+idP+
         "\" class=\"paplist list-group-item pAuth\"><strong>"
-         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
+         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -377,10 +377,12 @@ function deleteP(idCk){
 
 function setPapHandlers(){
     $(".inCits")
+        .on("click", clickHandler)
         .on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".outCits")
+        .on("click", clickHandler)
         .on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
@@ -409,8 +411,8 @@ function setMouseHandlers(){
             var idClick = event.target.id,
                 idClick = idClick.substring(1,idClick.length),
                 paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
-            $('#paperInfo').html(paperInfo(paper))
             setPapHandlers()
+            clickHandler(paper)
             
         })
         .on("mouseover", "li", ListMouseOver)
@@ -900,6 +902,10 @@ popRect = svgP.append("rect")
 function dragstarted(d) {
     //console.log("started")
     if(click) unclick_auth()
+    if(clickP)
+        d3.select("#p"+d.id)
+            .attr("r", 10)
+    //if(clickP) unclick_pap(clkPp)
   /*if (!d3.event.active) */simulation.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
   d.fx = d.x;
   d.fy = d.y;
@@ -1094,9 +1100,9 @@ function print_rew(){
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
-        
+        let name = suggestion.value//.replace(/[^\x00-\x7F]/g, "")
         let fs = (authColor(suggestion)) ? "italic" : "normal";
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs+";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+suggestion.value.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
+        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs+";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
     }
     $(".replacement")
         .on("click", repl_clk)

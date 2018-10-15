@@ -199,12 +199,15 @@ function authorGraph() {
     }
     d3.select("#svgAG").on("click", function(){
         if(click) unclick_auth(clkA);
+        if(clickP) unclick_pap(clkPp)
     })
     d3.select("#authTable").on("click", function(){
         if(click) unclick_auth(clkA);
+        if(clickP) unclick_pap(clkPp)
     })
     d3.select("#svgP").on("click", function(){
         if(click) unclick_auth(clkA);
+        if(clickP) unclick_pap(clkPp)
     })
     
 }
