@@ -137,18 +137,7 @@ function rankAuths(auths){
 function checkThetaNC(author, el){
     //check what variable betweet thataN/C set to 0 or its spinner value
     var l = author.coAuthList[el][1] ? author.coAuthList[el][1] : 1900;
-    if(checkboxTC.spinner( "option", "disabled" ) && checkboxTN.spinner( "option", "disabled" )){
-        return true;
-    }
-    else if(checkboxTC.spinner( "option", "disabled" ) && !checkboxTN.spinner( "option", "disabled" )
-      && author.coAuthList[el][2] && (thetaN == 0 || author.coAuthList[el][2].length >= thetaN)){
-        return true;
-    }
-    else if(!checkboxTC.spinner( "option", "disabled" ) && checkboxTN.spinner( "option", "disabled" )
-      && ((2018 - l) <= thetaC)){
-        return true;
-    }
-    else if((2018 - l) <= thetaC){
+    if((2018 - l) <= thetaC){
         if(thetaN == 0) return true;
         let count = 0, i = author.coAuthList[el][2].length-1, found = false;
         while( i >= 0 && !found ){
@@ -369,35 +358,13 @@ function authorBars(){
     //var authsDef = null;
     //authsFiltered = [];
     
-    authsDef = authors.filter(anpFilter_noc)
+    authsDef = authors.filter(anpFilter)
     idAs = []
-    authsDef.map(function(el){idAs.push(el.id)})
-    if(checkboxA[0].checked)
-        authsDef = authsDef.filter(anpFilter)
-    else
+    authsDef = authsDef.filter(thetaPapFilter)
+    if(!checkboxA[0].checked)
         authsDef = authsDef.filter(apFilter)
-    
-
-    //console.log(idAs)
-    
     $("#authTable").html("")
-    
-    
-    //append_ico("#svgRT", anp_ico, 20, 65)
-    
-    
-    /* .append('tspan')
-    .attr("class", "label-txtspan").attr("id", "anpn")
-      .attr("x", 65)
-      .attr('dy', 30)
-      .text(ANP.length)*/
-
-    
-    
     if(authsDef){
-        if(!checkboxTP.spinner( "option", "disabled" ))
-            authsDef = authsDef.filter(thetaPapFilter)
-        
         var na = authsDef.length
         authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {

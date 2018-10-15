@@ -987,6 +987,7 @@ function dragended(d) {
                     else
                         return "rgba( 221, 167, 109, 0.342 )"
         })
+    if(clickP) reclick_pap(clkPp)
     
 }
 
