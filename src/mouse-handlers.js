@@ -1049,8 +1049,8 @@ function handleMouseOver(d){
 }
 
 function handleMouseOut(d){
-
-    if(!click && !clickP){
+    
+    if(!click){
         d3.selectAll("#pb"+d.id)
             .attr("cy", 15)
             .attr("r",function (d1){return (idPs.includes(d1.id) || papersPrint.includes(d1.id)) ? 3: 2 })
