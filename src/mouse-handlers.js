@@ -444,11 +444,11 @@ function authClickHandler(d){
         })
         d3.selectAll(".authlLine")
             .style('stroke', function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 221, 167, 109, 0.642 )"; })
-            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
+            .style("opacity", function(d1){ return d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)) ?  1 : 0; })
         d3.selectAll(".authNode")   
             .attr("fill", function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 221, 167, 109, 0.642 )"; })
             .style("opacity", function(d1){ 
-                if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
+                if(d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id))){
                     return 1;
                 }
                 else{
@@ -459,7 +459,7 @@ function authClickHandler(d){
 //        d3.selectAll(".auth-name")
 //            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })   
                 d3.selectAll(".auth-name")
-            .style("opacity", function(d1){ if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
+            .style("opacity", function(d1){ if(d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id))){
                     return 1;
                 }else{
                     d3.selectAll(".p"+d1.id).style("opacity", 0)
@@ -1283,7 +1283,6 @@ function handleMouseOutPB(d){
     if(clickP) reclick_pap(clkPp)
 }
 
-
 function clickHandlerPB(d){
     //if(click) unclick_auth(clkA)
     //$('#paperInfo').html(paperInfo(d))
@@ -1630,10 +1629,16 @@ function authDblc(event){
         d3.select("#td1").style("font-size", "1em")
         document.getElementById("td2").style.display = "inline";
         $( ".hiddenSB" ).autocomplete({disabled:true});
+        $( ".hiddenSB" )[0].disabled = true;
+        $( ".hiddenSB" )[1].disabled = true;
+        $( "#export-btn" )[0].disabled = true;
         $( "#done_submit").on("click", function(){
             if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
             else{
                 $( ".hiddenSB" ).autocomplete({disabled:false});
+                $( ".hiddenSB" )[0].disabled = false;
+                $( ".hiddenSB" )[1].disabled = false;
+                $( "#export-btn" )[0].disabled = false;
                 d3.selectAll(".hiddenSB").style("background-color", "white")
                 d3.select("#td1").style("font-size", "0.8em")
                 document.getElementById("td2").style.display = "none";

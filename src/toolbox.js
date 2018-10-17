@@ -178,13 +178,6 @@ function colorMappingInit(){
 }
 
 function checkboxesInit(){
-//  
-//    authViz.addEventListener('change', function(){
-//        if(papersFiltered.length > 0){
-//            authorBars()
-//            authorGraph()
-//        }
-//    });
     checkboxA.on('click', function(){
         if(checkboxA[0].checked){
             last_val = $( "#MNP" )[0].value;
@@ -202,20 +195,11 @@ function checkboxesInit(){
         }
     });
     $(".tdp").css("padding", "0px")
-    $.widget( "ui.pcntspinner", $.ui.spinner, {
- 
-    _format: function( value ) { 
-        var suffix = this.options.suffix;
-        return value +" "+ suffix; 
-    },
-    
-});
     
     let spinnerY = $( "#lastYearOfP" ).spinner({
             min: 0,
             disabled: false,
             max: 20,
-            suffix:"y",
             spin: function( event, ui ) {
                     thetaY = ui.value;
                     if(papersFiltered.length > 0){
@@ -233,30 +217,8 @@ function checkboxesInit(){
                 }
             }
         });
-    let spinnerN = $( "#N" ).spinner({
-            min: 0,
-            disabled: false,
-            max: 50,
-            spin: function( event, ui ) {
-                    thetaN = ui.value;
-                    if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
-                    authorBars()
-                    authorGraph()
-                }
-            },
-            change: function( event, ui ) {
-                this.value = this.value > 50 ? 50 : this.value;
-                this.value = this.value < 0 ? 0 : this.value;
-                thetaN = this.value;
-                if(papersFiltered.length > 0 && authsExclude.length > 0 && authsReview.length > 0){
-                    authorBars()
-                    authorGraph()
-                }
-            }
-        });
     let spinnerC = $( "#C" ).spinner({
             min: 0,
-            suffix:"y",
             disabled: false,
             max: 20,
             spin: function( event, ui ) {
@@ -276,29 +238,9 @@ function checkboxesInit(){
                 }
             }
         });
-    
-   /* let spinnerMNoC = $( "#MNoC" ).spinner({
-            min: 0,
-            disabled: true,
-            max: 100,
-            spin: function( event, ui ) {
-                //console.log(ui.value)
-                thetaCit = ui.value;
-                if(papersFiltered.length>0)
-                    paperGraph(papersFiltered, citPrint, idPs, simulation)
-                },
-            change: function( event, ui ) {
-                this.value = this.value > 100 ? 100 : this.value;
-                this.value = this.value < 0 ? 0 : this.value;
-                thetaCit = this.value;
-                if(papersFiltered.length>0)
-                    paperGraph(papersFiltered, citPrint, idPs, simulation)
-                }
-        });*/
     let spinnerMNP = $( "#MNP" ).spinner({
             min: 1,
             disabled: false,
-            suffix:"p",
             max: 20,
             spin: function( event, ui ) {
                     thetaPap = ui.value;
@@ -317,91 +259,9 @@ function checkboxesInit(){
                 }
             }
         });
-    $( "#disableMNP" ).on( "click", function() {
-      if ( spinnerMNP.spinner( "option", "disabled" ) ) {
-        spinnerMNP.spinner( "enable" );
-        this.innerHTML = "Remove filter"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      } else {
-        spinnerMNP.spinner( "disable" );
-        this.innerHTML = "Filter auhtors"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      }
-    });
-    $( "#disableN" ).on( "click", function() {
-      if ( spinnerN.spinner( "option", "disabled" ) ) {
-        spinnerN.spinner( "enable" );
-        this.innerHTML = "Remove filter"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      } else {
-        spinnerN.spinner( "disable" );
-        this.innerHTML = "Filter auhtors"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      }
-    });
-    $( "#disableY" ).on( "click", function() {
-      if ( spinnerY.spinner( "option", "disabled" ) ) {
-        spinnerY.spinner( "enable" );
-        this.innerHTML = "Remove filter"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      } else {
-        spinnerY.spinner( "disable" );
-        this.innerHTML = "Filter auhtors"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      }
-    });
-    $( "#disableC" ).on( "click", function() {
-      if ( spinnerC.spinner( "option", "disabled" ) ) {
-        spinnerC.spinner( "enable" );
-        this.innerHTML = "Remove filter"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      } else {
-        spinnerC.spinner( "disable" );
-        this.innerHTML = "Filter auhtors"
-        if(papersFiltered.length > 0){
-            authorBars()
-            authorGraph()
-        }
-      }
-    });
-    $( "#disableMNoC" ).on( "click", function() {
-      if ( spinnerMNoC.spinner( "option", "disabled" ) ) {
-        spinnerMNoC.spinner( "enable" );
-          this.innerHTML = "Remove filter"
-        if(papersFiltered.length>0)
-            paperGraph(papersFiltered, citPrint, idPs, simulation)
-      } else {
-        spinnerMNoC.spinner( "disable" );
-        this.innerHTML = "Filter papers"
-        if(papersFiltered.length>0)
-            paperGraph(papersFiltered, citPrint, idPs, simulation)
-      }
-    });
-    $( "#N" ).spinner("value", 10)
+
     $( "#C" ).spinner("value", 12)
     $( "#lastYearOfP" ).spinner("value", 7)
-    $( "#MNoC" ).spinner("value", 8)
     $( "#MNP" ).spinner("value", 1)
     $( "button" ).button();
 }

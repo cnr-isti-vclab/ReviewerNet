@@ -1314,6 +1314,11 @@ function setup_searchbars(){
         if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
         else{
             $( ".hiddenSB" ).autocomplete({disabled:false});
+            $( ".hiddenSB" )[0].disabled = false;
+            $( ".hiddenSB" )[1].disabled = false;
+            console.log("BEFORE "+$( "#export-btn" )[0].disabled)
+            $( "#export-btn" )[0].disabled = false;
+            console.log("AFTER "+$( "#export-btn" )[0].disabled)
             d3.selectAll(".hiddenSB").style("background-color", "white")
             d3.select("#td1").style("font-size", "0.8em")
             document.getElementById("td2").style.display = "none";

@@ -91,9 +91,7 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        if(!checkboxTY.spinner( "option", "disabled" )){
-            exclude = (idAs.includes(d1.id) && authDict[d1.id][2] && ( 2018 - authDict[d1.id][2][authDict[d1.id][2].length - 1].year > thetaY )) ? true : false;
-        }
+        exclude = (authDict[d1.id][2] && ( 2018 - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) )) ? true : false;
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
     //console.log("Exclude "+exclude)
@@ -136,22 +134,8 @@ function rankAuths(auths){
 
 function checkThetaNC(author, el){
     //check what variable betweet thataN/C set to 0 or its spinner value
-    var l = author.coAuthList[el][1] ? author.coAuthList[el][1] : 1900;
-    if((2018 - l) <= thetaC){
-        if(thetaN == 0) return true;
-        let count = 0, i = author.coAuthList[el][2].length-1, found = false;
-        while( i >= 0 && !found ){
-            l = author.coAuthList[el][2][i].year;
-            count++
-            found = ((count == thetaN) || ((2018 - l) > thetaC)) ? true : false;
-            i = i-1;
-        }
-        return count == thetaN ? true : false;
-        //while((2018 - i) <  )
-        //for(var i = 0; i < l; i++){
-          //  author.coAuthList[el][2]
-        //}
-    }else return false;
+    var l = author.coAuthList[el][1] ? parseInt(author.coAuthList[el][1]) : 1900;
+    return ((2018 - l) <= parseInt(thetaC));
 }
 
 function authColor(author){
