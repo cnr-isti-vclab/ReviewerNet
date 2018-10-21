@@ -6,7 +6,7 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     loader_str = "<div class=\"loader text-center\"></div>",
     auths_in_g = new Set([]),
     start = true,
-    click = false, toolboxSvg = d3.select("#tb-svg"),
+    click = false, clickExp = false, stoolboxSvg = d3.select("#tb-svg"),
     authTable = d3.select("#authTable"),
     authors = [],
     AP = [],
@@ -197,6 +197,55 @@ function papNameConflict(d){
         .attr("y", y + 4)
         .attr("opacity", 1)
         .attr("fill", "#db0000"/*"#000000"*/)    
+}
+
+function export_session(){
+    d3.select("#export-list").selectAll("li").remove()
+    d3.select("#export-list").remove()
+    if(clickExp){
+        document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("svgAxis").style.visibility = "visible";
+        clickExp = false;
+    }else{
+        let title = (authsExclude.length > 0) ? "Session snapshot" : "Empty session, nothing to show"
+        document.getElementById("startMsg").innerHTML = ""
+        $("#startMsg").append("<span id=\"export-list\"><span>")
+
+        
+        document.getElementById("startMsg").style.visibility = "visible";
+        document.getElementById("svgAxis").style.visibility = "hidden";
+        clickExp = true;
+        $("#export-list").append("<span class=\"eli eli-title\"><br>"+title+"</span><hr>")
+        if(authsExclude.length == 0) return;
+        
+        
+        $("#export-list").append("<span class=\"eli eli-title1\">"+authsExclude.length+" Submitting authors:</span><br>")
+        let txt = ""
+        for (var i = 0; i < authsExclude_obj.length; i++)
+            txt += (i == authsExclude_obj.length-1) ? authsExclude_obj[i].value+"." : authsExclude_obj[i].value+", ";
+        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span><br>")
+
+        $("#export-list").append("<span class=\"eli eli-title1\">"+authsReview.length+" Selected Reviewers:</span><br>")
+        txt = ""
+        for (var i = 0; i < authsReview_obj.length; i++)
+            txt += (i == authsReview_obj.length-1) ? authsReview_obj[i].value+"." : authsReview_obj[i].value+", ";
+        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span><br>")
+        
+        $("#export-list").append("<span class=\"eli eli-title1\">"+idPs.length+" Key Papers:</span><br>")
+        
+        txt = ""
+        
+        var pT = papersFiltered.filter(function (item){
+                return idPs.includes(item.id)})
+
+        for(var i = 0; i < idPs.length; i++){
+                var pap = pT.filter(function (item){return item.id === idPs[i]})[0]
+                txt += (i == idPs.length-1) ? pap.year+", "+pap.value+"." : pap.year+", "+pap.value+"<br>";
+                
+            }
+        
+        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span>")
+    }
 }
 
 function isCoAuth(item){ }
@@ -1324,6 +1373,7 @@ function setup_searchbars(){
             document.getElementById("td2").style.display = "none";
         }
     })
+    $( "#export-btn").on("click", export_session)
 }
 
 $(function (){

@@ -502,8 +502,8 @@ footer {
 	height: inherit;
 	overflow-y: hidden;
 	overflow-x: hidden;
-	width: 95%;
-    height: auto;
+	width: 100%;
+    height: 100%;
 	padding: 3px;
 }
 
@@ -526,6 +526,7 @@ hr {
     float: right;
     position: absolute;
     background-color: rgba( 78, 89, 136, 0.298 );
+    transform:  translateY(10%)scale(0.8);
 }
 
 .col-sm-8 {
@@ -846,6 +847,7 @@ table#bnt-table td {
 	/* padding-right: 8px; */
 	width: 25px;
 	border-radius: 15px;
+    float: rightS
 }
 .done_submit {
 	height: 6%;
@@ -853,7 +855,7 @@ table#bnt-table td {
 	/* padding-right: 8px; */
 	width: 6%;
 	border-radius: 50%;
-	transform: translateX(40%)scale(0.8);
+	transform: translate(45%, 45%)scale(0.8);
 }
 
 
@@ -862,12 +864,39 @@ table#bnt-table td {
     background-color: #efefef;
 }
 
+#export-list {
+    position: absolute;
+	width: 100%;
+    height: 100%;
+    background-color: #efefef;
+}
+
 .tli{
     width: inherit;
-    padding: 10px;
     text-align: left;
     background-color: inherit
 }
+
+.eli{
+    width: inherit;
+    text-align: left;
+    background-color: inherit
+}
+
+.eli-title{
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.eli-title1{
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.eli-item{
+    font-size: 0.8em;
+}
+
 
 .done-btn {
     width: 100%;
@@ -899,5 +928,22 @@ table#bnt-table td {
 
 #export-btn{
     border-width: 0;
+    height: 95%;
+	/* padding: 5px; */
+	/* padding-right: 8px; */
+	width: 95%;
     
+}
+
+#export_dropup{
+    position: relative;
+	float: left;
+    transform: translate(90%, 60%)scale(0.9);
+}
+
+.aform{
+    margin: 0; 
+    background-color: rgba( 0, 0, 0, 0 ); 
+    width: 90%;
+    float: right
 }
