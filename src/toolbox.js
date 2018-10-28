@@ -28,8 +28,9 @@ function setup_popups(){
             event.stopPropagation()},
         resizeStop: function( event, ui ) {
             resize_modal = false
-            d3.selectAll( ".my-dialog" ).style("width", "99%")
-            event.stopPropagation()}
+            d3.selectAll( this ).style("width", "97%").style("height", "93%")
+            event.stopPropagation()
+        }
     })
     
     $( "#tutorial" ).on( "click", function() {
