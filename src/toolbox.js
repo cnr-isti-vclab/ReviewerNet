@@ -20,16 +20,11 @@ function setup_popups(){
         maxWidth: 800,
         width: 400,
         height: 400,
-        resize: function( event, ui ) {
-            //d3.selectAll( ".my-dialog" ).style("width", "99%")
-            event.stopPropagation()},
         resizeStart: function( event, ui ) {
-            resize_modal = true
-            event.stopPropagation()},
+            resize_modal = true;
+            },
         resizeStop: function( event, ui ) {
-            resize_modal = false
-            d3.selectAll( this ).style("width", "97%").style("height", "93%")
-            event.stopPropagation()
+            resize_modal = false;
         }
     })
     

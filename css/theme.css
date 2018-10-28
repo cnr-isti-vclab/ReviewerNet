@@ -871,9 +871,8 @@ table#bnt-table td {
 
 
 .my-dialog {
-    max-width: inherit;
-    max-height: inherit;
-    height: inherit;
+    max-height: 600;
+    max-width: 800;
     overflow-y: auto;
     
 }
