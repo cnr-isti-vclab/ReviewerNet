@@ -87,6 +87,7 @@ function author_dblclick_ABG(d){
     popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
      d3.event.stopPropagation()
+    refresh_export()
 }
 
 function unclick_auth(d){
@@ -143,6 +144,8 @@ function unclick_auth(d){
     d3.selectAll(".auth-name")
         .style("opacity", 1)
     d3.selectAll(".paper_in_bars").style("opacity", 1).style("cursor","pointer")
+    
+    un_highlight_auth(d.id)
 }
 
 function unclick_pap(d){
@@ -1583,7 +1586,9 @@ function papDblc(event){
         .style("opacity", "0")
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
+    
     deleteP(idClick)
+    refresh_export()
     document.getElementsByClassName("td2title").innerHTML = ""
 }
 
@@ -1646,6 +1651,7 @@ function authDblc(event){
         })
     } 
     print_rew()
+    refresh_export()
 }
 
 function r_authDblc(event){
@@ -1664,7 +1670,6 @@ function r_authDblc(event){
         
         .style("opacity", 1)
     d3.selectAll(".papersNode")
-        
         .attr("r", "6")
         .style("opacity", 1)
         .attr("stroke", function(d1){
@@ -1687,6 +1692,7 @@ function r_authDblc(event){
     authorGraph()
     if(authsReview.length > 0)
         print_rew()
+    refresh_export()
 }
 
 function repl_clk(event){
@@ -1737,7 +1743,9 @@ function repl_click(event){
     authorBars()
     authorGraph()
     if(authsReview.length > 0)
-        print_rew()}
+        print_rew()
+    refresh_export()
+    }
     event.stopPropagation()
 }
 

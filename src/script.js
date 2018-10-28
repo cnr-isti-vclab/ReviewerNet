@@ -8,11 +8,12 @@ var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  fal
     start = true,
     click = false, clickExp = false, stoolboxSvg = d3.select("#tb-svg"),
     authTable = d3.select("#authTable"),
-    authors = [],
+    authors = [], resize_modal = false,
     AP = [],
     ANP = [],
     lines = [],
-    authsReview = [], authsReview_obj = [], idA_rev,
+    authsReview = [], authsReview_obj = [], idA_rev, revDict = {},//id_rev: [[ida1, namea1]...]
+    altRev = [], altRev_obj = [],
     authsExclude = [], authsExclude_obj = [],
     authsDef = [],
     papers = [],
@@ -199,55 +200,6 @@ function papNameConflict(d){
         .attr("fill", "#db0000"/*"#000000"*/)    
 }
 
-function export_session(){
-    d3.select("#export-list").selectAll("li").remove()
-    d3.select("#export-list").remove()
-    if(clickExp){
-        document.getElementById("startMsg").style.visibility = "hidden";
-        document.getElementById("svgAxis").style.visibility = "visible";
-        clickExp = false;
-    }else{
-        let title = (authsExclude.length > 0) ? "Session snapshot" : "Empty session, nothing to show"
-        document.getElementById("startMsg").innerHTML = ""
-        $("#startMsg").append("<span id=\"export-list\"><span>")
-
-        
-        document.getElementById("startMsg").style.visibility = "visible";
-        document.getElementById("svgAxis").style.visibility = "hidden";
-        clickExp = true;
-        $("#export-list").append("<span class=\"eli eli-title\"><br>"+title+"</span><hr>")
-        if(authsExclude.length == 0) return;
-        
-        
-        $("#export-list").append("<span class=\"eli eli-title1\">"+authsExclude.length+" Submitting authors:</span><br>")
-        let txt = ""
-        for (var i = 0; i < authsExclude_obj.length; i++)
-            txt += (i == authsExclude_obj.length-1) ? authsExclude_obj[i].value+"." : authsExclude_obj[i].value+", ";
-        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span><br>")
-
-        $("#export-list").append("<span class=\"eli eli-title1\">"+authsReview.length+" Selected Reviewers:</span><br>")
-        txt = ""
-        for (var i = 0; i < authsReview_obj.length; i++)
-            txt += (i == authsReview_obj.length-1) ? authsReview_obj[i].value+"." : authsReview_obj[i].value+", ";
-        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span><br>")
-        
-        $("#export-list").append("<span class=\"eli eli-title1\">"+idPs.length+" Key Papers:</span><br>")
-        
-        txt = ""
-        
-        var pT = papersFiltered.filter(function (item){
-                return idPs.includes(item.id)})
-
-        for(var i = 0; i < idPs.length; i++){
-                var pap = pT.filter(function (item){return item.id === idPs[i]})[0]
-                txt += (i == idPs.length-1) ? pap.year+", "+pap.value+"." : pap.year+", "+pap.value+"<br>";
-                
-            }
-        
-        $("#export-list").append("<span class=\"eli eli-item\">"+txt+"</span>")
-    }
-}
-
 function isCoAuth(item){ }
 
 function isInCited(item){ return inC.includes(item.id)}
@@ -299,6 +251,7 @@ function addId(name, year){
       isIn = true
     }
     else{
+        
       idPs[idPs.length] = idP
       papersPrint.push(idP)        
       AP = []
@@ -322,6 +275,7 @@ function addId(name, year){
       updateColor()
       getAP()
       getANP()
+      refresh_export()
     }
     
     return isIn
@@ -364,9 +318,11 @@ function getAuths() {
                 authors[i]=a[i]
                 authDict[a[i].id] = [2019, 1900, []]
             }
-            document.getElementById("loading").innerHTML = papers.length+" papers<br>"+
-            citations.length+" citations<br>"+
-            authors.length+" authors successfully loaded.<br><hr>Click to start using the <span style=\"color:#1584c0\">Computer Graphics instance of SemanticBrowser.org</span> that includes all articles since 1995 from:<br><br>ACM Transactions on Graphics, Computer Graphics Forum, IEEE Transactions on Visualization and Computer Graphics,<br> SIGGRAPH, Visual Computer, Computer & Graphics, IEEE Visualization, IEEE Computer Graphics & Applications.<br><br>SemanticBrowser can be built over any subset of papers from <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a>." 
+            init_txt = "<br><br>ReviewerNet helps journal editors and programme committee members selecting reviewers. Its intuition is that the authors of relevant papers are good candidate reviewers;<br>The main idea is using visual representations of citation and co-authorship relations to support the decision making process.<br>ReviewerNet ensures both goodness (maximization of the reviewer expertise) and fairness (minimization of the conflict of interest).<br>ReviewerNet builds on a reference database including papers, authors and citations from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Research Corpus.<br><br>ReviewerNet can be built over different datasets, according to the domain of interest.<br>Click to start a platform demonstration in the field of Computer Graphics. The reference dataset contains data ("+papers.length+" papers, "+
+            citations.length+" citations, "+authors.length+" authors) from eight sources<br>(ACM Transactions on Graphics, Computer Graphics and Applications, Computer Graphics Forum, Computers & Graphics, IEEE Transactions on Visualization and Computer Graphics, Visual Computer, Proceedings of IEEE Conference Visualization pre 2006, Proceedings of ACM SIGGRAPH pre 2003), spanning the years in-between 1995 and 2018."
+
+    
+            document.getElementById("loading").innerHTML = init_txt 
             d3.select("#loading").style("pointer-events", "all")
             d3.select("#loading").on("click", start_click_handler);
         })
@@ -1084,10 +1040,15 @@ function replacement(sid, cal){
                 exclude = true;
         })
         if(!exclude){
-            let test_obj = authors.filter(function(el){return el.id === id_test })[0],
+            let test_obj = authsDef.filter(function(el){return el.id === id_test })[0],
                 fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal",
                 name = test_obj.value;
             found++
+            if(!revDict[sid])
+                revDict[sid] = []
+            revDict[sid].push([id_test, name])
+            altRev.push(id_test)
+            altRev_obj.push(test_obj);
             name = name.length > 17 ? name.substring(0, 17)+"..." : name;
             txt1 += "<span class=\"replacement\" id=\"rep"+sid+"-"+id_test+"\" style=\"font-style:"+fs+";\"> "+name+" |</span>"
         }
@@ -1141,6 +1102,9 @@ function print_submitting(){
 
 function print_rew(){
     $('#rauthList').html("")
+    revDict = {}
+    altRev = []
+    altRev_obj = []
     var al = authsReview_obj.length;
     for(var i = 0; i < al; i++){
         let suggestion = authsReview_obj[i];
@@ -1185,7 +1149,7 @@ function setup_searchbars(){
         minLength: 3,
         showNoSuggestionNotice: true,
         response: function(event, ui){
-            ui.content.sort(function (a, b) {return a.value >= b.value;});
+            ui.content.sort(function (a, b) {return a.value.localeCompare(b.value);});
             $('#rauthors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
@@ -1215,6 +1179,7 @@ function setup_searchbars(){
                 authsReview_obj.push(suggestion)
                 authorBars()
                 authorGraph()
+                refresh_export()
             }
         $('#rauthors-badge').html("")
          setTimeout(function(){$('#rauthors-autocomplete')[0].value = ""}, 200)
@@ -1244,7 +1209,7 @@ function setup_searchbars(){
         source: authors,
         minLength: 3,
         response: function(event, ui){
-            ui.content.sort(function (a, b) {return a.value >= b.value;});
+            ui.content.sort(function (a, b) {return a.value.localeCompare(b.value);})
             $('#authors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
@@ -1365,9 +1330,6 @@ function setup_searchbars(){
             $( ".hiddenSB" ).autocomplete({disabled:false});
             $( ".hiddenSB" )[0].disabled = false;
             $( ".hiddenSB" )[1].disabled = false;
-            console.log("BEFORE "+$( "#export-btn" )[0].disabled)
-            $( "#export-btn" )[0].disabled = false;
-            console.log("AFTER "+$( "#export-btn" )[0].disabled)
             d3.selectAll(".hiddenSB").style("background-color", "white")
             d3.select("#td1").style("font-size", "0.8em")
             document.getElementById("td2").style.display = "none";
@@ -1451,34 +1413,35 @@ $(function (){
 
     window.onresize = function(e) {
         
-        
-        width = $("#aut_table").width()
-        _docHeight = document.documentElement.clientHeight - 30
-        height = document.documentElement.clientHeight - 30
+        if(!resize_modal){
+            width = $("#aut_table").width()
+            _docHeight = document.documentElement.clientHeight - 30
+            height = document.documentElement.clientHeight - 30
 
-        w = width
-        h = height
-        heightA = document.getElementById('aut_table').clientHeight    
-        let newH = _docHeight - heightA;
-        document.getElementById('row21').style.height = newH.toString()+"px";
+            w = width
+            h = height
+            heightA = document.getElementById('aut_table').clientHeight    
+            let newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
 
-        
-        newH = _docHeight - heightAG;
-        document.getElementById('row22').style.height = newH.toString()+"px";
-        d3.select("#main-span").attr("dy",function(){
-            return heightA-100}) 
 
-         if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
-            updateWidth()
-             simulationA.stop()
-             paperGraph(papersFiltered, citPrint, idPs, simulation)
-                setTimeout(function(){ 
-                    simulation.stop()
-                }, 1000);
-             authorBars()
-                //authorGraph()
-            }
-        oldw = width
+            newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            d3.select("#main-span").attr("dy",function(){
+                return heightA-100}) 
+
+             if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
+                updateWidth()
+                 simulationA.stop()
+                 paperGraph(papersFiltered, citPrint, idPs, simulation)
+                    setTimeout(function(){ 
+                        simulation.stop()
+                    }, 1000);
+                 authorBars()
+                    //authorGraph()
+                }
+            oldw = width
+        }
     }
     document.getElementById("svgAxis").style.visibility = "visible";
     

@@ -99,7 +99,7 @@
                         <table id = "bnt-table" class="table table-condensed" style="border:0px">
                           <tr>
                             <td rowspan="2" style="border:0px" >
-                                <label class=" pop-up gui-menu-item" title = "It's minimum number of authored papers in the PN for a researcher to be included in the RT and the RN." for="MNP">Productivity<br> Threshold</label>
+                                <label class=" pop-up gui-menu-item" title = "The minimum number of authored papers in the Paper Network." for="MNP">Productivity<br> Threshold</label>
                                 <input id="MNP" class = "spinner" name="value">
 <!--                                <button id="disableMNP">Filter authors</button>-->
                             </td>
@@ -111,10 +111,10 @@
                             </td>
 -->
                                 <td rowspan="2" style="border:0px">
-                                <label for="lastYearOfP" title = "If enabled, a researcher is displayed in the RT and RN only if has published a paper in the last y years." class="pop-up gui-menu-item">Researcher<br>Freshness</label>
+                                <label for="lastYearOfP" title = "The maximum number of years since the last authored paper in the database" class="pop-up gui-menu-item">Researcher<br>Freshness</label>
                         <input id="lastYearOfP" class = "spinner" name="value">
                                    <td rowspan="2" style="border:0px">
-                                <label for="C" title = "Two researchers are considered as co-authors if they have at least a paper in common published in the last n years" class="pop-up gui-menu-item">Co-authors<br>Expiration</label>
+                                <label for="C" title = "the maximum number of years since the last co-authored paper in the database." class="pop-up gui-menu-item">Co-authors<br>Expiration</label>
                                 <input id="C" class = "spinner" name="val">
 <!--                                <button id="disableC">Filter authors</button>-->
                             </td>
@@ -223,6 +223,8 @@
                                     </td>
                                 <td class ="td2 button-bar">
                                     <div id="export_dropup" class="done_submit">
+                                     <div id="export-dialog" title="Session Snapshot"  class = "my-dialog">
+                                    </div>
                                     <button id ="export-btn" type="button"><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
                                     </div>
                             <form class="aform">
@@ -285,29 +287,38 @@
     <footer class="text-center" id = "my-foot">
      <table style="width:100%; height: 100%">
       <tr>
-          <td>
-          <div class="dropup">
-            <button id="tutorial" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
-            <ul id="tutorial-list" class="dropdown-menu">
-              <li class="tli">The user can search for papers and build its own cluster of interesting papers including in and out-citations. Above the paper graph the one referred to the authors is displayed. With this tool we hope to simplify the <strong>process of choosing reviewers</strong> that know well a subject but are not conflicted with the authors of the paper under scrutiny.</li>
-            </ul>
-          </div>
+          <td>        
+              <div id="tutorial-dialog" title="Tutorial"  class = "my-dialog" syle="width: 99%;">
+                  To look for your reviewers:
+                  <ul id="tutorial-list">
+                    <li> input the names of the authors of the submitted paper in the ‘Submitting Authors’ field, and click on the ‘Done’ net to the searchbar;</li>
+                    <li> build your Paper Network: the intuition is that the authors of relevant papers are good candidate reviewers. Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic, and input their titles in the ‘Key papers’ field; then, expand the network by selecting interesting nodes, i.e. papers you deem relevant to the topic of the submission, on a mouse double click;</li>
+                    <li> continue until you feel the selected papers and their citations offer a good coverage of the literature about the topic at hand; while you create the Paper Network, ReviewerNet automatically builds for you the Researcher Timeline, visualizing the academic career of the authors of selected key papers, and the Researcher Network, a graph visualization of co-authorship relations among the researchers in the timeline;</li>
+                    <li> explore the Researcher Timeline to assess the suitability of candidate reviewers: check topic coverage, stage of career, production over years etc.; visual cues (color, font) will help you to tell apart candidate reviewers from conflicting researchers;</li>
+                    <li> analyse the Researcher Network and find sets of independent reviewers, thanks to the the visualization of network of collaborators;</li>
+                    <li> once you identified one or more candidate reviewers who fit your requirements, input their names in the ‘Selected Reviewers’ field;</li>
+                    <li> download your list of reviewers; ReviewerNet will also add a list of potential substitute reviewers, in case of decline.
+                    </ul>
+                For further information, refer to the paper XXXX and the accompanying video YYY
+                </div>
+            <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
           </td>
-        <td>
-      <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">Semantic Browser </span> 
-    </td>
-        <td>
-      <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Computer Graphics instance: ACM TOG, CGF, IEEE TVCG, SIGGRAPH, Visual Computer, CG, IEEE Vis, IEEE CGA </span> 
-    </td>
-          <td>
-        <a class="links" href="http://labs.semanticscholar.org/corpus/" style="height: 9px; color: #275d58; font-style: oblique; font-size: 0.7em">data courtesy of semanticScholar </a><a class="links" href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique;"><img class = "links" id="ghl" src="imgs/gh.png" alt="(about)"></a>
-          </td>
+            <td>
+              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">Semantic Browser </span> 
+            </td>
+                <td>
+              <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Computer Graphics instance: ACM TOG, CGF, IEEE TVCG, SIGGRAPH, Visual Computer, CG, IEEE Vis, IEEE CGA </span> 
+            </td>
+                  <td>
+                <a class="links" href="http://labs.semanticscholar.org/corpus/" style="height: 9px; color: #275d58; font-style: oblique; font-size: 0.7em">data courtesy of semanticScholar </a><a class="links" href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique;"><img class = "links" id="ghl" src="imgs/gh.png" alt="(about)"></a>
+              </td>
       </tr>
     </table> 
     </footer>   
 </div>
 <script src="src\author-graph.js"> //rgba( 71, 66, 66, 0 )</script>
 <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
+<script src="src\export.js"> //rgba( 71, 66, 66, 0 )</script>
 <script src="src\authTable.js"></script>
 <script src="src\mouse-handlers.js"></script>
 <script src="src\toolbox.js"></script>

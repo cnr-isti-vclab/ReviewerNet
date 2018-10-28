@@ -11,6 +11,32 @@ function setup_popups(){
         effect: "slideDown",
         delay: 50
       }
+    });      
+    $( ".my-dialog" ).dialog({
+        autoOpen: false,
+        minWidth: 200,
+        minHeight: 200,
+        maxHeight: 600,
+        maxWidth: 800,
+        width: 400,
+        height: 400,
+        resize: function( event, ui ) {
+            //d3.selectAll( ".my-dialog" ).style("width", "99%")
+            event.stopPropagation()},
+        resizeStart: function( event, ui ) {
+            resize_modal = true
+            event.stopPropagation()},
+        resizeStop: function( event, ui ) {
+            resize_modal = false
+            d3.selectAll( ".my-dialog" ).style("width", "99%")
+            event.stopPropagation()}
+    })
+    
+    $( "#tutorial" ).on( "click", function() {
+        if( $( "#tutorial-dialog" ).dialog( "isOpen" ))
+            $( "#tutorial-dialog" ).dialog( "close" );
+        else 
+            $( "#tutorial-dialog" ).dialog( "open" );
     });
 }
 

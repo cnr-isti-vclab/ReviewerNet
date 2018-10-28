@@ -11,6 +11,17 @@
     cursor: help
 }
 
+.ui-button-icon-only .ui-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -8px;
+	margin-left: -9px;
+}
+
+.ui-icon {
+	width: 18px;
+}
 .ui-resizable-handle{
     background-color: rgba( 111, 115, 118, 0.15);
     height: 2.5px;
@@ -51,7 +62,7 @@
 }
 
 .ui-icon{
-    width: 10px;
+    width: 18px;
     height: 15px;
     padding: 0px;
 }
@@ -859,10 +870,14 @@ table#bnt-table td {
 }
 
 
-#tutorial-list {
-	width: 560px;
-    background-color: #efefef;
+.my-dialog {
+    max-width: 700px;
+    max-height: 400px;
+    height: inherit;
+    overflow-y: auto;
+    
 }
+
 
 #export-list {
     position: absolute;
@@ -890,11 +905,25 @@ table#bnt-table td {
 
 .eli-title1{
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 1em;
 }
 
 .eli-item{
+    font-size: 0.9em;
+}
+
+.eli-alt{
+    font-size: 0.77em;
+    font-style: italic;
+}
+
+
+.eli-autp{
     font-size: 0.8em;
+}
+
+.eli-pap{
+    font-style: italic;
 }
 
 
