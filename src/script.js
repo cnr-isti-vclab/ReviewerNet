@@ -1000,8 +1000,24 @@ function add_labels(){
     //Paper Network
     append_ico("#svgAxis", p_ico, 20, 55)
     append_ico("#svgAxis", np_ico, 20, 85)
-    d3.select("#svgAxis").append("text").attr("class","area-labels").attr("id", "area-name-PN").text("Paper Network").attr("y", 50).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
-    .append("tspan").attr("class", "label-txtspan")
+    d3.select("#svgAxis")
+        .append("text")
+        .attr("class","area-labels popup")
+        .attr("id", "area-name-PN")
+        .text("P")
+        .attr("title", "A visual overview of the literature related with a submission topic, showing key papers and their citation relations.")
+        .attr("y", 50).attr("x", 5)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    d3.select("#svgAxis").append("text")
+        .attr("class","area-text")
+        .text("aper Network")
+        .attr("x", 18)
+        .attr('y', 50)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
+    d3.select("#area-name-PN")
+        .append("tspan")
+        .attr("class", "label-txtspan")
         .attr("id", "pn")
       .attr("x", 65)
       .attr('dy', 25)
@@ -1010,23 +1026,65 @@ function add_labels(){
       .attr("x", 65)
       .attr('dy', 30)
       .text("0")
+    
     //Researcher Timeline
     
-    d3.select("#svgRT").append("text").attr("class","area-labels").attr("id", "area-name-RT").text("Researcher Timeline").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )").append("tspan").attr("class", "label-txtspan")
-      .attr("id", "apn")
-      .attr("x", 65)
-      .attr('dy', 25)
-      .text("0")
+    d3.select("#svgRT").append("text")
+        .attr("id", "area-name-RT")
+        .attr("class","area-labels popup")
+        .attr("title", "A visual summary of the academic career of potential reviewers (topic coverage, expertise, stage of career), and of conflicts-of-interest.")
+        .text("R")
+        .attr("y", 30).attr("x", 5)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
+    d3.select("#svgRT").append("text")
+        .attr("class","area-text")
+        .text("esearcher Timeline")
+        .attr("y", 30).attr("x", 21)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+        
+    d3.select("#area-name-RT")
+        .append("tspan").attr("class", "label-txtspan")
+        .attr("id", "apn")
+        .attr("x", 65)
+        .attr('dy', 25)
+        .text("0")
     append_ico("#svgRT", a_ico, 20, 30)
     /**/
     //Researcher Network
     append_ico("#svgAG_names", anp_ico, 15, 35)
-    d3.select("#svgAG_names").append("text").attr("class","area-labels").attr("id", "area-name-RN").text("Researcher Network").attr("y", 30).attr("x", 5).attr("fill", "rgba( 0, 0, 0, 0.407 )")
-    .append('tspan')
-    .attr("class", "label-txtspan").attr("id", "anpn")
-      .attr("x", 65)
-      .attr('dy', 30)
-      .text("0")
+    d3.select("#svgAG_names").append("text")
+        .attr("class","area-labels popup")
+        .attr("title", "A graph representation of co-authorship relations, for the visualization of network of collaborators.")
+        .attr("id", "area-name-RN")
+        .text("R")
+        .attr("y", 30).attr("x", 5)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
+     d3.select("#svgAG_names").append("text")
+        .attr("class","area-text")
+        .text("esearcher Network")
+        .attr("y", 30).attr("x",21)
+        .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
+    
+    d3.select("#area-name-RN")
+        .append('tspan')
+        .attr("class", "label-txtspan").attr("id", "anpn")
+        .attr("x", 65)
+        .attr('dy', 30)
+        .text("0")
+    
+    $(".area-labels").css("pointer-events", "all")
+    $(".area-labels").css("cursor", "help")
+    $(".area-labels").tooltip({
+        show: {
+            delay: 150
+        }
+    })
+    .tooltip( "option", "position", { my: "left+20 top+35", at: "center top" } );
+    $(".label-txtspan").css("pointer-events", "none")
+    $(".label-txtspan").css("cursor", "none")
 }
 
 function replacement(sid, cal){
