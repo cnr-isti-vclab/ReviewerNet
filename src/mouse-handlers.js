@@ -1418,9 +1418,7 @@ function ListMouseOver(event){
         idClick = idClick.substring(1,idClick.length);
         d3.select("#ag"+idClick)
         .attr("r", function (){return $("#ag"+idClick)[0].r.baseVal.value  * 2.3})
-     d3.select("#aa"+idClick).attr('fill',"rgba( 138, 223, 223, 0.569 )")
-        d3.select(event.target)
-            .style("background-color", function(){ return "rgba( 138, 223, 223, 0.569 )";})   
+        highlight_auth(idClick) 
          if(!click){
     reset_texts()
     //if(click) unclick_auth();
@@ -1814,58 +1812,46 @@ function repl_over(event){
         d3.select("#ag"+id2)
         
         .attr("r", 7)
-     d3.select("#aa"+id2).attr('fill',"rgba( 138, 223, 223, 0.569 )")
-        d3.select(event.target)
-            .style("background-color", function(){ return "rgba( 138, 223, 223, 0.569 )";})   
-         if(!click){
-    reset_texts()
-    //if(click) unclick_auth();
-    d3.select("#aa"+id2)
-        
-        .attr('fill',"rgba( 138, 223, 223, 0.569 )")
+     highlight_auth(id2)
 
-    d3.select("#aaline"+id2)
-        
-        .style('stroke',"rgba( 138, 223, 223, 0.569 )")
-    
-    d3.select("#ag"+id2)
-        
-        .attr("r", 7)
-    
-    d3.selectAll(".plink")
-        .style("opacity", 0.2)
-    
-    d3.selectAll(".papersNode")
-        .style("opacity", function(d1){
-            if(d1.authsId.includes(id2))
-                return 1;
-            else
-                return 0.2;
-        })
-        .attr("r", function(d1){
-            if(d1.authsId.includes(id2))
-                return "9";
-            else return "6";
-        })
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(id2))
-                return "#d08701";
-            else
-                if(idPs.includes(d1.id))                    
-                    return "#4238ff"
-                    //return "#6d10ca";
+    if(!click){
+        console.log("not click over rep")
+       d3.selectAll(".plink")
+            .style("opacity", 0.2)
+
+        d3.selectAll(".papersNode")
+            .style("opacity", function(d1){
+                if(d1.authsId.includes(id2))
+                    return 1;
                 else
-                    return "#999";
+                    return 0.2;
             })
-        .attr("stroke-width", function(d1){
-            if(d1.authsId.includes(id2)){
-                papName(d1)
-                return 3.5;
-            }
-            else
-                if(idPs.includes(d1.id))                    
-                    return 2.5;
+            .attr("r", function(d1){
+                if(d1.authsId.includes(id2))
+                    return "9";
+                else return "6";
             })
+            .attr("stroke", function(d1){
+                if(d1.authsId.includes(id2))
+                    return "#d08701";
+                else
+                    if(idPs.includes(id2))                    
+                        return "#4238ff"
+                        //return "#6d10ca";
+                    else
+                        return "#999";
+                })
+            .attr("stroke-width", function(d1){
+                if(d1.authsId.includes(id2)){
+                    papName(d1)
+                    return 3.5;
+                }
+                else
+                    if(idPs.includes(d1.id))                    
+                        return 2.5;
+                })
+        highlight_auth(id2)
+
     }
     else if(id2 != idClickedA && clkIds.includes(id2)){
         reset_texts()
@@ -1951,6 +1937,7 @@ function repl_over(event){
                 }})  
         
     }
+    event.stopPropagation()
 }
 
 function repl_out(event){
@@ -1975,7 +1962,6 @@ function repl_out(event){
             })
     
    d3.select("#ag"+id2)
-        
         .attr("r", a_radius) 
     d3.select("#aaline"+id2).style('stroke',function (d){/*
                     if(!(authsExclude.includes(id2) || authsReview.includes(id2)) && (authColor(d) || authColor_r(d)))
@@ -2013,5 +1999,6 @@ function repl_out(event){
         d3.select(".txtspan").remove()
         reclick_auth(clkA)
     }
+    event.stopPropagation()
 }
 
