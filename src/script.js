@@ -1311,9 +1311,9 @@ function setup_searchbars(){
     
     $('#papers-autocomplete').autocomplete({
         disabled: true,
-        focus: function(event, ui){
+/*        focus: function(event, ui){
             console.log(ui)  
-        },
+        },*/
         open : function(){
             let d = $("#ui-id-3").height() + 25
             if(_docHeight-heightAG-100 < 210)
