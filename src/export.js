@@ -1,12 +1,16 @@
+let ftxt = "";
+
 function get_auth_biblio(id, biblio){
     let abiblio = []
     for(var i = 0; i < biblio.length; i++)
-        if (biblio[i].authsId.includes(id))
-            abiblio.push(i+1)
+        if (biblio[i].authsId.includes(id)){
+            let tmp_txt = idPs.includes(biblio[i].id) ? "<span class=\"key-pap\">"+(i+1)+"</span>" : (i+1);
+            abiblio.push(tmp_txt)
+        }
     let txt = "";
-    for (var i = 0; i < abiblio.length; i++)
+    for (var i = 0; i < abiblio.length; i++){
         txt += (i == abiblio.length-1) ? abiblio[i] : abiblio[i]+", ";
-    return txt
+    }return txt
 }
 
 function export_altRev(id, biblio){
@@ -31,13 +35,21 @@ function pap_auths(pap){
 function print_biblio(biblio){
     let txt = ""
         inner_txt = "";
-    if(biblio.length == 0) return "<span class=\"eli eli-title1\">No Key Papers authored by any reviewer selected.</span>";
+    if(biblio.length == 0){
+        ftxt += "No Papers authored by any reviewer selected.\n"
+        return "<span class=\"eli eli-title1\">No Papers authored by any reviewer selected.</span>";
+    }
     else{    
         txt = ""
-        inner_txt = "<span class=\"eli eli-title1\">Key Papers:</span><br>"
+        inner_txt = "<span class=\"eli eli-title1\">References:</span><br>"
+        ftxt += "References:\n"
+        
         for(var i = 0; i < biblio.length; i++){
             var pap = biblio[i]
-            txt += "["+(i+1)+"] "+ pap.year +"- " +pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.journal) + "<br>";
+            let ref = idPs.includes(pap.id) ? "<span class=\"key-pap\">["+(i+1)+"]</span> " : "["+(i+1)+"] ";
+            txt += ref + pap.year +" "+pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.journal) + "<br>";
+            
+            ftxt += "["+(i+1)+"] "+ pap.year +" " +pap_auths(pap)+": "+pap.value+". "+ (pap.venue ? pap.venue : pap.journal) + "\n"            
         }
         inner_txt += "<span class=\"eli eli-item\">"+txt+"</span>" 
     }
@@ -47,12 +59,19 @@ function print_biblio(biblio){
 function print_revs(biblio){
     let txt = "",
         inner_txt = "";
-    if(authsReview_obj.length == 0) return "<span class=\"eli eli-title1\"> No reviewer selected.</span><br><br>";
+    if(authsReview_obj.length == 0){ 
+        ftxt = "No reviewer selected.\n"
+        return "<span class=\"eli eli-title1\"> No reviewer selected.</span><br><br>";
+    }
     else{
         inner_txt += "<span class=\"eli eli-title1\"> Selected Reviewers:</span><br>"
+        ftxt = "Selected Reviewers:\n"
+        
         for (var i = 0; i < authsReview_obj.length; i++){
             let aut = authsReview_obj[i] 
             txt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "<br>";
+            
+            ftxt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "\n" 
         }
     
         inner_txt += "<span class=\"eli eli-item\">"+txt+"</span><br>"
@@ -95,16 +114,17 @@ function export_session(){
             biblio = papersFiltered.filter(function (el){
                 commonValues = el.authsId.filter(x => rev_set.has(x));
                 return commonValues.length > 0;
-            }).sort(function (a, b) {return a.value.localeCompare(b.value);});
+            }).sort(function (a, b) {return b.year-a.year});
         
+        ftxt = ""
         //need revDict := id_rev : [[ida_1, namea_1]...]
         
         inner_txt += print_revs(biblio)
         
         inner_txt += print_biblio(biblio)
         
-        /*
-        var textFile = null,
+        
+        /*var textFile = null,
         makeTextFile = function (text) {
             var data = new Blob([text], {type: 'text/plain'});
 
@@ -118,12 +138,12 @@ function export_session(){
 
             // returns a URL you can use as a href
             return textFile;
-        };
+        }
 
 
         var link = document.createElement('a');
         link.setAttribute('download', 'info.txt');
-        link.href = makeTextFile(txt);
+        link.href = makeTextFile(ftxt);
         document.body.appendChild(link);
 
         // wait for the link to be added to the document

@@ -974,3 +974,8 @@ table#bnt-table td {
     width: 90%;
     float: right
 }
+
+.key-pap{
+    font-weight: 100;
+    color:blue;
+}

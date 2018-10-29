@@ -99,7 +99,7 @@
                         <table id = "bnt-table" class="table table-condensed" style="border:0px">
                           <tr>
                             <td rowspan="2" style="border:0px" >
-                                <label class=" pop-up gui-menu-item" title = "The minimum number of authored papers in the Paper Network." for="MNP">Productivity<br> Threshold</label>
+                                <label class=" pop-up gui-menu-item" title = "For a researcher to be a candidate reviewer, the minimum number of authored papers in the PN. If you increase the value, then you lower the number of researchers visualized in the RT and RN. " for="MNP">Productivity<br> Threshold</label>
                                 <input id="MNP" class = "spinner" name="value">
 <!--                                <button id="disableMNP">Filter authors</button>-->
                             </td>
@@ -111,10 +111,10 @@
                             </td>
 -->
                                 <td rowspan="2" style="border:0px">
-                                <label for="lastYearOfP" title = "The maximum number of years since the last authored paper in the database" class="pop-up gui-menu-item">Researcher<br>Freshness</label>
+                                <label for="lastYearOfP" title = "For a researcher to be a candidate reviewer, the maximum number of years since the last authored paper in the database. If you increase the value, then you visualize more researchers in the RT and RN." class="pop-up gui-menu-item">Researcher<br>Expiration</label>
                         <input id="lastYearOfP" class = "spinner" name="value">
                                    <td rowspan="2" style="border:0px">
-                                <label for="C" title = "the maximum number of years since the last co-authored paper in the database." class="pop-up gui-menu-item">Co-authors<br>Expiration</label>
+                                <label for="C" title = "For two researchers to have a conflict-of-interest, the maximum number of years since the last co-authored paper in the database. If you increase the value, then more researchers are visualized as conflicting." class="pop-up gui-menu-item">Conflict<br>Expiration</label>
                                 <input id="C" class = "spinner" name="val">
 <!--                                <button id="disableC">Filter authors</button>-->
                             </td>
@@ -128,14 +128,14 @@
                               
                               
                                 <td class="tdp" style="border:0px;transform:translateX(-5%)">
-                                <input id = "cb-av" class="checkB" type="checkbox" value="false"><label class="checkbox-inline pop-up gui-menu-item" title="If enabled, all authors of all the visualized papers will be displayed. Can be computationally expansive.">Expand RT & RN</label> 
+                                <input id = "cb-av" class="checkB" type="checkbox" value="false"><label class="checkbox-inline pop-up gui-menu-item" title="If ticked, then you visualize the authors of all papers in the PN, instead of selected papers only. This augments the number of candidate reviewers. Note: it can be computationally expensive.">Expand RT & RN</label> 
                             </td>
                               </td>
                             </tr>
                             <tr>
                             <td class="tdp" style="border:0px; transform: translate(-5%,-20%);">
                                 <input class="checkB" id = "cb-confl" type="checkbox" value="false">       
-                                <label title ="If enabled, hide all conflicting researchers from the RT and RN." class="checkbox-inline pop-up gui-menu-item">Hide Conflicted</label> 
+                                <label title ="If ticked, then you remove conflicting authors from the visualization." class="checkbox-inline pop-up gui-menu-item">Hide Conflicted</label> 
                             </td>
                             </tr>
                         </table>
@@ -200,7 +200,7 @@
                             <table>
                               <tr id="submitting_row">
                                 <td id="td1" class="td1">
-                                  <a id="conflict-a" title = "This area allows the user to serach for authors for which wants to find conflicts. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by clicking on an author name in the Paper Info area." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Submitting Authors <span id="authors-badge"class="badge"></span></a>
+                                  <span id="conflict-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Submitting Authors <span id="authors-badge"class="badge"></span></span>
                                   </td>
                                 <td id = "td2" class ="button-bar">
                                     <button id="done_submit" class="btn btn-default done_submit"><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
@@ -219,7 +219,7 @@
                              <table>
                               <tr>
                                 <td class="td1" class = "button-label">
-                                 <a id="review-a" title = "This area allows the user to serach for authors and elect them as candidate reviewers. The list of searched authors is displayed below the searchbar. It is also possible to add authors to this list simply by double-clicking on it in the graphs." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Selected Reviewers<span id="rauthors-badge"class="badge"></span></a>
+                                 <span id="review-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Selected Reviewers<span id="rauthors-badge"class="badge"></span></span>
                                     </td>
                                 <td class ="td2 button-bar">
                                     <div id="export_dropup" class="done_submit">
@@ -243,7 +243,7 @@
                             <table>
                               <tr>
                                 <td class="td1">
-                                  <a id="area-paper-a" title = "This area allows the user to serach for papers to build the topic-based graph. The list of added papers is displayed below the searchbar." class="text-left pop-up"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Key Papers<span id="area-paper-badge"class="badge"></span> </a>
+                                  <span id="area-paper-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
                                   </td>
                                 <td class ="td2">
                                     <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input disabled="true" name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
@@ -263,7 +263,7 @@
                             <table>
                               <tr class="side-tab">
                                 <td class="td1pi">
-                                  <a id="paper-info-a" title="This box shows some useful information about the selected paper such as title, year of pub., venue and journal name, authors and citations. Authors and citations have their associated mouse handlers." class="text-left pop-up"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold; cursor: help">Paper Info</a>
+                                  <span id="paper-info-a" class="text-left"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Paper Info</span>
                                   </td>
                                 <td class ="td2title">
                                   </td>
@@ -291,10 +291,10 @@
               <div id="tutorial-dialog" title="Tutorial"  class = "my-dialog" style="width: 99%; height: 93%">
                   To look for your reviewers:
                   <ul id="tutorial-list">
-                    <li> input the names of the authors of the submitted paper in the ‘Submitting Authors’ field, and click on the ‘Done’ net to the searchbar;</li>
-                    <li> build your Paper Network: the intuition is that the authors of relevant papers are good candidate reviewers. Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic, and input their titles in the ‘Key papers’ field; then, expand the network by selecting interesting nodes, i.e. papers you deem relevant to the topic of the submission, on a mouse double click;</li>
-                    <li> continue until you feel the selected papers and their citations offer a good coverage of the literature about the topic at hand; while you create the Paper Network, ReviewerNet automatically builds for you the Researcher Timeline, visualizing the academic career of the authors of selected key papers, and the Researcher Network, a graph visualization of co-authorship relations among the researchers in the timeline;</li>
-                    <li> explore the Researcher Timeline to assess the suitability of candidate reviewers: check topic coverage, stage of career, production over years etc.; visual cues (color, font) will help you to tell apart candidate reviewers from conflicting researchers;</li>
+                    <li> input the names of the authors of the submitted paper in the ‘Submitting Authors’ field, and click the ‘Done’ button next to the searchbar;</li>
+                    <li> build your Paper Network: the intuition is that the authors of relevant papers are good candidate reviewers. Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic, and input their titles in the ‘Key papers’ field. Then, expand the network by selecting interesting nodes on a mouse double click;</li>
+                    <li> continue until you feel the selected papers and their citations offer a good coverage of the literature about the topic at hand. While you create the Paper Network, ReviewerNet automatically builds for you the Researcher Timeline - visualizing the academic career of the authors of selected key papers - and the Researcher Network - a graph visualization of co-authorship relations;</li>
+                    <li> explore the Researcher Timeline to assess the suitability of candidate reviewers: check topic coverage, stage of career, production over years etc. Visual cues (color, font) will help you to tell apart candidate reviewers from conflicting researchers;</li>
                     <li> analyse the Researcher Network and find sets of independent reviewers, thanks to the the visualization of network of collaborators;</li>
                     <li> once you identified one or more candidate reviewers who fit your requirements, input their names in the ‘Selected Reviewers’ field;</li>
                     <li> download your list of reviewers; ReviewerNet will also add a list of potential substitute reviewers, in case of decline.
