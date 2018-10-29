@@ -1,6 +1,64 @@
 var texts = [],
     clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine;
 
+
+function overing_pap_bar(d){
+    d3.select("#p"+d.id)
+        .attr("r", 10)
+              
+    d3.selectAll("#pb"+d.id)
+        .attr("r", 5)
+         .attr("cy", 12)
+
+    highlight_cluster_pap(d)
+
+    d3.selectAll(".authNode")
+        .attr("fill", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+        })
+
+     highlight_cluster(d)
+     d3.selectAll(".authlLine")
+        .style("stroke", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+        })
+}
+
+function reset_pap_bar(d){
+    d3.selectAll("#pb"+d.id)
+        .attr("cy", 15)
+        .attr("r",function (d1){return (idPs.includes(d1.id) || papersPrint.includes(d1.id)) ? 3: 2 })
+
+    d3.select("#p"+d.id)
+        .attr("r", 6);
+    d3.selectAll(".plink")
+        .style("opacity", 0.8)
+    d3.selectAll(".authNode")
+                    .attr('fill', function (d){
+                return "rgba( 221, 167, 109, 0.342 )"
+        })
+    d3.selectAll(".authlLine")
+
+                   .style('stroke',function (d){
+                    return "rgba( 221, 167, 109, 0.342 )"
+            })
+
+    un_highlight_cluster()
+
+    d3.selectAll(".plink").style("opacity", 1)
+    d3.selectAll(".papersNode").style("opacity", 1)
+
+    d3.selectAll(".authors-dot")
+        .attr("r", a_radius)
+
+    d3.selectAll(".aglink")
+        .style("opacity", 1)
+}
+
 function highlight_cluster(d){
     d3.selectAll(".authors-dot")
 /*        .attr("r", function(d1){ 

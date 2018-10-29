@@ -19,7 +19,7 @@ function setup_popups(){
         minWidth: 200,
         minHeight: 200,
         maxHeight: 600,
-        maxWidth: 800,
+        maxWidth: 1000,
         width: 600,
         resizeStart: function( event, ui ) {
             resize_modal = true;
