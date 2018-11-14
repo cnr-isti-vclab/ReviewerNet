@@ -493,9 +493,15 @@ width: 15%;
 }
 
 #logo {
-    position: relative;
-    float: left;
-    
+	position: relative;
+	width: 100px;
+	height: 130px;
+}
+
+#titleLogo{
+    font-variant-caps: petite-caps; 
+    color: #385e84; 
+    font-weight: bold;
 }
 
 footer {
@@ -514,8 +520,10 @@ footer {
 	overflow-y: hidden;
 	overflow-x: hidden;
 	width: 100%;
-    height: 100%;
+	height: 100%;
 	padding: 3px;
+	text-align: center;
+	align-content: center;
 }
 
 hr {
@@ -774,9 +782,6 @@ hr {
 
 .pAuthr {
     color: #5263fe;
-}
-.aa {
-    
 }
 
 #row22 {
