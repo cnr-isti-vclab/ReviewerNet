@@ -16,11 +16,11 @@ In this way it is immediately possible to identify all the possible candidate-re
 
 ### Usage
 Just visit
-> http://semanticbrowser.org <br>
+> http://reviewernet.org <br>
 > *tested browsers: Chrome, Firefox, Safari* 
 
 
-![SemanticBrowser screenshot](https://raw.githubusercontent.com/cnr-isti-vclab/ReviewerNet/master/screen/screen.png)
+![ReviewerNet screenshot](https://raw.githubusercontent.com/cnr-isti-vclab/ReviewerNet/master/screen/screen.png)
 
 
 ## Papers&Authors 
