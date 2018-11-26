@@ -144,7 +144,7 @@ The Researcher Network (RN) is a graph visualization of co-authorship relations 
 *   Once you select a reviewer, ReviewerNet adds automatically a list of potential alternative reviewers, in case of decline. Alternative reviewers are chosen from the candidate ones, so that they only conflict with the declining reviewer. Substitute reviewers by a mouse click.  
 *   Download your list of reviewers with a click on the download button. The list reports reviewers' names and bibliographic references to their papers. 
 
-For further information on how to use ReviewerNet, have a look at the accompanying video.
+For further information on how to use ReviewerNet, have a look at the accompanying video https://youtu.be/JnomPO8QI28 
 
 
 
