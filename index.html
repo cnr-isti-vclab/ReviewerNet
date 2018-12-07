@@ -50,18 +50,6 @@
                 <h3 id="titleLogo">ReviewerNet</h3>
                 <img id="logo" src="imgs/new-logo.PNG">
                 </span>
-<!--                <p>
-                    A <a class="links" href="https://d3js.org/">D3js</a>-based-browser on a filtered version of the <a class="links" href="https://labs.semanticscholar.org/corpus/" title="SemanticScholar lastest corpus link">Semantic Scholar corpus.</a>
-                </p>
-                <hr>
-              <h4>Usage:</h4>
-                    <ol>
-                      <li>build a topic-based graph by searching  for papers titles in the <strong>AREA PAPER</strong> searchbar</li>
-                      <li>build the set of conflicting authors by searching their names in the <strong>CONFILICTING AUTHORS</strong> search bar</li>
-                    </ol>
-                Once the graph and the conflicting authors list have been populated, good reviewer candidates are shown in the author area.
-                <br>For further information visit <a class="links" href="https://github.com/hybrs/hybrs.github.io" style=" color: #275d58; font-style: oblique; font-size: 0.6em"><img class = "links" id="ghs" src="imgs/gh.png" alt="the GitHub page"></a>
-                </span>-->
                 <!-- Paper Graph -->
                 <svg id = "svgAxis" class = "svg" style="width: inherit; height: 800px">
                     <defs>
@@ -204,7 +192,7 @@
                                   <span id="conflict-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Submitting Authors <span id="authors-badge"class="badge"></span></span>
                                   </td>
                                 <td id = "td2" class ="button-bar">
-                                    <button id="done_submit" class="btn btn-default done_submit"><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
+                                    <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
                                     <form class="aform"><input name="authoSearchBar" class="biginput " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                               </tr>
@@ -226,7 +214,7 @@
                                     <div id="export_dropup" class="done_submit">
                                      <div id="export-dialog" title="Session Snapshot"  class = "my-dialog">
                                     </div>
-                                    <button id ="export-btn" type="button"><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
+                                    <button id ="export-btn"  class = "pop-up" type="button" title = "Export button."><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
                                     </div>
                             <form class="aform">
                                 <input disabled="true" name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>

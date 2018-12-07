@@ -96,6 +96,7 @@ function un_highlight_cluster(){
 }
 
 function highlight_auth(id){
+
     d3.select("#aa"+id)        
         .attr('fill',"rgba( 221, 167, 109, 0.642 )")//"rgba( 138, 223, 223, 0.569 )"
 
@@ -105,6 +106,7 @@ function highlight_auth(id){
     d3.select("#ag"+id)
         .attr("stroke","rgba( 221, 167, 109)")
         .attr("stroke-width", "3.5px")
+        //.attr("r", function (){return $("#ag"+id)[0].r.baseVal.value  * 2})
 }
 
 function un_highlight_auth(id){
@@ -116,11 +118,11 @@ function un_highlight_auth(id){
     })
 
    d3.select("#ag"+id)
-        .attr("r", a_radius)
+        //.attr("r", a_radius)
         .attr("stroke"," rgba( 221, 167, 109, 0)")
         .attr("stroke-width", "0px")
     
-       d3.select("#aaline"+id).style('stroke',function (d){/*
+    d3.select("#aaline"+id).style('stroke',function (d){/*
                     if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else*/
@@ -1416,8 +1418,6 @@ function ListMouseOver(event){
         }else return;
     }else{
         idClick = idClick.substring(1,idClick.length);
-        d3.select("#ag"+idClick)
-        .attr("r", function (){return $("#ag"+idClick)[0].r.baseVal.value  * 2.3})
         highlight_auth(idClick) 
          if(!click){
     reset_texts()
@@ -1587,10 +1587,7 @@ function ListMouseOut(event){
         }else return;
     }else{
        idClick = idClick.substring(1,idClick.length);
-                d3.select("#ag"+idClick)
-        
-        .attr("r", a_radius) 
-
+        un_highlight_auth(idClick)
         d3.select(event.target)
             .style("background-color", "rgba( 71, 66, 66, 0)")
         

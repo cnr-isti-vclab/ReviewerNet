@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.4, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -253,7 +253,11 @@ function addId(name, year){
     else{
         
       idPs[idPs.length] = idP
-      papersPrint.push(idP)        
+      papersPrint.push(idP)
+        /*
+        console.log(idP)
+        get_JSON(idP, process_auth)
+        */
       AP = []
       ANP = []
       papersCit[idP] = [[], []];
@@ -1397,6 +1401,20 @@ function setup_searchbars(){
     })
     $( "#export-btn").on("click", export_session)
 }
+
+function process_auth(data) {
+        console.log(data)//document.getElementById("demo").innerHTML = this.responseText;
+}
+
+function get_JSON(json_id, process_JSON) {
+    console.log(json_id.length)
+    console.log('https://api.semanticscholar.org/v1/'+
+            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id)
+  $.getJSON('https://api.semanticscholar.org/v1/'+
+            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id, process_JSON);
+  
+}
+
 
 $(function (){
     d3.selectAll(".links").attr("target", "_blank")

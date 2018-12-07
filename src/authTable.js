@@ -250,55 +250,6 @@ function printPapers(auths){
     }
 }
 
-/*function reset_ABG(){
-     d3.selectAll(".authlLine")
-            .style('stroke',function (d){
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
-
-        
-        d3.selectAll(".authNode")
-            .attr('fill', function (d){return "rgba( 221, 167, 109, 0.342 )"
-            })
-            .style("border-radius", "30px")
-            .style("stroke-width", function (d){
-                if(authsExclude.includes(d.id))
-                    return 0.8
-                else return 0})
-            .style("stroke", function (d){
-                if(authsExclude.includes(d.id))
-                    return "rgba( 47, 198, 212, 0.713 )"
-                })
-
-        d3.selectAll(".auth-name")
-            .style("font-size", "12px")
-            .text(function (d){ return d.value })
-            .style("font-style", function (d){ 
-                if( authColor(d) || authColor_r(d) )
-                    return "italic"
-            })
-            .style("font-weight", "bold")
-            .attr("fill",  function (d){
-                if(authsReview.includes(d.id)) return "#5263fe";
-                else if(authsExclude.includes(d.id)) return "#be27be";
-                else if(authColor_r(d)) return "#8d585a";
-                else if(authColor(d)) return "#db0000";
-                else return "black"
-            })
-    
-        d3.selectAll(".authors-dot")
-        .attr("fill",  function (d){
-            if(authsReview.includes(d.id)) return "#5263fe";
-            else if(authsExclude.includes(d.id)) 
-                return "#be27be";
-            else if(!idAs.includes(d.id))
-                return "rgba( 153, 212, 234, 0.541 )";
-            else if(authColor_r(d)) return "#8d585a";
-            else if(authColor(d)) return "#db0000";
-            else return "black"
-        })
-}*/
-
 function print_legend(txt_el){
     d3.selectAll(".label-txtspanL").remove()
     txt_el.append('tspan')
@@ -307,18 +258,6 @@ function print_legend(txt_el){
         .attr("x", 10)
         .attr('dy',function(){
         return $("#svgRT").height()-100})
-        /*.attr("fill", "#be27be")
-        .text("Submitting authors")
-    txt_el.append('tspan')
-        .attr("class", "label-txtspanL")
-        .attr("x", 10)
-        .attr('dy', 15)
-        .attr("fill", "#5263fe")
-        .text("Selected reviewers")
-    txt_el.append('tspan')
-        .attr("class", "label-txtspanL")
-        .attr("x", 10)
-        .attr('dy', 15)*/
         .attr("fill","#db0000")
         .style("font-style", "italic")
         .text("Conflicted with submitting")
@@ -495,8 +434,8 @@ function authorBars(){
                 else return "#474747";*/
                 if(authsReview.includes(d.id)) return "#5263fe";
                 else if(authsExclude.includes(d.id)) return "#be27be";
-                else if(authColor_r(d)) return "#8d585a";
                 else if(authColor(d)) return "#db0000";
+                else if(authColor_r(d)) return "#8d585a";
                 else return "black"
             })
             .attr("x", function(d){
