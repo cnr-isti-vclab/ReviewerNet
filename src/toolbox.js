@@ -171,6 +171,7 @@ function checkboxesInit(){
 }
 
 function toolboxInit(){
+    $("#input_file")[0].value = ""
     checkboxesInit()
     setup_popups()
 }

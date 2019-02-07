@@ -30,6 +30,7 @@
 </script>
         
 <div class="container-fluid" id= "all" >
+    <script src="src\import.js"></script>
     <!-- RT & PN col -->
     <div class="row" style="overflow: hidden">
     <div class="col-sm-8" style="padding-left: 5px;padding-right: 2px;">
@@ -295,6 +296,12 @@
             <td>
               <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet </span> 
             </td>
+          <td id = "import">
+              <span style="font-style: italic; color: #2f8fe4; font-size: 1.1em">Import session </span>
+              <span style="float: right">
+                <input type="file" id="input_file" onchange="startRead()"/> 
+              </span>
+                  </td>
                 <td>
                     <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
 

@@ -36,20 +36,20 @@ function print_biblio(biblio){
     let txt = ""
         inner_txt = "";
     if(biblio.length == 0){
-        ftxt += "No Papers authored by any reviewer selected.\n"
+        //ftxt += "No Papers authored by any reviewer selected.\n"
         return "<span class=\"eli eli-title1\">No Papers authored by any reviewer selected.</span>";
     }
     else{    
         txt = ""
         inner_txt = "<span class=\"eli eli-title1\">References:</span><br>"
-        ftxt += "References:\n"
+        //ftxt += "References:\n"
         
         for(var i = 0; i < biblio.length; i++){
             var pap = biblio[i]
             let ref = idPs.includes(pap.id) ? "<span class=\"key-pap\">["+(i+1)+"]</span> " : "["+(i+1)+"] ";
             txt += ref + pap.year +" "+pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.journal) + "<br>";
             
-            ftxt += "["+(i+1)+"] "+ pap.year +" " +pap_auths(pap)+": "+pap.value+". "+ (pap.venue ? pap.venue : pap.journal) + "\n"            
+            //ftxt += "["+(i+1)+"] "+ pap.year +" " +pap_auths(pap)+": "+pap.value+". "+ (pap.venue ? pap.venue : pap.journal) + "\n"            
         }
         inner_txt += "<span class=\"eli eli-item\">"+txt+"</span>" 
     }
@@ -65,13 +65,13 @@ function print_revs(biblio){
     }
     else{
         inner_txt += "<span class=\"eli eli-title1\"> Selected Reviewers:</span><br>"
-        ftxt = "Selected Reviewers:\n"
+        //ftxt = "Selected Reviewers:\n"
         
         for (var i = 0; i < authsReview_obj.length; i++){
             let aut = authsReview_obj[i] 
             txt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "<br>";
             
-            ftxt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "\n" 
+            //ftxt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "\n" 
         }
     
         inner_txt += "<span class=\"eli eli-item\">"+txt+"</span><br>"
@@ -100,7 +100,32 @@ function refresh_export(){
     }
 }
 
+function export_file(){
+    let ret = thetaPap+"."+thetaY+"."+thetaC+"."+checkboxA[0].checked+"."+checkboxC[0].checked;
+    
+    ret += "\n"
+    
+    for(var i  = 0; i < authsExclude.length-1; i++)
+        ret += authsExclude[i]+"."
+    ret += authsExclude[authsExclude.length-1]
+    
+    ret += authsReview.length > 0 ? "\n" : ""
+    
+    for(var i  = 0; i < authsReview.length-1; i++)
+        ret += authsReview[i]+"."
+    ret += authsReview[authsReview.length-1]
+    
+    ret += idPs.length > 0 ? "\n" : ""
+    
+    for(var i  = 0; i < idPs.length-1; i++)
+        ret += idPs[i]+"."
+    ret += idPs[idPs.length-1]
+    
+    return ret
+}
+
 function export_session(){
+    
     if($( "#export-dialog" ).dialog( "isOpen" )){
          $( "#export-dialog" ).dialog( "close" );
         clickExp = false;
@@ -123,8 +148,9 @@ function export_session(){
         
         inner_txt += print_biblio(biblio)
         
+        ftxt = export_file()
         
-        /*var textFile = null,
+        var textFile = null,
         makeTextFile = function (text) {
             var data = new Blob([text], {type: 'text/plain'});
 
@@ -140,9 +166,11 @@ function export_session(){
             return textFile;
         }
 
-
+        document.getElementById("export-dialog").innerHTML = inner_txt
+        
+        $( "#export-dialog" ).dialog( "open" );
         var link = document.createElement('a');
-        link.setAttribute('download', 'info.txt');
+        link.setAttribute('download', 'session.txt');
         link.href = makeTextFile(ftxt);
         document.body.appendChild(link);
 
@@ -151,10 +179,10 @@ function export_session(){
           var event = new MouseEvent('click');
           link.dispatchEvent(event);
           document.body.removeChild(link);
-        });*/
-        document.getElementById("export-dialog").innerHTML = inner_txt
-        $( "#export-dialog" ).dialog( "open" );
+        });
     }
+    
+    
     
     
 }

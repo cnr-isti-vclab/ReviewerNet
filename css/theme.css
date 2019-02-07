@@ -984,3 +984,6 @@ table#bnt-table td {
     font-weight: 100;
     color:blue;
 }
+#import {
+    font-size: 0.8em
+}

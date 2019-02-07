@@ -471,16 +471,6 @@ function updateAuthDict(pf){
     }
 }
 
-
-/*
-Gli autori sono viola
-I co-autori degli autori sono rossi
-I co-autori dei revisori sono grigi (non più rossi)
-I revisori selezionati sono blu
-I candidati disponibili sono neri bold
-
-*/
-
 function addPaper(suggestion){
     this.value=""
     if(start){
@@ -1407,6 +1397,9 @@ function process_auth(data) {
 }
 
 function get_JSON(json_id, process_JSON) {
+    /*
+        Non funziona per tutti i paper.
+    */
     console.log(json_id.length)
     console.log('https://api.semanticscholar.org/v1/'+
             (json_id.length > 20 ? 'paper' :'author')+'/'+json_id)
