@@ -8,7 +8,7 @@ var fS = "#ff433d", sS = "#ffffff", tS = "#248bda", last_val = 1;
 function setup_popups(){
     $( ".pop-up" ).tooltip({
         show: {
-            delay: 150
+            delay: 10
         }
     });
     
