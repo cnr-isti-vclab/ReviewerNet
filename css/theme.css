@@ -991,7 +991,17 @@ table#bnt-table td {
 	/* cursor: pointer; */
 	width: 80px;
 	height: 22px;
-	font-size: 0.9em;
+	font-size: 0.94em;
+	color: #3484ca;
+	border-color: lightblue;
+	border-width: 1px;
+}
+
+#export_label {
+	/* cursor: pointer; */
+	width: 80px;
+	height: 22px;
+	font-size: 0.66em;
 	color: #3484ca;
 	border-color: lightblue;
 	border-width: 1px;

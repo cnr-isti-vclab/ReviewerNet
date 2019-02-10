@@ -111,10 +111,11 @@ function export_file(){
     
     ret += authsReview.length > 0 ? "\n" : ""
     
-    for(var i  = 0; i < authsReview.length-1; i++)
-        ret += authsReview[i]+"."
-    ret += authsReview[authsReview.length-1]
-    
+    if(authsReview.length > 0){
+        for(var i  = 0; i < authsReview.length-1; i++)
+            ret += authsReview[i]+"."
+        ret += authsReview[authsReview.length-1]
+    }
     ret += idPs.length > 0 ? "\n" : ""
     
     for(var i  = 0; i < idPs.length-1; i++)
@@ -185,4 +186,51 @@ function export_session(){
     
     
     
+}
+
+function export_fileb(){
+    
+    if(authsExclude.length == 0 || !authsExclude){
+        alert("Nothing to export.")
+        return;
+    }
+    
+    if(idPs.length == 0 || !idPs){
+        alert("Nothing to export.")
+        return;
+    }
+    
+    let txt = export_file()
+
+    var textFile = null,
+    makeTextFile = function (text) {
+        var data = new Blob([text], {type: 'text/plain'});
+
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        if (textFile !== null) {
+          window.URL.revokeObjectURL(textFile);
+        }
+
+        textFile = window.URL.createObjectURL(data);
+
+        // returns a URL you can use as a href
+        return textFile;
+    }
+
+    var link = document.createElement('a');
+    link.setAttribute('download', 'session.txt');
+    link.href = makeTextFile(txt);
+    document.body.appendChild(link);
+
+    // wait for the link to be added to the document
+    window.requestAnimationFrame(function () {
+      var event = new MouseEvent('click');
+      link.dispatchEvent(event);
+      document.body.removeChild(link);
+    });
+    
+    if(authsReview.length == 0 || !authsReview){
+        alert("The session file doesn't contain any candidate reviewer.")
+    }
 }
