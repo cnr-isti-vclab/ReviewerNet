@@ -32,9 +32,9 @@ function loaded(evt) {
     
     //reset all and then repopulate vizs
     
-    session = fileString.split('\n');
-    if(session.length != 4){
-        alert("Weird file format, cannot load.");
+    let session = fileString.split('\n');
+    if(session.length < 3){
+        alert("Weird file format, cannot load. l="+session.length);
         return;
     }
     
@@ -53,10 +53,17 @@ function loaded(evt) {
         start = false;
     }
     
-    params = session[0].split('.');
-    submitting = session[1].split('.');
-    rev = session[2].split('.');
-    paps = session[3].split('.');
+    let params = session[0].split('.');
+    let submitting = session[1].split('.');
+    let rev = [],
+        paps = [];
+    
+    if(session.length == 3)
+        paps = session[2].split('.');    
+    else{
+        rev = session[2].split('.');
+        paps = session[3].split('.');
+    }
     
     $('#papList').html("")
     $('#authList').html("")
@@ -90,10 +97,9 @@ function loaded(evt) {
     //riaggiungo papers
     for(var i = 0; i < paps.length; i++)
         addP(papers.filter(function(el){ return el.id === paps[i];})[0])
-    
     //riaggiungo reviewers
-    for(var i = 0; i < rev.length; i++)
-        addR(authors.filter(function(el){ return el.id === rev[i];})[0])
+        for(var i = 0; i < rev.length; i++)
+            addR(authors.filter(function(el){ return el.id === rev[i];})[0])
     
     
     paperGraph(papersFiltered, citPrint, idPs, simulation)
