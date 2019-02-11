@@ -167,12 +167,15 @@ function export_session(){
             return textFile;
         }
 
+        inner_txt += "<br>Click <a id=\"download_link\">here</a> to download the session file."
+        
         document.getElementById("export-dialog").innerHTML = inner_txt
         
         $( "#export-dialog" ).dialog( "open" );
-        var link = document.createElement('a');
+        var link = document.getElementById('download_link');
         link.setAttribute('download', 'session.txt');
         link.href = makeTextFile(ftxt);
+        /*
         document.body.appendChild(link);
 
         // wait for the link to be added to the document
@@ -180,7 +183,7 @@ function export_session(){
           var event = new MouseEvent('click');
           link.dispatchEvent(event);
           document.body.removeChild(link);
-        });
+        });*/
     }
     
     

@@ -1006,3 +1006,8 @@ table#bnt-table td {
 	border-color: lightblue;
 	border-width: 1px;
 }
+
+#download_link{
+    cursor: pointer;
+    color: blue;
+}
