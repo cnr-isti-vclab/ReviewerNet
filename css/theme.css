@@ -494,14 +494,13 @@ width: 15%;
 
 #logo {
 	position: relative;
-	width: 100px;
-	height: 130px;
+	width: 120px;
+	height: 100px;
 }
 
 #titleLogo{
     font-variant-caps: petite-caps; 
-    color: #385e84; 
-    font-weight: bold;
+    color: #385e84;
 }
 
 footer {
