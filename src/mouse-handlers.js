@@ -1374,8 +1374,10 @@ function addFromList(event){
     if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
         var paper = papers.filter(function (item){ return item.id === idClick})[0];
-        if(!idPs.includes(idClick))
+        if(!idPs.includes(idClick)){
+            zoom_by(1)
             addPaper(paper)
+        }
     }else{
         idClick = idClick.substring(1,idClick.length);
         
@@ -1642,6 +1644,7 @@ function papDblc(event){
     
     deleteP(idClick)
     refresh_export()
+    zoom_by(1)
     document.getElementsByClassName("td2title").innerHTML = ""
 }
 
