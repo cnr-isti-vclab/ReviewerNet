@@ -35,7 +35,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 1000, baseHeight = 1000,
+    heightP = 800, baseHeight = 800,
     h = height,
     w = width,
     oldw = w,
@@ -800,7 +800,7 @@ function zoom_by(zf){
 
      let minc = heightP, maxc = 0;
     simulation.stop()
-     heightP = baseHeight *(Math.log(zoomFact)+1)
+     heightP = baseHeight +  baseHeight *Math.log(zoomFact)
          //console.log(Math.sqrt(zoomFact))
     //console.log(zoomFact)
     simulation.force("center", d3.forceCenter((w / 2), (heightP / 2)))
