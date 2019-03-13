@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false,  resize_rn = false,
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -426,6 +426,10 @@ function setMouseHandlers(){
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", papDblc);
+    $("#resizable")
+        .on("mousedown", () => resize_pn = true)
+    $("#resizable1")
+        .on("mousedown", () => resize_rn = true)
 }
 
 function updateAuthDict(pf){
@@ -1484,7 +1488,7 @@ $(function (){
 
     window.onresize = function(e) {
         
-        if(!resize_modal){
+        if(!resize_pn && !resize_rn){
             width = $("#aut_table").width()
             _docHeight = document.documentElement.clientHeight - 30
             height = document.documentElement.clientHeight - 30
@@ -1514,6 +1518,11 @@ $(function (){
             oldw = width
         }
     }
+    document.onmouseup =  function(e){
+        resize_pn = false;
+        resize_rn = false;
+    }
+    
     document.getElementById("svgAxis").style.visibility = "visible";
     
     d3.select("#cmpa")
