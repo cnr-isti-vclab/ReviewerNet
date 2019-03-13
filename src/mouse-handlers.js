@@ -1642,10 +1642,9 @@ function papDblc(event){
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     
-    zoom_by(1)
     deleteP(idClick)
     refresh_export()
-    
+    zoom_by(1)
     document.getElementsByClassName("td2title").innerHTML = ""
 }
 
