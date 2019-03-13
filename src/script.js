@@ -24,7 +24,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     inC = [],
     outC = [],
     its = 0,
-    zoomFact = 1,
+    zoomFact = 1.0,
     citPrint = [],
     papersFiltered = [],
     authsFiltered = [],
@@ -99,6 +99,7 @@ function start_click_handler(){
 function updateWidth(){
     xConstrained.range([15, w -30]);
     d3.select("#axis").remove()
+    d3.select("#scale").remove()
     if(svgAxis) svgAxis.append("g").attr("id", "axis").call(xaxis);
 }
 
@@ -434,6 +435,38 @@ function setMouseHandlers(){
         //.on("mousemove", function(){resize_ag = true})
         .on("mouseup", function(){resize_ag = false})
         //.on("mouseout", function(){resize_ag = false})
+    
+     $("#zoomin-button")
+        .on("click", function() {
+            if(zoomFact<10){
+                zoomFact = Math.min(zoomFact+0.5, 10);
+                zoom_by(zoomFact)
+            }                    
+     })
+        .on("mouseenter", function() {d3.select("#zoomin-img").style("opacity", "0.55").transition().duration(100)})
+        .on("mouseout", function(){d3.select("#zoomin-img").style("opacity", "0.3")})
+     
+    $("#zoomout-button")
+        .on("click", function() {
+            if(zoomFact>1){
+                zoomFact = Math.max(zoomFact-0.5, 1);
+                zoom_by(zoomFact)
+            }                    
+     })
+     .on("mouseenter", function() {d3.select("#zoomout-img").style("opacity", "0.55").transition().duration(100)})
+        .on("mouseout", function(){d3.select("#zoomout-img").style("opacity", "0.3")})
+    
+     $("#reset-button")
+        .on("click", function() {
+            if(zoomFact!=1){
+                if(idClickedA != 0) unclick_auth(clkA)
+                if(clickP) unclick_pap(clkPp)
+                zoom_by(1)
+                paperGraph(papersFiltered, citPrint, idPs, simulation)
+            }})
+     .on("mouseenter", function() {d3.select("#reset-img").style("opacity", "0.55").transition().duration(100)})
+     .on("mouseout", function(){d3.select("#reset-img").style("opacity", "0.3")})
+    
     
     $( "#resizable" )
         .on("mousedown", function(){resize_pn = true})
@@ -792,12 +825,13 @@ function node_in_range(ymin, ymax){
     })
 }
 
-function zoom_by(zf){  
+function zoom_by(zf){ 
+    
      zoomFact = zf
      zoom_scaler = d3.scaleLinear()
         .domain([0, heightP])
         .range([0, baseHeight * zoomFact])
-
+    d3.select("#scale").text("Y-scaling factor = "+zoomFact.toFixed(1))
      let minc = heightP, maxc = 0;
     simulation.stop()
      heightP = baseHeight *(Math.log(zoomFact)+1)
@@ -855,6 +889,14 @@ function zoom_by(zf){
         //minc = Math.min(minc, ret)
         return ret == 30 ? ret : ret-minc
         })
+    let at = authors.filter((el) => el.id === idClickedA)[0]
+    if(at){
+        reset_texts()
+        popTextA.style("opacity", 0)
+        popRectA.style('opacity',0)
+        d3.select(".txtspan").remove()
+        reclick_auth(at)
+    }
 }
 
 function paperGraph(papers1, citations1, idPs, simulation) {
@@ -862,16 +904,21 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     d3.select("#svgP").remove()
     d3.select(".ap").append("svg").attr("id", "svgP")
     getPaperSvg()
+    
     var svg = svgP
     svg.attr("y", "120")
     svg.attr("width", "100%")
    
-    
+        d3.select("#scale").remove()
     d3.select("#pn").text(idPs.length).attr("x", 65)
       .attr('dy', 25).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
       .attr("x", 65)
       .attr('dy', 30)
       .text(papersFiltered.length)
+     d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
+    .attr("x", () => width-200)
+      .attr('y', 45)
+      .text("Y-scaling factor = "+zoomFact.toFixed(1))
     
     
     var link = svg.append("g")
@@ -917,7 +964,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
-            zoom_by(1)
+            zoom_by(1.0)
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d)
             d3.event.stopPropagation()
@@ -990,11 +1037,15 @@ popRect = svgP.append("rect")
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
     
-     d3.select("#svgP").attr("width", "100%")
+    /* d3.select("#svgP").attr("width", "100%")
         .call(d3.zoom().on("zoom", function(){
-             zoomFact = Math.max(1,Math.min(d3.event.transform.k, 10));
-             zoom_by(zoomFact)
-        }))
+             let old_z = zoomFact
+             
+             zoomFact = d3.event.sourceEvent.deltaY > 0 ? zoomFact+0.2 : zoomFact-0.2
+             zoomFact = Math.max(1.0,Math.min(zoomFact, 10));
+             if(old_z != zoomFact)
+                zoom_by(zoomFact)
+        }))*/
 
 }
 
@@ -1616,7 +1667,7 @@ $(function (){
              if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
                 updateWidth()
                  simulationA.stop()
-                 zoom_by(1)
+                 zoom_by(1.0)
                  paperGraph(papersFiltered, citPrint, idPs, simulation)
                     setTimeout(function(){ 
                         simulation.stop()

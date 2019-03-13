@@ -614,9 +614,18 @@ hr {
     font-variant-caps: all-petite-caps;
     pointer-events: all
 }
+
+#scale{
+    font-size: 1em;
+    font-style: italic;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
 .label-txtspanL{
     font-size: 0.5em;
-    font-variant-caps:normal
+    font-variant-caps:small-caps;
+    pointer-events: none
 }
 
 #loading {
@@ -1010,3 +1019,4 @@ table#bnt-table td {
     cursor: pointer;
     color: blue;
 }
+

@@ -59,12 +59,27 @@
 <!--                              <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />-->
                               <stop id="thirdStopS" offset="100%" style="stop-color:#00cc99;stop-opacity:1"  />
                             </linearGradient>
+                <pattern id="zoomin-image" x="0%" y="0%" height="100%" width="100%"
+                         viewBox="0 0 5 5">
+                        <image id="zoomin-img" x="0%" y="0%" width="5" height="5" href="/imgs/zoom-in.svg"  style="opacity: 0.3"></image>
+                </pattern>
+                <pattern id="zoomout-image" x="0%" y="0%" height="100%" width="100%"
+                         viewBox="0 0 5 5">
+                        <image id="zoomout-img" x="0%" y="0%" width="5" height="5" href="/imgs/zoom-out.svg"  style="opacity: 0.3"></image>
+                </pattern>
+                <pattern id="reset-image" x="0%" y="0%" height="100%" width="100%"
+                         viewBox="0 0 5 5">
+                        <image id="reset-img" x="0.15%" y="0%" width="4" height="4" href="/imgs/icon.svg" style="opacity: 0.3"></image>
+                </pattern>
                           </defs>
                
-                          <rect id="cmpa" class = "cmpClass pop-up" x="20" y="126" width="10px" title = "Is a color-map associated with the number of in-citations. The steps are 0 and 100." height="36%" fill="url(#grad_v)" text ="100" ry="6px" />
-                        <text x="35px" y="126px" class = "cmpClass" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">100</text>
+                          <rect id="cmpa" class = "cmpClass pop-up" x="20" y="160" width="10px" title = "Is a color-map associated with the number of in-citations. The steps are 0 and 100." height="36%" fill="url(#grad_v)" text ="100" ry="6px" />
+                    <circle style = "cursor: pointer; pointer-events: all" id="zoomin-button" cx="30" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomin-image)" />
+                    <circle style = "cursor: pointer; pointer-events: all" id="zoomout-button" cx="55" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomout-image)" />
+                    <circle style = "cursor: pointer; pointer-events: all" id="reset-button" cx="80" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#reset-image)" />
+                        <text x="35px" y="160px" class = "cmpClass" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">100</text>
 <!--                        <text x="35px" y="275px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">30</text>-->
-                        <text class = "cmpClass" x="35px" y="420px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
+                        <text class = "cmpClass" x="35px" y="454px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
 
                 </svg>
                 <svg id = "svgP" class = "svg" style="width: inherit" height= 500px >
@@ -289,7 +304,7 @@
                     <li> once you identified one or more candidate reviewers who fit your requirements, input their names in the ‘Selected Reviewers’ field;</li>
                     <li> download your list of reviewers; ReviewerNet will also add a list of potential substitute reviewers, in case of decline.
                     </ul>
-                For further information, refer to the paper XXXX and the accompanying <a href="https://youtu.be/JnomPO8QI28">video</a>
+                For further information, refer to the paper XXXX and the accompanying <a class="links" href="https://youtu.be/JnomPO8QI28">video</a>
                 </div>
             <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
           </td>
