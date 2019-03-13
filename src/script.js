@@ -1,4 +1,4 @@
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false,
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight,
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -24,7 +24,6 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     inC = [],
     outC = [],
     its = 0,
-    zoomFact = 1,
     citPrint = [],
     papersFiltered = [],
     authsFiltered = [],
@@ -35,7 +34,6 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 800, baseHeight = 800,
     h = height,
     w = width,
     oldw = w,
@@ -428,18 +426,6 @@ function setMouseHandlers(){
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", papDblc);
-    
-    $( "#resizable1" )
-        .on("mousedown", function(){resize_ag = true})
-        //.on("mousemove", function(){resize_ag = true})
-        .on("mouseup", function(){resize_ag = false})
-        //.on("mouseout", function(){resize_ag = false})
-    
-    $( "#resizable" )
-        .on("mousedown", function(){resize_pn = true})
-        //.on("mousemove", function(){resize_pn = true})
-        .on("mouseup", function(){resize_pn = false})
-        //.on("mouseout", function(){resize_pn = false})
 }
 
 function updateAuthDict(pf){
@@ -727,7 +713,7 @@ function define_gradients(){
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return heightP})
+        .attr("height", function(){return "800px"})
         .append("g")
         .attr("id", "gP")
     define_gradients()
@@ -756,7 +742,7 @@ function setSimulation(){
                 .theta(0.5))
 //                .distanceMin(40)
 //                .distanceMax(140))
-        .force("center", d3.forceCenter((w / 2), (heightP / 2)))
+        .force("center", d3.forceCenter((w / 2), (800 / 2)))
         //.force("y", d3.forceY(-180))
         //.force("x", d3.forceX())
     simulation.alpha(1)
@@ -786,77 +772,6 @@ function append_ico(svgN, url, x, y){
         $(svgN).append(svgimg);
 }
 
-function node_in_range(ymin, ymax){
-    return papersPrint.filter( function (el){
-        return $("#p"+el)[0].cy.baseVal.value >= ymin && $("#p"+el)[0].cy.baseVal.value <= ymax
-    })
-}
-
-function zoom_by(zf){  
-     zoomFact = zf
-     zoom_scaler = d3.scaleLinear()
-        .domain([0, heightP])
-        .range([0, baseHeight * zoomFact])
-
-     let minc = heightP, maxc = 0;
-    simulation.stop()
-     heightP = baseHeight +  baseHeight *Math.log(zoomFact)
-         //console.log(Math.sqrt(zoomFact))
-    //console.log(zoomFact)
-    simulation.force("center", d3.forceCenter((w / 2), (heightP / 2)))
-
-     $("#svgP")[0].height.baseVal.value = heightP
-
-     d3.selectAll(".papersNode").attr("lel", function () {
-         //console.log(this.attributes.cy)
-        if(!isNaN(this.attributes.cy)){
-            minc = Math.min(minc, this.attributes.cy)
-            maxc = Math.max(maxc, this.attributes.cy)
-        }
-        
-     })
-     minc = Math.max(10, minc/10)
-     //console.log("maxc "+maxc)
-     //console.log("newH "+(heightP - maxc + 20)) 
-     //console.log("H "+heightP)
-    
-     d3.selectAll(".papersNode").attr("cy", function () {
-         if(this.attributes.baseY){
-              let ny = zoom_scaler(this.attributes.baseY.value),
-                  ret = Math.max(30, Math.min(heightP - 20, ny));
-             return ret == 30 ? ret : ret-minc
-         }
-         let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.__data__.y)))   
-            return ret == 30 ? ret : ret-minc
-     })
-
-
-     d3.selectAll(".plink")
-         .attr("y1", function () {
-         if(this.attributes.baseY1){
-             let ny = zoom_scaler(this.attributes.baseY1.value),
-                 ret =  Math.max(30, Math.min(heightP - 20, ny))
-             //minc = Math.min(minc, ret)
-             return ret == 30 ? ret : ret-minc
-         }
-         console.log(this.y1.baseVal.value)
-        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-        //minc = Math.min(minc, ret)
-        return ret == 30 ? ret : ret-minc
-        })
-         .attr("y2",function () {
-         if(this.attributes.baseY2){
-             let ny = zoom_scaler(this.attributes.baseY2.value),
-                ret =  Math.max(30, Math.min(heightP - 20, ny))
-             //minc = Math.min(minc, ret)
-             return ret == 30 ? ret : ret-minc
-         }
-        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-        //minc = Math.min(minc, ret)
-        return ret == 30 ? ret : ret-minc
-        })
-}
-
 function paperGraph(papers1, citations1, idPs, simulation) {
     simulation.stop()
     d3.select("#svgP").remove()
@@ -865,8 +780,7 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     var svg = svgP
     svg.attr("y", "120")
     svg.attr("width", "100%")
-   
-    
+    d3.select("#gP").attr("width", "100%")
     d3.select("#pn").text(idPs.length).attr("x", 65)
       .attr('dy', 25).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
       .attr("x", 65)
@@ -917,11 +831,10 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
-            zoom_by(1)
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d)
-            d3.event.stopPropagation()
         })
+
 
         
 popRect = svgP.append("rect")
@@ -954,15 +867,9 @@ popRect = svgP.append("rect")
     function ticked() {
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.source.y));
-                d3.select(this).attr("baseY1", () => ny ) 
-                return ny; /*d.source.y*/; })
+            .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.target.y));
-                d3.select(this).attr("baseY2", () => ny ) 
-                return ny;})
+            .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
            .attr("stroke", function(d){
                 if(d.source.year != d.target.year)
                     return "url(#gradxX)";
@@ -973,10 +880,7 @@ popRect = svgP.append("rect")
             .attr("cx", function(d) { 
             var nX = xConstrained(d.year);
             return nX; })
-            .attr("cy", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.y));
-                d3.select(this).attr("baseY", () => ny ) 
-            return ny; })
+            .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
     }
     if(simulation){
         
@@ -989,13 +893,6 @@ popRect = svgP.append("rect")
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
-    
-     d3.select("#svgP").attr("width", "100%")
-        .call(d3.zoom().on("zoom", function(){
-             zoomFact = Math.max(1,Math.min(d3.event.transform.k, 10));
-             zoom_by(zoomFact)
-        }))
-
 }
 
 //rgba( 223, 225, 225, 0.604 )
@@ -1007,19 +904,14 @@ function dragstarted(d) {
         d3.select("#p"+d.id)
             .attr("r", 10)
     //if(clickP) unclick_pap(clkPp)
-  /*if (!d3.event.active) */
-    if(zoomFact == 1){
-        simulation.alpha(0.3).alphaMin(0.1).alphaDecay(0.0001).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-    }
+  /*if (!d3.event.active) */simulation.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
+  d.fx = d.x;
+  d.fy = d.y;
 }
 
 function dragged(d) {
-    if(zoomFact == 1){
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-   }
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
     
      d3.select(this)
         .attr("r", 10);
@@ -1539,9 +1431,7 @@ $(function (){
     $( "#resizable" ).resizable({
         handles: "s",
         resize: function( event, ui ) {
- 
              onlyag = false
-            
             if(ui.size.height < 200){
                 heightA = 200
                 ui.size.height = 200
@@ -1559,14 +1449,12 @@ $(function (){
             d3.select("#main-span").attr("dy",function(){
             return heightA-100}) 
             event.stopPropagation()
-            
         }
     });
     
     $( "#resizable1" ).resizable({
         handles: "s",
         resize: function( event, ui ) {
-            //console.log("res1")
             onlyag = true
             if(ui.size.height < 300){
                 heightAG = 300
@@ -1587,17 +1475,16 @@ $(function (){
             newH = _docHeight - heightA;
             document.getElementById('row21').style.height = newH.toString()+"px";
 /*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
-
+            
             event.stopPropagation()
         }
     });
-   
+    
     setMouseHandlers()
 
     window.onresize = function(e) {
         
-        if(!resize_pn && !resize_ag){
-            //console.log("res_global")
+        if(!resize_modal){
             width = $("#aut_table").width()
             _docHeight = document.documentElement.clientHeight - 30
             height = document.documentElement.clientHeight - 30
@@ -1608,6 +1495,7 @@ $(function (){
             let newH = _docHeight - heightA;
             document.getElementById('row21').style.height = newH.toString()+"px";
 
+
             newH = _docHeight - heightAG;
             document.getElementById('row22').style.height = newH.toString()+"px";
             d3.select("#main-span").attr("dy",function(){
@@ -1616,23 +1504,16 @@ $(function (){
              if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
                 updateWidth()
                  simulationA.stop()
-                 zoom_by(1)
                  paperGraph(papersFiltered, citPrint, idPs, simulation)
                     setTimeout(function(){ 
                         simulation.stop()
-                    }, 100);
+                    }, 1000);
                  authorBars()
                     //authorGraph()
                 }
             oldw = width
         }
     }
-    document.onmouseup = function(e){
-        //console.log("up")
-        resize_pn = false
-        resize_ag = false
-    }
-    
     document.getElementById("svgAxis").style.visibility = "visible";
     
     d3.select("#cmpa")

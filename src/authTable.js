@@ -201,7 +201,6 @@ function printPapers(auths){
             .on("mouseover", handleMouseOverPB)
             .on("mouseout", handleMouseOutPB)
             .on("dblclick", function(d) {
-                zoom_by(1)
                 addPaper(d)
                 popText.attr("width", 0)
                     .attr("x", -5000)
