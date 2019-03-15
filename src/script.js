@@ -24,7 +24,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     inC = [],
     outC = [],
     its = 0,
-    zoomFact = 1.0,
+    zoomFact = 1.0, dy = 0, old_dy = 0, old_zoomFact=1.0,
     citPrint = [],
     papersFiltered = [],
     authsFiltered = [],
@@ -35,7 +35,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 1000, baseHeight = 1000,
+    heightP = 800, baseHeight = 800,
     h = height,
     w = width,
     oldw = w,
@@ -757,6 +757,14 @@ function define_gradients(){
         .style("stop-opacity", "1")
 }
 
+function centerSvg(){
+    let patt = new RegExp("[0-9]+"),
+        hres = parseFloat(patt.exec(document.getElementById('row21').style.height)), 
+        hp = (heightP - hres)/2;
+        document.getElementById('scrollable').scrollTop = hp;
+    //console.log("hp "+hp)
+}
+
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
@@ -817,86 +825,6 @@ function append_ico(svgN, url, x, y){
         svgimg.setAttributeNS(null,'y',y);
         svgimg.setAttributeNS(null, 'opacity', '0.5');
         $(svgN).append(svgimg);
-}
-
-function node_in_range(ymin, ymax){
-    return papersPrint.filter( function (el){
-        return $("#p"+el)[0].cy.baseVal.value >= ymin && $("#p"+el)[0].cy.baseVal.value <= ymax
-    })
-}
-
-function zoom_by(zf){ 
-    
-     zoomFact = zf
-     zoom_scaler = d3.scaleLinear()
-        .domain([0, heightP])
-        .range([0, baseHeight * zoomFact])
-    d3.select("#scale").text("Y-scaling factor = "+zoomFact.toFixed(1))
-     let minc = heightP, maxc = 0;
-    simulation.stop()
-     heightP = baseHeight *(Math.log(zoomFact)+1)
-         //console.log(Math.sqrt(zoomFact))
-    //console.log(zoomFact)
-    simulation.force("center", d3.forceCenter((w / 2), (heightP / 2)))
-
-     $("#svgP")[0].height.baseVal.value = heightP
-
-     d3.selectAll(".papersNode").attr("lel", function () {
-         //console.log(this.attributes.cy)
-        if(!isNaN(this.attributes.cy)){
-            minc = Math.min(minc, this.attributes.cy)
-            maxc = Math.max(maxc, this.attributes.cy)
-        }
-        
-     })
-     minc = Math.max(10, minc/10)
-     //console.log("maxc "+maxc)
-     //console.log("newH "+(heightP - maxc + 20)) 
-     //console.log("H "+heightP)
-    
-     d3.selectAll(".papersNode").attr("cy", function () {
-         if(this.attributes.baseY){
-              let ny = zoom_scaler(this.attributes.baseY.value),
-                  ret = Math.max(30, Math.min(heightP - 20, ny));
-             return ret == 30 ? ret : ret-minc
-         }
-         let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.__data__.y)))   
-            return ret == 30 ? ret : ret-minc
-     })
-
-
-     d3.selectAll(".plink")
-         .attr("y1", function () {
-         if(this.attributes.baseY1){
-             let ny = zoom_scaler(this.attributes.baseY1.value),
-                 ret =  Math.max(30, Math.min(heightP - 20, ny))
-             //minc = Math.min(minc, ret)
-             return ret == 30 ? ret : ret-minc
-         }
-         console.log(this.y1.baseVal.value)
-        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-        //minc = Math.min(minc, ret)
-        return ret == 30 ? ret : ret-minc
-        })
-         .attr("y2",function () {
-         if(this.attributes.baseY2){
-             let ny = zoom_scaler(this.attributes.baseY2.value),
-                ret =  Math.max(30, Math.min(heightP - 20, ny))
-             //minc = Math.min(minc, ret)
-             return ret == 30 ? ret : ret-minc
-         }
-        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-        //minc = Math.min(minc, ret)
-        return ret == 30 ? ret : ret-minc
-        })
-    let at = authors.filter((el) => el.id === idClickedA)[0]
-    if(at){
-        reset_texts()
-        popTextA.style("opacity", 0)
-        popRectA.style('opacity',0)
-        d3.select(".txtspan").remove()
-        reclick_auth(at)
-    }
 }
 
 function paperGraph(papers1, citations1, idPs, simulation) {
@@ -1036,9 +964,29 @@ popRect = svgP.append("rect")
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
-    
-    /* d3.select("#svgP").attr("width", "100%")
+   d3.selectAll("#svgP").call(d3.drag()
+            //.on("start", dragStart)
+            .on("drag",dragSvg))
+            //.on("end", dragEnd))
+    .on("wheel", scaleSvg)
+    d3.select("#scrollable")
+        .on("scroll", scrollSvg)
+        .on("wheel", bypass_wheel)
+           /*
+    d3.select("#svgP").attr("width", "100%")
         .call(d3.zoom().on("zoom", function(){
+            let evt = d3.event.transform 
+            evt.x = 0
+            evt.k = 0
+        console.log(evt)
+            d3.select("#svgP").style("transform", evt)
+         zoomFact = d3.event.sourceEvent.deltaY > 0 ? zoomFact+0.2 : zoomFact-0.2
+             zoomFact = Math.max(1.0,Math.min(zoomFact, 10));
+                zoom_by(zoomFact)
+        event.stopPropagation()
+            
+    }))
+
              let old_z = zoomFact
              
              zoomFact = d3.event.sourceEvent.deltaY > 0 ? zoomFact+0.2 : zoomFact-0.2
@@ -1046,6 +994,7 @@ popRect = svgP.append("rect")
              if(old_z != zoomFact)
                 zoom_by(zoomFact)
         }))*/
+    centerSvg()
 
 }
 
@@ -1396,14 +1345,12 @@ function setup_searchbars(){
         }
     })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let /*fw = ((!authColor(item) && !authColor_r(item)) ||
-                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",*/
-                col = "black",
+        let col = "black",
             fs = (authColor(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
-            else if(authColor_r(item)) return "#8d585a";
+            else if(authColor_r(item)) col  = "#8d585a";
             
               return $( "<li>" )
                 .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )

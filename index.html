@@ -44,7 +44,7 @@
          </div>
         <!-- PN row-->
         <div class="row ui-widget-content" id="row21">
-            <div  class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
+            <div id="scrollable" class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
                 <!-- Start Msg -->
                 <span id="loading" class="text-center"><div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> <!--<div class="loader text-center"></div>--></span>
                 <span id="startMsg">
@@ -74,9 +74,9 @@
                           </defs>
                
                           <rect id="cmpa" class = "cmpClass pop-up" x="20" y="160" width="10px" title = "Is a color-map associated with the number of in-citations. The steps are 0 and 100." height="36%" fill="url(#grad_v)" text ="100" ry="6px" />
-                    <circle style = "cursor: pointer; pointer-events: all" id="zoomin-button" cx="30" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomin-image)" />
-                    <circle style = "cursor: pointer; pointer-events: all" id="zoomout-button" cx="55" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomout-image)" />
-                    <circle style = "cursor: pointer; pointer-events: all" id="reset-button" cx="80" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#reset-image)" />
+<!--                    <circle style = "cursor: pointer; pointer-events: all" id="zoomin-button" cx="30" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomin-image)" />
+                    <circle style = "cursor: pointer; pointer-events: all" id="zoomout-button" cx="55" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#zoomout-image)" />-->
+                    <circle style = "cursor: pointer; pointer-events: all" id="reset-button" cx="30" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#reset-image)" />
                         <text x="35px" y="160px" class = "cmpClass" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">100</text>
 <!--                        <text x="35px" y="275px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">30</text>-->
                         <text class = "cmpClass" x="35px" y="454px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
@@ -332,6 +332,7 @@
 </div>
 <script src="src\author-graph.js"> //rgba( 71, 66, 66, 0 )</script>
 <script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
+<script src="src\pan-zoom.js"></script>
 <script src="src\export.js"> //rgba( 71, 66, 66, 0 )</script>
 <script src="src\authTable.js"></script>
 <script src="src\mouse-handlers.js"></script>
