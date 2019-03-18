@@ -35,7 +35,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 800, baseHeight = 800,
+    heightP = 5000, baseHeight = 5000,
     h = height,
     w = width,
     oldw = w,
@@ -436,31 +436,11 @@ function setMouseHandlers(){
         .on("mouseup", function(){resize_ag = false})
         //.on("mouseout", function(){resize_ag = false})
     
-     $("#zoomin-button")
-        .on("click", function() {
-            if(zoomFact<10){
-                zoomFact = Math.min(zoomFact+0.5, 10);
-                zoom_by(zoomFact)
-            }                    
-     })
-        .on("mouseenter", function() {d3.select("#zoomin-img").style("opacity", "0.55").transition().duration(100)})
-        .on("mouseout", function(){d3.select("#zoomin-img").style("opacity", "0.3")})
-     
-    $("#zoomout-button")
-        .on("click", function() {
-            if(zoomFact>1){
-                zoomFact = Math.max(zoomFact-0.5, 1);
-                zoom_by(zoomFact)
-            }                    
-     })
-     .on("mouseenter", function() {d3.select("#zoomout-img").style("opacity", "0.55").transition().duration(100)})
-        .on("mouseout", function(){d3.select("#zoomout-img").style("opacity", "0.3")})
-    
      $("#reset-button")
         .on("click", function() {
             if(zoomFact!=1){
-                if(idClickedA != 0) unclick_auth(clkA)
-                if(clickP) unclick_pap(clkPp)
+                if(idClickedA && idClickedA != 0) unclick_auth(clkA)
+                if(clkPp) unclick_pap(clkPp)
                 zoom_by(1)
                 paperGraph(papersFiltered, citPrint, idPs, simulation)
             }})
@@ -757,14 +737,6 @@ function define_gradients(){
         .style("stop-opacity", "1")
 }
 
-function centerSvg(){
-    let patt = new RegExp("[0-9]+"),
-        hres = parseFloat(patt.exec(document.getElementById('row21').style.height)), 
-        hp = (heightP - hres)/2;
-        document.getElementById('scrollable').scrollTop = hp;
-    //console.log("hp "+hp)
-}
-
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
@@ -833,6 +805,8 @@ function paperGraph(papers1, citations1, idPs, simulation) {
     d3.select(".ap").append("svg").attr("id", "svgP")
     getPaperSvg()
     
+    zoomFact = 1
+    
     var svg = svgP
     svg.attr("y", "120")
     svg.attr("width", "100%")
@@ -844,9 +818,11 @@ function paperGraph(papers1, citations1, idPs, simulation) {
       .attr('dy', 30)
       .text(papersFiltered.length)
      d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
-    .attr("x", () => width-200)
+    .attr("x", () => width-150)
       .attr('y', 45)
-      .text("Y-scaling factor = "+zoomFact.toFixed(1))
+      .text("Y-force = "+zoomFact.toFixed(1)+"X")
+    d3.select("#reset-button").attr("cx", () => width-165)
+    .attr("cy", () => 42)
     
     
     var link = svg.append("g")
@@ -892,12 +868,11 @@ function paperGraph(papers1, citations1, idPs, simulation) {
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
-            zoom_by(1.0)
+            zoom_by(1)
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d)
             d3.event.stopPropagation()
         })
-
         
 popRect = svgP.append("rect")
          .attr('x',0)
@@ -952,7 +927,17 @@ popRect = svgP.append("rect")
                 let ny = Math.max(30, Math.min(heightP - 20, d.y));
                 d3.select(this).attr("baseY", () => ny ) 
             return ny; })
+    
+         if(idClickedA && idClickedA!=0){
+            reset_texts()
+            popTextA.style("opacity", 0)
+            popRectA.style('opacity',0)
+            d3.select(".txtspan").remove()
+            reclick_auth(clkA)
+        }
+        
     }
+    
     if(simulation){
         
         simulation
@@ -964,36 +949,9 @@ popRect = svgP.append("rect")
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
-   d3.selectAll("#svgP").call(d3.drag()
-            //.on("start", dragStart)
-            .on("drag",dragSvg))
-            //.on("end", dragEnd))
-    .on("wheel", scaleSvg)
-    d3.select("#scrollable")
-        .on("scroll", scrollSvg)
-        .on("wheel", bypass_wheel)
-           /*
-    d3.select("#svgP").attr("width", "100%")
-        .call(d3.zoom().on("zoom", function(){
-            let evt = d3.event.transform 
-            evt.x = 0
-            evt.k = 0
-        console.log(evt)
-            d3.select("#svgP").style("transform", evt)
-         zoomFact = d3.event.sourceEvent.deltaY > 0 ? zoomFact+0.2 : zoomFact-0.2
-             zoomFact = Math.max(1.0,Math.min(zoomFact, 10));
-                zoom_by(zoomFact)
-        event.stopPropagation()
-            
-    }))
 
-             let old_z = zoomFact
-             
-             zoomFact = d3.event.sourceEvent.deltaY > 0 ? zoomFact+0.2 : zoomFact-0.2
-             zoomFact = Math.max(1.0,Math.min(zoomFact, 10));
-             if(old_z != zoomFact)
-                zoom_by(zoomFact)
-        }))*/
+    svg_handlers()
+    
     centerSvg()
 
 }
@@ -1008,18 +966,16 @@ function dragstarted(d) {
             .attr("r", 10)
     //if(clickP) unclick_pap(clkPp)
   /*if (!d3.event.active) */
-    if(zoomFact == 1){
-        simulation.alpha(0.3).alphaMin(0.1).alphaDecay(0.0001).restart();
+        simulation.alpha(0.2).alphaMin(0.1).alphaDecay(0.0001).restart();
     d.fx = d.x;
     d.fy = d.y;
-    }
+    
 }
 
 function dragged(d) {
-    if(zoomFact == 1){
+    
         d.fx = d3.event.x;
         d.fy = d3.event.y;
-   }
     
      d3.select(this)
         .attr("r", 10);
@@ -1061,6 +1017,8 @@ function dragged(d) {
                 return color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
+    
+    simulation.alpha(0.2);
 }
 
 function dragended(d) {

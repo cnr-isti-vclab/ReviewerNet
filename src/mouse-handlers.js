@@ -154,7 +154,7 @@ function unclick_auth(d){
     idClickedA = 0;
         clkIds= [];
         clkA = null;
-        clkRect.attr("stroke-width",0)
+        if(clkRect) clkRect.attr("stroke-width",0)
         clkRect = null;
         clkLine = null;
     click = false;
@@ -1375,7 +1375,7 @@ function addFromList(event){
         idClick = idClick.substring(1,idClick.length);
         var paper = papers.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick)){
-            zoom_by(1.0)
+            zoom_by(1)
             addPaper(paper)
         }
     }else{
@@ -1642,7 +1642,7 @@ function papDblc(event){
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     
-    zoom_by(1.0)
+    zoom_by(1)
     deleteP(idClick)
     refresh_export()
     
