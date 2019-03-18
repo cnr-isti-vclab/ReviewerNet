@@ -184,7 +184,7 @@ function scaleSvg(deltaY){
                 .strength(-50*zoomFact)
                 .theta(0.5))
         
-        simulation.restart().alpha(0.2)
+        simulation.restart().alpha(0.3)
 
         //document.getElementById('scrollable').scrollTop = scroll1
         /*let scroll1 = d3.event.layerY;
