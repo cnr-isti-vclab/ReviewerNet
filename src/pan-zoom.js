@@ -20,7 +20,7 @@ function svg_handlers(){
           event.preventDefault()
          event.stopPropagation()
         let deltaY = event.deltaY 
-        console.log(deltaY)
+        //console.log(deltaY)
         if(deltaY!= 0) scaleSvg(deltaY)
         });
 //    d3.select("#scrollable")
