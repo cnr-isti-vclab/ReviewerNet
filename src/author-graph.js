@@ -217,8 +217,8 @@ function dragstartedA(d) {
     simulation.stop()
     d.fx = d.x;
     d.fy = d.y;
-    popTextA.style("opacity", 0)
-    popRectA.style("opacity",0)
+    //popTextA.style("opacity", 0)
+    //popRectA.style("opacity",0)
     
 }
 

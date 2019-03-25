@@ -1,7 +1,7 @@
 .gui-menu-item{
     font-style: oblique;
     font-variant-caps: titling-caps; 
-    font-size: 0.8em; 
+    font-size: 0.7em; 
     font-weight: bold;
     color: rgba( 56, 90, 110, 0.792 );
     transform: translateY(15%);
@@ -991,7 +991,7 @@ table#bnt-table td {
     color:blue;
 }
 #import {
-    font-size: 0.8em;
+    font-size: 1em;
     color: #419ceb
 }
 
@@ -999,7 +999,6 @@ table#bnt-table td {
 	/* cursor: pointer; */
 	width: 80px;
 	height: 22px;
-	font-size: 0.94em;
 	color: #3484ca;
 	border-color: lightblue;
 	border-width: 1px;
@@ -1009,7 +1008,7 @@ table#bnt-table td {
 	/* cursor: pointer; */
 	width: 80px;
 	height: 22px;
-	font-size: 0.66em;
+	font-size: 0.62em;
 	color: #3484ca;
 	border-color: lightblue;
 	border-width: 1px;
@@ -1020,3 +1019,11 @@ table#bnt-table td {
     color: blue;
 }
 
+
+.tb_labels {
+    float: left;
+    font-size: 0.8em;
+    font-variant-caps: petite-caps; 
+    color: #385e84; 
+    font-weight: bold;
+}
