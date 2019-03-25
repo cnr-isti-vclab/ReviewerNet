@@ -78,7 +78,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     xConstrained = d3.scaleLinear()
         .domain([minYear, maxYear])
         .range([10, width - 20]),
-    xaxis = d3.axisBottom().scale(xConstrained); 
+    xaxis = d3.axisBottom().scale(xConstrained);
 
 function getXRect(x, wdt, inGraph){
     
@@ -88,12 +88,6 @@ function getXRect(x, wdt, inGraph){
         else return width - wdt -15
     else if(x+wdt < wdt) return 5
         else return x + 5
-}
-
-function start_click_handler(){
-    document.getElementById("loading").style.visibility = "hidden";
-    d3.select(".pop-up").style("pointer", "help")
-    toolboxInit()
 }
 
 function updateWidth(){
@@ -185,12 +179,6 @@ function getAuths() {
                 authors[i]=a[i]
                 authDict[a[i].id] = [2019, 1900, []]
             }
-
-            init_txt = "<br><br><b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains "+papers.length+" papers, "+citations.length+" citations, and "+authors.length+" authors, from 1995 to 2018, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br><center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>The bibliographic database is fully loaded at the beginning and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>" 
-    
-            document.getElementById("loading").innerHTML = init_txt 
-            d3.select("#loading").style("pointer-events", "all")
-            d3.select("#loading").on("click", start_click_handler);
         })
         
     }
@@ -274,8 +262,6 @@ function setWinMouseHandlers(){
 }
 
 function setMouseHandlers(){
-    
-    setWinMouseHandlers()
     
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
@@ -1050,7 +1036,24 @@ function process_auth(data) {
 }
 
 function import_ds(path){
-    
+    var ele = $("#ldr-val");
+    var clr = null;
+    var rand = 0;
+    (loop = function() {
+    clearTimeout(clr);
+    (inloop = function() {
+      ele.html(rand += 1);
+        if(rand >= 49) return;
+      clr = setTimeout(inloop, 125);
+    })();
+    //setTimeout(loop, 2500);
+    })();
+    var graphTxt = fetch('datasets/p_v0518f.txt')
+    .then(response => response.text())
+    .then(function(text) {
+        var graph = JSON.parse(text);
+        getArrays(graph)       
+    });
 }
 
 function get_JSON(json_id, process_JSON) {
@@ -1070,31 +1073,8 @@ $(function (){
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
-
-    setMouseHandlers()
-
-    setSvgs()
-    simulation = setSimulation()
-    simulationA = setAGSimulation()
-
-    var ele = $("#ldr-val");
-    var clr = null;
-    var rand = 0;
-    (loop = function() {
-    clearTimeout(clr);
-    (inloop = function() {
-      ele.html(rand += 1);
-        if(rand >= 49) return;
-      clr = setTimeout(inloop, 125);
-    })();
-    //setTimeout(loop, 2500);
-    })();
-    var graphTxt = fetch('datasets/p_v0518f.txt')
-    .then(response => response.text())
-    .then(function(text) {
-        var graph = JSON.parse(text);
-        getArrays(graph)       
-    });
-    setup_searchbars()
-                                
+    setWinMouseHandlers()
+    
+    //d3.select("#loading").style("pointer-events", "all")
+    d3.select("#loading").on("click", start_click_handler);
 });

@@ -1,6 +1,24 @@
 var texts = [],
     clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine;
 
+function start_click_handler(){
+    console.log("start")
+    document.getElementById("loading").style.visibility = "hidden";
+    d3.select(".pop-up").style("pointer", "help")
+    toolboxInit()
+    
+    setMouseHandlers()    
+    setSvgs()
+    simulation = setSimulation()
+    simulationA = setAGSimulation()
+    
+    //mostra prima pagina 
+    //on click mostra sito con interfaccia inattiva
+    //due bottoni sotto il logo
+    //use default ds | import dataset 
+    
+    setup_searchbars()    
+}
 
 function overing_pap_bar(d){
     d3.select("#p"+d.id)

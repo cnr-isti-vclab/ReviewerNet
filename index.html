@@ -46,7 +46,11 @@
         <div class="row ui-widget-content" id="row21">
             <div id="scrollable" class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
                 <!-- Start Msg -->
-                <span id="loading" class="text-center"><div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> <!--<div class="loader text-center"></div>--></span>
+                <span id="loading" class="text-center"><!--<<div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> div class="loader text-center"></div>-->
+                <br><br>
+                <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains "+"xxxxx"+" papers, "+"xxxx"+" citations, and "+"xxxx"+" authors, from 1995 to 2019, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br>
+                <center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>If you choose to use the deafult instance of ReviewerNet, the bibliographic database is fully loaded and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>                
+                </span>
                 <span id="startMsg">
                 <img id="logo" src="imgs/logo.png">
                 <h3 id="titleLogo">ReviewerNet</h3>
@@ -299,7 +303,7 @@
             <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
           </td>
             <td>
-              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet </span> 
+              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet</span> 
             </td>
           <td id = "import">
               <button id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
@@ -310,7 +314,7 @@
                   </td>
                 <td>
                     
-                    <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
+                    <span style="justify-content: center; font-size: 0.75em; color: #1584c0">Default instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
 
             </td>
                   <td>

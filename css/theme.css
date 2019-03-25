@@ -633,7 +633,7 @@ hr {
     height: 100%;
     text-align: center;
     color: rgba( 0, 0, 0, 0.567 );
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: bold;
     font-style: normal;
     background-color: #d8d8d8;/*rgba( 59, 184, 174, 0.15 );*/
@@ -641,7 +641,6 @@ hr {
     top:        0; 
     left:       0; 
     position:   fixed;
-    pointer-events: none;
 }
 
 
