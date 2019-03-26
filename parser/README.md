@@ -22,7 +22,7 @@ The reference corpus can be found at http://labs.semanticscholar.org/corpus/. Th
 
 The papers are provided as json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 990 MB, and the total collection is about 46 GB.
 
-### ~~script.sh~~
+### script.sh
 
 The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 4 concurrent downloads. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
