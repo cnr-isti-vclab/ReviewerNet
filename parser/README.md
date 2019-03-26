@@ -13,7 +13,7 @@ To run the script succesfully you need:
 
 - python2.7 or higher, for parsing phase 
 
-- fuzzywuzzy, a fuzzy string matching python library. If python-Levenshtein is also installed, 
+- [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy/), a fuzzy string matching python library. If python-Levenshtein is also installed, 
  fuzzywuzzy uses Levenshtein Distance (up to 4-10x speedup)
 
 ### The SemanticScholar corpus
@@ -46,5 +46,6 @@ The completion time of the whole process with a speed connection of 1MB/s is abo
 ### Notes
 <hr>
 ^The completion time has been measured on a dual-core laptop. 
+
 ^^Use always semanticscholar.org as reference for journal names and available papers because the same journal/venue is referenced in different ways across different papers.
 We suggest to put at least three string for each journal in order to have better coverage in the fuzzy search.[see journals.py for an example]
