@@ -27,7 +27,7 @@ The papers are provided as json objects, one per line. Papers are grouped in bat
 The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 4 concurrent downloads. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
 
-- a folder named ~~dataset~~ which contains the files needed to run a ReviewerNet session.
+- a folder named *datasets* which contains the files needed to run a ReviewerNet session.
 
 - 47 corpus partitions as gzip files 
 
@@ -37,10 +37,10 @@ The completion time of the whole process with a speed connection of 1MB/s is abo
 
 Once exectued, the script checks the presence of the needed libraries, asking the user to install fuzzywuzzy if not present; then the latest corpus manifest is downloaded.
 
-At this point the **download&parse** process is started: each file listed in the manifest is downloaded - as a gzip - and filtered. The resulting files are stored with the "-filtered" suffix.
+At this point the **download&parse** process is started: each file listed in the manifest is downloaded - as a gzip - and filtered. The resulting files are stored with the *-filtered* suffix.
 
 When all partitions have been downloaded and filtered the **merging
-phase** can start. Filtered corpus partitions are merged togheter and the personalized dataset are build.
+phase** can start. Filtered corpus partitions are merged together and the personalized datasets are built.
 
 Eventually the script asks the user whether to delete or not the interemediate files (gzipped/filtered partitions).
 
@@ -48,14 +48,15 @@ At this point he *datasets* folder will contain the file needed to run ReviewerN
 
 ### Execution
 
-1. open journals.py with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
+1. open *journals.py* with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
-2. execute script.sh
+2. execute *script.sh*
 
-3. [[?? run a local/remote reviewernet session, click on *import datasets* and upload the datasets folder you've just created; Use RN..."  ??]]
-
-### Notes
+<!-- 3. [[?? run a local/remote reviewernet session, click on *import datasets* and upload the datasets folder you've just created; Use RN..."  ??]] -->
 <hr>
+
+#### Notes
+
 ^The completion time has been measured on a dual-core laptop connected to a network with 2MB/s bandwidth. 
 
 ^^Use always https://www.semanticscholar.org/ as reference for journal names and available papers because the same journal/venue is referenced in different ways across different papers.
