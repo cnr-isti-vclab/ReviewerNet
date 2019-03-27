@@ -142,7 +142,7 @@ function getANP(){
     }
 }
 
-function getArrays(graph) {
+function getArrays(graph, path) {
     var p = graph.nodes,
         n = p.length;
     for (i = 0; i < n; i++)
@@ -165,11 +165,12 @@ function getArrays(graph) {
         })();
         //setTimeout(loop, 2500);
       })();
-    getAuths()
+    getAuths(path)
   }
 
-function getAuths() {
-    var authTxt = fetch('datasets/a_v0518f.txt')
+function getAuths(path) {
+    console.log("auths: "+path)
+    var authTxt = fetch(path)
         .then(response => response.text())
         .then(function(text){
             var authG = JSON.parse(text),
@@ -219,6 +220,16 @@ function setWinMouseHandlers(){
     
     $("body").on('click', function(){
             $(".badge").html("")
+    })
+    
+     $("#file_input").on('change', function(event){
+            console.log("papers: "+event.target.files[1].name)
+          var graphTxt = fetch(event.target.files[1].name)
+    .then(response => response.text())
+    .then(function(text) {
+        var graph = JSON.parse(text);
+        getArrays(graph, event.target.files[0].name)       
+    });
     })
     
     window.onresize = function(e) {    
