@@ -35,17 +35,28 @@ The only input needed is a set of journal/venue names (see next section for furt
 
 The completion time of the whole process with a speed connection of 1MB/s is about 7 hours^.
 
+Once exectued, the script checks the presence of the needed libraries, asking the user to install fuzzywuzzy if not present; then the latest corpus manifest is downloaded.
+
+At this point the **download&parse** process is started: each file listed in the manifest is downloaded - as a gzip - and filtered. The resulting files are stored with the "-filtered" suffix.
+
+When all partitions have been downloaded and filtered the **merging
+phase** can start. Filtered corpus partitions are merged togheter and the personalized dataset are build.
+
+Eventually the script asks the user whether to delete or not the interemediate files (gzipped/filtered partitions).
+
+At this point he *datasets* folder will contain the file needed to run ReviewerNet.
+
 ### Execution
 
-1. open journals.py with a text editor and change the content of the python array with the names* of the journals/venues that will be used to build the topic-based datasets.  
+1. open journals.py with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
 2. execute script.sh
 
-3. ....
+3. [[?? run a local/remote reviewernet session, click on *import datasets* and upload the datasets folder you've just created; Use RN..."  ??]]
 
 ### Notes
 <hr>
-^The completion time has been measured on a dual-core laptop. 
+^The completion time has been measured on a dual-core laptop connected to a network with 2MB/s bandwidth. 
 
 ^^Use always https://www.semanticscholar.org/ as reference for journal names and available papers because the same journal/venue is referenced in different ways across different papers.
 We suggest to put at least three string for each journal in order to have better coverage in the fuzzy search.[see journals.py for an example]
