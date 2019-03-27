@@ -1,4 +1,4 @@
-## Guide to a creation of a user-defined instance of Reviewernet.org
+## How to run an user-defined instance of Reviewernet.org
 
 This is a tutotial to download, create and deploy a user-defined instance of Reviewernet.org.
 This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is script.sh. 
@@ -31,7 +31,7 @@ The only input needed is a set of journal/venue names (see next section for furt
 
 - 47 corpus partitions as gzip files 
 
-- at most 47 parsed files.
+- at most 47 parsed files
 
 The completion time of the whole process with a speed connection of 1MB/s is about 7 hours^.
 
