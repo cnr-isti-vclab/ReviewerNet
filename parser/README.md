@@ -53,7 +53,7 @@ phase** can start. Filtered corpus partitions are merged together and the person
 
 Eventually the script asks the user whether to delete or not the interemediate files (gzipped/filtered partitions).
 
-At this point he *datasets* folder will contain the file needed to run ReviewerNet.
+At this point he *datasets* folder will contain the files needed to run ReviewerNet, both ending with *-pers* suffix.
 
 ## 4. Execution
 
@@ -61,7 +61,9 @@ At this point he *datasets* folder will contain the file needed to run ReviewerN
 
 2. execute *script.sh*
 
-<!-- 3. [[?? run a local/remote reviewernet session, click on *import datasets* and upload the datasets folder you've just created; Use RN..."  ??]] -->
+3. run a local/remote ReviewerNet session and click on *import datasets* to upload the files you've just created; 
+
+4. Use your own instance of ReviewerNet!
 <hr>
 
 ### Notes
