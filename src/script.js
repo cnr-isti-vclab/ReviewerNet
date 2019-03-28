@@ -170,19 +170,16 @@ function getArrays(graph, path) {
   }
 
 function getAuths(path) {
-    var authTxt = fetch(path)
-        .then(response => response.text())
-        .then(function(text){
-            var authG = JSON.parse(text),
-                a = authG.authors,
-                n = a.length
-            for (i = 0; i < n; i++){
-                authors[i]=a[i]
-                authDict[a[i].id] = [2019, 1900, []]
-            }
-        })
-        
+
+    var authG = JSON.parse(readTextFile(path)),
+        a = authG.authors,
+        n = a.length
+    for (i = 0; i < n; i++){
+        authors[i]=a[i]
+        authDict[a[i].id] = [2019, 1900, []]
     }
+        
+}
 
 function str_match(matchers, t){
     var res = true;
