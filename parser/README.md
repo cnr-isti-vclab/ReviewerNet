@@ -1,4 +1,4 @@
-## How to run an user-defined instance of Reviewernet.org
+# How to run an user-defined instance of Reviewernet.org
 
 This is a tutotial to download, create and deploy a user-defined instance of Reviewernet.org.
 This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is script.sh. 
@@ -12,7 +12,7 @@ This folder contains both Bash and Python scripts. The only file to run in order
 [4. Execution](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#4-Execution)
 <hr>
 
-### 1. Requirements
+## 1. Requirements
 
 To run the script succesfully you need:
 
@@ -25,13 +25,13 @@ To run the script succesfully you need:
 - [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy/), a fuzzy string matching python library. If python-Levenshtein is also installed, 
  fuzzywuzzy uses Levenshtein Distance (up to 4-10x speedup)
 
-### 2. The SemanticScholar corpus
+## 2. The SemanticScholar corpus
 
 The reference corpus can be found at http://labs.semanticscholar.org/corpus/. This representation of the full Semantic Scholar corpus offers data relating to papers crawled from the web and subjected to a number of filters.
 
 The papers are provided as json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 990 MB, and the total collection is about 46 GB.
 
-### 3. script.sh
+## 3. script.sh
 
 The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 4 concurrent downloads. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
@@ -55,7 +55,7 @@ Eventually the script asks the user whether to delete or not the interemediate f
 
 At this point he *datasets* folder will contain the file needed to run ReviewerNet.
 
-### 4. Execution
+## 4. Execution
 
 1. open *journals.py* with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
@@ -64,7 +64,7 @@ At this point he *datasets* folder will contain the file needed to run ReviewerN
 <!-- 3. [[?? run a local/remote reviewernet session, click on *import datasets* and upload the datasets folder you've just created; Use RN..."  ??]] -->
 <hr>
 
-#### Notes
+### Notes
 
 ^The completion time has been measured on a dual-core laptop connected to a network with 2MB/s bandwidth. 
 
