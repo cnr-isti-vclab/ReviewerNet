@@ -471,8 +471,15 @@ width: 15%;
   color: #858585;
 }
 
-#ui-id-2, #ui-id-1, #ui-id-3{
-    border: 1px solid #999; max-height: 150px; max-width: 350px; background: rgba( 234, 234, 234, 0.934 ); cursor: default; overflow-y: auto; overflow-x: hidden;}
+#ui-id-2, #ui-id-1, #ui-id-3, .ui-autocomplete {
+	border: 1px solid #999;
+	max-height: 150px;
+	max-width: 350px;
+	background: rgba( 234, 234, 234, 0.934 );
+	cursor: default;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 
 .replacement{
     font-size: 0.7em;
@@ -633,7 +640,7 @@ hr {
     height: 100%;
     text-align: center;
     color: rgba( 0, 0, 0, 0.567 );
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: bold;
     font-style: normal;
     background-color: #d8d8d8;/*rgba( 59, 184, 174, 0.15 );*/
@@ -641,7 +648,6 @@ hr {
     top:        0; 
     left:       0; 
     position:   fixed;
-    pointer-events: none;
 }
 
 
@@ -669,7 +675,7 @@ hr {
 	font-size:16px;
 	color: rgb(61,61,61);
 	letter-spacing: 0.2em;
-    pointer-events:
+    pointer-events: none;
 }
 .cssload-loader::before, .cssload-loader::after {
 	content: "";
@@ -1026,4 +1032,16 @@ table#bnt-table td {
     font-variant-caps: petite-caps; 
     color: #385e84; 
     font-weight: bold;
+}
+
+
+
+.ds_btn {
+	font-size: 0.7em;
+	width: 105px;
+	height: 35px;
+	color: #3484ca;
+	border-width: 0;
+	border-radius: 12%;
+	background-color: rgba( 191, 191, 191, 0.105 );
 }

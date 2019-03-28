@@ -173,8 +173,7 @@ function deleteP(idCk){
                 }    
             }
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-        if(idInfo === idCk)
-            $('#paperInfo').html("")
+
         setTimeout(function(){ 
             authorBars()
             authorGraph()

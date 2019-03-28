@@ -46,10 +46,25 @@
         <div class="row ui-widget-content" id="row21">
             <div id="scrollable" class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
                 <!-- Start Msg -->
-                <span id="loading" class="text-center"><div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> <!--<div class="loader text-center"></div>--></span>
+                <span id="loading" class="text-center"><!--<<div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> div class="loader text-center"></div>-->
+                <br><br>     
+                <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains 17754 papers, 108155 citations, and 23386 authors, from 1995 to 2018, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br>
+                <center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>If you choose to use the deafult instance of ReviewerNet, the bibliographic database is fully loaded and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>                
+                </span>
                 <span id="startMsg">
                 <img id="logo" src="imgs/logo.png">
                 <h3 id="titleLogo">ReviewerNet</h3>
+                <table id="ds_table">
+                  <tr>
+                    <td  style="padding-right: 4px;"> <button style="float: right;" id="default_inst" class="ds_btn" >Use default instance</button></td>
+                    <td style=" padding-left: 4px;"> 
+                        <button class="ds_btn" style="float: left;" id="import_ds_b" onclick="document.getElementById('input_ds').click()">Import dataset</button>
+                        <input type="file" id="input_ds" style="display: none;" onchange="import_ds_m()" multiple/> 
+                        <!--<input type="file" id="file_input" webkitdirectory="" directory="">-->
+                    </td>
+                  </tr>
+                </table>                
+                    
                 </span>
                 <!-- Paper Graph -->
                 <svg id = "svgAxis" class = "svg" style="width: inherit; height: 800px">
@@ -199,7 +214,7 @@
                                   </td>
                                 <td id = "td2" class ="button-bar">
                                     <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
-                                    <form class="aform"><input name="authoSearchBar" class="biginput " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                    <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                               </tr>
                             </table>
@@ -223,7 +238,7 @@
                                     <button id ="export-btn"  class = "pop-up" type="button" title = "Export button."><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
                                     </div>
                             <form class="aform">
-                                <input disabled="true" name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                <input name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                                  </tr>
                             </table>
@@ -241,7 +256,7 @@
                                   <span id="area-paper-a" class="text-left tb_labels" style="transform:  translateY(46%);">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
                                   </td>
                                 <td class ="td2">
-                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input disabled="true" name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
                                   </td>
                               </tr>
                             </table>  
@@ -299,18 +314,18 @@
             <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
           </td>
             <td>
-              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet </span> 
+              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet</span> 
             </td>
           <td id = "import">
-              <button id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
+              <button class="hiddenSB" id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
                 <input type="file" id="input_file" style="display: none;" onchange="startRead()"/> 
                   </td>
           <td id = "export">
-              <button id="export_label" onclick="export_fileb()">Export session</button>
+              <button class="hiddenSB" id="export_label" onclick="export_fileb()">Export session</button>
                   </td>
                 <td>
                     
-                    <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
+                    <span style="justify-content: center; font-size: 0.75em; color: #1584c0">Default instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
 
             </td>
                   <td>

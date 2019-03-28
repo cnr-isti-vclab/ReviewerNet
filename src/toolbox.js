@@ -34,6 +34,8 @@ function setup_popups(){
             $( "#tutorial-dialog" ).dialog( "close" );
         else 
             $( "#tutorial-dialog" ).dialog( "open" );
+        event.preventDefault()
+        event.stopPropagation()
     });
 }
 
