@@ -78,7 +78,8 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     xConstrained = d3.scaleLinear()
         .domain([minYear, maxYear])
         .range([10, width - 20]),
-    xaxis = d3.axisBottom().scale(xConstrained);
+    xaxis = d3.axisBottom().scale(xConstrained),
+    loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";
 
 function getXRect(x, wdt, inGraph){
     
@@ -169,7 +170,6 @@ function getArrays(graph, path) {
   }
 
 function getAuths(path) {
-    console.log("auths: "+path)
     var authTxt = fetch(path)
         .then(response => response.text())
         .then(function(text){
@@ -222,15 +222,7 @@ function setWinMouseHandlers(){
             $(".badge").html("")
     })
     
-     $("#file_input").on('change', function(event){
-            console.log("papers: "+event.target.files[1].name)
-          var graphTxt = fetch(event.target.files[1].name)
-    .then(response => response.text())
-    .then(function(text) {
-        var graph = JSON.parse(text);
-        getArrays(graph, event.target.files[0].name)       
-    });
-    })
+     
     
     window.onresize = function(e) {    
         if(!resize_pn && !resize_ag){
@@ -272,11 +264,49 @@ function setWinMouseHandlers(){
     
 }
 
+function show_loading(){
+
+    document.getElementById("loading").style.pointerEvents = "none"
+    
+    document.getElementById("loading").innerHTML = loader;
+
+    document.getElementById("loading").style.visibility = "visible";
+    document.getElementById("loading").style.backgroundColor = "rgba( 211, 211, 211, 0.55 )"
+
+    document.getElementById("ldr").style.top = "30%";
+}
+
+function hide_loading(){
+
+    document.getElementById("ldr").innerHTML = "All data loaded"
+     document.getElementById("loading").style.pointerEvents = "all"
+    
+    $("#loading").on("click", function(){
+        event.preventDefault()
+        document.getElementById("loading").style.visibility = "hidden";
+        d3.select(".pop-up").style("pointer", "help")    
+        enable_all()
+    })
+    
+    
+    
+}
+
 function setMouseHandlers(){
+    
+    $("#default_inst").on("click", function(){
+        let ppath = "datasets/p_v0518f.txt",
+            apath = "datasets/a_v0518f.txt";
+        
+        show_loading()
+        
+        import_ds(ppath, apath)
+        
+        hide_loading()
+    })
     
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
- 
     
     d3.select(".pop-up").style("pointer", "none")
    
@@ -347,17 +377,13 @@ function setMouseHandlers(){
         .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
     
     
-    $("#loading").on("click", function (event){
-        event.stopPropagation();
-    })
-    
     $("#authList")
         .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
         .on("dblclick", "td", authDblc);
     $("#rauthList")
-        .on("click", addFromList)
+        .on("click", "li", addFromList)
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", r_authDblc);
@@ -831,6 +857,14 @@ function print_rew(){
     
 }
 
+function enable_all(){
+    $(".hiddenSB").css("pointer-events", "all")
+    
+    $(".hiddenSB").css("background-color", "white")
+    //d3.select("#td1").style("font-size", "0.8em")
+    //document.getElementById("td2").style.display = "none";
+}
+
 function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -842,7 +876,6 @@ function setup_searchbars(){
     this.value=""
     });
     $('#rauthors-autocomplete').autocomplete({
-        disabled: true,
         open : function(){
             let d = $("#ui-id-1").height() + 25
             if(_docHeight-heightAG-100 < 160)
@@ -954,7 +987,6 @@ function setup_searchbars(){
     });
     
     $('#papers-autocomplete').autocomplete({
-        disabled: true,
 /*        focus: function(event, ui){
             console.log(ui)  
         },*/
@@ -1025,46 +1057,24 @@ function setup_searchbars(){
         if(this.value.length < 3) 
             $(".badge").html("")
     })
+    
     d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-    $( "#rauthors-autocomplete" ).autocomplete( "option", "disabled", true );
-    $( "#papers-autocomplete" ).autocomplete( "option", "disabled", true );
+    $(".hiddenSB").css("pointer-events", "none")
+        
+    document.getElementById("loading").onclick = null
+    document.getElementById("loading").style.pointerEvents = "none"
+    
     $( "#done_submit").on("click", function(){
-        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-        else{
-            $( ".hiddenSB" ).autocomplete({disabled:false});
-            $( ".hiddenSB" )[0].disabled = false;
-            $( ".hiddenSB" )[1].disabled = false;
-            d3.selectAll(".hiddenSB").style("background-color", "white")
-            d3.select("#td1").style("font-size", "0.8em")
-            document.getElementById("td2").style.display = "none";
-        }
-    })
+//        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+//        else
+//            enable_all
+    }).hide()
+    
     $( "#export-btn").on("click", export_session)
 }
 
 function process_auth(data) {
         console.log(data)//document.getElementById("demo").innerHTML = this.responseText;
-}
-
-function import_ds(path){
-    var ele = $("#ldr-val");
-    var clr = null;
-    var rand = 0;
-    (loop = function() {
-    clearTimeout(clr);
-    (inloop = function() {
-      ele.html(rand += 1);
-        if(rand >= 49) return;
-      clr = setTimeout(inloop, 125);
-    })();
-    //setTimeout(loop, 2500);
-    })();
-    var graphTxt = fetch('datasets/p_v0518f.txt')
-    .then(response => response.text())
-    .then(function(text) {
-        var graph = JSON.parse(text);
-        getArrays(graph)       
-    });
 }
 
 function get_JSON(json_id, process_JSON) {
@@ -1087,5 +1097,5 @@ $(function (){
     setWinMouseHandlers()
     
     //d3.select("#loading").style("pointer-events", "all")
-    d3.select("#loading").on("click", start_click_handler);
+    $("#loading").on("click", start_click_handler);
 });

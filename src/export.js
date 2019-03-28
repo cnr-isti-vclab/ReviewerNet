@@ -105,18 +105,19 @@ function export_file(){
     
     ret += "\n"
     
-    for(var i  = 0; i < authsExclude.length-1; i++)
-        ret += authsExclude[i]+"."
-    ret += authsExclude[authsExclude.length-1]
-    
-    ret += authsReview.length > 0 ? "\n" : ""
+    if(authsExclude.length > 0){
+        for(var i  = 0; i < authsExclude.length-1; i++)
+            ret += authsExclude[i]+"."
+        ret += authsExclude[authsExclude.length-1]
+    }
+    ret += "\n"
     
     if(authsReview.length > 0){
         for(var i  = 0; i < authsReview.length-1; i++)
             ret += authsReview[i]+"."
         ret += authsReview[authsReview.length-1]
     }
-    ret += idPs.length > 0 ? "\n" : ""
+    ret += "\n"
     
     for(var i  = 0; i < idPs.length-1; i++)
         ret += idPs[i]+"."
@@ -186,17 +187,9 @@ function export_session(){
         });*/
     }
     
-    
-    
-    
 }
 
 function export_fileb(){
-    
-    if(authsExclude.length == 0 || !authsExclude){
-        alert("Nothing to export.")
-        return;
-    }
     
     if(idPs.length == 0 || !idPs){
         alert("Nothing to export.")
@@ -233,7 +226,4 @@ function export_fileb(){
       document.body.removeChild(link);
     });
     
-    if(authsReview.length == 0 || !authsReview){
-        alert("The session file doesn't contain any candidate reviewer.")
-    }
 }

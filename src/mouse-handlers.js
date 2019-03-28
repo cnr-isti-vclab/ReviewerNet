@@ -1,9 +1,9 @@
 var texts = [],
-    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine;
+    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false;
 
 function start_click_handler(){
-    console.log("start")
     document.getElementById("loading").style.visibility = "hidden";
+    $(".hiddenSB").css("pointer-events", "none")
     d3.select(".pop-up").style("pointer", "help")
     toolboxInit()
     
@@ -1310,6 +1310,8 @@ function addFromList(event){
         authClickHandler(aObj)    
 
     }
+    event.preventDefault()
+    event.StopPropagation()
 }   
 
 function ListMouseOver(event){
@@ -1344,6 +1346,8 @@ function ListMouseOver(event){
             highlight_cluster_pap(p)
         }else return;
     }else{
+        d3.select(event.target)
+            .style("background-color", "rgba( 71, 66, 66, 0.2)") 
         idClick = idClick.substring(1,idClick.length);
         highlight_auth(idClick) 
          if(!click){
@@ -1408,8 +1412,8 @@ function ListMouseOver(event){
                 if((d1.source.id === idClick || d1.target.id === idClick) 
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
-                        let value = authsDef.filter(function (el){ return el.id === idClickedA;})[0].value;
-                        var txt = clkA.value + " - " + value
+                        let value = authsDef.filter(function (el){ return el.id === d1.target.id;})[0].value;
+                        var txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
                         var el   = document.getElementById("svgAG_names");
                         var rect = el.getBoundingClientRect(); // get the bounding rectangle
@@ -1565,6 +1569,8 @@ function ListMouseOut(event){
 }
 
 function papDblc(event){
+    
+    if(!first_dbl){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length),
         paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
@@ -1582,9 +1588,12 @@ function papDblc(event){
     refresh_export()
     
     document.getElementsByClassName("td2title").innerHTML = ""
+    first_dbl = true;
+    }else first_dbl = !first_dbl
 }
 
 function authDblc(event){
+    if(!first_dbla){
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     var idClick = event.target.id,
@@ -1596,10 +1605,9 @@ function authDblc(event){
     print_submitting()
         
     d3.selectAll(".plink")
-    
         .style("opacity", 1)
+    
     d3.selectAll(".papersNode")
-        
         .attr("r", "6")
         .style("opacity", 1)
         .attr("stroke", function(d1){
@@ -1617,32 +1625,39 @@ function authDblc(event){
             if(idPs.includes(d1.id))
                 return 2.5;
             })
+    
     reset_texts()
     authorBars()
     authorGraph()
-    if(authsExclude.length == 0){
-        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-        d3.select("#td1").style("font-size", "1em")
-        document.getElementById("td2").style.display = "inline";
-        $( ".hiddenSB" ).autocomplete({disabled:true});
-        $( ".hiddenSB" )[0].disabled = true;
-        $( ".hiddenSB" )[1].disabled = true;
-        $( "#export-btn" )[0].disabled = true;
-        $( "#done_submit").on("click", function(){
-            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-            else{
-                $( ".hiddenSB" ).autocomplete({disabled:false});
-                $( ".hiddenSB" )[0].disabled = false;
-                $( ".hiddenSB" )[1].disabled = false;
-                $( "#export-btn" )[0].disabled = false;
-                d3.selectAll(".hiddenSB").style("background-color", "white")
-                d3.select("#td1").style("font-size", "0.8em")
-                document.getElementById("td2").style.display = "none";
-            }
-        })
-    } 
+//    if(authsExclude.length == 0){
+//        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
+//        d3.select("#td1").style("font-size", "1em")
+//        document.getElementById("td2").style.display = "inline";
+//        $( ".hiddenSB" ).autocomplete({disabled:true});
+//        $( ".hiddenSB" )[0].disabled = true;
+//        $( ".hiddenSB" )[1].disabled = true;
+//        $( "#export-btn" )[0].disabled = true;
+//        $( "#done_submit").on("click", function(){
+//            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+//            else{
+//                $( ".hiddenSB" ).autocomplete({disabled:false});
+//                $( ".hiddenSB" )[0].disabled = false;
+//                $( ".hiddenSB" )[1].disabled = false;
+//                $( "#export-btn" )[0].disabled = false;
+//                d3.selectAll(".hiddenSB").style("background-color", "white")
+//                d3.select("#td1").style("font-size", "0.8em")
+//                document.getElementById("td2").style.display = "none";
+//            }
+//        })
+//    } 
     print_rew()
     refresh_export()
+    
+    event.preventDefault()
+    event.stopPropagation()
+    first_dbla = true
+    }else first_dbla = !first_dbla
+    
 }
 
 function r_authDblc(event){
@@ -1684,6 +1699,9 @@ function r_authDblc(event){
     if(authsReview.length > 0)
         print_rew()
     refresh_export()
+    
+    event.preventDefault()
+    event.StopPropagation()
 }
 
 function repl_clk(event){
@@ -1746,6 +1764,8 @@ function repl_over(event){
         idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         d3.select("#ag"+id2)
         .attr("r", 7)
+    d3.select(event.target)
+            .style("background-color", "rgba( 71, 66, 66, 0.2)") 
      highlight_auth(id2)
 
     if(!click){

@@ -54,7 +54,16 @@
                 <span id="startMsg">
                 <img id="logo" src="imgs/logo.png">
                 <h3 id="titleLogo">ReviewerNet</h3>
-                <input type="file" id="file_input" webkitdirectory="" directory="">
+                <table id="ds_table">
+                  <tr>
+                    <td  style="padding-right: 4px;"> <button style="float: right;" id="default_inst" class="ds_btn" >Use default instance</button></td>
+                    <td style=" padding-left: 4px;"> 
+                        <button class="ds_btn" style="float: left;" id="import_ds_b" onclick="document.getElementById('input_ds').click()">Import dataset</button>
+                        <input type="file" id="input_ds" style="display: none;" onchange="import_ds_m()" multiple/> 
+                        <!--<input type="file" id="file_input" webkitdirectory="" directory="">-->
+                    </td>
+                  </tr>
+                </table>                
                     
                 </span>
                 <!-- Paper Graph -->
@@ -205,7 +214,7 @@
                                   </td>
                                 <td id = "td2" class ="button-bar">
                                     <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
-                                    <form class="aform"><input name="authoSearchBar" class="biginput " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                    <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                               </tr>
                             </table>
@@ -229,7 +238,7 @@
                                     <button id ="export-btn"  class = "pop-up" type="button" title = "Export button."><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
                                     </div>
                             <form class="aform">
-                                <input disabled="true" name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                <input name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
                                  </tr>
                             </table>
@@ -247,7 +256,7 @@
                                   <span id="area-paper-a" class="text-left tb_labels" style="transform:  translateY(46%);">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
                                   </td>
                                 <td class ="td2">
-                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input disabled="true" name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
                                   </td>
                               </tr>
                             </table>  
@@ -308,11 +317,11 @@
               <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet</span> 
             </td>
           <td id = "import">
-              <button id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
+              <button class="hiddenSB" id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
                 <input type="file" id="input_file" style="display: none;" onchange="startRead()"/> 
                   </td>
           <td id = "export">
-              <button id="export_label" onclick="export_fileb()">Export session</button>
+              <button class="hiddenSB" id="export_label" onclick="export_fileb()">Export session</button>
                   </td>
                 <td>
                     
