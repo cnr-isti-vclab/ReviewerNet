@@ -91,7 +91,7 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        exclude = (authDict[d1.id][2] && ( 2018 - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) )) ? true : false;
+        exclude = (authDict[d1.id][2] && ( 2019 - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) )) ? true : false;
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
     //console.log("Exclude "+exclude)
@@ -135,7 +135,7 @@ function rankAuths(auths){
 function checkThetaNC(author, el){
     //check what variable betweet thataN/C set to 0 or its spinner value
     var l = author.coAuthList[el][1] ? parseInt(author.coAuthList[el][1]) : 1900;
-    return ((2018 - l) <= parseInt(thetaC));
+    return ((2019 - l) <= parseInt(thetaC));
 }
 
 function authColor(author){

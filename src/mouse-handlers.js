@@ -1311,7 +1311,7 @@ function addFromList(event){
 
     }
     event.preventDefault()
-    event.StopPropagation()
+    event.stopPropagation()
 }   
 
 function ListMouseOver(event){

@@ -56,7 +56,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     minYear = 1995,
     minInCits = 100,
     maxInCits = 0,
-    maxYear = 2018,
+    maxYear = 2019,
     checkboxTP = $('#MNP'),
     //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
@@ -292,8 +292,8 @@ function hide_loading(){
 function setMouseHandlers(){
     
     $("#default_inst").on("click", function(){
-        let ppath = "datasets/p_v0518f.txt",
-            apath = "datasets/a_v0518f.txt";
+        let ppath = "datasets/p_2019-01-31.txt",
+            apath = "datasets/a_2019-01-31.txt";
         
         show_loading()
         
