@@ -1,5 +1,5 @@
 #!/bin/bash
-#array pf PIDs
+#array pf PIDs fpr multitasking
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
 DWN=0
