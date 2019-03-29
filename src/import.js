@@ -73,7 +73,7 @@ function loaded(evt) {
     papersCit = {}
     papersPrint = []
     idPs = []
-    
+    let err = 0;
     thetaPap = params[0] 
     thetaY = params[1]
     thetaC = params[2] 
@@ -88,16 +88,37 @@ function loaded(evt) {
     //riaggiungo submitting
     if(submitting[0] > 0){
         for(var i = 0; i < submitting.length; i++)
+            try{
             add_submitting(authors.filter(function(el){ return el.id === submitting[i];})[0])
+            }catch (e) {
+             // statements to handle any exceptions
+             err += 1
+                console.log("Cannot load "+ submitting[i])
+                console.log(e); // pass exception object to error handler
+            }
     }
     //riaggiungo papers
     for(var i = 0; i < paps.length; i++)
+        try{
         addP(papers.filter(function(el){ return el.id === paps[i];})[0])
+            }catch (e) {
+             // statements to handle any exceptions
+             err += 1
+                console.log("Cannot load "+ paps[i])
+                console.log(e); // pass exception object to error handler
+            }
         
     if(rev[0] > 0){
     //riaggiungo reviewers
         for(var i = 0; i < rev.length; i++)
+            try{
             addR(authors.filter(function(el){ return el.id === rev[i];})[0])
+            }catch (e) {
+             // statements to handle any exceptions
+             err += 1
+                console.log("Cannot load "+ rev[i])
+                console.log(e); // pass exception object to error handler
+            }    
     }
     if(papersFiltered.length > 0 && papersFiltered)
     {paperGraph(papersFiltered, citPrint, idPs, simulation)
@@ -106,6 +127,8 @@ function loaded(evt) {
         authorGraph()
         print_submitting()
         print_rew()
+        if(err > 0)
+            alert(err+" error"+(err>1?"s":"")+" occured while importing session file,you might be using a different dataset version than the session file one.")
     }, 1000);
 
     }
