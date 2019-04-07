@@ -7,7 +7,7 @@
 #   . create the papers and authors' datasets
 #   . read/write datasets   
 #
-# The usage is shwon from line 437 on.
+# The usage is shwon from line 489 on.
 #
 ###########################################################################################
 from __future__ import division
@@ -20,10 +20,23 @@ import json
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import heapq
-import journals as jj
 
-journals = jj.journals
+def export_partialJ(path, j_obj):
+    with io.open(path, mode='w', encoding = 'utf8')  as f:
+        i = 0
+        l = len(j_obj)
+        for j in j_obj:
+            f.write(unicode(json.dumps(j)))
+            f.write(unicode('\n'))
 
+def import_partialJ(path):
+    with io.open(path, mode='r', encoding = 'utf8')  as f:
+        js = []
+        for l in f:
+            js.append(json.loads(l))
+        return js
+
+journals = import_partialJ("journals.txt")
 
 exclude_words = set([
     'foreword',
@@ -44,9 +57,9 @@ def contains_words(s):
     splt = set()
     sp = []
     for s in spl:
-         try:
+        try:
             sp.append(str(s))
-         except Exception:
+        except Exception:
             continue;
     #print(sp)
     for s in sp:
@@ -142,6 +155,8 @@ def getPapersTestingJSON(papers, PIds):
     i = 0
     l = len(papers)
     jN = ''
+    j_id = ''
+    v_id = ''
     venue = ''
     for p in papers:
         add = True
@@ -155,10 +170,12 @@ def getPapersTestingJSON(papers, PIds):
             continue;
         try:
             jN = p['journalName']
+            j_id = p['journalID']
         except Exception:
             continue;
         try:
             venue = p['venue']
+            v_id = p['venueID']
         except Exception:
             continue;
         inC = set(p['inCitations'])
@@ -169,7 +186,7 @@ def getPapersTestingJSON(papers, PIds):
         citations, inTot, inInP, outTot, outInP = setCitations(citations, idP, inC, outC, PIds, inTot, inInP, outTot, outInP)
         i+=1
         if(add):
-            papersJson[idP] = [title, year, jN, venue, authorsId, (inTot-inPrev), (outInP-outPrev)]
+            papersJson[idP] = [title, year, jN, venue, authorsId, (inTot-inPrev), (outInP-outPrev), j_id, v_id]
         else:
             added = added+1
         if i % 1000 == 0:
@@ -188,7 +205,7 @@ def getPapersTestingJSON(papers, PIds):
 #     {"source": "paperId1", "target": "paperId2", "value": 1},the last no comma
 # ]
 #}
-def writeCitations(cits, f, idP):
+def writeCitations(cits, f):
     value = 5
     lim = len(cits)
     for i in range(0, lim):
@@ -242,7 +259,7 @@ def papersTestingForSearchFile(path, pJSON, auth, cit):
             authsIDs = []
             for a in p[4]:
                 authsIDs.append(a)
-            pF = {'id':idP, 'value':p[0], 'color':p[5], 'nOc':p[6], 'year':p[1], 'jN':p[2], 'venue':p[3], 'authsId': authsIDs}
+            pF = {'id':idP, 'value':p[0], 'color':p[5], 'nOc':p[6], 'year':p[1], 'jN':p[2], 'venue':p[3], 'authsId': authsIDs, 'j_id':p[7], 'v_id':p[8]}
             f.write(unicode(json.dumps(pF)))
             if i < (l-1):
                 f.write(unicode(', '))
@@ -251,7 +268,7 @@ def papersTestingForSearchFile(path, pJSON, auth, cit):
         f.write(unicode('"authoringLinks": ['))
         writeAuth(auth, f)
         f.write(unicode('"links": ['))
-        writeCitations(cit, f, idP)
+        writeCitations(cit, f)
     print('DONE.')
     
 def getLastest(papers):
@@ -261,51 +278,86 @@ def getLastest(papers):
             tmp.append(p)
     return tmp
 
+def incr_count(jn, js):
+    for i in range(len(js)):
+        if (journals[i]['id'] == jn):
+            js[i]['count'] += 1
+            return js
+
+def rebuild_journals():
+    journals_new = []
+    for i in range(len(journals)):
+        j = journals[i]
+        journals_new.append({'id':j['id'], 'name_list':j['name_list'], 'count':0})
+    return journals_new
+        
+
 def fuzzy_search(path):
     add = 0
     scoreTot = 0
     fuzzyP = []
     read = 0
     i = 1
+    journals_new = rebuild_journals()
+    
     start()
-    #r's2-corpus-01.gz'
+    
     with gzip.open(path, 'rb') as f:
-    #with io.open(corpus_path, mode = "r", encoding = 'utf-8') as f:
-        #lenght = LengthOfFile(f)
+    #with io.open(path, mode = "r", encoding = 'utf-8') as f:
         for l in f:
-            #read += len(l)+1
             p = json.loads(l)
             jn = p['journalName']
             v = p['venue']
-            sv = 0
-            sj = 0
+            score = 0
+            p1 = p
+            
             try:
-                if (p['year'] > 1994 and not(jn == '')):
-                    sj = process.extractOne(jn, journals, scorer=fuzz.token_sort_ratio)[1]
-                if (p['year'] > 1994 and not(v == '') and (sj < 80)):
-                    sv = process.extractOne(v, journals, scorer=fuzz.token_sort_ratio)[1]
+                scoresj = dict({})
+                scoresv = dict({})
+
+                for j in journals:
+                    if jn:
+                        scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+                    if v:
+                        scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+
+                kj = max(scoresj, key=scoresj.get) if jn else None
+                kv = max(scoresv, key=scoresv.get) if v else None
+                
+                scorej = scoresj[kj] if kj else None
+                scorev = scoresv[kv] if kv else None
+                
+                score = max(scorej, scorev)
+                 
+                journals_new = incr_count(kj, journals_new) if kj and scorej > 80 else journals_new
+                cond = kj and kv
+                journals_new = incr_count(kv, journals_new) if (kv and scorev > 80)  and (not kj or (cond and not(kv == kj))) else journals_new
+
+                p1['journalId'] = kj if kj else ''
+                p1['venueId'] = kv if kv else ''
+                    
             except Exception:
+		      #print(Exception.message())
                 continue;
-            score = max(sv, sj)
+        
             if score > 80:
                 scoreTot += score
-                fuzzyP.append(p)
+                fuzzyP.append(p1)
                 add += 1
-            if(i%100000==0):
-                #perc = (read*100)/lenght
-                #perc = str(perc)
-                #perc = perc[0:5]
+            
+            if(i%50000==0):
                 tm = time.asctime()
-                tm = tm.split(' ')
-                tm = tm[3]
                 print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add))
+            
             i+=1
     avgScore = 0
+    
     if add != 0:
-    	avgScore = scoreTot/add 
+        avgScore = scoreTot/add 
     end()
     print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add))
-    return keep_goodP(fuzzyP)[0]
+    
+    return keep_goodP(fuzzyP)[0], journals_new
 
 ############################
 #  authorsGraph functions  #

@@ -9,9 +9,11 @@ filename = filename.split("/")[-1]
 print("Extracting "+filename+" and filtering")
 
 #Parsing and filtering corpus file with journals list in journals.py
-papers = u.fuzzy_search(filename)
+papers, journals = u.fuzzy_search(filename)
 filename = unicode(filename.split(".")[0]+"-filtered")
-print("Saving resulting file into "+filename)
+jname = unicode(filename+"-journals")
+print("Saving resulting file into "+filename+" and "+jname)
 
 if len(papers) > 0:
-	u.saveP(papers, filename)
+    u.saveP(papers, filename)
+    u.export_partialJ(jname,journals)

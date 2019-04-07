@@ -3,48 +3,6 @@
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
 DWN=0
-# Function that check the presence of fuzzywuzzy python library. 
-# This library provides fuzzy string matching. If python-Levenshtein is also installed, 
-# fuzzywuzzy uses Levenshtein Distance [up to 4-10x speedup]
-install_fuzzy(){
-	RET=1
-	patt=fuzzywuzzy
-	x=$(pip list | grep $patt | wc -l)
-	if [[ $x -ge 1 ]]; then 
-	echo "$patt already installed";
-	RET=0
-	return $RET
-	else 
-	while true; do
-	    read -p "Fuzzywuzzy not installed. This is a mandatory package to parse the corpus; do you want to install it? [y/n] " yn
-	    case $yn in
-	        [y]* ) pip install $patt; RET=$?; break;;
-	        * ) printf "You choose to not install $patt, remember this is MANDATORY to parse the corpus.\nPlease install it and try again\n"; break;;
-		esac
-	done
-	fi
-	return $RET
-}
-# Function that check the presence of python-Levenshtein. 
-install_pl(){
-	RET=0
-	patt=python-Levenshtein
-	x=$(pip list | grep $patt | wc -l)
-	if [[ $x -ge 1 ]]; then 
-	printf "$patt already installed\n"
-	return $RET
-	else 
-	RET=1
-	while true; do
-	    read -p "$patt not installed [requires Microsoft Visual C++ 14.0], this package it's not mandatory, but could provide a 4-10x speedup; do you want to install it? [y/n] " yn
-	    case $yn in
-	        [y]* ) pip install $patt; RET=$?; break;;
-	        * ) printf "You choose to not install $patt, this could take longer time\n"; break;;
-		esac
-	done
-	fi
-	return $RET
-}
 #Wait for parsing jobs to finish
 waitPPids() {
 	while [ ${#PARSING_PIDS[@]} -ne 0 ]; do
@@ -141,19 +99,6 @@ parse_file(){
 	
 }
 
-install_fuzzy
-
-if [[ $? -eq 1 ]]; then
-	printf "Fuzzywuzzy not installed. This is a mandatory package to parse the corpus\n"
-	exit;
-fi
-
-install_pl
-
-if [[ $? -eq 1 ]]; then
-	printf "Could not install python-Levenshtein. Continuing...\n"
-fi
-
 ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/"
 SUFFIX="-filtered"
 
@@ -164,12 +109,12 @@ echo "Downloading&parsing SemanticScholar corpus"
 
 wget --no-check-certificate https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/manifest.txt
 
-if [[ ! $? ]]; then
-	printf "Unable to download manifest. Please retry"
-	exit;
-fi
-
 filename="manifest.txt"
+
+if [[  ! -f $filename  ]]; then
+	printf "Unable to download manifest. Please retry\n"
+else
+
 
 while read -r line; do 
 FILENAMES=""; 
@@ -239,3 +184,4 @@ rm -f manifest*
 rm -Rf datasets
 mkdir datasets
 mv *pers.txt ./datasets/
+fi

@@ -1,7 +1,7 @@
 # How to run an user-defined instance of Reviewernet.org
 
 This is a tutotial to download, create and deploy a user-defined instance of Reviewernet.org.
-This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is script.sh. 
+This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is download_and_parse.sh. 
 
 [1. Requirements](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#1-Requirements)
 
@@ -31,7 +31,7 @@ The reference corpus can be found at http://labs.semanticscholar.org/corpus/. Th
 
 The papers are provided as json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 990 MB, and the total collection is about 46 GB.
 
-## 3. script.sh
+## 3. download_and_parse.sh
 
 The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 4 concurrent downloads. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
@@ -41,6 +41,8 @@ The only input needed is a set of journal/venue names (see next section for furt
 - 47 corpus partitions as gzip files 
 
 - at most 47 parsed files
+
+- at most 47 partial journal files (partial paper per journal counts)
 
 The completion time of the whole process with a speed connection of 1MB/s is about 7 hours^.
 
@@ -59,7 +61,7 @@ At this point he *datasets* folder will contain the files needed to run Reviewer
 
 1. open *journals.py* with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
-2. execute *script.sh*
+2. execute *download_and_parse.sh*
 
 3. run a local/remote ReviewerNet session and click on *import datasets* to upload the files you've just created; 
 
