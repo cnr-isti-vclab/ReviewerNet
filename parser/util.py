@@ -7,8 +7,6 @@
 #   . create the papers and authors' datasets
 #   . read/write datasets   
 #
-# The usage is shwon from line 489 on.
-#
 ###########################################################################################
 from __future__ import division
 import gzip
@@ -151,7 +149,7 @@ def getPapersTestingJSON(papers, PIds):
     citations = []
     authoring = []
     papersJson = dict()
-    added = 0
+    discard = 0
     i = 0
     l = len(papers)
     jN = ''
@@ -167,34 +165,34 @@ def getPapersTestingJSON(papers, PIds):
             year = p['year']
         except Exception:
             add = False
+            discard +=1
             continue;
         try:
             jN = p['journalName']
             j_id = p['journalID']
         except Exception:
-            continue;
+            pass;
         try:
             venue = p['venue']
             v_id = p['venueID']
         except Exception:
-            continue;
-        inC = set(p['inCitations'])
-        outC = set(p['outCitations'])
-        authoring = setAuthoring(authoring, authorsId, idP)
-        inPrev = inTot
-        outPrev = outInP
-        citations, inTot, inInP, outTot, outInP = setCitations(citations, idP, inC, outC, PIds, inTot, inInP, outTot, outInP)
+            pass;
         i+=1
+
         if(add):
+            inC = set(p['inCitations'])
+            outC = set(p['outCitations'])
+            authoring = setAuthoring(authoring, authorsId, idP)
+            inPrev = inTot
+            outPrev = outInP
+            citations, inTot, inInP, outTot, outInP = setCitations(citations, idP, inC, outC, PIds, inTot, inInP, outTot, outInP)
             papersJson[idP] = [title, year, jN, venue, authorsId, (inTot-inPrev), (outInP-outPrev), j_id, v_id]
-        else:
-            added = added+1
+        
         if i % 1000 == 0:
             tm = time.asctime()
-            tm = tm.split(' ')
-            tm = tm[3]
             print('['+tm+'] Processed '+str(i)+' papers')
-    print(str(len(papersJson))+' papers loaded, '+str(added)+' discarded')
+
+    print(str(len(papersJson))+' papers loaded, '+str(discard)+' discarded')
     printInOutStats(inTot, inInP, outTot, outInP)
     return papersJson, authoring, citations
 
@@ -338,7 +336,7 @@ def fuzzy_search(path):
                     
             except Exception:
 		      #print(Exception.message())
-                continue;
+                pass;
         
             if score > 80:
                 scoreTot += score
@@ -462,7 +460,7 @@ def authorsJSONObj(papers, authJson1):
             year = s['year']
         except Exception:
             year = 0
-            continue;
+            pass;
         for ap in authors:
             if ((len(ap['ids']) > 0) and (ap['ids'][0] in authJson1)):
                 paperAuths.add(ap['ids'][0])
@@ -478,8 +476,6 @@ def authorsJSONObj(papers, authJson1):
             perc = str(perc)
             perc = perc[0:5]
             tm = time.asctime()
-            tm = tm.split(' ')
-            tm = tm[3]
             print('['+tm+'] Processed '+str(perc)+' - '+str(i)+' papers - ') 
         i+=1
     end()

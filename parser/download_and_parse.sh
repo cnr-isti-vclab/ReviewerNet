@@ -155,6 +155,12 @@ waitDPids
 echo "Waiting for ${#PARSING_PIDS[@]} partitions to be decompressed and parsed"
 waitPPids
 
+options=(
+    "Delete both compressed and filtered partitions and quit"
+)
+
+PS3="Do you want to merge now? (1-${#options[@]}): "
+
 echo "Creating datasets from parsed partitions"
 python2 merge_data.py
 
@@ -167,13 +173,11 @@ options=(
 
 PS3="Datasets created, what do you want to do now? (1-${#options[@]}): "
 
-clear
-
 select option in "${options[@]}"; do
     case "$REPLY" in 
-        1) echo	"Deleting all..."; rm -f *.gz; rm -f *-filtered; echo "Files deleted, quitting."; break ;;
+        1) echo	"Deleting all..."; rm -f *.gz; rm -f *-filtered; rm -f *-journals; echo "Files deleted, quitting."; break ;;
         2) echo	"Deleting compressed partitions..."; rm -f *.gz; echo "Files deleted, quitting."; break ;;
-        3) echo	"Deleting filtered partitions..."; rm -f *-filtered; echo "Files deleted, quitting."; break ;;
+        3) echo	"Deleting filtered partitions..."; rm -f *-filtered;rm -f *-journals; echo "Files deleted, quitting."; break ;;
         *) echo "Nothing to delete, quitting."; break ;;
     esac
 done

@@ -25,22 +25,21 @@ for j_list in j_files:
         except:
             journals[j['id']] = j
             continue;
-my = 0
-for p in papers:
-	if p['year'] > my:
-		my = p['year']
-print(my)	
 
 PTIds = u.getPaperSet(papers)
 u.start()
-print(str(len(papers))+" papers from 1995 to "+str(my)+" collected. Starting papers' file creation...")
+print(str(len(papers))+" papers from 1995 to 2019 collected. Starting papers' file creation...")
 pTestingJSON, authoring, citations = u.getPapersTestingJSON(papers, PTIds)
+print(str(len(pTestingJSON))+" a "+str(len(authoring))+" c "+str(len(citations)))
+lp = len(papers)
+lc = len(citations)
 u.papersTestingForSearchFile(destination_path, pTestingJSON, authoring, citations)
 u.end()
 ### Create and write the authors' dataset
 print("Papers' file created!")
 print("Starting authors' file creation...")
 authJSON = u.getAuthJson(papers)
+la = len(authJSON)
 A = u.authorsJSONObj(papers, authJSON)
 ## once A is ready you can write it with
 u.authorsForSearchFile(auth_file, A)
@@ -55,7 +54,9 @@ with io.open("j_pers.txt", mode='w', encoding = 'utf8')  as f:
         if i < l-1:
             f.write(unicode(',  '))
         i+=1
-    f.write(unicode(']}'))
+    f.write(unicode('], "papers":'+str(lp)+', '))
+    f.write(unicode('"authors":'+str(la)+', ' ))
+    f.write(unicode('"cits":'+str(lc)+'}' ))
  
 print("All files created!")
 print("You can now copy them into datasets folder and start using your personalized instance of ReviewerNet.")
