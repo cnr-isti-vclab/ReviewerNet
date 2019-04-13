@@ -7,7 +7,7 @@ This folder contains both Bash and Python scripts. The only file to run in order
 
 [2. The SemanticScholar corpus](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#2-the-semanticscholar-corpus)
 
-[3. script.sh](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#3-scriptsh)
+[3. dowload_and_parse.sh](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#3-scriptsh)
 
 [4. Execution](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#4-Execution)
 <hr>
@@ -59,7 +59,7 @@ At this point he *datasets* folder will contain the files needed to run Reviewer
 
 ## 4. Execution
 
-1. open *journals.py* with a text editor and change the content of the python array with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
+1. open *journals.txt* with a text editor and change the content of the JSON object with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
 2. execute *download_and_parse.sh*
 
@@ -73,4 +73,4 @@ At this point he *datasets* folder will contain the files needed to run Reviewer
 ^The completion time has been measured on a dual-core laptop connected to a network with 2MB/s bandwidth. 
 
 ^^Use always https://www.semanticscholar.org/ as reference for journal names and available papers because the same journal/venue is referenced in different ways across different papers.
-We suggest to put at least three string for each journal in order to have better coverage in the fuzzy search.[see journals.py for an example]
+We suggest to put at least three string for each journal in order to have better coverage in the fuzzy search.[see journals.txt for an example]
