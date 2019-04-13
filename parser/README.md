@@ -63,7 +63,7 @@ At this point he *datasets* folder will contain the files needed to run Reviewer
 
 2. execute *download_and_parse.sh*
 
-3. run a local/remote ReviewerNet session and click on *import datasets* to upload the files you've just created; 
+3. run a local/remote ReviewerNet session and click on *Upload instance* to upload the files you've just created; 
 
 4. Use your own instance of ReviewerNet!
 <hr>
