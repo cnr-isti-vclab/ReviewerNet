@@ -169,12 +169,12 @@ def getPapersTestingJSON(papers, PIds):
             continue;
         try:
             jN = p['journalName']
-            j_id = p['journalID']
+            j_id = p['journalId']
         except Exception:
             pass;
         try:
             venue = p['venue']
-            v_id = p['venueID']
+            v_id = p['venueId']
         except Exception:
             pass;
         i+=1

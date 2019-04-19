@@ -155,12 +155,6 @@ waitDPids
 echo "Waiting for ${#PARSING_PIDS[@]} partitions to be decompressed and parsed"
 waitPPids
 
-options=(
-    "Delete both compressed and filtered partitions and quit"
-)
-
-PS3="Do you want to merge now? (1-${#options[@]}): "
-
 echo "Creating datasets from parsed partitions"
 python2 merge_data.py
 

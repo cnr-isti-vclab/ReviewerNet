@@ -1,4 +1,4 @@
-var a_file, p_file;
+var a_file, p_file, j_file;
 
 function add_submitting(suggestion){
     idA = suggestion.id
@@ -21,12 +21,6 @@ function addR(suggestion){
     var aName = suggestion.value
     authsReview.push(idA_rev)
     authsReview_obj.push(suggestion)
-}
-
-function getAsText(readFile, loaded) {
-    var reader = new FileReader();
-    reader.readAsText(readFile, "UTF-8");
-    reader.onload = loaded;
 }
 
 function loaded(evt) {
@@ -141,24 +135,6 @@ function startRead(evt) {
     }
 }
 
-function readTextFile(file)
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                return rawFile.responseText;
-            }
-        }
-    }
-    rawFile.send(null);
-    return rawFile.responseText;
-}
-
 function import_ds(ppath, apath){
     var ele = $("#ldr-val");
     var clr = null;
@@ -210,6 +186,32 @@ function loadedp(evt){
     if(a_file) getAsText(a_file, loadeda);
 }
 
+function loadedj(evt){
+    var jj = JSON.parse(evt.target.result),
+        jns = jj.journals,
+        n = jns.length,
+        instance = 'pers',
+        npp = jj.papers ? jj.papers : 0,
+        nat = jj.authors ? jj.authors : 0,
+        nct = jj.cits ? jj.cits : 0;
+        
+    
+    j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[npp, nct, nat]}
+    
+    for (i = 0; i < n; i++){
+        j_lists[instance]['j_list'].push(jns[i]['id'])
+    }
+    
+    create_jtext(instance, jns)
+
+    hide_loading()
+
+    document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
+    document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
+    document.getElementById('stat-intro').innerHTML = "The uploaded instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2019, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    
+}
+
 function loadeda(evt){
     var authG = JSON.parse(evt.target.result),
         a = authG.authors,
@@ -218,22 +220,25 @@ function loadeda(evt){
         authors[i]=a[i]
         authDict[a[i].id] = [2019, 1900, []]
     }
-    hide_loading()
-    enable_all();
+    
+    if(j_file) getAsText(j_file, loadedj);
 }
 
 function import_ds_m(event){
     //console.log(event.target.files)
-
+    choosen_j = "pers"
     let an = event.target.files[0].name,
-        ppn = event.target.files[1].name;
+        jn = event.target.files[1].name,
+        ppn = event.target.files[2].name;
     
     a_file = event.target.files[0];
-    p_file = event.target.files[1];
+    j_file = event.target.files[1];
+    p_file = event.target.files[2];
     
     //console.log(an+" "+ppn)
     
     show_loading()
+
     
     var ele = $("#ldr-val");
     var clr = null;
@@ -251,6 +256,7 @@ function import_ds_m(event){
         $("#ds_table").hide();
         getAsText(p_file, loadedp);
     }
+    
     //import_ds(ppn, an)
 
 }

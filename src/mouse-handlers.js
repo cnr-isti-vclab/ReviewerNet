@@ -1,5 +1,113 @@
 var texts = [],
-    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false;
+    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
+    j_lists = {}, choosen_j = null;
+
+
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                return rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return rawFile.responseText;
+}
+
+function getAsText(readFile, loaded) {
+    var reader = new FileReader();
+    reader.readAsText(readFile, "UTF-8");
+    reader.onload = loaded;
+}
+
+function create_jtext(instance, journals){
+    let str = "<ul style=\"list-style-type:none;\">",
+        str1 = "<ul style=\"list-style-type:none; float:left;\">",
+        n = journals.length;
+    
+    for (i = 0; i < n; i++){
+        str += "<li class =\"j-text\">"+journals[i]['id']+"</li>"
+        str1 += "<li class =\"j-text-stat\">"+journals[i]["count"]+" papers </li>"
+    }
+    
+    
+    str += "</ul>"
+    str1 += "</ul>"
+
+    j_lists[instance]['texts'] = [str, str1]
+
+}
+
+function readJournals(path, instance){
+    var jj = JSON.parse(readTextFile(path)),
+        jns = jj.journals,
+        n = jns.length,
+        npp = jj.papers ? jj.papers : 0,
+        nat = jj.authors ? jj.authors : 0,
+        nct = jj.cits ? jj.cits : 0;
+    
+    j_lists[instance]['j_list'] = []
+    for (i = 0; i < n; i++){
+        j_lists[instance]['j_list'].push(jns[i]['id'])
+    }
+    j_lists[instance]['stats'] = [npp, nct, nat]
+    create_jtext(instance, jns)
+    
+}
+
+function clickOnGo(){
+    if(choosen_j){       
+    //load data
+        if(choosen_j === "pers"){
+         start_click_handler()
+        enable_all()
+            return 
+        }
+            
+       let ppath = "datasets/p_"+choosen_j+"_2019-01-31.txt",
+            apath = "datasets/a_"+choosen_j+"_2019-01-31.txt";
+
+    show_loading()
+
+    import_ds(ppath, apath)
+
+    hide_loading()
+    
+    start_click_handler()
+    
+    enable_all()
+        
+    }else
+        alert("Choose an instance to run ReviewerNet.")
+        
+}
+
+function clickOnJ(x1){
+    console.log(x1.innerText)
+    let x = x1.id, instance = x.split("-")[0]
+    choosen_j = instance
+    document.getElementById('j-list').innerHTML = ""
+    document.getElementById('j-stat').innerHTML = ""
+    
+    if(!j_lists[instance]){
+        j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
+        //scarico file x e creo jlist e texts
+        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+    }
+    //e mostro testi con stats
+    document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
+    document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
+    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2019, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    
+    
+}
 
 function start_click_handler(){
     document.getElementById("loading").style.visibility = "hidden";
@@ -11,12 +119,6 @@ function start_click_handler(){
     setSvgs()
     simulation = setSimulation()
     simulationA = setAGSimulation()
-    
-    //mostra prima pagina 
-    //on click mostra sito con interfaccia inattiva
-    //due bottoni sotto il logo
-    //use default ds | import dataset 
-    
     setup_searchbars()    
 }
 

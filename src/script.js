@@ -1,4 +1,5 @@
 var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false,
+    old_loading = "",
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -265,10 +266,12 @@ function show_loading(){
 
     document.getElementById("loading").style.pointerEvents = "none"
     
-    document.getElementById("loading").innerHTML = loader;
+    old_loading = document.getElementById("loading").innerHTML
+    
+    document.getElementById("loading").innerHTML = loader + old_loading;
 
     document.getElementById("loading").style.visibility = "visible";
-    document.getElementById("loading").style.backgroundColor = "rgba( 211, 211, 211, 0.55 )"
+    document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.2 )"
 
     document.getElementById("ldr").style.top = "30%";
 }
@@ -277,13 +280,14 @@ function hide_loading(){
 
     document.getElementById("ldr").innerHTML = "All data loaded"
      document.getElementById("loading").style.pointerEvents = "all"
-    
-    $("#loading").on("click", function(){
-        event.preventDefault()
-        document.getElementById("loading").style.visibility = "hidden";
-        d3.select(".pop-up").style("pointer", "help")    
-        enable_all()
-    })
+    document.getElementById("loading").innerHTML = old_loading
+     document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.567 )"
+    //$("#loading").on("click", function(){
+      //  event.preventDefault()
+        //document.getElementById("loading").style.visibility = "hidden";
+        //d3.select(".pop-up").style("pointer", "help")    
+        //enable_all()
+//    })
     
     
     
@@ -1094,5 +1098,5 @@ $(function (){
     setWinMouseHandlers()
     
     //d3.select("#loading").style("pointer-events", "all")
-    $("#loading").on("click", start_click_handler);
+    //$("#loading").on("click", start_click_handler);
 });

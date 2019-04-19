@@ -48,22 +48,68 @@
                 <!-- Start Msg -->
                 <span id="loading" class="text-center"><!--<<div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> div class="loader text-center"></div>-->
                 <br><br>     
-                <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains 17754 papers, 108155 citations, and 23386 authors, from 1995 to 2018, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br>
-                <center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>If you choose to use the deafult instance of ReviewerNet, the bibliographic database is fully loaded and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>                
+                <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target="_blank"class="links" href="https://www.semanticscholar.org/">Semantic Scholar</a> Corpus.<br> 
+                <hr>
+                    
+                    <span id="stat-intro">
+                    </span>
+                    
+<div id="table_container">
+    
+<table id = "init-table">
+  <tr>
+    <td>
+      <table class="jTable">
+  <tr class="tjr">
+      <td class="tj-1r"> <button id="ml-btn" class="j-btn" onclick="clickOnJ(this)"> Machine Learning / AI </button></td>
+  </tr>
+  <tr class="tjr">
+      <td class="tj-2r"> <button id="hpc-btn" class="j-btn" onclick="clickOnJ(this)"> HPC </button></td>
+  </tr>
+  <tr class="tjr">
+      <td class="tj-3r"><button id="cg-btn" class="j-btn" onclick="clickOnJ(this)"> Computer Graphics </button></td>
+  </tr>
+  <tr class="tjr">
+      <td class="tj-4r"> <button id="dm-btn" class="j-btn" onclick="clickOnJ(this)"> Data Mining </button></td>
+  </tr>
+  <tr class="tjr">
+      <td class="tj-5r"> <button id="cv-btn" class="j-btn" onclick="clickOnJ(this)"> Computer Vision &amp; Pattern Recognition </button></td>
+  </tr>
+    <tr class="tjr">
+      <td class="tj-5r"> <button id="pers-btn" class="j-btn"  onclick="document.getElementById('input_ds').click()">Upload your instance</button>
+                        <input type="file" id="input_ds" style="display: none;" onchange="import_ds_m(event)" multiple/> 
+        
+        </td>
+  </tr>
+</table>
+      </td>
+    <td id = "j-list" class = "jrow">
+      </td>
+    <td id = "j-stat" class = "jrow">
+    </td>
+  </tr>
+</table>
+    
+    </div>
+                    <br> 
+                    <button id="j-go-btn" class="jgo-btn" onclick="clickOnGo()">Use ReviewerNet</button>
+                    <hr>  
+                <br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br>
+                <center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>If you choose to use the deafult instance of ReviewerNet, the bibliographic database is fully loaded and queried on your local client.<br><br> Click on "Use ReviewerNet" to acknowledge this info and start enjoying ReviewerNet.</center>                
                 </span>
                 <span id="startMsg">
                 <img id="logo" src="imgs/logo.png">
                 <h3 id="titleLogo">ReviewerNet</h3>
-                <table id="ds_table">
+                <!--<table id="ds_table">
                   <tr>
                     <td  style="padding-right: 4px;"> <button style="float: right;" id="default_inst" class="ds_btn" >Use default instance</button></td>
                     <td style=" padding-left: 4px;"> 
                         <button class="ds_btn" style="float: left;" id="import_ds_b" onclick="document.getElementById('input_ds').click()">Import datasets</button>
                         <input type="file" id="input_ds" style="display: none;" onchange="import_ds_m(event)" multiple/> 
-                        <!--<input type="file" id="file_input" webkitdirectory="" directory="">-->
+                        <input type="file" id="file_input" webkitdirectory="" directory="">
                     </td>
                   </tr>
-                </table>                
+                </table>                -->
                     
                 </span>
                 <!-- Paper Graph -->
@@ -99,7 +145,7 @@
                 </svg>
             </div>   
         </div>
-        
+    
     </div>
     <!-- RN & GUI col -->
     <div id="AG-col" class="col-sm-4">

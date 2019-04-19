@@ -1045,3 +1045,39 @@ table#bnt-table td {
 	border-radius: 12%;
 	background-color: rgba( 191, 191, 191, 0.105 );
 }
+
+.tjr {
+    height: 30px;
+}
+
+.jrow {
+	width: 33%;
+    text-align: center;
+}
+
+.j-btn {
+    width: 100%;
+    border-width: 0px;
+    
+}
+.j-btn:hover {
+     cursor: pointer;
+    background-color: lightgray;
+}
+
+#table_container {
+  /*transform: translateX(20%)*/
+}
+
+table#init-table t{
+    width: 33%
+}
+
+
+.j-text-stat {
+    font-style: italic;
+}
+
+#init-table {
+    margin-left: 10%;
+}
