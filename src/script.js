@@ -66,6 +66,10 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     checkboxC = $('#cb-confl'),
     checkboxA = $('#cb-av'),
     authViz = document.getElementById('authViz'),
+    color10 = d3.scaleOrdinal(d3.schemeCategory10),
+    color20b = d3.scaleOrdinal(d3.schemeCategory20), //20b categorical cmap
+    colorjj = color10,
+    c20 = false,
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
@@ -219,7 +223,6 @@ function setWinMouseHandlers(){
     $("body").on('click', function(){
             $(".badge").html("")
     })
-    
      
     
     window.onresize = function(e) {    
@@ -373,10 +376,13 @@ function setMouseHandlers(){
     .on("mouseup", function(){resize_ag = false})
 
  
+    /*
+    In-citations & journal/venue color-maps
+    */
     d3.select("#cmpa")
         .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
         .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
-    
+        .on("dblclick", cmap_dbl)
     
     $("#authList")
         .on("click","td", addFromList)
@@ -510,7 +516,18 @@ function printCits(){
     return thehtml;
 }
 
-function color_n(c){return c > 100 ? color(100):color(c);}
+function color_n(c){
+    return c > 100 ? color(100):color(c);
+}
+
+function color_j(p){
+   return p.v_id ? colorjj(j_lists[choosen_j].j_list.indexOf(p.v_id)) : colorjj(j_lists[choosen_j].j_list.indexOf(p.j_id))
+    
+        /*
+    color20b(j_lists[choosen_j].j_list.indexOf(p.venueId)) : color20b(j_lists[choosen_j].j_list.indexOf(p.journalId))
+    */
+
+}
 
 function getPaperSvg(){
     svgP = d3.select("#svgP")
@@ -1097,6 +1114,20 @@ $(function (){
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
     setWinMouseHandlers()
     
+    
+    /*
+    DEBUG
+    
+    
+    choosen_j = "cg"
+    let instance  = choosen_j
+     if(!j_lists[instance]){
+        j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
+        //scarico file x e creo jlist e texts
+        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+    }
+    clickOnGo()
+    */
     //d3.select("#loading").style("pointer-events", "all")
     //$("#loading").on("click", start_click_handler);
 });

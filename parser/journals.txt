@@ -2,7 +2,7 @@
 {"id": "CGF", "name_list": ["Computer Graphics Forum", "Comp. Graph. Forum"]}
 {"id": "IEEETVCG", "name_list": ["IEEE Transactions on Visualization and Computer Graphics", "IEEE Trans. Vis. Comput. Graph.", "IEEE TVCG"]}
 {"id": "VISCOMP", "name_list": ["Visual Computer", "The Visual Computer"]}
-{"id": "C&G", "name_list": ["Computer & Graphics"]}
+{"id": "CG", "name_list": ["Computer & Graphics"]}
 {"id": "IEEEVIS", "name_list": ["IEEE Visualization", "IEEE Conf. on Vis.", "IEEE Conference on Visualization", "IEEE Conf. on Visualization", "IEEECOV"]}
 {"id": "IEEECGA", "name_list": ["IEEE Computer Graphics & Applications", "IEEE Comp Graph & Apps", "IEEE CGA"]}
 {"id": "SIGGRAPH", "name_list": ["SIGGRAPH"]}

@@ -1,5 +1,5 @@
 var texts = [],
-    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
+    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
     j_lists = {}, choosen_j = null;
 
 
@@ -25,6 +25,118 @@ function getAsText(readFile, loaded) {
     var reader = new FileReader();
     reader.readAsText(readFile, "UTF-8");
     reader.onload = loaded;
+}
+
+function highlight_j(d){
+    d3.selectAll(".papersNode").style("opacity", function(p){ 
+        return p.v_id === d || p.j_id == d ? 1 : 0.2 
+    })
+    d3.selectAll(".plink").style("opacity", 0.2)
+}
+
+function unhighlight_j(d){
+    d3.selectAll(".papersNode").style("opacity",1)
+    d3.selectAll(".plink").style("opacity", 1)
+}
+
+function unclick_j(){
+    unhighlight_j(clickedJ)
+    d3.selectAll(".jrect").style("opacity", 1)
+    d3.selectAll(".jtext").attr("fill", "black")
+    d3.select("#j"+clickedJ).style("stroke-width", 0)
+    clickJ = !clickJ
+}
+
+function cmap_on(d){
+    d3.selectAll(".jrect").style("opacity", 0.3)
+    d3.selectAll(".jtext").attr("fill","rgba( 0, 0, 0, 0.33 )")
+    
+    if(clickJ){
+        //unhighlight previous
+        unhighlight_j(clickedJ)
+        d3.select("#j"+clickedJ).style("stroke-width", 0)
+        clickedJ = d
+    }
+    //highlight cluster
+    highlight_j(d)
+    d3.select("#j"+d).style("stroke-width", 1).style("stroke", "#1584c0").style("opacity", 1)
+    d3.select("#jt"+d).attr("fill","#1584c0")
+}
+
+function cmap_out(d){
+    if(clickJ) return
+    unhighlight_j(d)
+    d3.selectAll(".jrect").style("opacity", 1)
+    d3.selectAll(".jtext").attr("fill", "black")
+    d3.select("#j"+d).style("stroke-width", 0)
+}
+
+function cmap_click(d){
+    if(clickJ){
+        unhighlight_j(clickedJ)
+        clickedJ = null
+    }else{
+        clickedJ = d
+    }
+    clickJ = !clickJ
+    if (d3.event) d3.event.stopPropagation()
+}
+
+function cmap_dbl(){
+    if(!c20){//hide inc cmap and show j/v squares
+        if(j_lists[choosen_j].j_list.length > 10)
+            colorjj = color20b
+        colorjj.domain(j_lists[choosen_j].j_list)
+        $(".cmpClass").hide()
+        let x_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([150, 330]) 
+        svgAxis.selectAll("jrect")
+            .data(j_lists[choosen_j].j_list)
+            .enter()
+            .append("rect").attr("class","jrect").attr("id", (d)=>"j"+d)
+            .attr("height", 10)
+            .attr("width", 10)
+            .attr("y", function (d){
+                return x_coords(j_lists[choosen_j].j_list.indexOf(d))
+            })
+            .attr("x", 20)
+            .attr("fill", (d) => colorjj(j_lists[choosen_j].j_list.indexOf(d)))
+            .style("pointer-events", "all")
+            //scrivere handler in mouse-handlers.js
+            .on("click", cmap_click)
+            .on("mouseenter", cmap_on)
+            .on("mouseout", cmap_out)
+            .on("dblclick", cmap_dbl)
+            //evidenziare border e paperi su mouse over
+        svgAxis.selectAll(".jtext")
+            .data(j_lists[choosen_j].j_list)
+            .enter()
+            .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+d)
+            .attr("y", (d) => x_coords(j_lists[choosen_j].j_list.indexOf(d))+8)
+            .attr("x", 35)
+            .attr("text-anchor", "left")  
+            .style("font-size", "8px")
+            .text((d)=>d)
+    }else{
+        $(".cmpClass").show()
+        d3.selectAll(".jrect").remove()
+        d3.selectAll(".jtext").remove()
+    }
+    //hide squares and show inc cmap
+    c20 = !c20
+    color_papers()
+}
+
+function color_papers(){
+    d3.selectAll(".paper_in_bars").attr("fill", function (d){
+        if(idPs.includes(d.id) || papersPrint.includes(d.id))
+            return c20 ? color_j(d) : color_n(d.color)
+        else return "rgba( 217, 217, 217, 1 )"
+    })
+    d3.selectAll(".papersNode").attr("fill", function(d) {
+        if(c20)
+            return color_j(d)
+        else return color_n(d.color)})  
+                                        
 }
 
 function create_jtext(instance, journals){
@@ -135,7 +247,7 @@ function overing_pap_bar(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -143,7 +255,7 @@ function overing_pap_bar(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 }
@@ -179,11 +291,30 @@ function reset_pap_bar(d){
         .style("opacity", 1)
 }
 
+function highlight_cluster_pap(d){
+    d3.selectAll(".papersNode")
+        .style("opacity",  function(d1){ return d1.id === d.id ? 1 : 0.2;})
+        
+    d3.selectAll(".plink")
+        .style("opacity", function(d1){
+            if(d1.source.id===d.id){
+                d3.select("#p"+d1.target.id)
+                    .style("opacity", 1);
+                return 1;
+            }
+            if(d1.target.id===d.id){
+                d3.select("#p"+d1.source.id)
+                    .style("opacity", 1);
+                return 1;
+            }else return 0.2;
+    })
+}
+
 function highlight_cluster(d){
     d3.selectAll(".authors-dot")
         .attr("stroke",function (d1){
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgb(0,0,0,0)";
         })
         .attr("stroke-width",function (d1){
@@ -233,6 +364,7 @@ function un_highlight_auth(id){
 }
 
 function author_dblclick_ABG(d){
+    //GESTIRE CLICKJ/CLICKP???
     suggestion = d
     var isIn = false
     idA_rev = suggestion.id
@@ -248,7 +380,7 @@ function author_dblclick_ABG(d){
     popTextA.style("opacity", 0)
     popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
-     d3.event.stopPropagation()
+    d3.event.stopPropagation()
     refresh_export()
 }
 
@@ -437,7 +569,7 @@ function reclick_pap(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -446,7 +578,7 @@ function reclick_pap(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
             })
 }
@@ -522,6 +654,7 @@ function hide_link_text(){
 }
 
 function authClickHandler(d){
+    if(clickJ) unclick_j()
     if(!clickP){
 
     if(click){
@@ -746,6 +879,7 @@ function handlerMouseOverA(d){
 }
 
 function handlerMouseOutA(d){
+    if(clickJ) highlight_j(clickedJ)
     if(!clickP){
        if(!click){ 
         reset_texts()
@@ -960,6 +1094,7 @@ function handlerMouseOverAG(d){
 }
 
 function handlerMouseOutAG(d){
+
     if(!clickP){
         if(!click){
            //unclick_auth();
@@ -1010,10 +1145,12 @@ function handlerMouseOutAG(d){
         popRectA.attr("x", "-5000px")
             .style('opacity',0)
     }
+    if(clickJ) highlight_j(clickedJ)
 }
 
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
+    if(clickJ) unclick_j()
     if(!clickP){
     if(!click){
         if(clickAG){
@@ -1089,25 +1226,7 @@ function handlerMouseOutLinkAG(d){
         hide_link_text()
         if(clickP) reclick_pap(clkPp)
     }
-}
-
-function highlight_cluster_pap(d){
-  d3.selectAll(".papersNode")
-        .style("opacity",  function(d1){ return d1.id === d.id ? 1 : 0.2;})
-        
-    d3.selectAll(".plink")
-        .style("opacity", function(d1){
-            if(d1.source.id===d.id){
-                d3.select("#p"+d1.target.id)
-                    .style("opacity", 1);
-                return 1;
-            }
-            if(d1.target.id===d.id){
-                d3.select("#p"+d1.source.id)
-                    .style("opacity", 1);
-                return 1;
-            }else return 0.2;
-    })
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function handleMouseOver(d){
@@ -1129,7 +1248,7 @@ function handleMouseOver(d){
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
         
-        popRect.attr('fill', color_n(d.color))
+        popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
             .attr('width',wd +10)
             .attr('height',ht+2)
             .attr("x", getXRect(x, wd, true))
@@ -1146,7 +1265,7 @@ function handleMouseOver(d){
         d3.selectAll(".authNode")
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d.color);
                 else return "rgba( 221, 167, 109, 0.342 )"
             })
         
@@ -1154,14 +1273,13 @@ function handleMouseOver(d){
          d3.selectAll(".authlLine")
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d.color);
                 else return "rgba( 221, 167, 109, 0.342 )"
                 })
     }
 }
 
 function handleMouseOut(d){
-    
     if(!click){
         d3.selectAll("#pb"+d.id)
             .attr("cy", 15)
@@ -1199,14 +1317,15 @@ function handleMouseOut(d){
 
     }
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function clickHandler(d){
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     $('#paperInfo').html(paperInfo(d))
     setPapHandlers()
     if(clickP){
-        //console.log("click was true")
         unclick_pap(clkPp)
     }else{
         clickP = true;
@@ -1263,7 +1382,7 @@ function handleMouseOverPB(d, event){
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
                 y = pap.node().cy.baseVal.value;
-            popRect.attr('fill', color_n(d.color))
+            popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
             //popRect.attr('fill', aolor_r(d.color))
                 .attr('width',wd +10)
                 .attr('height',ht+2)
@@ -1284,7 +1403,7 @@ function handleMouseOverPB(d, event){
                  d3.selectAll(".authNode")
                 .attr("fill", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d.color);
                     else /*if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else*/
@@ -1293,7 +1412,7 @@ function handleMouseOverPB(d, event){
                 d3.selectAll(".authlLine")
                 .style("stroke", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d.color);
                     else/* if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
                             return "rgba( 188, 188, 188, 0.454 )"
                         else*/
@@ -1371,12 +1490,14 @@ function handleMouseOutPB(d){
     }
     if(click) reclick_auth(clkA)
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function clickHandlerPB(d){
-    //if(click) unclick_auth(clkA)
-    //$('#paperInfo').html(paperInfo(d))
-    //setPapHandlers()
+    if(clickJ) unclick_j()
+    if(click) unclick_auth(clkA)
+    $('#paperInfo').html(paperInfo(d))
+    setPapHandlers()
     popText.attr("width", 0)
         .attr("x", -5000)
         .attr("opacity", 0);
@@ -1394,7 +1515,7 @@ function clickHandlerPB(d){
 
 function addFromList(event){
     var idClick = event.target.id;
-    
+    if(clickJ) unclick_j()
     if(!idClick)
         idClick = event.target.parentNode.id
 
@@ -1434,11 +1555,11 @@ function ListMouseOver(event){
                         
                         .attr("fill", function(d1){ 
                             if(d.authsId.includes(d1.id))
-                                return color_n(d.color);
+                                return c20 ? color_j(d) : color_n(d.color);
                             else 
                                 return "rgba( 221, 167, 109, 0.342 )"
                          })        
-                    return color_n(d.color)            
+                    return c20 ? color_j(d) : color_n(d.color);            
                 }) 
              d3.selectAll("#pb"+idClick)
             .attr("r", 5)
@@ -1580,7 +1701,7 @@ function ListMouseOver(event){
 
 function ListMouseOut(event){
     var idClick = event.target.id;
-    
+
     if(!idClick)
         idClick = event.target.parentNode.id
     if(idClick[0]=='p'){
@@ -1592,7 +1713,7 @@ function ListMouseOut(event){
                 .duration(200)
                 .attr("r", 6)
                 .attr("fill", function(d){
-                    return color_n(d.color) 
+                    return c20 ? color_j(d) : color_n(d.color); 
                 }) 
             
             
@@ -1668,14 +1789,15 @@ function ListMouseOut(event){
         }    
     }
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function papDblc(event){
-    
     if(!first_dbl){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length),
         paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
+    if(clickJ) unclick_j()
     d3.select(this).style("background-color", "red").transition()
         .duration(500)
         .style("opacity", "0")
@@ -1696,6 +1818,7 @@ function papDblc(event){
 
 function authDblc(event){
     if(!first_dbla){
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     var idClick = event.target.id,
@@ -1767,6 +1890,7 @@ function r_authDblc(event){
         idClick = idClick.substring(1,idClick.length),
         index = authsReview.indexOf(idClick),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     $('#rauthList').html("")
@@ -1812,6 +1936,7 @@ function repl_clk(event){
         idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         
         let aObj = idAs.includes(id2) ? (authsDef.filter(function (el){return el.id === id2}))[0] : (authors.filter(function (el){return el.id === id2}))[0];
+    if(clickJ) unclick_j()
     if(clickP) unclick_pap(clkPp)   
     authClickHandler(aObj)    
          
@@ -1819,6 +1944,7 @@ function repl_clk(event){
 }
 
 function repl_click(event){
+    if(clickJ) unclick_j()
     if(!clickP){
      var idClick = event.target.id,
         idClick = idClick.substring(3,idClick.length),
@@ -2059,5 +2185,6 @@ function repl_out(event){
         d3.select(".txtspan").remove()
         reclick_auth(clkA)
     }
+        if(clickJ) highlight_j(clickedJ)
     event.stopPropagation()
 }

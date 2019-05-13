@@ -188,7 +188,10 @@ function printPapers(auths){
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
+                if(idPs.includes(d.id) || papersPrint.includes(d.id))
+                    return c20 ? color_j(d) : color_n(d.color)
+                else return "rgba( 217, 217, 217, 1 )"
+            }
    /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/
@@ -233,7 +236,7 @@ function printPapers(auths){
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return color_n(d.color) }
+                return c20 ? color_j(d) : color_n(d.color) }
                 /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/

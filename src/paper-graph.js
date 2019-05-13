@@ -401,7 +401,9 @@ function paperGraph(papers1, citations1, idPs, simulation){
                 return 2.5;
             })
         .attr("fill", function(d) {
-            return color_n(d.color)}
+            if(c20)
+                return color_j(d)
+            else return color_n(d.color)}
             /*
             if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
             else return "rgba( 64, 145, 215, 0.519 )";}*/)
@@ -496,7 +498,6 @@ popRect = svgP.append("rect")
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
 
     svg_handlers()
-    
     centerSvg()
 
 }
@@ -533,7 +534,7 @@ function dragged(d) {
         ht = bbox.height,
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
-    popRect.attr('fill', color_n(d.color))
+    popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
     //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
         .attr('width',wd +10)
         .attr('height',ht+2)
@@ -551,13 +552,13 @@ function dragged(d) {
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
     

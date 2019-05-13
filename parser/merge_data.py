@@ -5,6 +5,9 @@ import json
 destination_path = "p_pers.txt"
 auth_file = "a_pers.txt"
 
+print("Journals:")
+print(u.journals)
+
 papers = []
 j_files = []
 journals = dict({})

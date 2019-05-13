@@ -1081,3 +1081,10 @@ table#init-table t{
 #init-table {
     margin-left: 10%;
 }
+
+.jrect{
+    border: 0px;
+    border-radius: 30%;
+    cursor: pointer;
+    
+}
