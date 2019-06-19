@@ -13,7 +13,7 @@ waitPPids() {
 	    echo "Done decompressing and parsing partition -- PID ${PARSING_PIDS[$i]}"
 	    unset PARSING_PIDS[$i]
 	    fi
-	    sleep 1s
+	    sleep 2s
 	done
 	PARSING_PIDS=("${PARSING_PIDS[@]}") # Expunge nulls created by unset.
 	sleep 5m

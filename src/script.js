@@ -308,7 +308,6 @@ function setMouseHandlers(){
         
         hide_loading()
     })
-    
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
     
@@ -1113,6 +1112,7 @@ $(function (){
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
     setWinMouseHandlers()
+    $("#cit-btn").on("click", submit_biblio)
     
     
     /*

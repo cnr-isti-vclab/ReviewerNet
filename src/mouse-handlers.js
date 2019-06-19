@@ -2,6 +2,54 @@ var texts = [],
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
     j_lists = {}, choosen_j = null;
 
+function submit_biblio(){
+    let len = $("#citation_string")[0].innerHTML.split('\n').length
+    console.log(len)
+    let URL = "http://128.148.7.71/citations/create",
+        URL1 = "http://127.0.0.1:2000"
+        data = {"citation": $("#citation_string")[0].innerHTML},
+        dataType = "xml";
+    
+    var request = new XMLHttpRequest();
+    var path=URL1;
+    request.onreadystatechange=state_change;
+
+    request.open("GET", path, true);
+
+    request.send(null);
+        function state_change()
+    {
+    if (request.readyState==4)
+      {// 4 = "loaded"
+      if (request.status==200)
+        {// 200 = OK
+        // ...our code here...
+        alert('ok');
+        }
+      else
+        {
+        alert("Problem retrieving XML data");
+        }
+      }
+    }
+    
+    /*
+    $.ajax({
+    type: 'GET',
+    url: URL1,
+    crossDomain: true,
+    //data: data,
+    //dataType: dataType,
+    success: function(responseData, textStatus, jqXHR) {
+        console.log(responseData)
+    },
+    error: function (responseData, textStatus, errorThrown) {
+        alert('POST failed.');
+    }
+    });
+    */
+   // $.post(URL,data,function(result){},dataType)
+}
 
 function readTextFile(file)
 {

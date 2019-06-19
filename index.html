@@ -47,7 +47,13 @@
             <div id="scrollable" class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
                 <!-- Start Msg -->
                 <span id="loading" class="text-center"><!--<<div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> div class="loader text-center"></div>-->
-                <br><br>     
+                <br><br>
+                <form action="http://128.148.7.71/citations/create" target="_blank" method="POST" enctype="text/xml">
+  Bibliography:<br>
+  <textarea cols="80" id="citation_string" name="citation[string]" rows="10">Udvarhelyi, I.S., Gatsonis, C.A., Epstein, A.M., Pashos, C.L., Newhouse, J.P. and McNeil, B.J. Acute Myocardial Infarction in the Medicare population: process of care and clinical outcomes. Journal of the American Medical Association, 1992; 18:2530-2536.
+</textarea>
+  <input id="cit-btn" type="button" value="Submit">
+</form>
                 <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target="_blank"class="links" href="https://www.semanticscholar.org/">Semantic Scholar</a> Corpus.<br> 
                 <hr>
                     
