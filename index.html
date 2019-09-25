@@ -48,11 +48,8 @@
                 <!-- Start Msg -->
                 <span id="loading" class="text-center"><!--<<div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> div class="loader text-center"></div>-->
                 <br><br>
-                <form action="http://128.148.7.71/citations/create" target="_blank" method="POST" enctype="text/xml">
-  Bibliography:<br>
-  <textarea cols="80" id="citation_string" name="citation[string]" rows="10">Udvarhelyi, I.S., Gatsonis, C.A., Epstein, A.M., Pashos, C.L., Newhouse, J.P. and McNeil, B.J. Acute Myocardial Infarction in the Medicare population: process of care and clinical outcomes. Journal of the American Medical Association, 1992; 18:2530-2536.
-</textarea>
-  <input id="cit-btn" type="button" value="Submit">
+                    
+
 </form>
                 <b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a bibliographic database in the field of Computer Graphics extracted from the <a target="_blank"class="links" href="https://www.semanticscholar.org/">Semantic Scholar</a> Corpus.<br> 
                 <hr>
@@ -66,21 +63,26 @@
   <tr>
     <td>
       <table class="jTable">
+<!--
   <tr class="tjr">
       <td class="tj-1r"> <button id="ml-btn" class="j-btn" onclick="clickOnJ(this)"> Machine Learning / AI </button></td>
   </tr>
   <tr class="tjr">
       <td class="tj-2r"> <button id="hpc-btn" class="j-btn" onclick="clickOnJ(this)"> HPC </button></td>
   </tr>
+-->
   <tr class="tjr">
       <td class="tj-3r"><button id="cg-btn" class="j-btn" onclick="clickOnJ(this)"> Computer Graphics </button></td>
   </tr>
+<!--
+          
   <tr class="tjr">
       <td class="tj-4r"> <button id="dm-btn" class="j-btn" onclick="clickOnJ(this)"> Data Mining </button></td>
   </tr>
   <tr class="tjr">
       <td class="tj-5r"> <button id="cv-btn" class="j-btn" onclick="clickOnJ(this)"> Computer Vision &amp; Pattern Recognition </button></td>
   </tr>
+-->
     <tr class="tjr">
       <td class="tj-5r"> <button id="pers-btn" class="j-btn"  onclick="document.getElementById('input_ds').click()">Upload your instance</button>
                         <input type="file" id="input_ds" style="display: none;" onchange="import_ds_m(event)" multiple/> 
@@ -260,7 +262,7 @@
                             <table>
                               <tr id="submitting_row">
                                 <td id="td1" class="td1">
-                                  <span id="conflict-a" class="text-left tb_labels"  style="transform: translateY(55%);">Submitting Authors <span id="authors-badge"class="badge"></span></span>
+                                  <span id="conflict-a" class="text-left tb_labels"  style="transform: translateY(55%);">Conflicting Researchers <span id="authors-badge"class="badge"></span></span>
                                   </td>
                                 <td id = "td2" class ="button-bar">
                                     <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
@@ -301,14 +303,29 @@
                         <li class="sidebar-search">                            
                             <div id="searchfield" style="width: 100%; padding-top: 1px;">
                             <table>
+                                <tbody>
                               <tr>
                                 <td class="td1">
                                   <span id="area-paper-a" class="text-left tb_labels" style="transform:  translateY(46%);">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
                                   </td>
-                                <td class ="td2">
-                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                            
+
+                                  
+                            <td class ="td2 button-bar">
+                            <div id="export_dropup" style="width: 15px">
+                                     <div id="biblio-dialog" title="Import from Bibliography"  class = "my-dialog" style="width: 100%">
+                                    </div>
+                                    <button id ="biblio-btn"  class = "pop-up" type="button" title = "Import from Bibliography button." style= "border:0px; background: none;"><img id="biblio" class = "biblio-btn" src="imgs/biblio.svg" style="width: 22px; height: 26px" alt="Import from biblio"
+                                    style=""></button>
+                                    </div> 
+                            <form style="margin: 0 auto; width: 90%; float:right; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
                                   </td>
+                                  
+                                <!--<td class ="td2">
+                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                                  </td>-->
                               </tr>
+                                    </tbody>
                             </table>  
                             </div>
                         </li>

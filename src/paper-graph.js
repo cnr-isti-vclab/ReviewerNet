@@ -182,7 +182,6 @@ function deleteP(idCk){
 }
 
 function addPaper(suggestion){
-    this.value=""
     if(start){
         let delta = maxYear-minYear
         if(delta > 30) delta = delta/2
@@ -534,7 +533,7 @@ function dragged(d) {
         ht = bbox.height,
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
-    popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
+    popRect.attr('fill', () =>  "#d1d1d1")//c20 ? color_j(d) : color_n(d.color))
     //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
         .attr('width',wd +10)
         .attr('height',ht+2)

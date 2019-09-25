@@ -114,7 +114,7 @@ function loaded(evt) {
                 console.log(e); // pass exception object to error handler
             }    
     }
-    if(papersFiltered.length > 0 && papersFiltered)
+    if(papersFiltered && papersFiltered.length > 0)
     {paperGraph(papersFiltered, citPrint, idPs, simulation)
     setTimeout(function(){ 
         authorBars()

@@ -299,8 +299,8 @@ function hide_loading(){
 function setMouseHandlers(){
     
     $("#default_inst").on("click", function(){
-        let ppath = "datasets/p_2019-01-31.txt",
-            apath = "datasets/a_2019-01-31.txt";
+        let ppath = "datasets/p_cg_2019-01-31.txt",
+            apath = "datasets/a_cg_2019-01-31.txt";
         
         show_loading()
         
@@ -310,6 +310,7 @@ function setMouseHandlers(){
     })
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
+
     
     d3.select(".pop-up").style("pointer", "none")
    
@@ -1088,6 +1089,7 @@ function setup_searchbars(){
     }).hide()
     
     $( "#export-btn").on("click", export_session)
+    $( "#biblio-btn").on("click", biblio_click_handler)
 }
 
 function process_auth(data) {
@@ -1112,13 +1114,14 @@ $(function (){
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
     setWinMouseHandlers()
-    $("#cit-btn").on("click", submit_biblio)
     
+    
+    
+    
+    
+    //DEBUG
     
     /*
-    DEBUG
-    
-    
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
@@ -1126,8 +1129,11 @@ $(function (){
         //scarico file x e creo jlist e texts
         readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
     }
+    
     clickOnGo()
     */
-    //d3.select("#loading").style("pointer-events", "all")
-    //$("#loading").on("click", start_click_handler);
+    /*
+    d3.select("#loading").style("pointer-events", "all")
+    $("#loading").on("click", start_click_handler);
+    */
 });

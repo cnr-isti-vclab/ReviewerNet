@@ -1,38 +1,174 @@
 var texts = [],
-    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
+    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
     j_lists = {}, choosen_j = null;
 
-function submit_biblio(){
-    let len = $("#citation_string")[0].innerHTML.split('\n').length
-    console.log(len)
-    let URL = "http://128.148.7.71/citations/create",
-        URL1 = "http://127.0.0.1:2000"
-        data = {"citation": $("#citation_string")[0].innerHTML},
-        dataType = "xml";
-    
-    var request = new XMLHttpRequest();
-    var path=URL1;
-    request.onreadystatechange=state_change;
 
-    request.open("GET", path, true);
+function import_from_biblio(imports, query){
+    $( "#biblio-dialog" ).dialog( "close" );
+    clickBiblio = false;
+    let not_found = 0, resultset = [];
+    $("#biblio-txt").css("background", "lightgray")
+    for(var i =0; i<imports.length; i++){
+        
+        if(imports[i].title && imports[i].title.length >0){
+            var terms = imports[i].title.split(' ').slice(1, 4),
+                matchers = [], found = false, j =0;
 
-    request.send(null);
-        function state_change()
-    {
-    if (request.readyState==4)
-      {// 4 = "loaded"
-      if (request.status==200)
-        {// 200 = OK
-        // ...our code here...
-        alert('ok');
+            terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
+            
+            while(!found && j < papers.length){
+                var t = papers[j].value;
+                if (t && str_match(matchers, t)){
+                   addP(papers[j])
+                    resultset.push({'query':query[i], 'class':'query_found'})
+                    found = true
+                }
+                else j++
+            }     
+            if (!found){
+                resultset.push({'query':query[i], 'class':'query_not_found'})
+                not_found++
+            }
         }
-      else
-        {
-        alert("Problem retrieving XML data");
+    }
+        if(papersFiltered && papersFiltered.length > 0){
+            
+             if(start){
+                let delta = maxYear-minYear
+                if(delta > 30) delta = delta/2
+                document.getElementById("startMsg").style.visibility = "hidden";
+                xaxis.scale(xConstrained).ticks(delta, "r");
+                svgAxis = d3.select("#svgAxis").attr("y", "80")  
+                svgAxis.append("g").attr("id", "axis").call(xaxis);
+                document.getElementById("startMsg").style.visibility = "hidden";
+                 document.getElementById("svgAxis").style.visibility = "visible";
+                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+                d3.selectAll(".graph").style("overflow-y", "auto")
+                add_labels()
+                start = false;
+            }
+            
+            
+                paperGraph(papersFiltered, citPrint, idPs, simulation)
+            setTimeout(function(){ 
+                authorBars()
+                authorGraph()
+                $( "#biblio-dialog" ).dialog( "open" );
+            }, 1000);
+        }
+           
+        let inner_txt =  not_found > 0 ? not_found+" papers haven't been found:<hr>" :  "The entire bibliography has been parsed an loaded. <br>Close this dialog and enjoy Reviewernet!<hr>";
+        $("#biblio-txt").css("background", "white")
+    
+        for(var i =0; i<resultset.length; i++){
+           inner_txt += "<span class=\"query "+resultset[i].class+"\">"+resultset[i].query+"</span>"
+            if (i !=(resultset.length -1))
+                inner_txt+='<br>'
+        }
+    
+        inner_txt += "<hr>"
+
+        document.getElementById("biblio-dialog").innerHTML = inner_txt
+    
+}
+
+function biblio_click_handler(){
+     if($( "#biblio-dialog" ).dialog( "isOpen" )){
+         $( "#biblio-dialog" ).dialog( "close" );
+        clickBiblio = false;
+    }else{
+        $( "#biblio-dialog" ).dialog( "open" );
+        clickBiblio = true;
+        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, one for each line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
+        
+        document.getElementById("biblio-dialog").innerHTML = inner_txt
+        
+        //Parse button
+        $("#cit-btn").on("click", submit_biblio)
+    }
+}
+
+function submit_biblio(){
+    
+     var http = new XMLHttpRequest();
+    
+    let len = document.getElementById("biblio-txt").value.split('\n').length
+    //console.log(len+"\n"+document.getElementById("biblio-txt").value)
+    let URL = "http://128.148.7.71/citations/create",
+        URL1 = "http://anystyle.isti.cnr.it",
+        params = 'query='+document.getElementById("biblio-txt").value,
+        query =  document.getElementById("biblio-txt").value.split("\n");
+    
+    //Send the proper header information along with the request
+    http.open('POST', URL1, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+
+    http.onload = function (e) {
+    if (http.readyState === 4) {
+        if (http.status === 200) {
+            response = JSON.parse(http.responseText)
+            console.log(response)
+          import_from_biblio(response, query);
+        } else {
+          console.error(http.statusText);
         }
       }
+    };
+    http.onerror = function (e) {
+      console.error(http.statusText);
+        alert("Some error occurred, check the connection and try again.")
+    };
+
+    /*
+    
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if (http.readyState === 4) {
+            if (http.status === 200) {
+                import_from_biblio(JSON.parse(http.responseText))
+            } else {
+                console.error(http.statusText);
+            }
+        }
     }
     
+    
+    
+    http.ontimeout = function () {
+       alert("The request timed out.");
+    };
+
+    http.timeout = 1000;
+*/
+    http.send(params);
+    
+    
+//        data = {"citation": $("#citation_string")[0].innerHTML},
+//        dataType = "xml";
+//    
+//    var request = new XMLHttpRequest();
+//    var path=URL1;
+//    request.onreadystatechange=state_change;
+//
+//    request.open("GET", path, true);
+//
+//    request.send(null);
+//        function state_change()
+//    {
+//    if (request.readyState==4)
+//      {// 4 = "loaded"
+//      if (request.status==200)
+//        {// 200 = OK
+//        // ...our code here...
+//        alert('ok');
+//        }
+//      else
+//        {
+//        alert("Problem retrieving XML data");
+//        }
+//      }
+//    }
+//    
     /*
     $.ajax({
     type: 'GET',
@@ -274,7 +410,6 @@ function start_click_handler(){
     $(".hiddenSB").css("pointer-events", "none")
     d3.select(".pop-up").style("pointer", "help")
     toolboxInit()
-    
     setMouseHandlers()    
     setSvgs()
     simulation = setSimulation()
@@ -1296,7 +1431,7 @@ function handleMouseOver(d){
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
         
-        popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
+        popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
             .attr('width',wd +10)
             .attr('height',ht+2)
             .attr("x", getXRect(x, wd, true))
@@ -1430,7 +1565,7 @@ function handleMouseOverPB(d, event){
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
                 y = pap.node().cy.baseVal.value;
-            popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
+            popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
             //popRect.attr('fill', aolor_r(d.color))
                 .attr('width',wd +10)
                 .attr('height',ht+2)
