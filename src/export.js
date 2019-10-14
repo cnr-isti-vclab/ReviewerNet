@@ -1,20 +1,3 @@
-/*
-This file is part of ReviewerNet.org.
-Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
-All rights reserved.
-
-ReviewerNet.org is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
 let ftxt = "";
 
 function get_auth_biblio(id, biblio){
@@ -118,33 +101,26 @@ function refresh_export(){
 }
 
 function export_file(){
-    let ret = thetaPap+"."+thetaY+"."+thetaC+"."+checkboxA[0].checked+"."+checkboxC[0].checked,
-        paps_obj = papersFiltered.filter(function(el){ return idPs.includes(el.id);});
+    let ret = thetaPap+"."+thetaY+"."+thetaC+"."+checkboxA[0].checked+"."+checkboxC[0].checked;
     
     ret += "\n"
     
-    if(authsExclude_obj.length > 0){
-        for(var i  = 0; i < authsExclude_obj.length-1; i++)
-            ret += authsExclude_obj[i].id+sep1
-                +authsExclude_obj[i].value+sep2
-        ret += authsExclude_obj[authsExclude_obj.length-1].id+sep1
-            +authsExclude_obj[authsExclude_obj.length-1].value
-    }
-    ret += "\n"
+    for(var i  = 0; i < authsExclude.length-1; i++)
+        ret += authsExclude[i]+"."
+    ret += authsExclude[authsExclude.length-1]
     
-    if(authsReview_obj.length > 0){
-        for(var i  = 0; i < authsReview_obj.length-1; i++)
-            ret += authsReview_obj[i].id+sep1
-            +authsReview_obj[i].value+sep2
-        ret += authsReview_obj[authsReview_obj.length-1].id+sep1
-            +authsReview_obj[authsReview_obj.length-1].value
-    }
-    ret += "\n"
+    ret += authsReview.length > 0 ? "\n" : ""
     
-    for(var i  = 0; i < idPs.length-1; i++){
-        ret += idPs[i]+sep1+paps_obj.filter((el) => el.id === idPs[i])[0].value+sep2
+    if(authsReview.length > 0){
+        for(var i  = 0; i < authsReview.length-1; i++)
+            ret += authsReview[i]+"."
+        ret += authsReview[authsReview.length-1]
     }
-    ret += idPs[idPs.length-1]+sep1+paps_obj.filter((el) => el.id === idPs[idPs.length-1])[0].value
+    ret += idPs.length > 0 ? "\n" : ""
+    
+    for(var i  = 0; i < idPs.length-1; i++)
+        ret += idPs[i]+"."
+    ret += idPs[idPs.length-1]
     
     return ret
 }
@@ -210,9 +186,17 @@ function export_session(){
         });*/
     }
     
+    
+    
+    
 }
 
 function export_fileb(){
+    
+    if(authsExclude.length == 0 || !authsExclude){
+        alert("Nothing to export.")
+        return;
+    }
     
     if(idPs.length == 0 || !idPs){
         alert("Nothing to export.")
@@ -249,4 +233,7 @@ function export_fileb(){
       document.body.removeChild(link);
     });
     
+    if(authsReview.length == 0 || !authsReview){
+        alert("The session file doesn't contain any candidate reviewer.")
+    }
 }
