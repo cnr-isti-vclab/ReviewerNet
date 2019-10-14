@@ -257,5 +257,4 @@ function export_fileb(){
       link.dispatchEvent(event);
       document.body.removeChild(link);
     });
-    
 }
