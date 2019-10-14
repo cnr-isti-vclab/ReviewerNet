@@ -1,23 +1,4 @@
-/*
-This file is part of ReviewerNet.org.
-Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
-All rights reserved.
-
-ReviewerNet.org is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false,
-    old_loading = "",
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false,  resize_rn = false,
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -43,9 +24,6 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     inC = [],
     outC = [],
     its = 0,
-    sep1 = '§',
-    sep2 = '£',
-    zoomFact = 1.0, dy = 0, old_dy = 0, old_zoomFact=1.0,
     citPrint = [],
     papersFiltered = [],
     authsFiltered = [],
@@ -56,7 +34,6 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 5000, baseHeight = 5000,
     h = height,
     w = width,
     oldw = w,
@@ -77,7 +54,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     minYear = 1995,
     minInCits = 100,
     maxInCits = 0,
-    maxYear = 2019,
+    maxYear = 2018,
     checkboxTP = $('#MNP'),
     //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
@@ -86,10 +63,6 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     checkboxC = $('#cb-confl'),
     checkboxA = $('#cb-av'),
     authViz = document.getElementById('authViz'),
-    color10 = d3.scaleOrdinal(d3.schemeCategory10),
-    color20b = d3.scaleOrdinal(d3.schemeCategory20), //20b categorical cmap
-    colorjj = color10,
-    c20 = false,
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
         .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
@@ -103,8 +76,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     xConstrained = d3.scaleLinear()
         .domain([minYear, maxYear])
         .range([10, width - 20]),
-    xaxis = d3.axisBottom().scale(xConstrained),
-    loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";
+    xaxis = d3.axisBottom().scale(xConstrained); 
 
 function getXRect(x, wdt, inGraph){
     
@@ -116,10 +88,15 @@ function getXRect(x, wdt, inGraph){
         else return x + 5
 }
 
+function start_click_handler(){
+    document.getElementById("loading").style.visibility = "hidden";
+    d3.select(".pop-up").style("pointer", "help")
+    toolboxInit()
+}
+
 function updateWidth(){
     xConstrained.range([15, w -30]);
     d3.select("#axis").remove()
-    d3.select("#scale").remove()
     if(svgAxis) svgAxis.append("g").attr("id", "axis").call(xaxis);
 }
 
@@ -137,12 +114,110 @@ function getXTxt(x, wdt, inGraph){
     */
 }
 
+function paperFilter (item) { 
+    var r = papersPrint.includes(item.id);
+    /*if(r)
+        updateYear(item.year)
+    */return r;
+};
+
+function updateYear(y){
+    var change = false;
+    if(y<minYear){
+        minYear = y
+        change = true
+    }
+    if(y>maxYear){
+        maxYear = y
+        change = true
+    }
+    if(change){
+        xConstrained.domain([minYear, maxYear])
+        xaxis.scale(xConstrained)
+    }
+}
+
+function citFilter (currentValue) {
+    let flag = false,
+        cit = "", srcId,
+        trgId;
+    if(typeof(currentValue.source)==='string'){
+        srcId = currentValue.source
+        trgId = currentValue.target
+    }else{
+        srcId = currentValue.source.id
+        trgId = currentValue.target.id
+    }
+    if (srcId === idP){
+      cit = trgId
+      outC.push(cit)
+      flag = true
+    }
+    if (trgId === idP){
+      cit = srcId
+      inC.push(cit)
+      flag = true
+    }
+    if(write && flag && !(papersPrint.includes(cit))){ 
+        papersPrint.push(cit)
+    }
+    return flag;
+};
+
 function reset_texts(){
     for(var i = 0; i < texts.length; i++)
         texts[i].attr("x", -1000)
                 .attr("y", -1000)
                 .attr("opacity", 0)
     texts = []
+}
+
+function papName(d){
+    var p_name = d3.select($("#txt"+d.id)[0]),
+        bbox = p_name.node().getBBox(),
+        wd = bbox.width,
+        ht = bbox.height,
+        x = d3.select("#p"+d.id).node().cx.baseVal.value,
+        y = d3.select("#p"+d.id).node().cy.baseVal.value;
+    texts.push(p_name)
+    p_name.attr("x", getXTxt(x, wd, true))
+        .attr("y", y + 4)
+        .attr("opacity", 1)
+        .attr("fill", "#000000")    
+}
+
+function papNameConflict(d){
+    var p_name = d3.select($("#txt"+d.id)[0]),
+        bbox = p_name.node().getBBox(),
+        wd = bbox.width,
+        ht = bbox.height,
+        x = d3.select("#p"+d.id).node().cx.baseVal.value,
+        y = d3.select("#p"+d.id).node().cy.baseVal.value;
+    texts.push(p_name)
+    p_name.attr("x", getXTxt(x, wd, true))
+        .attr("y", y + 4)
+        .attr("opacity", 1)
+        .attr("fill", "#db0000"/*"#000000"*/)    
+}
+
+function isCoAuth(item){ }
+
+function isInCited(item){ return inC.includes(item.id)}
+
+function isOutCited(item){ return outC.includes(item.id)}
+
+function isInCited1(item){ return papersCit[idP][0].includes(item.id)}
+
+function isOutCited1(item){ return papersCit[idP][1].includes(item.id)}
+
+function updateColor(){
+    var lp = papersFiltered.length
+    for(var i = 0; i < lp; i++){
+        minInCits = Math.min(minInCits, papersFiltered[i].color)
+        maxInCits = Math.max(maxInCits, papersFiltered[i].color)
+    }
+    //console.log("[UPDATECOLOR@script.js] minC: "+minInCits)
+    //console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
 }
 
 function getAP(){
@@ -168,7 +243,49 @@ function getANP(){
     }
 }
 
-function getArrays(graph, path) {
+function addId(name, year){
+    var isIn = false
+    inC = []
+    outC = []
+    if(idPs.includes(idP)){
+      isIn = true
+    }
+    else{
+        
+      idPs[idPs.length] = idP
+      papersPrint.push(idP)
+        /*
+        console.log(idP)
+        get_JSON(idP, process_auth)
+        */
+      AP = []
+      ANP = []
+      papersCit[idP] = [[], []];
+        name = 
+        $("#papList").append("<li id=\""+"p"+idP+
+        "\" class=\"paplist list-group-item pAuth\"><strong>"
+         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
+        
+      write = true;
+      let tempCits = citations.filter(citFilter);
+      write = false;
+      for(var i = 0; i<inC.length; i++)
+        papersCit[idP][0].push(inC[i])
+      for(var i = 0; i<outC.length; i++)
+        papersCit[idP][1].push(outC[i])
+      citPrint = citPrint.concat(tempCits)
+      papersFiltered = papers.filter(paperFilter)
+      updateADpapers()
+      updateColor()
+      getAP()
+      getANP()
+      refresh_export()
+    }
+    
+    return isIn
+}
+
+function getArrays(graph) {
     var p = graph.nodes,
         n = p.length;
     for (i = 0; i < n; i++)
@@ -191,26 +308,79 @@ function getArrays(graph, path) {
         })();
         //setTimeout(loop, 2500);
       })();
-    getAuths(path)
+    getAuths()
   }
 
-function getAuths(path) {
+function getAuths() {
+    var authTxt = fetch('datasets/a_v0518f.txt')
+        .then(response => response.text())
+        .then(function(text){
+            var authG = JSON.parse(text),
+                a = authG.authors,
+                n = a.length
+            for (i = 0; i < n; i++){
+                authors[i]=a[i]
+                authDict[a[i].id] = [2019, 1900, []]
+            }
 
-    var authG = JSON.parse(readTextFile(path)),
-        a = authG.authors,
-        n = a.length
-    for (i = 0; i < n; i++){
-        authors[i]=a[i]
-        authDict[a[i].id] = [2019, 1900, []]
-    }
+            init_txt = "<br><br><b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains "+papers.length+" papers, "+citations.length+" citations, and "+authors.length+" authors, from 1995 to 2018, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br><center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>The bibliographic database is fully loaded at the beginning and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>" 
+    
+            document.getElementById("loading").innerHTML = init_txt 
+            d3.select("#loading").style("pointer-events", "all")
+            d3.select("#loading").on("click", start_click_handler);
+        })
         
-}
+    }
 
 function str_match(matchers, t){
     var res = true;
     for(var i = 0; i < matchers.length; i++)
         res = res && matchers[i].test(t)
     return res;
+}
+
+function deleteP(idCk){
+    $('#papList').html("")
+    var index = idPs.indexOf(idCk), idsT = [];
+    AP = []
+    ANP = []
+    if (index > -1) {
+        minInCits = 100
+        maxInCits = 0       
+        
+        idPs.splice(index, 1);
+        let idT = idPs
+        var n = authors.length
+        for (var i = 0; i < n; i++){
+            authDict[authors[i].id][0]= 2019
+            authDict[authors[i].id][1]= 1900
+        }
+            
+        var pT = papersFiltered.filter(function (item){
+                return idT.includes(item.id)})
+        idPs = []
+        papersFiltered = []
+        papersPrint = []
+        citPrint = []
+        papersCit = {}
+
+        if(idT.length > 0)
+            for(var i = 0; i < idT.length; i++){
+                var pap = pT.filter(function (item){return item.id === idT[i]})[0]
+                idP = pap.id
+                if(!addId(pap.value, pap.year)){
+                  //updateYear(pap.year)
+                    updateADpapers()
+                }    
+            }
+        paperGraph(papersFiltered, citPrint, idPs, simulation)
+        if(idInfo === idCk)
+            $('#paperInfo').html("")
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+        }, 1000);
+        }
 }
 
 function setPapHandlers(){
@@ -230,187 +400,17 @@ function setPapHandlers(){
         .on("mouseout", ListMouseOut);
 }
 
-function setWinMouseHandlers(){
-    
-    $( window ).on("load", function(){
-        height = this.height
-        heightA = this.height * 0.3
-        w = width
-        h = height
-        updateWidth()
-    })
-    
-    $("body").on('click', function(){
-            $(".badge").html("")
-    })
-     
-    
-    window.onresize = function(e) {    
-        if(!resize_pn && !resize_ag){
-            //console.log("res_global")
-            width = $("#aut_table").width()
-            _docHeight = document.documentElement.clientHeight - 30
-            height = document.documentElement.clientHeight - 30
-
-            w = width
-            h = height
-            heightA = document.getElementById('aut_table').clientHeight    
-            let newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-
-            newH = _docHeight - heightAG;
-            document.getElementById('row22').style.height = newH.toString()+"px";
-            d3.select("#main-span").attr("dy",function(){
-                return heightA-100}) 
-
-             if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
-                updateWidth()
-                 simulationA.stop()
-                 zoom_by(1.0)
-                 paperGraph(papersFiltered, citPrint, idPs, simulation)
-                    setTimeout(function(){ 
-                        simulation.stop()
-                    }, 100);
-                 authorBars()
-                    //authorGraph()
-                }
-            oldw = width
-        }
-     }
-    
-    document.onmouseup = function(e){
-        resize_pn = false
-        resize_ag = false
-    }
-    
-}
-
-function show_loading(){
-
-    document.getElementById("loading").style.pointerEvents = "none"
-    
-    old_loading = document.getElementById("loading").innerHTML
-    
-    document.getElementById("loading").innerHTML = loader + old_loading;
-
-    document.getElementById("loading").style.visibility = "visible";
-    document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.2 )"
-
-    document.getElementById("ldr").style.top = "30%";
-}
-
-function hide_loading(){
-
-    document.getElementById("ldr").innerHTML = "All data loaded"
-     document.getElementById("loading").style.pointerEvents = "all"
-    document.getElementById("loading").innerHTML = old_loading
-     document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.567 )"
-    //$("#loading").on("click", function(){
-      //  event.preventDefault()
-        //document.getElementById("loading").style.visibility = "hidden";
-        //d3.select(".pop-up").style("pointer", "help")    
-        //enable_all()
-//    })
-    
-    
-    
-}
-
 function setMouseHandlers(){
-    
-    $("#default_inst").on("click", function(){
-        let ppath = "datasets/p_2019-01-31.txt",
-            apath = "datasets/a_2019-01-31.txt";
-        
-        show_loading()
-        
-        import_ds(ppath, apath)
-        
-        hide_loading()
+    $("#loading").on("click", function (event){
+        event.stopPropagation();
     })
-    
-    d3.selectAll(".links").attr("target", "_blank")
-    d3.selectAll(".ui-resizable-handle").style("opacity", 0)
-    
-    d3.select(".pop-up").style("pointer", "none")
-   
-    
-    $( "#resizable" ).resizable({
-        handles: "s",
-        resize: function( event, ui ) {
- 
-             onlyag = false
-            
-            if(ui.size.height < 200){
-                heightA = 200
-                ui.size.height = 200
-            }
-            else if(ui.size.height > 600){
-                heightA = 600
-                ui.size.height = 600
-            }
-            else heightA = ui.size.height
-            document.getElementById('aut_table').clientHeight = heightA;
-            let delta =  oldH - heightA,
-                newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-            oldH = heightA;
-            d3.select("#main-span").attr("dy",function(){
-            return heightA-100}) 
-            event.stopPropagation()
-            
-        }
-    })
-    .on("mousedown", function(){resize_pn = true})
-    .on("mouseup", function(){resize_pn = false})
-    
-    $( "#resizable1" ).resizable({
-        handles: "s",
-        resize: function( event, ui ) {
-            //console.log("res1")
-            onlyag = true
-            if(ui.size.height < 300){
-                heightAG = 300
-                ui.size.height = 300
-            }
-            else if(ui.size.height > 600){
-                heightAG= 600
-                ui.size.height = 600
-            }
-            else heightAG = ui.size.height
-            document.getElementById('AG-container').clientHeight = heightAG;
-            let delta =  oldHAG - heightAG,
-                newH = _docHeight - heightAG;
-            document.getElementById('row22').style.height = newH.toString()+"px";
-            oldHAG = heightAG;
-/*            console.log("H "+document.getElementById('row21').clientHeight)*/
-            heightA = document.getElementById('aut_table').clientHeight    
-            newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-/*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
-
-            event.stopPropagation()
-        }
-    })
-    .on("mousedown", function(){resize_ag = true})
-    .on("mouseup", function(){resize_ag = false})
-
- 
-    /*
-    In-citations & journal/venue color-maps
-    */
-    d3.select("#cmpa")
-        .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
-        .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
-        .on("dblclick", cmap_dbl)
-    
     $("#authList")
         .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
         .on("dblclick", "td", authDblc);
     $("#rauthList")
-        .on("click", "li", addFromList)
+        .on("click", addFromList)
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", r_authDblc);
@@ -421,21 +421,15 @@ function setMouseHandlers(){
                 paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
             setPapHandlers()
             clickHandler(paper)
+            
         })
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         .on("dblclick", "li", papDblc);
-    
-     $("#reset-button")
-        .on("click", function() {
-            if(zoomFact!=1){
-                if(idClickedA && idClickedA != 0) unclick_auth(clkA)
-                if(clkPp) unclick_pap(clkPp)
-                zoom_by(1)
-                paperGraph(papersFiltered, citPrint, idPs, simulation)
-            }})
-     .on("mouseenter", function() {d3.select("#reset-img").style("opacity", "0.55").transition().duration(100)})
-     .on("mouseout", function(){d3.select("#reset-img").style("opacity", "0.3")})
+    $("#resizable")
+        .on("mousedown", () => resize_pn = true)
+    $("#resizable1")
+        .on("mousedown", () => resize_rn = true)
 }
 
 function updateAuthDict(pf){
@@ -479,6 +473,45 @@ function updateAuthDict(pf){
                 //authDict[auths[i]].push(hist)
             }
     }
+}
+
+function addPaper(suggestion){
+    this.value=""
+    if(start){
+        let delta = maxYear-minYear
+        if(delta > 30) delta = delta/2
+        xaxis.scale(xConstrained).ticks(delta, "r");
+        svgAxis = d3.select("#svgAxis").attr("y", "80")  
+        svgAxis.append("g").attr("id", "axis").call(xaxis);
+        document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("svgAxis").style.visibility = "visible";
+        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+        d3.selectAll(".graph").style("overflow-y", "auto")
+        add_labels()
+        start = false;
+    }
+    idP = suggestion.id
+    //console.log(suggestion)
+    var isIn = addId(suggestion.value, suggestion.year)
+    $('#paperInfo').html(paperInfo(suggestion));
+    setPapHandlers()
+    //setMouseHandlers()
+    if(!isIn){
+      //updateYear(suggestion.year)
+        updateADpapers()
+        updateAuthDict(papersFiltered)
+        paperGraph(papersFiltered, citPrint, idPs, simulation)
+        setTimeout(function(){ 
+            authorBars()
+            authorGraph()
+            print_rew()
+        }, 1000);
+        
+    }
+}
+
+function foo(event){
+    console.log(event)
 }
 
 function printCits(){
@@ -536,23 +569,155 @@ function printCits(){
     return thehtml;
 }
 
-function color_n(c){
-    return c > 100 ? color(100):color(c);
+function paperInfo(suggestion){
+    
+    idInfo = suggestion.id;
+    var title = suggestion.year+", "+(suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..." : suggestion.value)
+    
+    d3.select(".td2title").attr("id", ("p"+idInfo)).attr("class", "outCits td2title").text(title)
+    document.getElementsByClassName("td2title").innerHTML = title
+    var thehtml =  ""
+    
+/*"<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"*/
+    function isAuth(item){
+        return suggestion.authsId.includes(item.id);
+    }
+    var aPrint = authors.filter(isAuth), ia = 0;  
+    if(aPrint.length > 4){
+        //id = \"authsPap\"
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"trPj\"><th class =\"thP\"rowspan=\""+(extra > 0 ? rspan+1: rspan)+"\">Authors</th>"
+        for(var j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (var i = 0; i < 4; i++){
+                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[ia].id+"\">"+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (var i = ia; i < aPrint.length; i++){
+                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
+    }else{
+        thehtml += "<tr  class=\"trPj\"><th class =\"thP\" >Authors</th><td class=\"authsPap trP\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + '</td>'
+        for (var i = 1; i < aPrint.length; i++)
+            thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
+        thehtml += "</tr>"
+    }
+    if(suggestion.jN.length > 0)
+          thehtml += "<tr class=\"trPj\"><th class =\"thP\">Journal Name</th><td colspan=\"4\" class =\"tdj\">"+suggestion.jN+"</td></tr>";
+        else if(suggestion.venue.length > 0)
+            thehtml += "<tr  class=\"trPj\"><th class =\"thP\">Venue</th><td colspan=\"4\" class =\"tdj\" >"+suggestion.venue+"</td></tr>";
+    idP = suggestion.id
+    //thehtml += printCits()
+    return thehtml
+
 }
 
-function color_j(p){
-   return p.v_id ? colorjj(j_lists[choosen_j].j_list.indexOf(p.v_id)) : colorjj(j_lists[choosen_j].j_list.indexOf(p.j_id))
-    
-        /*
-    color20b(j_lists[choosen_j].j_list.indexOf(p.venueId)) : color20b(j_lists[choosen_j].j_list.indexOf(p.journalId))
-    */
+function paperInfoa(suggestion){
+    idInfo = suggestion.id;
+    var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
+    function isAuth(item){
+        return suggestion.authsId.includes(item.id);
+    }
+    var aPrint = authors.filter(isAuth)  
+    aPrint.sort(function(a, b) {
+            return (parseInt(a.year) - parseInt(b.year));
+        });
+    for (var i = 0; i < aPrint.length; i++)
+        thehtml += "<li id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</li>'
+    thehtml += "</ul>"
+    if(suggestion.jN.length > 0)
+      thehtml += "<strong>Journal Name:</strong><ul class=\"list-group\"><li class=\"list-group-item listG \">"+suggestion.jN+"</li></ul>";
 
+    if(suggestion.venue.length > 0)
+        thehtml += "<strong>Venue:</strong><ul class=\"list-group\" ><li class=\"list-group-item listG\">"+suggestion.venue+"</li></ul>";
+
+    idP = suggestion.id
+    if(idPs.includes(idP)){
+        var inCi = papersCit[idP][0],
+            outCi = papersCit[idP][1];
+        if(inCi.length > 0){
+          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\" >"
+          var inCits =  papers.filter(isInCited1)
+        inCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < inCits.length; i++)
+            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
+          thehtml += "</ul>"
+        }
+        if(outCi.length > 0){
+          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
+          var outCits =  papers.filter(isOutCited1)
+          outCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < outCits.length; i++)
+            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
+          thehtml += "</ul>"
+        }
+    }
+    else{
+        inC = []
+        outC = []
+        citations.filter(citFilter);
+        if(inC.length > 0){
+          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\">"
+          var inCits =  papers.filter(isInCited)
+        inCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < inCits.length; i++)
+            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
+          thehtml += "</ul>"
+        }
+        if(outC.length > 0){
+          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
+          var outCits =  papers.filter(isOutCited)
+          outCits.sort(function(a, b) {
+                return -(parseInt(a.year) - parseInt(b.year));
+            });
+          for (var i = 0; i < outCits.length; i++)
+            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
+          thehtml += "</ul>"
+        }
+    }
+
+    return thehtml
+
+}
+
+function color_n(c){return c > 100 ? color(100):color(c);}
+
+function define_gradients(){
+    svgP.append("svg:defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradxX")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%")
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradxX")
+        .append("stop")
+        .attr("offset", "100%")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
 }
 
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return heightP})
+        .attr("height", function(){return "800px"})
         .append("g")
         .attr("id", "gP")
     define_gradients()
@@ -581,7 +746,7 @@ function setSimulation(){
                 .theta(0.5))
 //                .distanceMin(40)
 //                .distanceMax(140))
-        .force("center", d3.forceCenter((w / 2), (heightP / 2)))
+        .force("center", d3.forceCenter((w / 2), (800 / 2)))
         //.force("y", d3.forceY(-180))
         //.force("x", d3.forceX())
     simulation.alpha(1)
@@ -590,6 +755,14 @@ function setSimulation(){
     
     return simulation;
 
+}
+
+function thetaPapFilter(item){
+    var paps = 0, lp = papersFiltered.length,
+        plset = new Set(papersPrint),
+        commonValues = item.paperList.filter(x => plset.has(x));
+    //console.log(item.value+" "+commonValues.length)
+    return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
 }
 
 function append_ico(svgN, url, x, y){
@@ -603,106 +776,221 @@ function append_ico(svgN, url, x, y){
         $(svgN).append(svgimg);
 }
 
-function define_gradients(){
-    //X gradients
-    svgP.append("svg:defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradxX")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "100%")
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0 )")
-        .style("stop-opacity", "1")
-    d3.select("#gradxX")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
-        .style("stop-opacity", "1")
+function paperGraph(papers1, citations1, idPs, simulation) {
+    simulation.stop()
+    d3.select("#svgP").remove()
+    d3.select(".ap").append("svg").attr("id", "svgP")
+    getPaperSvg()
+    var svg = svgP
+    svg.attr("y", "120")
+    svg.attr("width", "100%")
+    d3.select("#gP").attr("width", "100%")
+    d3.select("#pn").text(idPs.length).attr("x", 65)
+      .attr('dy', 25).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
+      .attr("x", 65)
+      .attr('dy', 30)
+      .text(papersFiltered.length)
     
-    svgP.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradXx")
-        .attr("x1", "100%")
-        .attr("y1", "100%")
-        .attr("x2", "0%")
-        .attr("y2", "0%")
-        .append("stop")
-        .attr("offset", "100%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
-        .style("stop-opacity", "1")
-    d3.select("#gradSameX")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 71, 66, 66, 0 )")
-        .style("stop-opacity", "1")
     
-    //Y gradients
-    svgP.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradYy")
-        .attr("x1", "100%")
-        .attr("y1", "100%")
-        .attr("x2", "0%")
-        .attr("y2", "0%")
-        .append("stop")
-        .attr("offset", "100%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
-        .style("stop-opacity", "1")
-    d3.select("#gradYy")
-        .append("stop")
-        .attr("offset", "0%")
-        .style("stop-color", "rgba( 71, 66, 66, 0 )")
-        .style("stop-opacity", "1")
+    var link = svg.append("g")
+        .attr("class", "citations")
+        .selectAll("line")
+        .data(citations1)
+        .enter().append("line")
+        .attr("class", "plink")
+        .attr("stroke-width", "2px")
+        .style("pointer-events", "none")
+        .attr("stroke", "rgba( 112, 112, 112, 0.402 )")
+    //.attr("marker-start","url(#end)")
+        
+
+    var node = svg.append("g")
+        .attr("class", "papers")
+        .selectAll("circle")
+        .data(papers1)
+        .enter().append("circle")
+        .attr("class", "papersNode")
+        .attr("id", function(d){return "p"+d.id})
+        .attr("r", 6)
+        .attr("stroke", function(d){
+            if(idPs.includes(d.id))
+                return "#4238ff"
+                //return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d){
+            if(idPs.includes(d.id))
+                return 2.5;
+            })
+        .attr("fill", function(d) {
+            return color_n(d.color)}
+            /*
+            if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
+            else return "rgba( 64, 145, 215, 0.519 )";}*/)
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended))
+        .on("click", clickHandler)
+        .on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut)
+        .on("dblclick", function(d) {
+            if(idPs.includes(d.id)) deleteP(d.id)
+                else addPaper(d)
+        })
+
+
+        
+popRect = svgP.append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popText = svgP.append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
+    for(var i = 0; i < papers1.length; i++)
+        svg.append("text")
+            .attr("id", function(){return "txt"+papers1[i].id})
+            .attr("x", -100)             
+            .attr("y", -100)
+            .attr("text-anchor", "center")  
+            .style("font-size", "0.7em")
+            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+            .attr("opacity",0)
+            .text(function(){return papers1[i].value});
     
-    svgP.select("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradyY")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "100%")
-        .append("stop")
-        .attr("offset",  "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0 )")
-        .style("stop-opacity", "1")
-    d3.select("#gradYy")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
-        .style("stop-opacity", "1")
+    function ticked() {
+        link
+            .attr("x1", function(d) { return xConstrained(d.source.year); })
+            .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
+            .attr("x2", function(d) { return xConstrained(d.target.year); })
+            .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
+           .attr("stroke", function(d){
+                if(d.source.year != d.target.year)
+                    return "url(#gradxX)";
+                else return "lightgray";
+            })
+        
+        node
+            .attr("cx", function(d) { 
+            var nX = xConstrained(d.year);
+            return nX; })
+            .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
+    }
+    if(simulation){
+        
+        simulation
+            .nodes(papers1)
+            .on("tick", ticked)
+
+        simulation.force("link")
+            .links(citations1);
+        simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
+    }
+    d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
 }
 
-function setSvgs(){
-    document.getElementById("svgAxis").style.visibility = "visible";
+//rgba( 223, 225, 225, 0.604 )
 
-    getPaperSvg()
-    getAGSvg()
+function dragstarted(d) {
+    //console.log("started")
+    if(click) unclick_auth()
+    if(clickP)
+        d3.select("#p"+d.id)
+            .attr("r", 10)
+    //if(clickP) unclick_pap(clkPp)
+  /*if (!d3.event.active) */simulation.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+}
 
-    document.getElementById("svgAxis").style.visibility = "hidden";
-    popRectAx = d3.select("#svgAxis").append("rect")
-    .attr('x',0)
-    .attr('y',-10)
-    .attr('width',0)
-    .attr('height',0)
-    .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-    .attr('opacity',0)
-    .style("border-radius", "10px")
-    popTextAx = d3.select("#svgAxis")
-    .append("text")
-    .attr("x", 0)             
-    .attr("y", 0)
-    .attr("text-anchor", "left")  
-    .style("font-size", "11px")
-    .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-    .attr("opacity",0)
-    .text("");
+function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+    
+     d3.select(this)
+        .attr("r", 10);
+    var txt = d.value
+    /*
+    if(txt.length>80)
+        txt = txt.substring(0,80)+"...";
+    */
+    popText.text(txt)
+    var bbox = popText.node().getBBox();
+    var wd = bbox.width,
+        ht = bbox.height,
+        x = this.cx.baseVal.value,
+        y = this.cy.baseVal.value;
+    popRect.attr('fill', color_n(d.color))
+    //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
+        .attr('width',wd +10)
+        .attr('height',ht+2)
+        .attr("x", getXRect(x, wd, true))
+        .attr("y", y-8)
+        .transition()
+        .duration(200)
+        .attr("opacity", 1)
+    popText.attr("x", getXTxt(x, wd, true))
+        .attr("y", y + 4)
+        .transition()
+        .duration(200)
+        .attr("opacity", 1)
+
+    d3.selectAll(".authNode")
+        .attr("fill", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+         })
+     d3.selectAll(".authlLine")
+        .style("stroke", function(d1){ 
+            if(d.authsId.includes(d1.id))
+                return color_n(d.color);
+            else return "rgba( 221, 167, 109, 0.342 )"
+         })
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.stop();
+  d.fx = null;
+  d.fy = null;
+
+    popText.attr("width", 0)
+        .attr("x", -5000)
+        .attr("opacity", 0);
+    popRect.attr("x", -5000)
+        .attr("width", 0)
+        .attr("opacity", 0);
+    d3.select(this).transition()
+        .duration(200)
+        .attr("r", 6);
+    d3.selectAll(".plink")
+        .style("opacity", 0.8)
+    d3.selectAll(".authNode")
+        .attr("fill", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
+    d3.selectAll(".authlLine")
+        .style("stroke", function (d){
+                    if(authColor(d))
+                        return "rgba( 188, 188, 188, 0.454 )"
+                    else
+                        return "rgba( 221, 167, 109, 0.342 )"
+        })
+    if(clickP) reclick_pap(clkPp)
+    
 }
 
 function add_labels(){
@@ -895,14 +1183,6 @@ function print_rew(){
     
 }
 
-function enable_all(){
-    $(".hiddenSB").css("pointer-events", "all")
-    
-    $(".hiddenSB").css("background-color", "white")
-    //d3.select("#td1").style("font-size", "0.8em")
-    //document.getElementById("td2").style.display = "none";
-}
-
 function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -914,6 +1194,7 @@ function setup_searchbars(){
     this.value=""
     });
     $('#rauthors-autocomplete').autocomplete({
+        disabled: true,
         open : function(){
             let d = $("#ui-id-1").height() + 25
             if(_docHeight-heightAG-100 < 160)
@@ -960,12 +1241,14 @@ function setup_searchbars(){
         }
     })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let col = "black",
+        let /*fw = ((!authColor(item) && !authColor_r(item)) ||
+                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",*/
+                col = "black",
             fs = (authColor(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
-            else if(authColor_r(item)) col  = "#8d585a";
+            else if(authColor_r(item)) return "#8d585a";
             
               return $( "<li>" )
                 .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )
@@ -1025,6 +1308,7 @@ function setup_searchbars(){
     });
     
     $('#papers-autocomplete').autocomplete({
+        disabled: true,
 /*        focus: function(event, ui){
             console.log(ui)  
         },*/
@@ -1095,19 +1379,20 @@ function setup_searchbars(){
         if(this.value.length < 3) 
             $(".badge").html("")
     })
-    
     d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-    $(".hiddenSB").css("pointer-events", "none")
-        
-    document.getElementById("loading").onclick = null
-    document.getElementById("loading").style.pointerEvents = "none"
-    
+    $( "#rauthors-autocomplete" ).autocomplete( "option", "disabled", true );
+    $( "#papers-autocomplete" ).autocomplete( "option", "disabled", true );
     $( "#done_submit").on("click", function(){
-//        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-//        else
-//            enable_all
-    }).hide()
-    
+        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+        else{
+            $( ".hiddenSB" ).autocomplete({disabled:false});
+            $( ".hiddenSB" )[0].disabled = false;
+            $( ".hiddenSB" )[1].disabled = false;
+            d3.selectAll(".hiddenSB").style("background-color", "white")
+            d3.select("#td1").style("font-size", "0.8em")
+            document.getElementById("td2").style.display = "none";
+        }
+    })
     $( "#export-btn").on("click", export_session)
 }
 
@@ -1127,27 +1412,165 @@ function get_JSON(json_id, process_JSON) {
   
 }
 
+
 $(function (){
+    d3.selectAll(".links").attr("target", "_blank")
+    d3.selectAll(".ui-resizable-handle").style("opacity", 0)
     _docHeight = document.documentElement.clientHeight - 30;/*window.screen.height - 170 */ 
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
-    setWinMouseHandlers()
+    $( window ).on("load", function(){
+        height = this.height
+        heightA = this.height * 0.3
+        w = width
+        h = height
+        updateWidth()
+    })
+    d3.select(".pop-up").style("pointer", "none")
+    $("body").on('click', function(){
+        $(".badge").html("")
+    })
     
+    $( "#resizable" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+             onlyag = false
+            if(ui.size.height < 200){
+                heightA = 200
+                ui.size.height = 200
+            }
+            else if(ui.size.height > 600){
+                heightA = 600
+                ui.size.height = 600
+            }
+            else heightA = ui.size.height
+            document.getElementById('aut_table').clientHeight = heightA;
+            let delta =  oldH - heightA,
+                newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+            oldH = heightA;
+            d3.select("#main-span").attr("dy",function(){
+            return heightA-100}) 
+            event.stopPropagation()
+        }
+    });
     
-    /*
-    DEBUG
+    $( "#resizable1" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+            onlyag = true
+            if(ui.size.height < 300){
+                heightAG = 300
+                ui.size.height = 300
+            }
+            else if(ui.size.height > 600){
+                heightAG= 600
+                ui.size.height = 600
+            }
+            else heightAG = ui.size.height
+            document.getElementById('AG-container').clientHeight = heightAG;
+            let delta =  oldHAG - heightAG,
+                newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            oldHAG = heightAG;
+/*            console.log("H "+document.getElementById('row21').clientHeight)*/
+            heightA = document.getElementById('aut_table').clientHeight    
+            newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+/*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
+            
+            event.stopPropagation()
+        }
+    });
     
-    
-    choosen_j = "cg"
-    let instance  = choosen_j
-     if(!j_lists[instance]){
-        j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
-        //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+    setMouseHandlers()
+
+    window.onresize = function(e) {
+        
+        if(!resize_pn && !resize_rn){
+            width = $("#aut_table").width()
+            _docHeight = document.documentElement.clientHeight - 30
+            height = document.documentElement.clientHeight - 30
+
+            w = width
+            h = height
+            heightA = document.getElementById('aut_table').clientHeight    
+            let newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+
+
+            newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            d3.select("#main-span").attr("dy",function(){
+                return heightA-100}) 
+
+             if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
+                updateWidth()
+                 simulationA.stop()
+                 paperGraph(papersFiltered, citPrint, idPs, simulation)
+                    setTimeout(function(){ 
+                        simulation.stop()
+                    }, 1000);
+                 authorBars()
+                    //authorGraph()
+                }
+            oldw = width
+        }
     }
-    clickOnGo()
-    */
-    //d3.select("#loading").style("pointer-events", "all")
-    //$("#loading").on("click", start_click_handler);
+    document.onmouseup =  function(e){
+        resize_pn = false;
+        resize_rn = false;
+    }
+    
+    document.getElementById("svgAxis").style.visibility = "visible";
+    
+    d3.select("#cmpa")
+        .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
+        .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
+    getPaperSvg()
+    getAGSvg()
+    document.getElementById("svgAxis").style.visibility = "hidden";
+    popRectAx = d3.select("#svgAxis").append("rect")
+         .attr('x',0)
+         .attr('y',-10)
+         .attr('width',0)
+         .attr('height',0)
+         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+         .attr('opacity',0)
+         .style("border-radius", "10px")
+    popTextAx = d3.select("#svgAxis").append("text")
+        .attr("x", 0)             
+        .attr("y", 0)
+        .attr("text-anchor", "left")  
+        .style("font-size", "11px")
+        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+        .attr("opacity",0)
+        .text("");
+    //M150 0 L75 200 L225 200 Z
+    simulation = setSimulation()
+    simulationA = setAGSimulation()
+    
+      var ele = $("#ldr-val");
+      var clr = null;
+      var rand = 0;
+      (loop = function() {
+        clearTimeout(clr);
+        (inloop = function() {
+          ele.html(rand += 1);
+            if(rand >= 49) return;
+          clr = setTimeout(inloop, 125);
+        })();
+        //setTimeout(loop, 2500);
+      })();
+    var graphTxt = fetch('datasets/p_v0518f.txt')
+        .then(response => response.text())
+        .then(function(text) {
+            var graph = JSON.parse(text);
+            getArrays(graph)       
+    });
+    setup_searchbars()
+                               
+    
 });
+
