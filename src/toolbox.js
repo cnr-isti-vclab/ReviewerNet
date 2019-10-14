@@ -29,11 +29,31 @@ function setup_popups(){
         }
     })
     
+    
+     $( "#biblio-dialog" ).dialog({
+         minWidth: 360,
+        minHeight: 300,
+         open: function(event, ui) {
+            var diagw = $($(event.target).parent()[0]).width(),
+                diagh = $($(event.target).parent()[0]).height(),
+                pagew = document.documentElement.clientWidth,
+                pageh = document.documentElement.clientHeight,
+                top = (pageh - diagh)*0.5,
+                left = (pagew - diagw)*0.5;
+             
+            $(event.target).parent().css('top', top+'px');
+            $(event.target).parent().css('left', left+'px');
+        }
+    })
+    
+    
     $( "#tutorial" ).on( "click", function() {
         if( $( "#tutorial-dialog" ).dialog( "isOpen" ))
             $( "#tutorial-dialog" ).dialog( "close" );
         else 
             $( "#tutorial-dialog" ).dialog( "open" );
+        event.preventDefault()
+        event.stopPropagation()
     });
 }
 

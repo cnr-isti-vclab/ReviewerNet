@@ -1,6 +1,520 @@
 var texts = [],
-    clickAG = false, clickP = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine;
+    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
+    j_lists = {}, choosen_j = null;
 
+function search_biblio(imports){
+    
+    let resultset = [],
+        not_found = 0;
+    
+    for(var i =0; i<imports.length; i++){
+        /*
+        * For each element parsed we search for the 
+        * relative paper in the dataset using regexp.
+        * We check the occurence of each word in the title of 
+        * papers and pick the paper that matches more temrs
+        */
+        if(imports[i].title && imports[i].title.length >0){
+            var terms = imports[i].title.split(' '),//.slice(1, 4),
+                matchers = [], found = false, j =0;
+
+            terms.map(function (el){ 
+                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
+            })
+
+            while(!found && j < papers.length){
+                var t = papers[j].value;
+                if (t && str_match(matchers, t)){
+                   addP(papers[j])
+                    resultset.push({'query':query[i], 'class':'query_found'})
+                    
+                    found = true
+                }
+                else j++
+            }     
+            if (!found){
+                resultset.push({'query':query[i], 'class':'query_not_found'})
+                not_found++
+            }
+        }
+    }
+    
+    return [resultset, not_found];
+}
+
+function get_query_year(query){ return query.match(/(?:(?:19|20)[0-9]{2})/) ? query.match(/(?:(?:19|20)[0-9]{2})/)[0] : 0;}
+
+function search_biblio1(imports, query){
+    
+    let resultset = [],
+        not_found = 0;
+    
+    for(var i =0; i<imports.length; i++){
+        /*
+        * For each element parsed we search for the 
+        * relative paper in the dataset using regexp.
+        * We check the occurence of each word in the title of 
+        * papers and pick the paper that matches more temrs
+        */
+        if(imports[i].title && imports[i].title.length > 10 ){
+            
+            var title = imports[i].title,
+                words = title.match(/(\w)+/ug),
+                terms_ = words.map((w)=>w.toLowerCase()),
+                matchers = [], src_papers = [],
+                j =0, k = 0,
+                matching_p = {};
+
+            terms_.map(function (el){ 
+                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
+            })
+            
+            src_papers = papers
+            
+            for(j = 0; j < src_papers.length; j++){
+                var t = src_papers[j].value;
+                
+                for( k = 0; k < matchers.length; k++)
+                    if (t && matchers[k].test(t) )
+                        if(!matching_p[src_papers[j].id]) 
+                            matching_p[src_papers[j].id] = 1
+                        else matching_p[src_papers[j].id]+=1
+            }
+
+            //Get the most similar paper
+            var keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
+            
+            for (kk = 0; kk < keys.length; kk++)
+                if(matching_p[keys[kk]] > maxp && matching_p[keys[kk]] >= (terms_.length*0.2) ){
+                    maxp = matching_p[keys[kk]]
+                    maxid = keys[kk]
+                }
+            
+            if (maxp == 0){
+                var res = [];
+                
+                console.log("p_search")
+                res = p_search(queries)
+                console.log("result")
+                console.log(res)
+                /*
+                
+                p_search and options
+                
+                resultset.push({'query':query[i], 'class':'query_not_found'})
+                not_found++
+                */
+                
+            }
+            else{
+                
+                /*
+                Mostro risultato, onclick parte p_search
+                */
+                
+                var papf = papers.filter((el)=>el.id == maxid)[0]
+                
+                resultset.push({'query':query[i], 'paper':papf, 'alt':alternatives, 'class':'query_found'})
+                
+            
+                //addP(papf)
+                //console.log("Found a paper for query:")
+                //console.log(query)
+                //console.log(papf.value)
+                
+            }
+//            }else{
+//                addP(src_papers[j])
+//                resultset.push({'query':query[i], 'class':'query_found'})
+//
+//                found = true
+//            }
+        }
+    }
+    
+    return [resultset, not_found];
+}
+
+
+function import_from_biblio(imports, query){
+    //$( "#biblio-dialog" ).dialog( "close" );
+    clickBiblio = false;
+    let not_found = 0, resultset = [], res;
+    $("#biblio-txt").css("background", "lightgray")
+    
+    current_query_result = []
+    res = search_biblio2(imports, query)
+    print_query_result(res)
+    
+    current_query_result = res
+    // set_query_handlers()
+    var dom_ell = document.getElementsByClassName("query-btn"),
+        i = 0, len = dom_ell.length;
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = print_query_alt
+    } 
+    
+    dom_ell = document.getElementsByClassName("confirm_parse")
+    i = 0
+    len = dom_ell.length
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = confirm_parsed_paper
+    }
+    /*
+    
+    tf-idf nella p_search?
+    
+    */    
+    $("#biblio-txt").css("background", "white")
+
+}
+
+function biblio_click_handler(){
+     if($( "#biblio-dialog" ).dialog( "isOpen" )){
+         $( "#biblio-dialog" ).dialog( "close" );
+        clickBiblio = false;
+    }else{
+        $( "#biblio-dialog" ).dialog( "open" );
+        clickBiblio = true;
+        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, one for each line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
+        
+        document.getElementById("biblio-dialog").innerHTML = inner_txt
+        
+        //Parse button
+        $("#cit-btn").on("click", submit_biblio)
+    }
+}
+
+function submit_biblio(){
+    
+     var http = new XMLHttpRequest();
+    
+    let len = document.getElementById("biblio-txt").value.split('\n').length
+    //console.log(len+"\n"+document.getElementById("biblio-txt").value)
+    let URL = "http://128.148.7.71/citations/create",
+        URL1 = "http://anystyle.isti.cnr.it",
+        params = 'query='+document.getElementById("biblio-txt").value,
+        query =  document.getElementById("biblio-txt").value.split("\n");
+    
+    //Send the proper header information along with the request
+    http.open('POST', URL1, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+
+    http.onload = function (e) {
+    if (http.readyState === 4) {
+        if (http.status === 200) {
+            response = JSON.parse(http.responseText)
+            console.log(response)
+          import_from_biblio(response, query);
+        } else {
+          console.error(http.statusText);
+        }
+      }
+    };
+    http.onerror = function (e) {
+      console.error(http.statusText);
+        alert("Some error occurred, check the connection and try again.")
+    };
+
+    /*
+    
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if (http.readyState === 4) {
+            if (http.status === 200) {
+                import_from_biblio(JSON.parse(http.responseText))
+            } else {
+                console.error(http.statusText);
+            }
+        }
+    }
+    
+    
+    
+    http.ontimeout = function () {
+       alert("The request timed out.");
+    };
+
+    http.timeout = 1000;
+*/
+    http.send(params);
+    
+    
+//        data = {"citation": $("#citation_string")[0].innerHTML},
+//        dataType = "xml";
+//    
+//    var request = new XMLHttpRequest();
+//    var path=URL1;
+//    request.onreadystatechange=state_change;
+//
+//    request.open("GET", path, true);
+//
+//    request.send(null);
+//        function state_change()
+//    {
+//    if (request.readyState==4)
+//      {// 4 = "loaded"
+//      if (request.status==200)
+//        {// 200 = OK
+//        // ...our code here...
+//        alert('ok');
+//        }
+//      else
+//        {
+//        alert("Problem retrieving XML data");
+//        }
+//      }
+//    }
+//    
+    /*
+    $.ajax({
+    type: 'GET',
+    url: URL1,
+    crossDomain: true,
+    //data: data,
+    //dataType: dataType,
+    success: function(responseData, textStatus, jqXHR) {
+        console.log(responseData)
+    },
+    error: function (responseData, textStatus, errorThrown) {
+        alert('POST failed.');
+    }
+    });
+    */
+   // $.post(URL,data,function(result){},dataType)
+}
+
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                return rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return rawFile.responseText;
+}
+
+function getAsText(readFile, loaded) {
+    var reader = new FileReader();
+    reader.readAsText(readFile, "UTF-8");
+    reader.onload = loaded;
+}
+
+function highlight_j(d){
+    d3.selectAll(".papersNode").style("opacity", function(p){ 
+        return p.v_id === d || p.j_id == d ? 1 : 0.2 
+    })
+    d3.selectAll(".plink").style("opacity", 0.2)
+}
+
+function unhighlight_j(d){
+    d3.selectAll(".papersNode").style("opacity",1)
+    d3.selectAll(".plink").style("opacity", 1)
+}
+
+function unclick_j(){
+    unhighlight_j(clickedJ)
+    d3.selectAll(".jrect").style("opacity", 1)
+    d3.selectAll(".jtext").attr("fill", "black")
+    d3.select("#j"+clickedJ).style("stroke-width", 0)
+    clickJ = !clickJ
+}
+
+function cmap_on(d){
+    d3.selectAll(".jrect").style("opacity", 0.3)
+    d3.selectAll(".jtext").attr("fill","rgba( 0, 0, 0, 0.33 )")
+    
+    if(clickJ){
+        //unhighlight previous
+        unhighlight_j(clickedJ)
+        d3.select("#j"+clickedJ).style("stroke-width", 0)
+        clickedJ = d
+    }
+    //highlight cluster
+    highlight_j(d)
+    d3.select("#j"+d).style("stroke-width", 1).style("stroke", "#1584c0").style("opacity", 1)
+    d3.select("#jt"+d).attr("fill","#1584c0")
+}
+
+function cmap_out(d){
+    if(clickJ) return
+    unhighlight_j(d)
+    d3.selectAll(".jrect").style("opacity", 1)
+    d3.selectAll(".jtext").attr("fill", "black")
+    d3.select("#j"+d).style("stroke-width", 0)
+}
+
+function cmap_click(d){
+    if(clickJ){
+        unhighlight_j(clickedJ)
+        clickedJ = null
+    }else{
+        clickedJ = d
+    }
+    clickJ = !clickJ
+    if (d3.event) d3.event.stopPropagation()
+}
+
+function cmap_dbl(){
+    if(!c20){//hide inc cmap and show j/v squares
+        if(j_lists[choosen_j].j_list.length > 10)
+            colorjj = color20b
+        colorjj.domain(j_lists[choosen_j].j_list)
+        $(".cmpClass").hide()
+        let x_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([150, 330]) 
+        svgAxis.selectAll("jrect")
+            .data(j_lists[choosen_j].j_list)
+            .enter()
+            .append("rect").attr("class","jrect").attr("id", (d)=>"j"+d)
+            .attr("height", 10)
+            .attr("width", 10)
+            .attr("y", function (d){
+                return x_coords(j_lists[choosen_j].j_list.indexOf(d))
+            })
+            .attr("x", 20)
+            .attr("fill", (d) => colorjj(j_lists[choosen_j].j_list.indexOf(d)))
+            .style("pointer-events", "all")
+            //scrivere handler in mouse-handlers.js
+            .on("click", cmap_click)
+            .on("mouseenter", cmap_on)
+            .on("mouseout", cmap_out)
+            .on("dblclick", cmap_dbl)
+            //evidenziare border e paperi su mouse over
+        svgAxis.selectAll(".jtext")
+            .data(j_lists[choosen_j].j_list)
+            .enter()
+            .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+d)
+            .attr("y", (d) => x_coords(j_lists[choosen_j].j_list.indexOf(d))+8)
+            .attr("x", 35)
+            .attr("text-anchor", "left")  
+            .style("font-size", "8px")
+            .text((d)=>d)
+    }else{
+        $(".cmpClass").show()
+        d3.selectAll(".jrect").remove()
+        d3.selectAll(".jtext").remove()
+    }
+    //hide squares and show inc cmap
+    c20 = !c20
+    color_papers()
+}
+
+function color_papers(){
+    d3.selectAll(".paper_in_bars").attr("fill", function (d){
+        if(idPs.includes(d.id) || papersPrint.includes(d.id))
+            return c20 ? color_j(d) : color_n(d.color)
+        else return "rgba( 217, 217, 217, 1 )"
+    })
+    d3.selectAll(".papersNode").attr("fill", function(d) {
+        if(c20)
+            return color_j(d)
+        else return color_n(d.color)})  
+                                        
+}
+
+function create_jtext(instance, journals){
+    let str = "<ul style=\"list-style-type:none;\">",
+        str1 = "<ul style=\"list-style-type:none; float:left;\">",
+        n = journals.length;
+    
+    for (i = 0; i < n; i++){
+        str += "<li class =\"j-text\">"+journals[i]['id']+"</li>"
+        str1 += "<li class =\"j-text-stat\">"+journals[i]["count"]+" papers </li>"
+    }
+    
+    
+    str += "</ul>"
+    str1 += "</ul>"
+
+    j_lists[instance]['texts'] = [str, str1]
+
+}
+
+function readJournals(path, instance){
+    var jj = JSON.parse(readTextFile(path)),
+        jns = jj.journals,
+        n = jns.length,
+        npp = jj.papers ? jj.papers : 0,
+        nat = jj.authors ? jj.authors : 0,
+        nct = jj.cits ? jj.cits : 0;
+    
+    j_lists[instance]['j_list'] = []
+    for (i = 0; i < n; i++){
+        j_lists[instance]['j_list'].push(jns[i]['id'])
+    }
+    j_lists[instance]['stats'] = [npp, nct, nat]
+    create_jtext(instance, jns)
+    
+}
+
+function clickOnGo(){
+    if(choosen_j){       
+    //load data
+        if(choosen_j === "pers"){
+         start_click_handler()
+        enable_all()
+            return 
+        }
+            
+       let ppath = "datasets/p_"+choosen_j+"_2019-01-31.txt",
+            apath = "datasets/a_"+choosen_j+"_2019-01-31.txt";
+
+    show_loading()
+
+    import_ds(ppath, apath)
+
+    hide_loading()
+    
+    start_click_handler()
+    
+    enable_all()
+        
+    }else
+        alert("Choose an instance to run ReviewerNet.")
+        
+}
+
+function clickOnJ(x1){
+    console.log(x1.innerText)
+    let x = x1.id, instance = x.split("-")[0]
+    choosen_j = instance
+    document.getElementById('j-list').innerHTML = ""
+    document.getElementById('j-stat').innerHTML = ""
+    
+    if(!j_lists[instance]){
+        j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
+        //scarico file x e creo jlist e texts
+        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+    }
+    //e mostro testi con stats
+    document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
+    document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
+    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2019, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    
+    
+}
+
+function start_click_handler(){
+    document.getElementById("loading").style.visibility = "hidden";
+    $(".hiddenSB").css("pointer-events", "none")
+    d3.select(".pop-up").style("pointer", "help")
+    toolboxInit()
+    setMouseHandlers()    
+    setSvgs()
+    simulation = setSimulation()
+    simulationA = setAGSimulation()
+    setup_searchbars()    
+}
 
 function overing_pap_bar(d){
     d3.select("#p"+d.id)
@@ -15,7 +529,7 @@ function overing_pap_bar(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -23,7 +537,7 @@ function overing_pap_bar(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 }
@@ -59,17 +573,30 @@ function reset_pap_bar(d){
         .style("opacity", 1)
 }
 
+function highlight_cluster_pap(d){
+    d3.selectAll(".papersNode")
+        .style("opacity",  function(d1){ return d1.id === d.id ? 1 : 0.2;})
+        
+    d3.selectAll(".plink")
+        .style("opacity", function(d1){
+            if(d1.source.id===d.id){
+                d3.select("#p"+d1.target.id)
+                    .style("opacity", 1);
+                return 1;
+            }
+            if(d1.target.id===d.id){
+                d3.select("#p"+d1.source.id)
+                    .style("opacity", 1);
+                return 1;
+            }else return 0.2;
+    })
+}
+
 function highlight_cluster(d){
     d3.selectAll(".authors-dot")
-/*        .attr("r", function(d1){ 
-            if(d.authsId.includes(d1.id)){
-                return $("#ag"+d1.id)[0].r.baseVal.value  * 2.3
-            }
-            else return a_radius(d1);
-        })*/
         .attr("stroke",function (d1){
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgb(0,0,0,0)";
         })
         .attr("stroke-width",function (d1){
@@ -98,7 +625,7 @@ function un_highlight_cluster(){
 function highlight_auth(id){
 
     d3.select("#aa"+id)        
-        .attr('fill',"rgba( 221, 167, 109, 0.642 )")//"rgba( 138, 223, 223, 0.569 )"
+        .attr('fill',"rgba( 221, 167, 109, 0.642 )")
 
     d3.select("#aaline"+id)        
         .style('stroke',"rgba( 221, 167, 109, 0.642 )")
@@ -106,31 +633,20 @@ function highlight_auth(id){
     d3.select("#ag"+id)
         .attr("stroke","rgba( 221, 167, 109)")
         .attr("stroke-width", "3.5px")
-        //.attr("r", function (){return $("#ag"+id)[0].r.baseVal.value  * 2})
+        
 }
 
 function un_highlight_auth(id){
-  d3.select("#aa"+id).attr('fill', function (d){/*
-        if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
-            return "rgba( 188, 188, 188, 0.454 )"
-        else*/
-            return "rgba( 221, 167, 109, 0.342 )"
-    })
-
-   d3.select("#ag"+id)
-        //.attr("r", a_radius)
+    d3.select("#aa"+id).attr('fill', "rgba( 221, 167, 109, 0.342 )")
+    d3.select("#ag"+id)
         .attr("stroke"," rgba( 221, 167, 109, 0)")
         .attr("stroke-width", "0px")
     
-    d3.select("#aaline"+id).style('stroke',function (d){/*
-                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else*/
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })   
+    d3.select("#aaline"+id).style('stroke', "rgba( 221, 167, 109, 0.342 )")   
 }
 
 function author_dblclick_ABG(d){
+    //GESTIRE CLICKJ/CLICKP???
     suggestion = d
     var isIn = false
     idA_rev = suggestion.id
@@ -146,17 +662,15 @@ function author_dblclick_ABG(d){
     popTextA.style("opacity", 0)
     popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
-     d3.event.stopPropagation()
+    d3.event.stopPropagation()
     refresh_export()
 }
 
 function unclick_auth(d){
-    idClickedA = 0;
-        clkIds= [];
-        clkA = null;
-        clkRect.attr("stroke-width",0)
-        clkRect = null;
-        clkLine = null;
+   
+    if(clkRect) clkRect.attr("stroke-width",0)
+    clkRect = null;
+    clkLine = null;
     click = false;
     reset_texts()
     d3.selectAll(".plink").style("opacity", 1)
@@ -166,7 +680,6 @@ function unclick_auth(d){
         .attr("stroke", function(d){
                     if(idPs.includes(d.id))
                         return "#4238ff"
-                        //return "#6d10ca";
                     else return "#999";
                     })
         .attr("stroke-width", function(d){
@@ -174,7 +687,7 @@ function unclick_auth(d){
                 return 2.5;
             })
     popRectA.style("opacity", 0)
-    popTextA.style("opacity", 0)
+    popTextA.style("opacity", 0).attr("x", "-5000px")
     d3.select(".txtspan").remove()
     d3.selectAll(".aglink")
         .style("opacity", 1)   
@@ -183,33 +696,31 @@ function unclick_auth(d){
         .attr("r", a_radius)
         .style("opacity", 1)
         .style("pointer", "cursor")
+    
+    d3.selectAll(".svgA")
+        .style("opacity", 1)
+        .style("pointer-events", "all")
+    
     d3.selectAll(".authlLine")
-        .style('stroke',function (d){
-/*                    if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else*/
-                        return "rgba( 221, 167, 109, 0.342 )"
-                })
+        .style('stroke', "rgba( 221, 167, 109, 0.342 )")
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".authNode")
-        .attr('fill', function (d){
-/*                if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else*/
-                    return "rgba( 221, 167, 109, 0.342 )"
-            })
+        .attr('fill', "rgba( 221, 167, 109, 0.342 )")
         .style("opacity", 1)
         .style("pointer", "cursor")
     d3.selectAll(".auth-name")
         .style("opacity", 1)
     d3.selectAll(".paper_in_bars").style("opacity", 1).style("cursor","pointer")
     
-    un_highlight_auth(d.id)
+    
+    un_highlight_auth(clkA.id)
+    idClickedA = 0;
+    clkIds= [];
+    clkA = null;
 }
 
 function unclick_pap(d){
-    //console.log("unclick")
     d3.select("#p"+d.id)
         .attr("r", 6)
         .attr("stroke-width", function(d){
@@ -232,20 +743,9 @@ function unclick_pap(d){
     d3.selectAll(".plink")
         .style("opacity", 1)
     d3.selectAll(".authNode")
-                    .attr('fill', function (d){/*
-
-            if((authColor(d) || authColor_r(d)) && !(authsExclude.includes(d.id) || authsReview.includes(d.id) ))
-                return "rgba( 188, 188, 188, 0.454 )"
-            else*/
-                return "rgba( 221, 167, 109, 0.342 )"
-        })
+        .attr('fill', "rgba( 221, 167, 109, 0.342 )")
     d3.selectAll(".authlLine")  
-        .style('stroke',function (d){/*
-                if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
-                    return "rgba( 188, 188, 188, 0.454 )"
-                else*/
-                    return "rgba( 221, 167, 109, 0.342 )"
-            })
+        .style('stroke', "rgba( 221, 167, 109, 0.342 )")
 
     un_highlight_cluster()
 
@@ -262,8 +762,8 @@ function unclick_pap(d){
 
 function reclick_auth(d){
     reset_texts()
-           d3.selectAll(".papersNode")
-            .style("opacity", function(d1){
+    d3.selectAll(".papersNode")
+        .style("opacity", function(d1){
             if(d1.authsId.includes(d.id))
                 return 1;
             else
@@ -280,7 +780,6 @@ function reclick_auth(d){
             else
                 if(idPs.includes(d1.id))                    
                     return "#4238ff"
-                    //return "#6d10ca";
                 else
                     return "#999";
             })
@@ -305,35 +804,37 @@ function reclick_auth(d){
                 }
             return found ? 1: 0;
         })
-//        d3.selectAll(".p"+d.id).style("opacity", function(d1){
-//                var al = d1.authsId,
-//                    all = al.length, found = false, i = 0;
-//                if(!al.includes(d.id)) return 0;
-//                while( !found && i < all ){
-//                    found = !(al[i] === d.id) && idAs.includes(al[i]) && d.coAuthList[al[i]] && checkThetaNC(d, al[i]) ? true : false;
-//                    i++
-//                }
-//                return found ? 1 : 0;
-//            })
+    
+    d3.selectAll(".svgA")
+        .style("opacity", 1)
+        .style("pointer-events", "all")
     
     d3.selectAll(".authors-dot")
         .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
+    
     d3.selectAll(".aglink")
         .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && ($("#ag"+d1.source.id)[0].style.opacity ==1 && $("#ag"+d1.target.id)[0].style.opacity ==1 ) && checkThetaNC(d1.source, d1.target.id)) ?  1 : 0; })
+    
     d3.selectAll(".authlLine")
-        .style('stroke', function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
+        .style('stroke', function(d1){ return "rgba( 251, 197, 125, 0.83 )"; })
         .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
+    
     d3.selectAll(".authNode")
-        .attr("fill", function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 251, 197, 125, 0.83 )"; })
+        .attr("fill", function(d1){ return "rgba( 251, 197, 125, 0.83 )"; })
         .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })
-//        d3.selectAll(".auth-name")
-//            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })   
+    
     d3.selectAll(".auth-name")
-        .style("opacity", function(d1){ if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
+        .style("opacity", function(d1){ 
+            if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
                 return 1;
             }else{
                 d3.selectAll(".p"+d1.id).style("opacity", 0)
-                return 0;} })   
+                d3.select("#svgA"+d1.id)
+                    .style("opacity", 0)
+                    .style("pointer-events", "none")
+                return 0;
+            } 
+    })   
 }
 
 function reclick_pap(d){
@@ -342,10 +843,7 @@ function reclick_pap(d){
         .attr("r", 10)
         .attr("stroke-width", "3px")
     var txt = d.value
-    /*
-    if(txt.length>80)
-        txt = txt.substring(0,80)+"...";
-    */
+
     d3.selectAll("#pb"+d.id)
         .attr("r", 5)
          .attr("cy", 12)
@@ -353,7 +851,7 @@ function reclick_pap(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -362,7 +860,7 @@ function reclick_pap(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return color_n(d.color);
+                return c20 ? color_j(d) : color_n(d.color);
             else return "rgba( 221, 167, 109, 0.342 )"
             })
 }
@@ -376,7 +874,7 @@ function show_link_text(d){
     var bbox = popTextA.node().getBBox();
     var wd = bbox.width,
         ht = bbox.height;
-    //popRect.attr('fill', color(d.color))
+
     popTextA.attr("x", function(){
         let ret = rect.width - wd - 28;
         //console.log("ret "+ret+ "wd "+wd+" ht "+ht)
@@ -438,51 +936,47 @@ function hide_link_text(){
 }
 
 function authClickHandler(d){
+    if(clickJ) unclick_j()
     if(!clickP){
-  //  if(idAs.includes(d.id)){
+
     if(click){
         unclick_auth(d)
     }
     else{
-        //console.log("clickA")
         clkRect = d3.select("#aa"+d.id)
         .attr("stroke", "#ce9153")
         .attr("stroke-width", "2px")
-        //reset_texts()
+
         simulation.stop()
         simulationA.stop()
         click = true;
         clkA = d;
         idClickedA = d.id;
-/*        d3.selectAll(".plink").style("opacity", 0.2)
-        d3.selectAll(".papersNode")
-            .style("opacity", function(d1){
-                var al = d1.authsId,
-                    all = al.length, found = false, i = 0;
-                if(!al.includes(d.id)) return 0.2;
-                while( !found && i < all ){
-                    found = ( al[i]!= d.id && idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
-                    i++
-                }
-                if(found){
-                    papNameConflict(d1)
-                    return 1;
-                }else return 0.2;
-            })
-            .attr("r",  function(d1){
-                var al = d1.authsId,
-                    all = al.length, found = false, i = 0;
-                if(!al.includes(d.id)) return 6;
-                while( !found && i < all ){
-                    found = (al[i]!= d.id && idAs.includes(al[i]) && d.coAuthList[al[i]]) ? true : false;
-                    i++
-                }
-                return found ? 9 : 6;
-            })*/
-        click = true;
         //mostra autori conflittati in AG e AB
-       
 
+         var txt = d.value
+
+        popTextA.text(txt)
+        var el   = document.getElementById("svgAG_names");
+        var rect = el.getBoundingClientRect(); // get the bounding rectangle
+
+        var bbox = popTextA.node().getBBox();
+        var wd = bbox.width,
+            ht = bbox.height;
+        //popRect.attr('fill', color(d.color))
+        popTextA.attr("x", function(){
+            let ret = rect.width - wd - 28;
+            //console.log("ret "+ret)
+            return ret;})
+            .attr("y", 20)
+            .style("opacity", 1)
+
+        popRectA.attr("x", function(){return rect.width - wd - 33})
+            .attr('y',5)
+            .attr('width',function(){return wd + 10})
+            .attr('height',function(){return ht + 5})
+            .style('opacity',1)
+        
         d3.selectAll(".authors-dot")
             .style("opacity", function(d1){ if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
                     clkIds.push(d1.id);
@@ -492,8 +986,7 @@ function authClickHandler(d){
             .attr("r", a_radius)
          d3.selectAll(".aglink")
             .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && ($("#ag"+d1.source.id)[0].style.opacity == 1 && $("#ag"+d1.target.id)[0].style.opacity ==1 ) && checkThetaNC(d1.source, d1.target.id)) ?  1 : 0; })
-        
-        //DA SISTEMARE ANCHE IN ALTRI HANDLER
+
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
             var al = d1.authsId,
                     all = al.length, found = false, i = 0;
@@ -506,10 +999,10 @@ function authClickHandler(d){
             return found ? 1: 0;
         })
         d3.selectAll(".authlLine")
-            .style('stroke', function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 221, 167, 109, 0.642 )"; })
+            .style('stroke', function(d1){ return "rgba( 221, 167, 109, 0.642 )"; })
             .style("opacity", function(d1){ return d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)) ?  1 : 0; })
         d3.selectAll(".authNode")   
-            .attr("fill", function(d1){ return /*d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id] ) && checkThetaNC(d, d1.id) ?  "rgba( 188, 188, 188, 0.454 )" : */"rgba( 221, 167, 109, 0.642 )"; })
+            .attr("fill", function(d1){ return "rgba( 221, 167, 109, 0.642 )"; })
             .style("opacity", function(d1){ 
                 if(d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id))){
                     return 1;
@@ -518,18 +1011,20 @@ function authClickHandler(d){
                     d3.selectAll(".p"+d1.id).style("opacity", 0)
                     return 0;
                    }
-            })
-//        d3.selectAll(".auth-name")
-//            .style("opacity", function(d1){ return d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id) ?  1 : 0; })   
-                d3.selectAll(".auth-name")
+            })  
+        d3.selectAll(".auth-name")
             .style("opacity", function(d1){ if(d1.id === d.id || ((idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id))){
                     return 1;
                 }else{
                     d3.selectAll(".p"+d1.id).style("opacity", 0)
-                    return 0;} })   
-   // }}
+                    d3.select("#svgA"+d1.id)
+                        .style("opacity", 0)
+                        .style("pointer-events", "none")
+                    return 0;
+                } 
+            })   
     }
-    }else{ unclick_pap(clkPp)}
+    }else{unclick_pap(clkPp)}
     if (d3.event) d3.event.stopPropagation()
 }
 
@@ -537,7 +1032,7 @@ function handlerMouseOverA(d){
     if(!clickP){
         if(!click){
         reset_texts()
-        //if(click) unclick_auth();
+       
         d3.selectAll(".plink")
             .style("opacity", 0.2)
 
@@ -559,7 +1054,6 @@ function handlerMouseOverA(d){
                 else
                     if(idPs.includes(d1.id))                    
                         return "#4238ff"
-                        //return "#6d10ca";
                     else
                         return "#999";
                 })
@@ -608,10 +1102,10 @@ function handlerMouseOverA(d){
                             var bbox = popTextA.node().getBBox();
                             var wd = bbox.width,
                                 ht = bbox.height;
-                            //popRect.attr('fill', color(d.color))
+                           
                             popTextA.attr("x", function(){
                                 let ret = rect.width - wd - 28;
-                                //console.log("ret "+ret+ "wd "+wd+" ht "+ht)
+                               
                                 return ret;})
                                 .attr("y", 20)
                                 .style("opacity", 1)
@@ -652,8 +1146,11 @@ function handlerMouseOverA(d){
                     if(d1.id === d.id || d1.id === idClickedA){
                         return 1;
                     }else{
-                            d3.selectAll(".p"+d1.id).style("opacity", 0)
-                            return 0;
+                        d3.selectAll(".p"+d1.id).style("opacity", 0)
+                        d3.select("#svgA"+d1.id)
+                            .style("opacity", 0)
+                            .style("pointer-events", "none")
+                        return 0;
                     }})  
 
         }
@@ -664,10 +1161,11 @@ function handlerMouseOverA(d){
 }
 
 function handlerMouseOutA(d){
+    if(clickJ) highlight_j(clickedJ)
     if(!clickP){
        if(!click){ 
         reset_texts()
-        //if(click) unclick_auth();
+
         un_highlight_auth(d.id)
 
         d3.selectAll(".plink")
@@ -692,7 +1190,7 @@ function handlerMouseOutA(d){
 
        }else if(d.id != idClickedA) {
            reset_texts()
-            popTextA.style("opacity", 0)
+            popTextA.style("opacity", 0).attr("x", "-5000px")
             popRectA.style('opacity',0)
             d3.select(".txtspan").remove()
             reclick_auth(clkA)
@@ -844,6 +1342,9 @@ function handlerMouseOverAG(d){
                         return 1;
                     }else{
                             d3.selectAll(".p"+d1.id).style("opacity", 0)
+                            d3.select("#svgA"+d1.id)
+                                .style("opacity", 0)
+                                .style("pointer-events", "none")
                             return 0;
                     }})  
 
@@ -875,6 +1376,7 @@ function handlerMouseOverAG(d){
 }
 
 function handlerMouseOutAG(d){
+
     if(!clickP){
         if(!click){
            //unclick_auth();
@@ -905,13 +1407,13 @@ function handlerMouseOutAG(d){
                     if(idPs.includes(d1.id))
                         return 2.5;
                     })
-            popTextA.style("opacity", 0)
+            popTextA.style("opacity", 0).attr("x", "-5000px")
 
             popRectA.style("opacity",0)
         }
         else if(d.id != idClickedA) {
             reset_texts()
-            popTextA.style("opacity", 0)
+            popTextA.style("opacity", 0).attr("x", "-5000px")
             popRectA.style('opacity',0)
             d3.select(".txtspan").remove()
             reclick_auth(clkA)
@@ -919,48 +1421,18 @@ function handlerMouseOutAG(d){
     }else{
         un_highlight_auth(d.id)
         reclick_pap(clkPp)
-        popTextA.attr("width", 0)
-            .attr("x", -5000)
+        popTextA
+            .attr("x", "-5000px")
             .style("opacity", 0);
-        popRectA.attr("x", function(){return - 5000})
+        popRectA.attr("x", "-5000px")
             .style('opacity',0)
     }
-//    if(!click){
-//        /*
-//    popTextA.attr("width", 0)
-//        .attr("x", -5000)
-//        .attr("opacity", 0);
-//    popRectA.attr("x", -5000)
-//        .attr("width", 0)
-//        .attr("opacity", 0);
-//    d3.select(this).transition()
-//        .duration(200)
-//        .attr("width", 500);
-//        */
-//    d3.selectAll(".plink")
-//        .style("opacity", 1)
-//    d3.selectAll(".papersNode")
-//        .attr("r", "6")
-//        .style("opacity", 1)
-//        .attr("stroke", function(d1){
-//            if(d1.authsId.includes(d.id))
-//                d3.select($("#txt"+d1.id)[0])
-//                    .attr("x", -1000)
-//                    .attr("y", -1000)
-//                    .attr("opacity", 0)  
-//            if(idPs.includes(d1.id))
-//                return "#6d10ca";
-//            else return "#999";
-//            })
-//        .attr("stroke-width", function(d1){
-//            if(idPs.includes(d1.id))
-//                return 2.5;
-//            })
-//    }
+    if(clickJ) highlight_j(clickedJ)
 }
 
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
+    if(clickJ) unclick_j()
     if(!clickP){
     if(!click){
         if(clickAG){
@@ -1021,7 +1493,7 @@ function handlerMouseOutLinkAG(d){
             .attr("r", a_radius)  
         d3.select("#ag"+d.target.id)
             .attr("r", a_radius)  
-        popTextA.style("opacity", 0)
+        popTextA.style("opacity", 0).attr("x", "-5000px")
         popRectA.style('opacity',0)
         d3.select(this)
             .attr("stroke-width", function(d){
@@ -1036,37 +1508,15 @@ function handlerMouseOutLinkAG(d){
         hide_link_text()
         if(clickP) reclick_pap(clkPp)
     }
-}
-
-function highlight_cluster_pap(d){
-  d3.selectAll(".papersNode")
-        .style("opacity",  function(d1){ return d1.id === d.id ? 1 : 0.2;})
-        
-    d3.selectAll(".plink")
-        .style("opacity", function(d1){
-            if(d1.source.id===d.id){
-                d3.select("#p"+d1.target.id)
-                    .style("opacity", 1);
-                return 1;
-            }
-            if(d1.target.id===d.id){
-                d3.select("#p"+d1.source.id)
-                    .style("opacity", 1);
-                return 1;
-            }else return 0.2;
-    })
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function handleMouseOver(d){
-    //console.log("over")
     if(!click && !(clickP && clkPp.id == d.id)){
         d3.select(this)
             .attr("r", 10);
         var txt = d.value
-        /*
-        if(txt.length>80)
-            txt = txt.substring(0,80)+"...";
-        */
+
         d3.selectAll("#pb"+d.id)
             .attr("r", 5)
              .attr("cy", 12)
@@ -1079,8 +1529,8 @@ function handleMouseOver(d){
             ht = bbox.height,
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
-        popRect.attr('fill', color_n(d.color))
-        //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
+        
+        popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
             .attr('width',wd +10)
             .attr('height',ht+2)
             .attr("x", getXRect(x, wd, true))
@@ -1097,7 +1547,7 @@ function handleMouseOver(d){
         d3.selectAll(".authNode")
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d.color);
                 else return "rgba( 221, 167, 109, 0.342 )"
             })
         
@@ -1105,22 +1555,21 @@ function handleMouseOver(d){
          d3.selectAll(".authlLine")
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d.color);
                 else return "rgba( 221, 167, 109, 0.342 )"
                 })
     }
 }
 
 function handleMouseOut(d){
-    
     if(!click){
         d3.selectAll("#pb"+d.id)
             .attr("cy", 15)
             .attr("r",function (d1){return (idPs.includes(d1.id) || papersPrint.includes(d1.id)) ? 3: 2 })
         popText.attr("width", 0)
-            .attr("x", -5000)
+            .attr("x", "-5000px")
             .attr("opacity", 0);
-        popRect.attr("x", -5000)
+        popRect.attr("x", "-5000px")
             .attr("width", 0)
             .attr("opacity", 0);
         d3.select(this)
@@ -1150,43 +1599,22 @@ function handleMouseOut(d){
 
     }
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function clickHandler(d){
-    //console.log(clickP)
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     $('#paperInfo').html(paperInfo(d))
     setPapHandlers()
     if(clickP){
-        //console.log("click was true")
         unclick_pap(clkPp)
     }else{
-        //console.log("click was false")
         clickP = true;
         idClickedP = d.id
          var txt = d.value
         clkPp = papersFiltered.filter(function(el){return el.id === d.id;})[0]
         reclick_pap(clkPp)
-/*         d3.selectAll("#pb"+d.id)
-            .attr("r", 5)
-             .attr("cy", 12)
-        
-        highlight_cluster_pap(d)
-        
-        d3.selectAll(".authNode")
-            .attr("fill", function(d1){ 
-                if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
-                else return "rgba( 221, 167, 109, 0.342 )"
-            })
-        
-         d3.selectAll(".authlLine")
-            .style("stroke", function(d1){ 
-                if(d.authsId.includes(d1.id))
-                    return color_n(d.color);
-                else return "rgba( 221, 167, 109, 0.342 )"
-                })*/
-        
         simulation.stop()
         simulationA.stop()
     }
@@ -1236,7 +1664,7 @@ function handleMouseOverPB(d, event){
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
                 y = pap.node().cy.baseVal.value;
-            popRect.attr('fill', color_n(d.color))
+            popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
             //popRect.attr('fill', aolor_r(d.color))
                 .attr('width',wd +10)
                 .attr('height',ht+2)
@@ -1257,7 +1685,7 @@ function handleMouseOverPB(d, event){
                  d3.selectAll(".authNode")
                 .attr("fill", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d.color);
                     else /*if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else*/
@@ -1266,7 +1694,7 @@ function handleMouseOverPB(d, event){
                 d3.selectAll(".authlLine")
                 .style("stroke", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d.color);
                     else/* if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
                             return "rgba( 188, 188, 188, 0.454 )"
                         else*/
@@ -1344,12 +1772,14 @@ function handleMouseOutPB(d){
     }
     if(click) reclick_auth(clkA)
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function clickHandlerPB(d){
-    //if(click) unclick_auth(clkA)
-    //$('#paperInfo').html(paperInfo(d))
-    //setPapHandlers()
+    if(clickJ) unclick_j()
+    if(click) unclick_auth(clkA)
+    $('#paperInfo').html(paperInfo(d))
+    setPapHandlers()
     popText.attr("width", 0)
         .attr("x", -5000)
         .attr("opacity", 0);
@@ -1367,15 +1797,17 @@ function clickHandlerPB(d){
 
 function addFromList(event){
     var idClick = event.target.id;
-    
+    if(clickJ) unclick_j()
     if(!idClick)
         idClick = event.target.parentNode.id
 
     if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
         var paper = papers.filter(function (item){ return item.id === idClick})[0];
-        if(!idPs.includes(idClick))
+        if(!idPs.includes(idClick)){
+            zoom_by(1)
             addPaper(paper)
+        }
     }else{
         idClick = idClick.substring(1,idClick.length);
         
@@ -1383,6 +1815,8 @@ function addFromList(event){
         authClickHandler(aObj)    
 
     }
+    event.preventDefault()
+    event.stopPropagation()
 }   
 
 function ListMouseOver(event){
@@ -1403,11 +1837,11 @@ function ListMouseOver(event){
                         
                         .attr("fill", function(d1){ 
                             if(d.authsId.includes(d1.id))
-                                return color_n(d.color);
+                                return c20 ? color_j(d) : color_n(d.color);
                             else 
                                 return "rgba( 221, 167, 109, 0.342 )"
                          })        
-                    return color_n(d.color)            
+                    return c20 ? color_j(d) : color_n(d.color);            
                 }) 
              d3.selectAll("#pb"+idClick)
             .attr("r", 5)
@@ -1417,6 +1851,8 @@ function ListMouseOver(event){
             highlight_cluster_pap(p)
         }else return;
     }else{
+        d3.select(event.target)
+            .style("background-color", "rgba( 71, 66, 66, 0.2)") 
         idClick = idClick.substring(1,idClick.length);
         highlight_auth(idClick) 
          if(!click){
@@ -1481,8 +1917,8 @@ function ListMouseOver(event){
                 if((d1.source.id === idClick || d1.target.id === idClick) 
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
-                        let value = authsDef.filter(function (el){ return el.id === idClickedA;})[0].value;
-                        var txt = clkA.value + " - " + value
+                        let value = authsDef.filter(function (el){ return el.id === d1.target.id;})[0].value;
+                        var txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
                         var el   = document.getElementById("svgAG_names");
                         var rect = el.getBoundingClientRect(); // get the bounding rectangle
@@ -1534,8 +1970,11 @@ function ListMouseOver(event){
                 if(d1.id === idClick || d1.id === idClickedA){
                     return 1;
                 }else{
-                        d3.selectAll(".p"+d1.id).style("opacity", 0)
-                        return 0;
+                    d3.selectAll(".p"+d1.id).style("opacity", 0)
+                    d3.select("#svgA"+d1.id)
+                        .style("opacity", 0)
+                        .style("pointer-events", "none")
+                    return 0;
                 }})  
         
     }  
@@ -1544,7 +1983,7 @@ function ListMouseOver(event){
 
 function ListMouseOut(event){
     var idClick = event.target.id;
-    
+
     if(!idClick)
         idClick = event.target.parentNode.id
     if(idClick[0]=='p'){
@@ -1556,8 +1995,15 @@ function ListMouseOut(event){
                 .duration(200)
                 .attr("r", 6)
                 .attr("fill", function(d){
-                    return color_n(d.color) 
+                    return c20 ? color_j(d) : color_n(d.color); 
                 }) 
+            
+            
+            d3.selectAll(".svgA")
+                .style("opacity", 1)
+                .style("pointer-events", "all")
+            
+            
             d3.selectAll(".authlLine")
                 .style('stroke',function (d){/*
                             if(!(authsExclude.includes(d.id) || authsReview.includes(d.id)) && (authColor(d) || authColor_r(d)))
@@ -1618,19 +2064,22 @@ function ListMouseOut(event){
                     })
         }else if(idClick != idClickedA) {
            reset_texts()
-            popTextA.style("opacity", 0)
+            popTextA.style("opacity", 0).attr("x", "-5000px")
             popRectA.style('opacity',0)
             d3.select(".txtspan").remove()
             reclick_auth(clkA)
         }    
     }
     if(clickP) reclick_pap(clkPp)
+        if(clickJ) highlight_j(clickedJ)
 }
 
 function papDblc(event){
+    if(!first_dbl){
     var idClick = event.target.id,
         idClick = idClick.substring(1,idClick.length),
         paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
+    if(clickJ) unclick_j()
     d3.select(this).style("background-color", "red").transition()
         .duration(500)
         .style("opacity", "0")
@@ -1640,12 +2089,18 @@ function papDblc(event){
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     
+    zoom_by(1)
     deleteP(idClick)
     refresh_export()
+    
     document.getElementsByClassName("td2title").innerHTML = ""
+    first_dbl = true;
+    }else first_dbl = !first_dbl
 }
 
 function authDblc(event){
+    if(!first_dbla){
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     var idClick = event.target.id,
@@ -1654,14 +2109,12 @@ function authDblc(event){
         elementPos = authsExclude_obj.map(function(x) {return x.id; }).indexOf(idClick);
     authsExclude.splice(index, 1);
     authsExclude_obj.splice(elementPos, 1);
-    //console.log(authsExclude)
     print_submitting()
         
     d3.selectAll(".plink")
-    
         .style("opacity", 1)
+    
     d3.selectAll(".papersNode")
-        
         .attr("r", "6")
         .style("opacity", 1)
         .attr("stroke", function(d1){
@@ -1679,32 +2132,39 @@ function authDblc(event){
             if(idPs.includes(d1.id))
                 return 2.5;
             })
+    
     reset_texts()
     authorBars()
     authorGraph()
-    if(authsExclude.length == 0){
-        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-        d3.select("#td1").style("font-size", "1em")
-        document.getElementById("td2").style.display = "inline";
-        $( ".hiddenSB" ).autocomplete({disabled:true});
-        $( ".hiddenSB" )[0].disabled = true;
-        $( ".hiddenSB" )[1].disabled = true;
-        $( "#export-btn" )[0].disabled = true;
-        $( "#done_submit").on("click", function(){
-            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-            else{
-                $( ".hiddenSB" ).autocomplete({disabled:false});
-                $( ".hiddenSB" )[0].disabled = false;
-                $( ".hiddenSB" )[1].disabled = false;
-                $( "#export-btn" )[0].disabled = false;
-                d3.selectAll(".hiddenSB").style("background-color", "white")
-                d3.select("#td1").style("font-size", "0.8em")
-                document.getElementById("td2").style.display = "none";
-            }
-        })
-    } 
+//    if(authsExclude.length == 0){
+//        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
+//        d3.select("#td1").style("font-size", "1em")
+//        document.getElementById("td2").style.display = "inline";
+//        $( ".hiddenSB" ).autocomplete({disabled:true});
+//        $( ".hiddenSB" )[0].disabled = true;
+//        $( ".hiddenSB" )[1].disabled = true;
+//        $( "#export-btn" )[0].disabled = true;
+//        $( "#done_submit").on("click", function(){
+//            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+//            else{
+//                $( ".hiddenSB" ).autocomplete({disabled:false});
+//                $( ".hiddenSB" )[0].disabled = false;
+//                $( ".hiddenSB" )[1].disabled = false;
+//                $( "#export-btn" )[0].disabled = false;
+//                d3.selectAll(".hiddenSB").style("background-color", "white")
+//                d3.select("#td1").style("font-size", "0.8em")
+//                document.getElementById("td2").style.display = "none";
+//            }
+//        })
+//    } 
     print_rew()
     refresh_export()
+    
+    event.preventDefault()
+    event.stopPropagation()
+    first_dbla = true
+    }else first_dbla = !first_dbla
+    
 }
 
 function r_authDblc(event){
@@ -1712,6 +2172,7 @@ function r_authDblc(event){
         idClick = idClick.substring(1,idClick.length),
         index = authsReview.indexOf(idClick),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
+    if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
     $('#rauthList').html("")
@@ -1746,6 +2207,9 @@ function r_authDblc(event){
     if(authsReview.length > 0)
         print_rew()
     refresh_export()
+    
+    event.preventDefault()
+    event.stopPropagation()
 }
 
 function repl_clk(event){
@@ -1754,6 +2218,7 @@ function repl_clk(event){
         idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         
         let aObj = idAs.includes(id2) ? (authsDef.filter(function (el){return el.id === id2}))[0] : (authors.filter(function (el){return el.id === id2}))[0];
+    if(clickJ) unclick_j()
     if(clickP) unclick_pap(clkPp)   
     authClickHandler(aObj)    
          
@@ -1761,6 +2226,7 @@ function repl_clk(event){
 }
 
 function repl_click(event){
+    if(clickJ) unclick_j()
     if(!clickP){
      var idClick = event.target.id,
         idClick = idClick.substring(3,idClick.length),
@@ -1807,8 +2273,9 @@ function repl_over(event){
         idClick = idClick.substring(3,idClick.length),
         idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         d3.select("#ag"+id2)
-        
         .attr("r", 7)
+    d3.select(event.target)
+            .style("background-color", "rgba( 71, 66, 66, 0.2)") 
      highlight_auth(id2)
 
     if(!click){
@@ -1877,7 +2344,7 @@ function repl_over(event){
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
                         let value = authsDef.filter(function (el){ return el.id === idClickedA;})[0].value;
-                        var txt = clkA.value + " - " + value
+                        var txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
                         var el   = document.getElementById("svgAG_names");
                         var rect = el.getBoundingClientRect(); // get the bounding rectangle
@@ -1918,6 +2385,7 @@ function repl_over(event){
                             .style('opacity',1)
                         return  1 
                     } else return 0; })
+        
         d3.selectAll(".authors-dot")
             .style("opacity", function(d1){ return d1.id === id2 || d1.id === idClickedA ?  1 : 0; })
         d3.selectAll(".authNode")
@@ -1930,6 +2398,9 @@ function repl_over(event){
                     return 1;
                 }else{
                         d3.selectAll(".p"+d1.id).style("opacity", 0)
+                            d3.select("#svgA"+d1.id)
+                    .style("opacity", 0)
+                    .style("pointer-events", "none")
                         return 0;
                 }})  
         
@@ -1991,11 +2462,11 @@ function repl_out(event){
             })
    }else if(id2 != idClickedA) {
        reset_texts()
-        popTextA.style("opacity", 0)
+        popTextA.style("opacity", 0).attr("x", "-5000px")
         popRectA.style('opacity',0)
         d3.select(".txtspan").remove()
         reclick_auth(clkA)
     }
+        if(clickJ) highlight_j(clickedJ)
     event.stopPropagation()
 }
-
