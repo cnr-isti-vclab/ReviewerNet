@@ -2,25 +2,32 @@ var texts = [],
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
     j_lists = {}, choosen_j = null;
 
-
-function import_from_biblio(imports, query){
-    $( "#biblio-dialog" ).dialog( "close" );
-    clickBiblio = false;
-    let not_found = 0, resultset = [];
-    $("#biblio-txt").css("background", "lightgray")
+function search_biblio(imports){
+    
+    let resultset = [],
+        not_found = 0;
+    
     for(var i =0; i<imports.length; i++){
-        
+        /*
+        * For each element parsed we search for the 
+        * relative paper in the dataset using regexp.
+        * We check the occurence of each word in the title of 
+        * papers and pick the paper that matches more temrs
+        */
         if(imports[i].title && imports[i].title.length >0){
-            var terms = imports[i].title.split(' ').slice(1, 4),
+            var terms = imports[i].title.split(' '),//.slice(1, 4),
                 matchers = [], found = false, j =0;
 
-            terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
-            
+            terms.map(function (el){ 
+                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
+            })
+
             while(!found && j < papers.length){
                 var t = papers[j].value;
                 if (t && str_match(matchers, t)){
                    addP(papers[j])
                     resultset.push({'query':query[i], 'class':'query_found'})
+                    
                     found = true
                 }
                 else j++
@@ -31,45 +38,137 @@ function import_from_biblio(imports, query){
             }
         }
     }
-        if(papersFiltered && papersFiltered.length > 0){
-            
-             if(start){
-                let delta = maxYear-minYear
-                if(delta > 30) delta = delta/2
-                document.getElementById("startMsg").style.visibility = "hidden";
-                xaxis.scale(xConstrained).ticks(delta, "r");
-                svgAxis = d3.select("#svgAxis").attr("y", "80")  
-                svgAxis.append("g").attr("id", "axis").call(xaxis);
-                document.getElementById("startMsg").style.visibility = "hidden";
-                 document.getElementById("svgAxis").style.visibility = "visible";
-                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-                d3.selectAll(".graph").style("overflow-y", "auto")
-                add_labels()
-                start = false;
-            }
-            
-            
-                paperGraph(papersFiltered, citPrint, idPs, simulation)
-            setTimeout(function(){ 
-                authorBars()
-                authorGraph()
-                $( "#biblio-dialog" ).dialog( "open" );
-            }, 1000);
-        }
-           
-        let inner_txt =  not_found > 0 ? not_found+" papers haven't been found:<hr>" :  "The entire bibliography has been parsed an loaded. <br>Close this dialog and enjoy Reviewernet!<hr>";
-        $("#biblio-txt").css("background", "white")
     
-        for(var i =0; i<resultset.length; i++){
-           inner_txt += "<span class=\"query "+resultset[i].class+"\">"+resultset[i].query+"</span>"
-            if (i !=(resultset.length -1))
-                inner_txt+='<br>'
-        }
-    
-        inner_txt += "<hr>"
+    return [resultset, not_found];
+}
 
-        document.getElementById("biblio-dialog").innerHTML = inner_txt
+function get_query_year(query){ return query.match(/(?:(?:19|20)[0-9]{2})/) ? query.match(/(?:(?:19|20)[0-9]{2})/)[0] : 0;}
+
+function search_biblio1(imports, query){
     
+    let resultset = [],
+        not_found = 0;
+    
+    for(var i =0; i<imports.length; i++){
+        /*
+        * For each element parsed we search for the 
+        * relative paper in the dataset using regexp.
+        * We check the occurence of each word in the title of 
+        * papers and pick the paper that matches more temrs
+        */
+        if(imports[i].title && imports[i].title.length > 10 ){
+            
+            var title = imports[i].title,
+                words = title.match(/(\w)+/ug),
+                terms_ = words.map((w)=>w.toLowerCase()),
+                matchers = [], src_papers = [],
+                j =0, k = 0,
+                matching_p = {};
+
+            terms_.map(function (el){ 
+                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
+            })
+            
+            src_papers = papers
+            
+            for(j = 0; j < src_papers.length; j++){
+                var t = src_papers[j].value;
+                
+                for( k = 0; k < matchers.length; k++)
+                    if (t && matchers[k].test(t) )
+                        if(!matching_p[src_papers[j].id]) 
+                            matching_p[src_papers[j].id] = 1
+                        else matching_p[src_papers[j].id]+=1
+            }
+
+            //Get the most similar paper
+            var keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
+            
+            for (kk = 0; kk < keys.length; kk++)
+                if(matching_p[keys[kk]] > maxp && matching_p[keys[kk]] >= (terms_.length*0.2) ){
+                    maxp = matching_p[keys[kk]]
+                    maxid = keys[kk]
+                }
+            
+            if (maxp == 0){
+                var res = [];
+                
+                console.log("p_search")
+                res = p_search(queries)
+                console.log("result")
+                console.log(res)
+                /*
+                
+                p_search and options
+                
+                resultset.push({'query':query[i], 'class':'query_not_found'})
+                not_found++
+                */
+                
+            }
+            else{
+                
+                /*
+                Mostro risultato, onclick parte p_search
+                */
+                
+                var papf = papers.filter((el)=>el.id == maxid)[0]
+                
+                resultset.push({'query':query[i], 'paper':papf, 'alt':alternatives, 'class':'query_found'})
+                
+            
+                //addP(papf)
+                //console.log("Found a paper for query:")
+                //console.log(query)
+                //console.log(papf.value)
+                
+            }
+//            }else{
+//                addP(src_papers[j])
+//                resultset.push({'query':query[i], 'class':'query_found'})
+//
+//                found = true
+//            }
+        }
+    }
+    
+    return [resultset, not_found];
+}
+
+
+function import_from_biblio(imports, query){
+    //$( "#biblio-dialog" ).dialog( "close" );
+    clickBiblio = false;
+    let not_found = 0, resultset = [], res;
+    $("#biblio-txt").css("background", "lightgray")
+    
+    current_query_result = []
+    res = search_biblio2(imports, query)
+    print_query_result(res)
+    
+    current_query_result = res
+    // set_query_handlers()
+    var dom_ell = document.getElementsByClassName("query-btn"),
+        i = 0, len = dom_ell.length;
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = print_query_alt
+    } 
+    
+    dom_ell = document.getElementsByClassName("confirm_parse")
+    i = 0
+    len = dom_ell.length
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = confirm_parsed_paper
+    }
+    /*
+    
+    tf-idf nella p_search?
+    
+    */    
+    $("#biblio-txt").css("background", "white")
+
 }
 
 function biblio_click_handler(){
@@ -2110,7 +2209,7 @@ function r_authDblc(event){
     refresh_export()
     
     event.preventDefault()
-    event.StopPropagation()
+    event.stopPropagation()
 }
 
 function repl_clk(event){
