@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false, terms ={},
+
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false,
     old_loading = "",
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
@@ -170,20 +171,8 @@ function getANP(){
 function getArrays(graph, path) {
     var p = graph.nodes,
         n = p.length;
-    for (i = 0; i < n; i++){
+    for (i = 0; i < n; i++)
         papers.push(p[i])
-        let words = p[i].value.match(/(\w)+/g);
-		words
-		words.forEach((w, pos)=>{ 
-			w = w.toLowerCase();
-			if(w.length <= 3) return; 
-			if(w == 'constructor') return;
-			if(!terms[w]) {
-				terms[w] = [[i, pos]]; 
-			} else {
-				terms[w].push([i, pos]); 
-            }})
-    }
         //papers[i]=p[i]
     var c = graph.links,
         n1 = c.length;
@@ -330,8 +319,8 @@ function hide_loading(){
 function setMouseHandlers(){
     
     $("#default_inst").on("click", function(){
-        let ppath = "datasets/p_cg_2019-01-31.txt",
-            apath = "datasets/a_cg_2019-01-31.txt";
+        let ppath = "datasets/p_2019-01-31.txt",
+            apath = "datasets/a_2019-01-31.txt";
         
         show_loading()
         
@@ -339,9 +328,9 @@ function setMouseHandlers(){
         
         hide_loading()
     })
+    
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
-
     
     d3.select(".pop-up").style("pointer", "none")
    
@@ -1120,7 +1109,6 @@ function setup_searchbars(){
     }).hide()
     
     $( "#export-btn").on("click", export_session)
-    $( "#biblio-btn").on("click", biblio_click_handler)
 }
 
 function process_auth(data) {
@@ -1147,12 +1135,10 @@ $(function (){
     setWinMouseHandlers()
     
     
-    
-    
-    
-    //DEBUG
-    
     /*
+    DEBUG
+    
+    
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
@@ -1160,11 +1146,8 @@ $(function (){
         //scarico file x e creo jlist e texts
         readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
     }
-    
     clickOnGo()
     */
-    /*
-    d3.select("#loading").style("pointer-events", "all")
-    $("#loading").on("click", start_click_handler);
-    */
+    //d3.select("#loading").style("pointer-events", "all")
+    //$("#loading").on("click", start_click_handler);
 });

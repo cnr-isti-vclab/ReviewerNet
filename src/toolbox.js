@@ -1,3 +1,21 @@
+/*
+This file is part of ReviewerNet.org.
+Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
+All rights reserved.
+
+ReviewerNet.org is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 var fS = "#ff433d", sS = "#ffffff", tS = "#248bda", last_val = 1; 
 /*
         color = d3.scaleLinear()
@@ -28,24 +46,6 @@ function setup_popups(){
             resize_modal = false;
         }
     })
-    
-    
-     $( "#biblio-dialog" ).dialog({
-         minWidth: 360,
-        minHeight: 300,
-         open: function(event, ui) {
-            var diagw = $($(event.target).parent()[0]).width(),
-                diagh = $($(event.target).parent()[0]).height(),
-                pagew = document.documentElement.clientWidth,
-                pageh = document.documentElement.clientHeight,
-                top = (pageh - diagh)*0.5,
-                left = (pagew - diagw)*0.5;
-             
-            $(event.target).parent().css('top', top+'px');
-            $(event.target).parent().css('left', left+'px');
-        }
-    })
-    
     
     $( "#tutorial" ).on( "click", function() {
         if( $( "#tutorial-dialog" ).dialog( "isOpen" ))

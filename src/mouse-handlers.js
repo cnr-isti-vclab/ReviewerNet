@@ -1,290 +1,25 @@
+/*
+This file is part of ReviewerNet.org.
+Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
+All rights reserved.
+
+ReviewerNet.org is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 var texts = [],
-    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
+    clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false,
     j_lists = {}, choosen_j = null;
 
-function search_biblio(imports){
-    
-    let resultset = [],
-        not_found = 0;
-    
-    for(var i =0; i<imports.length; i++){
-        /*
-        * For each element parsed we search for the 
-        * relative paper in the dataset using regexp.
-        * We check the occurence of each word in the title of 
-        * papers and pick the paper that matches more temrs
-        */
-        if(imports[i].title && imports[i].title.length >0){
-            var terms = imports[i].title.split(' '),//.slice(1, 4),
-                matchers = [], found = false, j =0;
-
-            terms.map(function (el){ 
-                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
-            })
-
-            while(!found && j < papers.length){
-                var t = papers[j].value;
-                if (t && str_match(matchers, t)){
-                   addP(papers[j])
-                    resultset.push({'query':query[i], 'class':'query_found'})
-                    
-                    found = true
-                }
-                else j++
-            }     
-            if (!found){
-                resultset.push({'query':query[i], 'class':'query_not_found'})
-                not_found++
-            }
-        }
-    }
-    
-    return [resultset, not_found];
-}
-
-function get_query_year(query){ return query.match(/(?:(?:19|20)[0-9]{2})/) ? query.match(/(?:(?:19|20)[0-9]{2})/)[0] : 0;}
-
-function search_biblio1(imports, query){
-    
-    let resultset = [],
-        not_found = 0;
-    
-    for(var i =0; i<imports.length; i++){
-        /*
-        * For each element parsed we search for the 
-        * relative paper in the dataset using regexp.
-        * We check the occurence of each word in the title of 
-        * papers and pick the paper that matches more temrs
-        */
-        if(imports[i].title && imports[i].title.length > 10 ){
-            
-            var title = imports[i].title,
-                words = title.match(/(\w)+/ug),
-                terms_ = words.map((w)=>w.toLowerCase()),
-                matchers = [], src_papers = [],
-                j =0, k = 0,
-                matching_p = {};
-
-            terms_.map(function (el){ 
-                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
-            })
-            
-            src_papers = papers
-            
-            for(j = 0; j < src_papers.length; j++){
-                var t = src_papers[j].value;
-                
-                for( k = 0; k < matchers.length; k++)
-                    if (t && matchers[k].test(t) )
-                        if(!matching_p[src_papers[j].id]) 
-                            matching_p[src_papers[j].id] = 1
-                        else matching_p[src_papers[j].id]+=1
-            }
-
-            //Get the most similar paper
-            var keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
-            
-            for (kk = 0; kk < keys.length; kk++)
-                if(matching_p[keys[kk]] > maxp && matching_p[keys[kk]] >= (terms_.length*0.2) ){
-                    maxp = matching_p[keys[kk]]
-                    maxid = keys[kk]
-                }
-            
-            if (maxp == 0){
-                var res = [];
-                
-                console.log("p_search")
-                res = p_search(queries)
-                console.log("result")
-                console.log(res)
-                /*
-                
-                p_search and options
-                
-                resultset.push({'query':query[i], 'class':'query_not_found'})
-                not_found++
-                */
-                
-            }
-            else{
-                
-                /*
-                Mostro risultato, onclick parte p_search
-                */
-                
-                var papf = papers.filter((el)=>el.id == maxid)[0]
-                
-                resultset.push({'query':query[i], 'paper':papf, 'alt':alternatives, 'class':'query_found'})
-                
-            
-                //addP(papf)
-                //console.log("Found a paper for query:")
-                //console.log(query)
-                //console.log(papf.value)
-                
-            }
-//            }else{
-//                addP(src_papers[j])
-//                resultset.push({'query':query[i], 'class':'query_found'})
-//
-//                found = true
-//            }
-        }
-    }
-    
-    return [resultset, not_found];
-}
-
-
-function import_from_biblio(imports, query){
-    //$( "#biblio-dialog" ).dialog( "close" );
-    clickBiblio = false;
-    let not_found = 0, resultset = [], res;
-    $("#biblio-txt").css("background", "lightgray")
-    
-    current_query_result = []
-    res = search_biblio2(imports, query)
-    print_query_result(res)
-    
-    current_query_result = res
-    // set_query_handlers()
-    var dom_ell = document.getElementsByClassName("query-btn"),
-        i = 0, len = dom_ell.length;
-    
-    for (i = 0; i < len; i++) {
-        dom_ell[i].onclick = print_query_alt
-    } 
-    
-    dom_ell = document.getElementsByClassName("confirm_parse")
-    i = 0
-    len = dom_ell.length
-    
-    for (i = 0; i < len; i++) {
-        dom_ell[i].onclick = confirm_parsed_paper
-    }
-    /*
-    
-    tf-idf nella p_search?
-    
-    */    
-    $("#biblio-txt").css("background", "white")
-
-}
-
-function biblio_click_handler(){
-     if($( "#biblio-dialog" ).dialog( "isOpen" )){
-         $( "#biblio-dialog" ).dialog( "close" );
-        clickBiblio = false;
-    }else{
-        $( "#biblio-dialog" ).dialog( "open" );
-        clickBiblio = true;
-        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, one for each line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
-        
-        document.getElementById("biblio-dialog").innerHTML = inner_txt
-        
-        //Parse button
-        $("#cit-btn").on("click", submit_biblio)
-    }
-}
-
-function submit_biblio(){
-    
-     var http = new XMLHttpRequest();
-    
-    let len = document.getElementById("biblio-txt").value.split('\n').length
-    //console.log(len+"\n"+document.getElementById("biblio-txt").value)
-    let URL = "http://128.148.7.71/citations/create",
-        URL1 = "http://anystyle.isti.cnr.it",
-        params = 'query='+document.getElementById("biblio-txt").value,
-        query =  document.getElementById("biblio-txt").value.split("\n");
-    
-    //Send the proper header information along with the request
-    http.open('POST', URL1, true);
-    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-
-    http.onload = function (e) {
-    if (http.readyState === 4) {
-        if (http.status === 200) {
-            response = JSON.parse(http.responseText)
-            console.log(response)
-          import_from_biblio(response, query);
-        } else {
-          console.error(http.statusText);
-        }
-      }
-    };
-    http.onerror = function (e) {
-      console.error(http.statusText);
-        alert("Some error occurred, check the connection and try again.")
-    };
-
-    /*
-    
-    http.onreadystatechange = function() {//Call a function when the state changes.
-        if (http.readyState === 4) {
-            if (http.status === 200) {
-                import_from_biblio(JSON.parse(http.responseText))
-            } else {
-                console.error(http.statusText);
-            }
-        }
-    }
-    
-    
-    
-    http.ontimeout = function () {
-       alert("The request timed out.");
-    };
-
-    http.timeout = 1000;
-*/
-    http.send(params);
-    
-    
-//        data = {"citation": $("#citation_string")[0].innerHTML},
-//        dataType = "xml";
-//    
-//    var request = new XMLHttpRequest();
-//    var path=URL1;
-//    request.onreadystatechange=state_change;
-//
-//    request.open("GET", path, true);
-//
-//    request.send(null);
-//        function state_change()
-//    {
-//    if (request.readyState==4)
-//      {// 4 = "loaded"
-//      if (request.status==200)
-//        {// 200 = OK
-//        // ...our code here...
-//        alert('ok');
-//        }
-//      else
-//        {
-//        alert("Problem retrieving XML data");
-//        }
-//      }
-//    }
-//    
-    /*
-    $.ajax({
-    type: 'GET',
-    url: URL1,
-    crossDomain: true,
-    //data: data,
-    //dataType: dataType,
-    success: function(responseData, textStatus, jqXHR) {
-        console.log(responseData)
-    },
-    error: function (responseData, textStatus, errorThrown) {
-        alert('POST failed.');
-    }
-    });
-    */
-   // $.post(URL,data,function(result){},dataType)
-}
 
 function readTextFile(file)
 {
@@ -509,6 +244,7 @@ function start_click_handler(){
     $(".hiddenSB").css("pointer-events", "none")
     d3.select(".pop-up").style("pointer", "help")
     toolboxInit()
+    
     setMouseHandlers()    
     setSvgs()
     simulation = setSimulation()
@@ -1530,7 +1266,7 @@ function handleMouseOver(d){
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
         
-        popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
+        popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
             .attr('width',wd +10)
             .attr('height',ht+2)
             .attr("x", getXRect(x, wd, true))
@@ -1664,7 +1400,7 @@ function handleMouseOverPB(d, event){
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
                 y = pap.node().cy.baseVal.value;
-            popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
+            popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
             //popRect.attr('fill', aolor_r(d.color))
                 .attr('width',wd +10)
                 .attr('height',ht+2)

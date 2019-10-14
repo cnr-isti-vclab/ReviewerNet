@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 let ftxt = "";
 
 function get_auth_biblio(id, biblio){
@@ -42,14 +41,6 @@ function export_altRev(id, biblio){
     return txt+"</span>";
 }
 
-function pap_auths1(pap){
-    let txt = "<span class=\"eli-autp\">",
-        aIds = authors.filter( x => pap.authsId.includes(x.id))
-    for (var i = 0 ; i< aIds.length; i++)
-        txt += (i == aIds.length -1) ? aIds[i].value.toUpperCase() : aIds[i].value.toUpperCase()+", ";
-    return txt+"</span>";
-}
-
 function pap_auths(pap){
     let txt = "<span class=\"eli-autp\">",
         aIds = authsDef.filter( x => pap.authsId.includes(x.id))
@@ -73,7 +64,7 @@ function print_biblio(biblio){
         for(var i = 0; i < biblio.length; i++){
             var pap = biblio[i]
             let ref = idPs.includes(pap.id) ? "<span class=\"key-pap\">["+(i+1)+"]</span> " : "["+(i+1)+"] ";
-            txt += ref + pap.year +" "+pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.jN) + "<br>";
+            txt += ref + pap.year +" "+pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.journal) + "<br>";
             
             //ftxt += "["+(i+1)+"] "+ pap.year +" " +pap_auths(pap)+": "+pap.value+". "+ (pap.venue ? pap.venue : pap.journal) + "\n"            
         }
