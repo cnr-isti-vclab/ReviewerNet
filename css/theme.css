@@ -826,8 +826,9 @@ hr {
 .button-bar {
     width: 70%
 }
+
 form{
-    width: 100%;
+    width: 99%;
     height: 90%;
 }
 
@@ -1065,6 +1066,32 @@ table#bnt-table td {
     background-color: lightgray;
 }
 
+.query-btn{
+    background-color: transparent;
+}
+
+.qalt {
+    background-color: transparent;
+}
+
+.confirm_parse{
+    background-color: transparent;
+}
+
+.confirm_parse:hover {
+    background-color: #d2e3f3;
+}
+
+
+.query-btn:hover{
+    background-color: #d2e3f3;
+}
+
+.qalt:hover {
+    background-color: #e5f5ff;
+}
+
+
 #table_container {
   /*transform: translateX(20%)*/
 }
@@ -1118,13 +1145,29 @@ table#init-table t{
 }
 
 .query{
-    font-size: 0.8em
+    font-size: 0.73em
 }
 
-.query_found{
+.query_ok{
     color:#2da115
 }
 
-.query_not_found{
+.unc_red{
     color:#d64444
+}
+
+table#query_tab {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 99%;
+}
+
+table#query_tab td {
+  border: 0px solid #dddddd;
+  text-align: left;
+  padding: 4px;
+}
+
+table#query_tab tr:nth-child(even) {
+  background-color: lightgray;/*#d2e3f3;*/
 }
