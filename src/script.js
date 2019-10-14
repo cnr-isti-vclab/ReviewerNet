@@ -1,4 +1,21 @@
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false,
+/*
+This file is part of ReviewerNet.org.
+Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
+All rights reserved.
+
+ReviewerNet.org is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false, terms ={},
     old_loading = "",
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
@@ -25,6 +42,8 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     inC = [],
     outC = [],
     its = 0,
+    sep1 = '§',
+    sep2 = '£',
     zoomFact = 1.0, dy = 0, old_dy = 0, old_zoomFact=1.0,
     citPrint = [],
     papersFiltered = [],
@@ -151,8 +170,20 @@ function getANP(){
 function getArrays(graph, path) {
     var p = graph.nodes,
         n = p.length;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < n; i++){
         papers.push(p[i])
+        let words = p[i].value.match(/(\w)+/g);
+		words
+		words.forEach((w, pos)=>{ 
+			w = w.toLowerCase();
+			if(w.length <= 3) return; 
+			if(w == 'constructor') return;
+			if(!terms[w]) {
+				terms[w] = [[i, pos]]; 
+			} else {
+				terms[w].push([i, pos]); 
+            }})
+    }
         //papers[i]=p[i]
     var c = graph.links,
         n1 = c.length;
