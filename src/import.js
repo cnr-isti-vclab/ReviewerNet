@@ -20,7 +20,7 @@ var a_file, p_file, j_file;
 
 function add_submitting(suggestion){
     idA = suggestion.id
-    var aName = suggestion.value
+    let aName = suggestion.value
     authsExclude.push(idA)
     authsExclude_obj.push(suggestion)
 }
@@ -36,13 +36,13 @@ function addP(suggestion){
 
 function addR(suggestion){
     idA_rev = suggestion.id
-    var aName = suggestion.value
+    let aName = suggestion.value
     authsReview.push(idA_rev)
     authsReview_obj.push(suggestion)
 }
 
 function loaded(evt) {
-    var fileString = evt.target.result;
+    let fileString = evt.target.result;
     let missed = {
         'submitting':[],
         'rev': [],
@@ -104,7 +104,7 @@ function loaded(evt) {
     
     //riaggiungo submitting
     if(submitting[0].length > 0){
-        for(var i = 0; i < submitting.length; i++){
+        for(let i = 0; i < submitting.length; i++){
             let sub_id = submitting[i].includes(sep1) ? submitting[i].split(sep1)[0] : submitting[i],
                 sub_name =submitting[i].includes(sep1) ? submitting[i].split(sep1)[1] : null
             
@@ -126,7 +126,7 @@ function loaded(evt) {
     }
     if(rev[0].length > 0){
     //riaggiungo reviewers
-        for(var i = 0; i < rev.length; i++){
+        for(let i = 0; i < rev.length; i++){
             let rev_id = rev[i].includes(sep1) ? rev[i].split(sep1)[0] : paps[i],
                 rev_name =rev[i].includes(sep1) ? rev[i].split(sep1)[1] : null
             
@@ -148,7 +148,7 @@ function loaded(evt) {
     }
     
         //riaggiungo papers
-    for(var i = 0; i < paps.length; i++){
+    for(let i = 0; i < paps.length; i++){
          let pap_id = paps[i].includes(sep1) ? paps[i].split(sep1)[0] : paps[i],
                 pap_name =paps[i].includes(sep1) ? paps[i].split(sep1)[1] : null
         try{
@@ -186,16 +186,16 @@ function loaded(evt) {
 }
 
 function startRead(evt) {
-    var file = document.getElementById("input_file").files[0];
+    let file = document.getElementById("input_file").files[0];
     if (file) {
         getAsText(file, loaded);
     }
 }
 
 function import_ds(ppath, apath){
-    var ele = $("#ldr-val");
-    var clr = null;
-    var rand = 0;
+    let ele = $("#ldr-val");
+    let clr = null;
+    let rand = 0;
     (loop = function() {
     clearTimeout(clr);
     (inloop = function() {
@@ -206,7 +206,7 @@ function import_ds(ppath, apath){
     //setTimeout(loop, 2500);
     })();
 
-    var graph = JSON.parse(readTextFile(ppath))
+    let graph = JSON.parse(readTextFile(ppath))
     getArrays(graph, apath) 
     
     $("#ds_table").hide()
@@ -214,7 +214,7 @@ function import_ds(ppath, apath){
 }
 
 function loadedp(evt){
-    var graphTxt = evt.target.result,
+    let graphTxt = evt.target.result,
         graph = JSON.parse(graphTxt),
         p = graph.nodes,
         n = p.length;
@@ -222,14 +222,14 @@ function loadedp(evt){
     for (i = 0; i < n; i++)
         papers.push(p[i])
         //papers[i]=p[i]
-    var c = graph.links,
+    let c = graph.links,
         n1 = c.length;
     for (i = 0; i < n1; i++)
         citations[i]=c[i]
         // empty f
-     var ele = $("#ldr-val");
-      var clr = null;
-      var rand = 49;
+     let ele = $("#ldr-val");
+      let clr = null;
+      let rand = 49;
       (loop = function() {
         clearTimeout(clr);
         (inloop = function() {
@@ -244,7 +244,7 @@ function loadedp(evt){
 }
 
 function loadedj(evt){
-    var jj = JSON.parse(evt.target.result),
+    let jj = JSON.parse(evt.target.result),
         jns = jj.journals,
         n = jns.length,
         instance = 'pers',
@@ -270,7 +270,7 @@ function loadedj(evt){
 }
 
 function loadeda(evt){
-    var authG = JSON.parse(evt.target.result),
+    let authG = JSON.parse(evt.target.result),
         a = authG.authors,
         n = a.length
     for (i = 0; i < n; i++){
@@ -297,9 +297,9 @@ function import_ds_m(event){
     show_loading()
 
     
-    var ele = $("#ldr-val");
-    var clr = null;
-    var rand = 0;
+    let ele = $("#ldr-val");
+    let clr = null;
+    let rand = 0;
     (loop = function() {
     clearTimeout(clr);
     (inloop = function() {

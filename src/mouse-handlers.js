@@ -1,4 +1,4 @@
-var texts = [],
+ var texts = [],
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
     j_lists = {}, choosen_j = null;
 
@@ -7,7 +7,7 @@ function search_biblio(imports){
     let resultset = [],
         not_found = 0;
     
-    for(var i =0; i<imports.length; i++){
+    for( let i =0; i<imports.length; i++){
         /*
         * For each element parsed we search for the 
         * relative paper in the dataset using regexp.
@@ -15,7 +15,7 @@ function search_biblio(imports){
         * papers and pick the paper that matches more temrs
         */
         if(imports[i].title && imports[i].title.length >0){
-            var terms = imports[i].title.split(' '),//.slice(1, 4),
+             let terms = imports[i].title.split(' '),//.slice(1, 4),
                 matchers = [], found = false, j =0;
 
             terms.map(function (el){ 
@@ -23,7 +23,7 @@ function search_biblio(imports){
             })
 
             while(!found && j < papers.length){
-                var t = papers[j].value;
+                 let t = papers[j].value;
                 if (t && str_match(matchers, t)){
                    addP(papers[j])
                     resultset.push({'query':query[i], 'class':'query_found'})
@@ -49,7 +49,7 @@ function search_biblio1(imports, query){
     let resultset = [],
         not_found = 0;
     
-    for(var i =0; i<imports.length; i++){
+    for( let i =0; i<imports.length; i++){
         /*
         * For each element parsed we search for the 
         * relative paper in the dataset using regexp.
@@ -58,7 +58,7 @@ function search_biblio1(imports, query){
         */
         if(imports[i].title && imports[i].title.length > 10 ){
             
-            var title = imports[i].title,
+             let title = imports[i].title,
                 words = title.match(/(\w)+/ug),
                 terms_ = words.map((w)=>w.toLowerCase()),
                 matchers = [], src_papers = [],
@@ -72,7 +72,7 @@ function search_biblio1(imports, query){
             src_papers = papers
             
             for(j = 0; j < src_papers.length; j++){
-                var t = src_papers[j].value;
+                 let t = src_papers[j].value;
                 
                 for( k = 0; k < matchers.length; k++)
                     if (t && matchers[k].test(t) )
@@ -82,7 +82,7 @@ function search_biblio1(imports, query){
             }
 
             //Get the most similar paper
-            var keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
+             let keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
             
             for (kk = 0; kk < keys.length; kk++)
                 if(matching_p[keys[kk]] > maxp && matching_p[keys[kk]] >= (terms_.length*0.2) ){
@@ -91,7 +91,7 @@ function search_biblio1(imports, query){
                 }
             
             if (maxp == 0){
-                var res = [];
+                 let res = [];
                 
                 console.log("p_search")
                 res = p_search(queries)
@@ -112,7 +112,7 @@ function search_biblio1(imports, query){
                 Mostro risultato, onclick parte p_search
                 */
                 
-                var papf = papers.filter((el)=>el.id == maxid)[0]
+                 let papf = papers.filter((el)=>el.id == maxid)[0]
                 
                 resultset.push({'query':query[i], 'paper':papf, 'alt':alternatives, 'class':'query_found'})
                 
@@ -136,41 +136,6 @@ function search_biblio1(imports, query){
 }
 
 
-function import_from_biblio(imports, query){
-    //$( "#biblio-dialog" ).dialog( "close" );
-    clickBiblio = false;
-    let not_found = 0, resultset = [], res;
-    $("#biblio-txt").css("background", "lightgray")
-    
-    current_query_result = []
-    res = search_biblio2(imports, query)
-    print_query_result(res)
-    
-    current_query_result = res
-    // set_query_handlers()
-    var dom_ell = document.getElementsByClassName("query-btn"),
-        i = 0, len = dom_ell.length;
-    
-    for (i = 0; i < len; i++) {
-        dom_ell[i].onclick = print_query_alt
-    } 
-    
-    dom_ell = document.getElementsByClassName("confirm_parse")
-    i = 0
-    len = dom_ell.length
-    
-    for (i = 0; i < len; i++) {
-        dom_ell[i].onclick = confirm_parsed_paper
-    }
-    /*
-    
-    tf-idf nella p_search?
-    
-    */    
-    $("#biblio-txt").css("background", "white")
-
-}
-
 function biblio_click_handler(){
      if($( "#biblio-dialog" ).dialog( "isOpen" )){
          $( "#biblio-dialog" ).dialog( "close" );
@@ -189,7 +154,7 @@ function biblio_click_handler(){
 
 function submit_biblio(){
     
-     var http = new XMLHttpRequest();
+      let http = new XMLHttpRequest();
     
     let len = document.getElementById("biblio-txt").value.split('\n').length
     //console.log(len+"\n"+document.getElementById("biblio-txt").value)
@@ -207,7 +172,7 @@ function submit_biblio(){
     if (http.readyState === 4) {
         if (http.status === 200) {
             response = JSON.parse(http.responseText)
-            console.log(response)
+            //console.log(response)
           import_from_biblio(response, query);
         } else {
           console.error(http.statusText);
@@ -240,55 +205,11 @@ function submit_biblio(){
     http.timeout = 1000;
 */
     http.send(params);
-    
-    
-//        data = {"citation": $("#citation_string")[0].innerHTML},
-//        dataType = "xml";
-//    
-//    var request = new XMLHttpRequest();
-//    var path=URL1;
-//    request.onreadystatechange=state_change;
-//
-//    request.open("GET", path, true);
-//
-//    request.send(null);
-//        function state_change()
-//    {
-//    if (request.readyState==4)
-//      {// 4 = "loaded"
-//      if (request.status==200)
-//        {// 200 = OK
-//        // ...our code here...
-//        alert('ok');
-//        }
-//      else
-//        {
-//        alert("Problem retrieving XML data");
-//        }
-//      }
-//    }
-//    
-    /*
-    $.ajax({
-    type: 'GET',
-    url: URL1,
-    crossDomain: true,
-    //data: data,
-    //dataType: dataType,
-    success: function(responseData, textStatus, jqXHR) {
-        console.log(responseData)
-    },
-    error: function (responseData, textStatus, errorThrown) {
-        alert('POST failed.');
-    }
-    });
-    */
-   // $.post(URL,data,function(result){},dataType)
 }
 
 function readTextFile(file)
 {
-    var rawFile = new XMLHttpRequest();
+     let rawFile = new XMLHttpRequest();
     rawFile.open("GET", file, false);
     rawFile.onreadystatechange = function ()
     {
@@ -305,7 +226,7 @@ function readTextFile(file)
 }
 
 function getAsText(readFile, loaded) {
-    var reader = new FileReader();
+     let reader = new FileReader();
     reader.readAsText(readFile, "UTF-8");
     reader.onload = loaded;
 }
@@ -441,7 +362,7 @@ function create_jtext(instance, journals){
 }
 
 function readJournals(path, instance){
-    var jj = JSON.parse(readTextFile(path)),
+     let jj = JSON.parse(readTextFile(path)),
         jns = jj.journals,
         n = jns.length,
         npp = jj.papers ? jj.papers : 0,
@@ -648,12 +569,54 @@ function un_highlight_auth(id){
 function author_dblclick_ABG(d){
     //GESTIRE CLICKJ/CLICKP???
     suggestion = d
-    var isIn = false
+     let isIn = false
     idA_rev = suggestion.id
-    var aName = suggestion.value
-    if(authsReview.includes(idA_rev))
+     let aName = suggestion.value
+    if(authsReview.includes(idA_rev)){
         isIn = true
-    else{
+        
+        let index = authsReview.indexOf(idA_rev),
+            elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idA_rev);
+    
+        if(clickJ) unclick_j()
+        if(click) unclick_auth(clkA)
+        if(clickP) unclick_pap(clkPp)
+        $('#rauthList').html("")
+        authsReview.splice(index, 1);
+        authsReview_obj.splice(elementPos, 1);
+        //console.log(authsReview_obj)
+
+        d3.selectAll(".plink")
+
+            .style("opacity", 1)
+        d3.selectAll(".papersNode")
+            .attr("r", "6")
+            .style("opacity", 1)
+            .attr("stroke", function(d1){
+                if(d1.authsId.includes(idA_rev))
+                    d3.select($("#txt"+d1.id)[0])
+                        .attr("x", -1000)
+                        .attr("y", -1000)
+                        .attr("opacity", 0)  
+                if(idPs.includes(d1.id))
+                    return "#4238ff"
+                    //return "#6d10ca";
+                else return "#999";
+                })
+            .attr("stroke-width", function(d1){
+                if(idPs.includes(d1.id))
+                    return 2.5;
+                })
+        reset_texts()
+        authorBars()
+        authorGraph()
+        if(authsReview.length > 0)
+            print_rew()
+        refresh_export()
+
+        d3.event.stopPropagation()
+    
+    }else{
         authsReview.push(idA_rev)
         authsReview_obj.push(suggestion)
         authorBars()
@@ -664,6 +627,10 @@ function author_dblclick_ABG(d){
     d3.select(".txtspan").remove()
     d3.event.stopPropagation()
     refresh_export()
+    
+    
+    
+    
 }
 
 function unclick_auth(d){
@@ -794,11 +761,11 @@ function reclick_auth(d){
             })
     //mostra autori conflittati in AG e AB
     d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-            var al = d1.authsId,
+             let al = d1.authsId,
                     all = al.length, found = false, i = 0;
                 if(!al.includes(d.id)) return 0;
                 while( !found && i < all ){
-                    var t = authsDef.filter(function(el){return el.id === al[i]})
+                     let t = authsDef.filter(function(el){return el.id === al[i]})
                     found = ( al[i]!= d.id && t.length > 0) ? true : false;
                     i++
                 }
@@ -842,7 +809,7 @@ function reclick_pap(d){
         .attr("stroke", "rgba( 221, 167, 109)")
         .attr("r", 10)
         .attr("stroke-width", "3px")
-    var txt = d.value
+     let txt = d.value
 
     d3.selectAll("#pb"+d.id)
         .attr("r", 5)
@@ -866,13 +833,13 @@ function reclick_pap(d){
 }
 
 function show_link_text(d){
-    var txt = d.source.value + " - " + d.target.value
+     let txt = d.source.value + " - " + d.target.value
     popTextA.text(txt)
-    var el   = document.getElementById("svgAG_names");
-    var rect = el.getBoundingClientRect(); // get the bounding rectangle
+     let el   = document.getElementById("svgAG_names");
+     let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-    var bbox = popTextA.node().getBBox();
-    var wd = bbox.width,
+     let bbox = popTextA.node().getBBox();
+     let wd = bbox.width,
         ht = bbox.height;
 
     popTextA.attr("x", function(){
@@ -896,7 +863,7 @@ function show_link_text(d){
         return ret;})
       .attr('dy', 20)
       .text(function() {
-        var shared_p = d.source.coAuthList[d.target.id][2],
+         let shared_p = d.source.coAuthList[d.target.id][2],
             shared_in_viz = papersFiltered.filter(function (el){
                 return shared_p.includes(el.id);
             })
@@ -954,14 +921,14 @@ function authClickHandler(d){
         idClickedA = d.id;
         //mostra autori conflittati in AG e AB
 
-         var txt = d.value
+          let txt = d.value
 
         popTextA.text(txt)
-        var el   = document.getElementById("svgAG_names");
-        var rect = el.getBoundingClientRect(); // get the bounding rectangle
+         let el   = document.getElementById("svgAG_names");
+         let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-        var bbox = popTextA.node().getBBox();
-        var wd = bbox.width,
+         let bbox = popTextA.node().getBBox();
+         let wd = bbox.width,
             ht = bbox.height;
         //popRect.attr('fill', color(d.color))
         popTextA.attr("x", function(){
@@ -988,11 +955,11 @@ function authClickHandler(d){
             .style("opacity", function(d1){ return ((d1.source.id === d.id || d1.target.id === d.id) && ($("#ag"+d1.source.id)[0].style.opacity == 1 && $("#ag"+d1.target.id)[0].style.opacity ==1 ) && checkThetaNC(d1.source, d1.target.id)) ?  1 : 0; })
 
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-            var al = d1.authsId,
+             let al = d1.authsId,
                     all = al.length, found = false, i = 0;
                 if(!al.includes(d.id)) return 0;
                 while( !found && i < all ){
-                    var t = authsDef.filter(function(el){return el.id === al[i]})
+                     let t = authsDef.filter(function(el){return el.id === al[i]})
                     found = ( al[i]!= d.id && t.length > 0) ? true : false;
                     i++
                 }
@@ -1073,20 +1040,20 @@ function handlerMouseOverA(d){
             reset_texts()
             d3.selectAll(".papersNode")
                 .style("opacity", function(d1){
-                    var al = d1.authsId;
+                     let al = d1.authsId;
                     return al.includes(d.id) && al.includes(idClickedA) ? 1 : 0.2;
                 })
                 .attr("r",  function(d1){
-                    var al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
+                     let al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
                     if (found) papNameConflict(d1);
                     return found ? 9 : 6;
                 })
             //mostra autori conflittati in AG e AB
             d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-                var al = d1.authsId;
+                 let al = d1.authsId;
                 return al.includes(d.id) && al.includes(idClickedA) ? 1:0;
             }).style("cursor", function(d1){
-                var al = d1.authsId;
+                 let al = d1.authsId;
                 return al.includes(d.id) && al.includes(idClickedA) ? "pointer":"none";
             })
             d3.selectAll(".aglink")
@@ -1094,13 +1061,13 @@ function handlerMouseOverA(d){
                     if((d1.source.id === d.id || d1.target.id === d.id) 
                        && (d1.source.id === idClickedA || d1.target.id 
                         === idClickedA)) {
-                            var txt = clkA.value + " - " + d.value
+                             let txt = clkA.value + " - " + d.value
                             popTextA.text(txt)
-                            var el   = document.getElementById("svgAG_names");
-                            var rect = el.getBoundingClientRect(); // get the bounding rectangle
+                             let el   = document.getElementById("svgAG_names");
+                             let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-                            var bbox = popTextA.node().getBBox();
-                            var wd = bbox.width,
+                             let bbox = popTextA.node().getBBox();
+                             let wd = bbox.width,
                                 ht = bbox.height;
                            
                             popTextA.attr("x", function(){
@@ -1124,7 +1091,7 @@ function handlerMouseOverA(d){
                                 return ret;})
                               .attr('dy', 20)
                               .text(function() {
-                                var shared_in_viz = papersFiltered.filter(function (el){
+                                 let shared_in_viz = papersFiltered.filter(function (el){
                                         return el.authsId.includes(idClickedA) && el.authsId.includes(d.id);
                                     })
                                 return shared_in_viz.length+" visualized"; })
@@ -1207,14 +1174,14 @@ function handlerMouseOverAG(d){
             reset_texts()
             highlight_auth(d.id)
 
-            var txt = d.value
+             let txt = d.value
 
             popTextA.text(txt)
-            var el   = document.getElementById("svgAG_names");
-            var rect = el.getBoundingClientRect(); // get the bounding rectangle
+             let el   = document.getElementById("svgAG_names");
+             let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-            var bbox = popTextA.node().getBBox();
-            var wd = bbox.width,
+             let bbox = popTextA.node().getBBox();
+             let wd = bbox.width,
                 ht = bbox.height;
             //popRect.attr('fill', color(d.color))
             popTextA.attr("x", function(){
@@ -1271,17 +1238,17 @@ function handlerMouseOverAG(d){
             reset_texts()
             d3.selectAll(".papersNode")
                 .style("opacity", function(d1){
-                    var al = d1.authsId;
+                     let al = d1.authsId;
                     return al.includes(d.id) && al.includes(idClickedA) ? 1 : 0.2;
                 })
                 .attr("r",  function(d1){
-                    var al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
+                     let al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
                     if (found) papNameConflict(d1);
                     return found ? 9 : 6;
                 })
             //mostra autori conflittati in AG e AB
             d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-                var al = d1.authsId;
+                 let al = d1.authsId;
                 return al.includes(d.id) && al.includes(idClickedA) ? 1:0;
             })
             d3.selectAll(".aglink")
@@ -1289,13 +1256,13 @@ function handlerMouseOverAG(d){
                     if((d1.source.id === d.id || d1.target.id === d.id) 
                        && (d1.source.id === idClickedA || d1.target.id 
                         === idClickedA)) {
-                            var txt = clkA.value + " - " + d.value
+                             let txt = clkA.value + " - " + d.value
                             popTextA.text(txt)
-                            var el   = document.getElementById("svgAG_names");
-                            var rect = el.getBoundingClientRect(); // get the bounding rectangle
+                             let el   = document.getElementById("svgAG_names");
+                             let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-                            var bbox = popTextA.node().getBBox();
-                            var wd = bbox.width,
+                             let bbox = popTextA.node().getBBox();
+                             let wd = bbox.width,
                                 ht = bbox.height;
                             //popRect.attr('fill', color(d.color))
                             popTextA.attr("x", function(){
@@ -1319,7 +1286,7 @@ function handlerMouseOverAG(d){
                                 return ret;})
                               .attr('dy', 20)
                               .text(function() {
-                                var shared_in_viz = papersFiltered.filter(function (el){
+                                 let shared_in_viz = papersFiltered.filter(function (el){
                                         return el.authsId.includes(idClickedA) && el.authsId.includes(d.id);
                                     })
                                 return shared_in_viz.length+" visualized"; })
@@ -1350,14 +1317,14 @@ function handlerMouseOverAG(d){
 
         }
     }else{
-        var txt = d.value
+         let txt = d.value
         highlight_auth(d.id)
         popTextA.text(txt)
-        var el   = document.getElementById("svgAG_names");
-        var rect = el.getBoundingClientRect(); // get the bounding rectangle
+         let el   = document.getElementById("svgAG_names");
+         let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-        var bbox = popTextA.node().getBBox();
-        var wd = bbox.width,
+         let bbox = popTextA.node().getBBox();
+         let wd = bbox.width,
             ht = bbox.height;
         //popRect.attr('fill', color(d.color))
         popTextA.attr("x", function(){
@@ -1515,7 +1482,7 @@ function handleMouseOver(d){
     if(!click && !(clickP && clkPp.id == d.id)){
         d3.select(this)
             .attr("r", 10);
-        var txt = d.value
+         let txt = d.value
 
         d3.selectAll("#pb"+d.id)
             .attr("r", 5)
@@ -1524,8 +1491,8 @@ function handleMouseOver(d){
         highlight_cluster_pap(d)
         
         popText.text(txt)
-        var bbox = popText.node().getBBox();
-        var wd = bbox.width,
+         let bbox = popText.node().getBBox();
+         let wd = bbox.width,
             ht = bbox.height,
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
@@ -1612,7 +1579,7 @@ function clickHandler(d){
     }else{
         clickP = true;
         idClickedP = d.id
-         var txt = d.value
+          let txt = d.value
         clkPp = papersFiltered.filter(function(el){return el.id === d.id;})[0]
         reclick_pap(clkPp)
         simulation.stop()
@@ -1633,7 +1600,7 @@ function handleMouseOverPB(d, event){
             .attr("r", 5)
             .attr("cy", 12)
 
-        var txt = d.value
+         let txt = d.value
         /*
         if(txt.length>80)
             txt = txt.substring(0,80)+"...";
@@ -1658,8 +1625,8 @@ function handleMouseOverPB(d, event){
         }
         if(papersPrint.includes(d.id)){
             popText.text(txt)
-            var bbox = popText.node().getBBox();
-            var wd = bbox.width,
+             let bbox = popText.node().getBBox();
+             let wd = bbox.width,
                 ht = bbox.height,
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
@@ -1706,8 +1673,8 @@ function handleMouseOverPB(d, event){
         }
         else{
             popTextAx.text(txt)
-            var bbox = popTextAx.node().getBBox();
-            var wd = bbox.width,
+             let bbox = popTextAx.node().getBBox();
+             let wd = bbox.width,
                 ht = bbox.height,
                 x = xConstrained(d.year) -wd/2,
                 y = 50;
@@ -1796,14 +1763,14 @@ function clickHandlerPB(d){
 }
 
 function addFromList(event){
-    var idClick = event.target.id;
+     let idClick = event.target.id;
     if(clickJ) unclick_j()
     if(!idClick)
         idClick = event.target.parentNode.id
 
     if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
-        var paper = papers.filter(function (item){ return item.id === idClick})[0];
+         let paper = papers.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick)){
             zoom_by(1)
             addPaper(paper)
@@ -1820,7 +1787,7 @@ function addFromList(event){
 }   
 
 function ListMouseOver(event){
-    var idClick = event.target.id;
+     let idClick = event.target.id;
     
     if(!idClick)
         idClick = event.target.parentNode.id
@@ -1895,21 +1862,21 @@ function ListMouseOver(event){
         reset_texts()
         d3.selectAll(".papersNode")
             .style("opacity", function(d1){
-                var al = d1.authsId;
+                 let al = d1.authsId;
                 return al.includes(idClick) && al.includes(idClickedA) ? 1 : 0.2;
             })
             .attr("r",  function(d1){
-                var al = d1.authsId, found = al.includes(idClick) && al.includes(idClickedA);
+                 let al = d1.authsId, found = al.includes(idClick) && al.includes(idClickedA);
                 if (found) papNameConflict(d1);
                 return found ? 9 : 6;
             })
         //mostra autori conflittati in AG e AB
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-            var al = d1.authsId;
+             let al = d1.authsId;
             return al.includes(idClick) && al.includes(idClickedA) ? 1:0;
         })
         .style("cursor", function(d1){
-            var al = d1.authsId;
+             let al = d1.authsId;
             return al.includes(idClick) && al.includes(idClickedA) ? "pointer":"none";
         })
         d3.selectAll(".aglink")
@@ -1918,13 +1885,13 @@ function ListMouseOver(event){
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
                         let value = authsDef.filter(function (el){ return el.id === d1.target.id;})[0].value;
-                        var txt = d1.source.value + " - " + d1.target.value
+                         let txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
-                        var el   = document.getElementById("svgAG_names");
-                        var rect = el.getBoundingClientRect(); // get the bounding rectangle
+                         let el   = document.getElementById("svgAG_names");
+                         let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-                        var bbox = popTextA.node().getBBox();
-                        var wd = bbox.width,
+                         let bbox = popTextA.node().getBBox();
+                         let wd = bbox.width,
                             ht = bbox.height;
                         //popRect.attr('fill', color(d.color))
                         popTextA.attr("x", function(){
@@ -1948,7 +1915,7 @@ function ListMouseOver(event){
                             return ret;})
                           .attr('dy', 20)
                           .text(function() {
-                            var shared_in_viz = papersFiltered.filter(function (el){
+                             let shared_in_viz = papersFiltered.filter(function (el){
                                     return el.authsId.includes(idClickedA) && el.authsId.includes(idClick);
                                 })
                             return shared_in_viz.length+" visualized"; })
@@ -1982,7 +1949,7 @@ function ListMouseOver(event){
 }
 
 function ListMouseOut(event){
-    var idClick = event.target.id;
+     let idClick = event.target.id;
 
     if(!idClick)
         idClick = event.target.parentNode.id
@@ -2076,9 +2043,7 @@ function ListMouseOut(event){
 
 function papDblc(event){
     if(!first_dbl){
-    var idClick = event.target.id,
-        idClick = idClick.substring(1,idClick.length),
-        paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
+     let paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
     if(clickJ) unclick_j()
     d3.select(this).style("background-color", "red").transition()
         .duration(500)
@@ -2088,7 +2053,11 @@ function papDblc(event){
         .style("opacity", "0")
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
+        
+    let idClick = event.target.id;
     
+    idClick = idClick.substring(1,idClick.length)
+            
     zoom_by(1)
     deleteP(idClick)
     refresh_export()
@@ -2103,9 +2072,10 @@ function authDblc(event){
     if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
-    var idClick = event.target.id,
-        idClick = idClick.substring(1,idClick.length),
-        index = authsExclude.indexOf(idClick),
+     let idClick = event.target.id;
+    
+     idClick = idClick.substring(1,idClick.length)
+        let index = authsExclude.indexOf(idClick),
         elementPos = authsExclude_obj.map(function(x) {return x.id; }).indexOf(idClick);
     authsExclude.splice(index, 1);
     authsExclude_obj.splice(elementPos, 1);
@@ -2168,9 +2138,10 @@ function authDblc(event){
 }
 
 function r_authDblc(event){
-    var idClick = event.target.id,
-        idClick = idClick.substring(1,idClick.length),
-        index = authsReview.indexOf(idClick),
+     let idClick = event.target.id;
+    
+        idClick = idClick.substring(1,idClick.length)
+    let index = authsReview.indexOf(idClick),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
     if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
@@ -2213,9 +2184,11 @@ function r_authDblc(event){
 }
 
 function repl_clk(event){
-     var idClick = event.target.id,
-        idClick = idClick.substring(3,idClick.length),
-        idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
+      let idClick = event.target.id;
+    
+        idClick = idClick.substring(3,idClick.length)
+    
+    let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         
         let aObj = idAs.includes(id2) ? (authsDef.filter(function (el){return el.id === id2}))[0] : (authors.filter(function (el){return el.id === id2}))[0];
     if(clickJ) unclick_j()
@@ -2228,9 +2201,9 @@ function repl_clk(event){
 function repl_click(event){
     if(clickJ) unclick_j()
     if(!clickP){
-     var idClick = event.target.id,
-        idClick = idClick.substring(3,idClick.length),
-        idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1],
+      let idClick = event.target.id;
+        idClick = idClick.substring(3,idClick.length)
+    let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1],
          index = authsReview.indexOf(id1),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(id1);
     authsReview[index] = id2
@@ -2269,9 +2242,9 @@ function repl_click(event){
 }
 
 function repl_over(event){
-     var idClick = event.target.id,
-        idClick = idClick.substring(3,idClick.length),
-        idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
+      let idClick = event.target.id;
+        idClick = idClick.substring(3,idClick.length)
+        let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         d3.select("#ag"+id2)
         .attr("r", 7)
     d3.select(event.target)
@@ -2321,21 +2294,21 @@ function repl_over(event){
         reset_texts()
         d3.selectAll(".papersNode")
             .style("opacity", function(d1){
-                var al = d1.authsId;
+                 let al = d1.authsId;
                 return al.includes(id2) && al.includes(idClickedA) ? 1 : 0.2;
             })
             .attr("r",  function(d1){
-                var al = d1.authsId, found = al.includes(id2) && al.includes(idClickedA);
+                 let al = d1.authsId, found = al.includes(id2) && al.includes(idClickedA);
                 if (found) papNameConflict(d1);
                 return found ? 9 : 6;
             })
         //mostra autori conflittati in AG e AB
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
-            var al = d1.authsId;
+             let al = d1.authsId;
             return al.includes(id2) && al.includes(idClickedA) ? 1:0;
         })
             .style("cursor", function(d1){
-            var al = d1.authsId;
+             let al = d1.authsId;
             return al.includes(idClick) && al.includes(idClickedA) ? "pointer":"none";
         })
         d3.selectAll(".aglink")
@@ -2344,13 +2317,13 @@ function repl_over(event){
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
                         let value = authsDef.filter(function (el){ return el.id === idClickedA;})[0].value;
-                        var txt = d1.source.value + " - " + d1.target.value
+                         let txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
-                        var el   = document.getElementById("svgAG_names");
-                        var rect = el.getBoundingClientRect(); // get the bounding rectangle
+                         let el   = document.getElementById("svgAG_names");
+                         let rect = el.getBoundingClientRect(); // get the bounding rectangle
 
-                        var bbox = popTextA.node().getBBox();
-                        var wd = bbox.width,
+                         let bbox = popTextA.node().getBBox();
+                         let wd = bbox.width,
                             ht = bbox.height;
                         //popRect.attr('fill', color(d.color))
                         popTextA.attr("x", function(){
@@ -2374,7 +2347,7 @@ function repl_over(event){
                             return ret;})
                           .attr('dy', 20)
                           .text(function() {
-                            var shared_in_viz = papersFiltered.filter(function (el){
+                             let shared_in_viz = papersFiltered.filter(function (el){
                                     return el.authsId.includes(idClickedA) && el.authsId.includes(id2);
                                 })
                             return shared_in_viz.length+" visualized"; })
@@ -2409,9 +2382,10 @@ function repl_over(event){
 }
 
 function repl_out(event){
-        var idClick = event.target.id,
-        idClick = idClick.substring(3,idClick.length),
-        idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
+         let idClick = event.target.id;
+        idClick = idClick.substring(3,idClick.length)
+    
+        let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
                 d3.select("#ag"+id2)
         
         .attr("r", a_radius) 

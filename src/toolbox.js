@@ -34,7 +34,7 @@ function setup_popups(){
          minWidth: 360,
         minHeight: 300,
          open: function(event, ui) {
-            var diagw = $($(event.target).parent()[0]).width(),
+            let diagw = $($(event.target).parent()[0]).width(),
                 diagh = $($(event.target).parent()[0]).height(),
                 pagew = document.documentElement.clientWidth,
                 pageh = document.documentElement.clientHeight,
@@ -70,7 +70,7 @@ function createSliders(){
             'max': 10
         }});
     sliderTP.noUiSlider.on('update', function( values, handle ) {
-        var value = values[handle];
+        let value = values[handle];
         value = value.substring(0,value.length-3)
         inputNumberTP.value = value
         thetaPap  = value

@@ -43,7 +43,7 @@ function getAGSvg(){
 } 
 
 function setAGSimulation(){
-    var wi = 200,
+    let wi = 200,
         he = 200;
     simulationA = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
@@ -63,7 +63,7 @@ function setAGSimulation(){
 function extract_coauthoring(){
     co_authoring = []
     auths_in_g = new Set([])
-    for(var i = 0; i< authsDef.length; i++){
+    for(let i = 0; i< authsDef.length; i++){
         auths_in_g.add(authsDef[i].id)
         Object.keys(authsDef[i].coAuthList).forEach(function(key) {
             if(authsDef[i].coAuthList[key][0] > 0){
@@ -85,7 +85,7 @@ function a_radius(d){
 
 function authorGraph() {
     co_authoring = extract_coauthoring()
-    var a_nodes = authors.filter(auths_in_g_filter)
+    let a_nodes = authors.filter(auths_in_g_filter)
      d3.select("#anpn").text(a_nodes ? a_nodes.length : 0)
     /*    
     console.log("nodes")
@@ -97,10 +97,10 @@ function authorGraph() {
     d3.select("#svgAG").remove()
     d3.select(".ag-container").append("svg").attr("id", "svgAG")
     getAGSvg()
-    var svg = svgAG
+    let svg = svgAG
     svgAG.attr("y", "100")
     //console.log(authsDef.length)
-    var link = svgAG.append("g")
+    let link = svgAG.append("g")
         .attr("class", "co_auth")
         .selectAll("line")
         .data(co_authoring)
@@ -125,7 +125,7 @@ function authorGraph() {
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
-    var node = svgAG.append("g")
+    let node = svgAG.append("g")
         .attr("class", "authors-el-cont")
         .selectAll("circle")
         .data(a_nodes)

@@ -137,7 +137,7 @@ function getXTxt(x, wdt, inGraph){
 }
 
 function reset_texts(){
-    for(var i = 0; i < texts.length; i++)
+    for(let i = 0; i < texts.length; i++)
         texts[i].attr("x", -1000)
                 .attr("y", -1000)
                 .attr("opacity", 0)
@@ -168,7 +168,7 @@ function getANP(){
 }
 
 function getArrays(graph, path) {
-    var p = graph.nodes,
+    let p = graph.nodes,
         n = p.length;
     for (i = 0; i < n; i++){
         papers.push(p[i])
@@ -185,14 +185,14 @@ function getArrays(graph, path) {
             }})
     }
         //papers[i]=p[i]
-    var c = graph.links,
+    let c = graph.links,
         n1 = c.length;
     for (i = 0; i < n1; i++)
         citations[i]=c[i]
         // empty f
-     var ele = $("#ldr-val");
-      var clr = null;
-      var rand = 49;
+     let ele = $("#ldr-val");
+      let clr = null;
+      let rand = 49;
       (loop = function() {
         clearTimeout(clr);
         (inloop = function() {
@@ -207,7 +207,7 @@ function getArrays(graph, path) {
 
 function getAuths(path) {
 
-    var authG = JSON.parse(readTextFile(path)),
+    let authG = JSON.parse(readTextFile(path)),
         a = authG.authors,
         n = a.length
     for (i = 0; i < n; i++){
@@ -218,8 +218,8 @@ function getAuths(path) {
 }
 
 function str_match(matchers, t){
-    var res = true;
-    for(var i = 0; i < matchers.length; i++)
+    let res = true;
+    for(let i = 0; i < matchers.length; i++)
         res = res && matchers[i].test(t)
     return res;
 }
@@ -427,9 +427,7 @@ function setMouseHandlers(){
         .on("dblclick", "li", r_authDblc);
     $("#papList")
         .on("click", "li", function(event){
-            var idClick = event.target.id,
-                idClick = idClick.substring(1,idClick.length),
-                paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
+            let paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
             setPapHandlers()
             clickHandler(paper)
         })
@@ -450,9 +448,9 @@ function setMouseHandlers(){
 }
 
 function updateAuthDict(pf){
-    for(var j = 0; j < pf.length; j++){
-        var auths = pf[j].authsId
-        for(var i = 0; i < auths.length; i++)
+    for(let j = 0; j < pf.length; j++){
+        let auths = pf[j].authsId
+        for(let i = 0; i < auths.length; i++)
             if(authDict[auths[i]][2].length == 0 ){
                 authDict[auths[i]][2] = papers.filter(function(el){
                         return el.authsId.includes(auths[i])
@@ -466,7 +464,7 @@ function updateAuthDict(pf){
                     curr_idx = 0
                 list_p[0].x_bar = 0
                 hist.push([curr_year, 1])
-                for(var z = 1; z < authDict[auths[i]][2].length; z++){
+                for(let z = 1; z < authDict[auths[i]][2].length; z++){
                     if(curr_year == list_p[z].year){
                         hist[curr_idx][1]++
                         list_p[z].x_bar= hist[curr_idx][1]-1
@@ -478,7 +476,7 @@ function updateAuthDict(pf){
                         list_p[z].x_bar = 0
                     }        
                 }
-                for(var z = 1; z < authDict[auths[i]][2].length; z++){
+                for(let z = 1; z < authDict[auths[i]][2].length; z++){
                     let ln = hist.filter(function (el) { return el[0] == authDict[auths[i]][2][z].year; })[0][1]
                     //console.log(ln)
                     authDict[auths[i]][2][z].x_bar = authDict[auths[i]][2][z].x_bar/ln
@@ -495,26 +493,26 @@ function updateAuthDict(pf){
 function printCits(){
     let thehtml = ""
     if(idPs.includes(idP)){
-        var inCi = papersCit[idP][0],
+        let inCi = papersCit[idP][0],
             outCi = papersCit[idP][1];
         if(inCi.length > 0){
             thehtml += "<tr class =\"trP\" ><th class =\"thP\" rowspan=\""+inCi.length+"\">In Citations</th>"
-            var inCits =  papers.filter(isInCited1)
+            let inCits =  papers.filter(isInCited1)
             inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"inCits\" id=\"p"+inCits[0].id+"\">"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
-            for (var i = 1; i < inCits.length; i++)
+            for (let i = 1; i < inCits.length; i++)
                 thehtml +="<tr class =\"trP inCits\" id=\"p"+inCits[i].id+"\"><td>"+ inCits[i].value +  ", "+ inCits[i].year +";</td></tr>"
         }
         if(outCi.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+outCi.length+"\">Out Citations</th>"
-            var outCits =  papers.filter(isOutCited1)
+            let outCits =  papers.filter(isOutCited1)
             outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"outCits\"  id=\"p"+outCits[0].id+"\">"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
-            for (var i = 1; i < outCits.length; i++)
+            for (let i = 1; i < outCits.length; i++)
                 thehtml +="<tr class =\"trP outCits\" id=\"p"+outCits[i].id+"\"><td>"+ outCits[i].value +  ', '+ outCits[i].year +';</td></tr>'
         }
         
@@ -525,22 +523,22 @@ function printCits(){
         citations.filter(citFilter);
         if(inC.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+inC.length+"\">In Citations</th>"
-            var inCits =  papers.filter(isInCited)
+            let inCits =  papers.filter(isInCited)
             inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"inCits\" id=\"p"+inCits[0].id+"\">"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
-            for (var i = 1; i < inCits.length; i++)
+            for (let i = 1; i < inCits.length; i++)
                 thehtml +="<tr class =\"trP inCits\" id=\"p"+inCits[i].id+"\"><td>"+ inCits[i].value +  ', '+ inCits[i].year +';</td></tr>'
         }
         if(outC.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+outC.length+"\">Out Citations</th>"
-            var outCits =  papers.filter(isOutCited)
+            let outCits =  papers.filter(isOutCited)
             outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"outCits\" id=\"p"+outCits[0].id+"\">"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
-            for (var i = 1; i < outCits.length; i++)
+            for (let i = 1; i < outCits.length; i++)
                 thehtml +="<tr class =\"trP outCits\" id=\"p"+outCits[i].id+"\"><td>"+ outCits[i].value + ', '+ outCits[i].year +';</td></tr>'
         }
     }
@@ -604,7 +602,7 @@ function setSimulation(){
 }
 
 function append_ico(svgN, url, x, y){
-        var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
+        let svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
         svgimg.setAttributeNS(null,'height','35');
         svgimg.setAttributeNS(null,'width','35');
         svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', url);
@@ -843,9 +841,9 @@ function print_submitting(){
         //id = \"authsPap\"
         let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
         thehtml += "<tr class=\"tr-submitting\">"
-        for(var j = 0; j < rspan; j++){
+        for(let j = 0; j < rspan; j++){
             if (j!=0) thehtml += "<tr>"
-            for (var i = 0; i < 4; i++){
+            for (let i = 0; i < 4; i++){
                  let test_obj = aPrint[ia],
                     fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
                 
@@ -856,7 +854,7 @@ function print_submitting(){
         }
         if(extra > 0){
             thehtml += "<tr>"
-            for (var i = ia; i < aPrint.length; i++){
+            for (let i = ia; i < aPrint.length; i++){
                 let test_obj = aPrint[ia],
                     fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
                 
@@ -867,7 +865,7 @@ function print_submitting(){
     }else{
         
         thehtml += "<tr class=\"tr-submitting\">"
-        for (var i = 0; i < aPrint.length; i++){
+        for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
                 fs = (authColor_r(test_obj)) ? "italic" : "normal";
         
@@ -883,11 +881,11 @@ function print_rew(){
     revDict = {}
     altRev = []
     altRev_obj = []
-    var al = authsReview_obj.length;
-    for(var i = 0; i < al; i++){
+    let al = authsReview_obj.length;
+    for(let i = 0; i < al; i++){
         let suggestion = authsReview_obj[i];
         let found = false, cal = [];
-        for(var key in suggestion.coAuthList) {
+        for(let key in suggestion.coAuthList) {
             if(!(authsExclude.includes(key) || authsReview.includes(key)) && idAs.includes(key))
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
@@ -954,9 +952,9 @@ function setup_searchbars(){
                 start = false;
             }
           this.value = null
-          var isIn = false
+          let isIn = false
           idA_rev = suggestion.id
-          var aName = suggestion.value
+          let aName = suggestion.value
             if(authsReview.includes(idA_rev))
                 isIn = true
             else{
@@ -1011,9 +1009,9 @@ function setup_searchbars(){
                 add_labels()
                 start = false;
             }
-          var isIn = false
+          let isIn = false
           idA = suggestion.id
-          var aName = suggestion.value
+          let aName = suggestion.value
             if(authsExclude.includes(idA))
                 isIn = true
             else{
@@ -1046,14 +1044,14 @@ function setup_searchbars(){
         },
         source: function(request, response) {
           
-            var terms = request.term.split(' '),
+            let terms = request.term.split(' '),
                 matchers = []
             
             terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
   
-          var resultset = [];
+          let resultset = [];
           $.each(papers, function() {
-            var t = this.value;
+            let t = this.value;
             if (this.value && (!request.term || str_match(matchers, t)))
                resultset.push(this)
 

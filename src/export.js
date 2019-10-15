@@ -16,17 +16,17 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-let ftxt = "";
+var ftxt = "";
 
 function get_auth_biblio(id, biblio){
     let abiblio = []
-    for(var i = 0; i < biblio.length; i++)
+    for(let i = 0; i < biblio.length; i++)
         if (biblio[i].authsId.includes(id)){
             let tmp_txt = idPs.includes(biblio[i].id) ? "<span class=\"key-pap\">"+(i+1)+"</span>" : (i+1);
             abiblio.push(tmp_txt)
         }
     let txt = "";
-    for (var i = 0; i < abiblio.length; i++){
+    for (let i = 0; i < abiblio.length; i++){
         txt += (i == abiblio.length-1) ? abiblio[i] : abiblio[i]+", ";
     }return txt
 }
@@ -34,7 +34,7 @@ function get_auth_biblio(id, biblio){
 function export_altRev(id, biblio){
     if(!revDict[id]) return "no alternate reviewers";
     let dic = revDict[id], txt = "<span class=\"eli-alt\">";
-    for (var i = 0; i < dic.length; i++){
+    for (let i = 0; i < dic.length; i++){
         let aut = dic[i] 
         txt += aut[1]+" [" +get_auth_biblio(aut[0], biblio)+"]"
         if(i < dic.length-1) txt+=", "   
@@ -45,7 +45,7 @@ function export_altRev(id, biblio){
 function pap_auths1(pap){
     let txt = "<span class=\"eli-autp\">",
         aIds = authors.filter( x => pap.authsId.includes(x.id))
-    for (var i = 0 ; i< aIds.length; i++)
+    for (let i = 0 ; i< aIds.length; i++)
         txt += (i == aIds.length -1) ? aIds[i].value.toUpperCase() : aIds[i].value.toUpperCase()+", ";
     return txt+"</span>";
 }
@@ -53,7 +53,7 @@ function pap_auths1(pap){
 function pap_auths(pap){
     let txt = "<span class=\"eli-autp\">",
         aIds = authsDef.filter( x => pap.authsId.includes(x.id))
-    for (var i = 0 ; i< aIds.length; i++)
+    for (let i = 0 ; i< aIds.length; i++)
         txt += (i == aIds.length -1) ? aIds[i].value.toUpperCase() : aIds[i].value.toUpperCase()+", ";
     return txt+"</span>";
 }
@@ -70,8 +70,8 @@ function print_biblio(biblio){
         inner_txt = "<span class=\"eli eli-title1\">References:</span><br>"
         //ftxt += "References:\n"
         
-        for(var i = 0; i < biblio.length; i++){
-            var pap = biblio[i]
+        for(let i = 0; i < biblio.length; i++){
+            let pap = biblio[i]
             let ref = idPs.includes(pap.id) ? "<span class=\"key-pap\">["+(i+1)+"]</span> " : "["+(i+1)+"] ";
             txt += ref + pap.year +" "+pap_auths(pap)+": <span class=\"eli-pap\">"+pap.value +"</span>. "+ (pap.venue ? pap.venue : pap.jN) + "<br>";
             
@@ -93,7 +93,7 @@ function print_revs(biblio){
         inner_txt += "<span class=\"eli eli-title1\"> Selected Reviewers:</span><br>"
         //ftxt = "Selected Reviewers:\n"
         
-        for (var i = 0; i < authsReview_obj.length; i++){
+        for (let i = 0; i < authsReview_obj.length; i++){
             let aut = authsReview_obj[i] 
             txt += (i+1)+") "+aut.value+" [" +get_auth_biblio(aut.id, biblio)+"] - " + export_altRev(aut.id, biblio) + "<br>";
             
@@ -133,7 +133,7 @@ function export_file(){
     ret += "\n"
     
     if(authsExclude_obj.length > 0){
-        for(var i  = 0; i < authsExclude_obj.length-1; i++)
+        for(let i  = 0; i < authsExclude_obj.length-1; i++)
             ret += authsExclude_obj[i].id+sep1
                 +authsExclude_obj[i].value+sep2
         ret += authsExclude_obj[authsExclude_obj.length-1].id+sep1
@@ -142,7 +142,7 @@ function export_file(){
     ret += "\n"
     
     if(authsReview_obj.length > 0){
-        for(var i  = 0; i < authsReview_obj.length-1; i++)
+        for(let i  = 0; i < authsReview_obj.length-1; i++)
             ret += authsReview_obj[i].id+sep1
             +authsReview_obj[i].value+sep2
         ret += authsReview_obj[authsReview_obj.length-1].id+sep1
@@ -150,7 +150,7 @@ function export_file(){
     }
     ret += "\n"
     
-    for(var i  = 0; i < idPs.length-1; i++){
+    for(let i  = 0; i < idPs.length-1; i++){
         ret += idPs[i]+sep1+paps_obj.filter((el) => el.id === idPs[i])[0].value+sep2
     }
     ret += idPs[idPs.length-1]+sep1+paps_obj.filter((el) => el.id === idPs[idPs.length-1])[0].value
@@ -184,9 +184,9 @@ function export_session(){
         
         ftxt = export_file()
         
-        var textFile = null,
+        let textFile = null,
         makeTextFile = function (text) {
-            var data = new Blob([text], {type: 'text/plain'});
+            let data = new Blob([text], {type: 'text/plain'});
 
             // If we are replacing a previously generated file we need to
             // manually revoke the object URL to avoid memory leaks.
@@ -205,7 +205,7 @@ function export_session(){
         document.getElementById("export-dialog").innerHTML = inner_txt
         
         $( "#export-dialog" ).dialog( "open" );
-        var link = document.getElementById('download_link');
+        let link = document.getElementById('download_link');
         link.setAttribute('download', 'session.txt');
         link.href = makeTextFile(ftxt);
         /*
@@ -213,7 +213,7 @@ function export_session(){
 
         // wait for the link to be added to the document
         window.requestAnimationFrame(function () {
-          var event = new MouseEvent('click');
+          let event = new MouseEvent('click');
           link.dispatchEvent(event);
           document.body.removeChild(link);
         });*/
@@ -230,9 +230,9 @@ function export_fileb(){
     
     let txt = export_file()
 
-    var textFile = null,
+    let textFile = null,
     makeTextFile = function (text) {
-        var data = new Blob([text], {type: 'text/plain'});
+        let data = new Blob([text], {type: 'text/plain'});
 
         // If we are replacing a previously generated file we need to
         // manually revoke the object URL to avoid memory leaks.
@@ -246,14 +246,14 @@ function export_fileb(){
         return textFile;
     }
 
-    var link = document.createElement('a');
+    let link = document.createElement('a');
     link.setAttribute('download', 'session.txt');
     link.href = makeTextFile(txt);
     document.body.appendChild(link);
 
     // wait for the link to be added to the document
     window.requestAnimationFrame(function () {
-      var event = new MouseEvent('click');
+      let event = new MouseEvent('click');
       link.dispatchEvent(event);
       document.body.removeChild(link);
     });

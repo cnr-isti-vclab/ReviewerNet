@@ -1,19 +1,18 @@
 var current_query_result = [];
 
 function p_search(queries, full_queries){
-    var res = [], j = 0;
+    let res = [], j = 0;
     
     for( j = 0; j < queries.length; j++){
-        var query = queries[j], fullq = full_queries[j]
+        let query = queries[j], fullq = full_queries[j]
         
-        if(query.length < 10) return;
         papercount = {};
-        var words = query.match(/(\w)+/ug);
+        let words = query.match(/(\w)+/ug);
         words = words.map((w)=>w.toLowerCase());
 
         words.forEach( (w)=> { 
             if(terms[w]) {
-                //console.log(w, terms[w][0], terms[w][1], 1/terms[w].length);
+                
                 terms[w].forEach( (i) => {
                     let weight = Math.exp(-terms[w].length/10);
                     weight = 1;
@@ -25,42 +24,68 @@ function p_search(queries, full_queries){
             }
         });
 
-        var bestmatches = [];
+        let bestmatches = [];
         for(i in papercount)
             bestmatches.push({ paper: i, count: papercount[i], title: papers[i].value });
         bestmatches = bestmatches.sort((a, b) => b.count - a.count ).slice(0, 3);
         res.push({'query':fullq, 'bestm':bestmatches, 'idx':0, 'confirmed': false})
-//        html += `<hr><p>Citation: <span style="color:red">${query}</span></p>`;
-//        bestmatches.forEach((m) => { html += `<p>Paper: ${m.paper} Score ${m.count.toFixed(2)}: ${papers[m.paper].value}</p>`; });
+
     }
-//    document.getElementById('results').innerHTML = html;
+
     return res
 }
 function search_biblio2(imports, query){
     
-    let res = [],
-        not_found = 0,
-        titles = [];
     
-            imports.forEach((impr) => {
-                titles.push(impr.title ? impr.title : "")
-            })
+    let i = 0, titles = [];
+        
+    for(i = 0; i< query.length; i++){
+        let impr = imports[i];
+        titles.push(impr.title ? (impr.title.length > 10 ? impr.title : query[i]) : query[i])
+    }
+     
+    return p_search(titles, query)
+;
+}
+
+function import_from_biblio(imports, query){
+
+    //$( "#biblio-dialog" ).dialog( "close" );
+    clickBiblio = false;
+    let not_found = 0, resultset = [], res;
+    $("#biblio-txt").css("background", "lightgray")
     
-            res = p_search(titles, query)
-            /*
-
-            p_search and options
-
-            resultset.push({'query':query[i], 'class':'query_not_found'})
-            not_found++
-            */
-
+    current_query_result = []
+    res = search_biblio2(imports, query)
+    print_query_result(res)
     
-    return res;
+    current_query_result = res
+    // set_query_handlers()
+    let dom_ell = document.getElementsByClassName("query-btn"),
+        i = 0, len = dom_ell.length;
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = print_query_alt
+    } 
+    
+    dom_ell = document.getElementsByClassName("confirm_parse")
+    i = 0
+    len = dom_ell.length
+    
+    for (i = 0; i < len; i++) {
+        dom_ell[i].onclick = confirm_parsed_paper
+    }
+    /*
+    
+    tf-idf nella p_search?
+    
+    */    
+    $("#biblio-txt").css("background", "white")
+
 }
 
 function confirm_parsed_paper(event){
-    var idClick = event.target.id,
+    let idClick = event.target.id,
         idq = parseInt(idClick.substring(3, idClick.length)),
         chosen_p_idx = current_query_result[idq].bestm[current_query_result[idq].idx].paper,
         papr = papers[chosen_p_idx];
@@ -111,20 +136,20 @@ function confirm_parsed_paper(event){
 }
 
 function print_query_u_el(idq, result, class_){
-    var papr = papers[result.bestm[0].paper], query = result.query,
+    let papr = papers[result.bestm[0].paper], query = result.query,
          auths = pap_auths1(papr), title = papr.value, year = papr.year, jon = papr.jN ? papr.jN : papr.venue;
     //<td><button class="${class_}" type="button">?</button></td>
     return `<tr id="q${idq}"><td class="query ${class_}"><button type="button" id="qb${idq}" class="query-btn"><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td><button id="cqb${idq}" class="confirm_parse" type="button">Confirm paper</button></td></tr>`;
 }
 
 function reprint_query_back(event){
-    var idq = parseInt(event.currentTarget.id.match(/[0-9]+/)[0]),
+    let idq = parseInt(event.currentTarget.id.match(/[0-9]+/)[0]),
         chosen_p_idx = current_query_result[idq].bestm[current_query_result[idq].idx].paper,
         papr = papers[chosen_p_idx],
         query = current_query_result[idq].query,
         auths = pap_auths1(papr), title = papr.value, year = papr.year, jon = papr.jN ? papr.jN : papr.venue;
 
-    var text =  `<td class="query"><button id="qb${idq}"type="button" class="query-btn" onclick="print_query_alt(event)" ><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td>`;
+    let text =  `<td class="query"><button id="qb${idq}"type="button" class="query-btn" onclick="print_query_alt(event)" ><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td>`;
     
     if(current_query_result[idq].confirmed)
         text += `<button id="cqb${idq}" class="confirm_parse" type="button" onclick="confirm_parsed_paper(event)" style="color:red">Remove paper</button></td>`
@@ -139,7 +164,7 @@ function reprint_query_back(event){
 }
 
 function reprint_query(event){
-    var idClick = event.currentTarget.id,
+    let idClick = event.currentTarget.id,
         idlst = idClick.substring(2,idClick.length).split("."),
         idq = parseInt(idlst[1]),
         idc = parseInt(idlst[0]), 
@@ -148,7 +173,7 @@ function reprint_query(event){
     
     current_query_result[idq].idx = idc
     
-    var text =  `<td class="query"><button id="qb${idq}"type="button" class="query-btn"><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td><button id="cqb${idq}" class="confirm_parse" onclick="confirm_parsed_paper(event)" type="button">Confirm paper</button></td>`
+    let text =  `<td class="query"><button id="qb${idq}"type="button" class="query-btn"><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td><button id="cqb${idq}" class="confirm_parse" onclick="confirm_parsed_paper(event)" type="button">Confirm paper</button></td>`
     
     document.getElementById("q"+idq).innerHTML = text;
     
@@ -157,7 +182,7 @@ function reprint_query(event){
 }
 
 function print_query_alt(event){
-    var idClick = event.currentTarget.id,
+    let idClick = event.currentTarget.id,
         idq = parseInt(idClick.substring(2,idClick.length)),
         idc = current_query_result[idq].idx, 
         paprs = current_query_result[idq].bestm,
@@ -167,7 +192,7 @@ function print_query_alt(event){
     if(current_query_result[idq].confirmed) return;
     
     for( i = 0; i< paprs.length; i++){
-        var papr = papers[paprs[i].paper],
+        let papr = papers[paprs[i].paper],
             auths = pap_auths1(papr), 
             title = papr.value, year = papr.year, 
             jon = papr.jN ? papr.jN : papr.venue;
@@ -188,14 +213,14 @@ function print_query_alt(event){
 }
 
 function print_query_el(result){
-        var papr = papers[result.bestm[0].paper], query = result.query, 
+        let papr = papers[result.bestm[0].paper], query = result.query, 
             auths = pap_auths1(papr), title = papr.value, year = papr.year, jon = papr.jN ? papr.jN : papr.venue;
     //<td> <button class="query_ok" type="button">&#10003;</button></td>
     return `<tr><td class="query query_ok"><p>Query: ${query}</p><hr style="margin: 5px;"/><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></td><td><button class="confirm_parse" type="button">Confirm paper</button></tr>`
 }
 
 function print_query_result(result){
-    var query_tab =  `<table id="query_tab"><tbody>`;
+    let query_tab =  `<table id="query_tab"><tbody>`;
     
     for(i =0; i<result.length; i++)
 //        if(result[i].bestm[0].count <= 3)
