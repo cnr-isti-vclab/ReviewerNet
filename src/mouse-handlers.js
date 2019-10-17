@@ -2,140 +2,6 @@
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
     j_lists = {}, choosen_j = null;
 
-function search_biblio(imports){
-    
-    let resultset = [],
-        not_found = 0;
-    
-    for( let i =0; i<imports.length; i++){
-        /*
-        * For each element parsed we search for the 
-        * relative paper in the dataset using regexp.
-        * We check the occurence of each word in the title of 
-        * papers and pick the paper that matches more temrs
-        */
-        if(imports[i].title && imports[i].title.length >0){
-             let terms = imports[i].title.split(' '),//.slice(1, 4),
-                matchers = [], found = false, j =0;
-
-            terms.map(function (el){ 
-                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
-            })
-
-            while(!found && j < papers.length){
-                 let t = papers[j].value;
-                if (t && str_match(matchers, t)){
-                   addP(papers[j])
-                    resultset.push({'query':query[i], 'class':'query_found'})
-                    
-                    found = true
-                }
-                else j++
-            }     
-            if (!found){
-                resultset.push({'query':query[i], 'class':'query_not_found'})
-                not_found++
-            }
-        }
-    }
-    
-    return [resultset, not_found];
-}
-
-function get_query_year(query){ return query.match(/(?:(?:19|20)[0-9]{2})/) ? query.match(/(?:(?:19|20)[0-9]{2})/)[0] : 0;}
-
-function search_biblio1(imports, query){
-    
-    let resultset = [],
-        not_found = 0;
-    
-    for( let i =0; i<imports.length; i++){
-        /*
-        * For each element parsed we search for the 
-        * relative paper in the dataset using regexp.
-        * We check the occurence of each word in the title of 
-        * papers and pick the paper that matches more temrs
-        */
-        if(imports[i].title && imports[i].title.length > 10 ){
-            
-             let title = imports[i].title,
-                words = title.match(/(\w)+/ug),
-                terms_ = words.map((w)=>w.toLowerCase()),
-                matchers = [], src_papers = [],
-                j =0, k = 0,
-                matching_p = {};
-
-            terms_.map(function (el){ 
-                matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))
-            })
-            
-            src_papers = papers
-            
-            for(j = 0; j < src_papers.length; j++){
-                 let t = src_papers[j].value;
-                
-                for( k = 0; k < matchers.length; k++)
-                    if (t && matchers[k].test(t) )
-                        if(!matching_p[src_papers[j].id]) 
-                            matching_p[src_papers[j].id] = 1
-                        else matching_p[src_papers[j].id]+=1
-            }
-
-            //Get the most similar paper
-             let keys = Object.keys(matching_p), maxp = 0, maxid = "", kk = 0, alternatives = [];
-            
-            for (kk = 0; kk < keys.length; kk++)
-                if(matching_p[keys[kk]] > maxp && matching_p[keys[kk]] >= (terms_.length*0.2) ){
-                    maxp = matching_p[keys[kk]]
-                    maxid = keys[kk]
-                }
-            
-            if (maxp == 0){
-                 let res = [];
-                
-                console.log("p_search")
-                res = p_search(queries)
-                console.log("result")
-                console.log(res)
-                /*
-                
-                p_search and options
-                
-                resultset.push({'query':query[i], 'class':'query_not_found'})
-                not_found++
-                */
-                
-            }
-            else{
-                
-                /*
-                Mostro risultato, onclick parte p_search
-                */
-                
-                 let papf = papers.filter((el)=>el.id == maxid)[0]
-                
-                resultset.push({'query':query[i], 'paper':papf, 'alt':alternatives, 'class':'query_found'})
-                
-            
-                //addP(papf)
-                //console.log("Found a paper for query:")
-                //console.log(query)
-                //console.log(papf.value)
-                
-            }
-//            }else{
-//                addP(src_papers[j])
-//                resultset.push({'query':query[i], 'class':'query_found'})
-//
-//                found = true
-//            }
-        }
-    }
-    
-    return [resultset, not_found];
-}
-
-
 function biblio_click_handler(){
      if($( "#biblio-dialog" ).dialog( "isOpen" )){
          $( "#biblio-dialog" ).dialog( "close" );
@@ -160,8 +26,14 @@ function submit_biblio(){
     //console.log(len+"\n"+document.getElementById("biblio-txt").value)
     let URL = "http://128.148.7.71/citations/create",
         URL1 = "http://anystyle.isti.cnr.it",
-        params = 'query='+document.getElementById("biblio-txt").value,
-        query =  document.getElementById("biblio-txt").value.split("\n");
+        query =  document.getElementById("biblio-txt").value.split("\n"), tmp = query.indexOf("");
+    
+    while( tmp != -1){
+        query.splice(tmp, 1)
+        tmp = query.indexOf("")
+    }
+    
+    let params = 'query='+query.join("\n")
     
     //Send the proper header information along with the request
     http.open('POST', URL1, true);
