@@ -162,6 +162,7 @@ function export_session(){
     
     if($( "#export-dialog" ).dialog( "isOpen" )){
          $( "#export-dialog" ).dialog( "close" );
+        $("#ui-id-1.ui-dialog-title")[0].innerHTML = "Session Snapshot"
         clickExp = false;
     }else{
         clickExp = true;

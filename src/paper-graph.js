@@ -173,7 +173,15 @@ function deleteP(idCk){
                 }    
             }
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-
+        
+        if(c20){
+            svgAxis.selectAll(".jtext")
+            .text(function (d){
+                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
+                return d+" "+num;
+            })
+        }
+        
         setTimeout(function(){ 
             authorBars()
             authorGraph()
@@ -206,6 +214,14 @@ function addPaper(suggestion){
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
+                
+        if(c20){
+            svgAxis.selectAll(".jtext")
+            .text(function (d){
+                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
+                return d+" "+num;
+            })
+        }
         setTimeout(function(){ 
             authorBars()
             authorGraph()

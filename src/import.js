@@ -46,17 +46,34 @@ function loaded(evt) {
     let missed = {
         'submitting':[],
         'rev': [],
-        'papers': []
-        },
-        n_missed = 0, import_errors = "";
+        'papers': [], 'ms':0, 'mr':0, 'mp':0
+        }, import_errors = `<table id="import-table"><tbody>`,
+        params = [], n_missed = 0, submitting = [], rev = [], paps = [],
+        blank_row = `<tr><td style="color:transparent">a</td></tr>`;
     
     //reset all and then repopulate vizs
     
     let session = fileString.split('\n');
-    if(session.length < 3){
-        alert("Weird file format, cannot load. l="+session.length);
+    if(session.length == 3){
+        //old session file wt no reviewers
+        params = session[0].split('.')
+        submitting = session[1].split('.')
+        paps = session[2].split('.')
+    }else if(session.length == 4){
+        //Either new session file (can be both full or not) or an old full session file
+        params = session[0].split('.')
+        submitting = session[1].includes(sep1) ? session[1].split(sep2) : session[1].split('.')
+        rev = session[2].includes(sep1) ? session[2].split(sep2) : session[2].split('.')
+        submitting = submitting[0] == 0 ? null : submitting
+        rev = rev[0] == "" ? null : rev
+        paps = session[3].includes(sep1) ? session[3].split(sep2) : session[3].split('.')
+    }else{
+        //Wierd session file
+         alert("Weird file format, cannot load.");
         return;
     }
+    
+    
     
     if(start){
         let delta = maxYear-minYear
@@ -73,11 +90,7 @@ function loaded(evt) {
         start = false;
     }
     
-    let params = session[0].split('.'),
-        submitting = session[1].includes(sep1) ? session[1].split(sep2) : session[1].split('.'),
-        rev = session[2].includes(sep1) ? session[2].split(sep2) : session[2].split('.'),
-        paps = session[3].includes(sep1) ? session[3].split(sep2) : session[3].split('.');
-    
+
     $('#papList').html("")
     $('#authList').html("")
     $('#rauthList').html("")
@@ -102,29 +115,37 @@ function loaded(evt) {
     $( "#lastYearOfP" ).spinner("value", thetaY)
     $( "#MNP" ).spinner("value", thetaPap)
     
+    function print_missing_table_row(elt, eln){
+        let l1 = missed[elt].length, l2 = missed['m'+elt[0]];
+        
+        if(l1 + l2 ==0){
+            let authstr = elt == 'submitting' ? "conflicting researcher(s)" : " candidate reviewer(s)" ;
+            import_errors += `<tr><th>Missed ${elt == "papers" ? "key paper(s)" : authstr}</th></tr>${blank_row}`
+        }
+        if(eln) {
+            missed[elt].push(eln)
+            import_errors +=  `<tr><td>${eln}</td></tr>`  
+        }else missed['m'+elt[0]]+=1
+    }
+    
     //riaggiungo submitting
-    if(submitting[0].length > 0){
+    if(submitting && submitting.length > 0){
         for(let i = 0; i < submitting.length; i++){
             let sub_id = submitting[i].includes(sep1) ? submitting[i].split(sep1)[0] : submitting[i],
                 sub_name =submitting[i].includes(sep1) ? submitting[i].split(sep1)[1] : null
             
             try{
-            add_submitting(authors.filter(function(el){ return el.id === sub_id;})[0])
+                add_submitting(authors.filter(function(el){ return el.id === sub_id;})[0])
             }catch (e) {
-             // statements to handle any exceptions
-             n_missed += 1
-             if(sub_name){
-                if(missed['submitting'].length == 0)
-                    import_errors += "\nSubmitting Authors:\n"
-                missed['submitting'].push(sub_name)
-                import_errors += sub_name+"\n"   
-             }
-                console.log("Cannot load "+ submitting[i])
-                console.log(e); // pass exception object to error handler
+                n_missed += 1
+                print_missing_table_row('submitting', sub_name)
             }
         }
+        if(missed['ms']>0) import_errors +=  `<tr><td>${missed['ms']} unknown author${missed['ms'] > 1 ? 's' : ''}</td></tr>`
+        import_errors += blank_row
     }
-    if(rev[0].length > 0){
+    
+    if(rev && rev.length > 0){
     //riaggiungo reviewers
         for(let i = 0; i < rev.length; i++){
             let rev_id = rev[i].includes(sep1) ? rev[i].split(sep1)[0] : paps[i],
@@ -135,16 +156,11 @@ function loaded(evt) {
             }catch (e) {
              // statements to handle any exceptions
              n_missed += 1
-                if(rev_name){
-                    if(missed['rev'].length == 0)
-                        import_errors += "\nCandidate Reviewers:\n"
-                    missed['rev'].push(rev_name)
-                    import_errors += rev_name+"\n"
-                }
-                console.log("Cannot load "+ rev[i])
-                console.log(e); // pass exception object to error handler
+            print_missing_table_row('rev', rev_name)
             }    
         }
+         if(missed['mr']>0) import_errors +=  `<tr><td>${missed['mr']} unknown author${missed['mr'] > 1 ? 's' : ''}</td></tr>`  
+        import_errors +=  blank_row
     }
     
         //riaggiungo papers
@@ -156,22 +172,17 @@ function loaded(evt) {
             }catch (e) {
              // statements to handle any exceptions
              n_missed += 1
-                if(pap_name){
-                    if(missed['papers'].length == 0)
-                        import_errors += "\nKey Papers:\n"
-                    missed['papers'].push(pap_name)
-                    import_errors += pap_name+"\n"
-                }
-                console.log("Cannot load "+ paps[i])
-                console.log(e); // pass exception object to error handler
+            print_missing_table_row('papers', pap_name)
+
             }
         }
     
+     if(missed['mp']>0) 
+         import_errors +=  `<tr><td>${missed['mp']} unknown paper${missed['mp'] > 1 ? 's' : ''}</td></tr>` 
+    import_errors += blank_row
     
-    if(n_missed > 0)
-        alert(n_missed+" error"+(n_missed>1?"s":"")+" occured while importing session file, you might be using a different dataset version than the session file one.\n"+import_errors)
-    
-    console.log(missed)
+        
+
     
     if(papersFiltered.length > 0 && papersFiltered)
     {paperGraph(papersFiltered, citPrint, idPs, simulation)
@@ -183,6 +194,11 @@ function loaded(evt) {
     }, 1000);
 
     }
+    
+         clickExp = true;
+     $("#ui-id-1.ui-dialog-title")[0].innerHTML = "Import result"
+     document.getElementById("export-dialog").innerHTML = n_missed > 0? import_errors + `</tbody></table>` : `<p>Session file successfully loaded:<br> </p><p style="text-align:center">${submitting ? submitting.length : 0} conflicting researcher${submitting && submitting.length <= 1 ? '': 's'}<br>${rev ? rev.length : 0} candidate reviewe${rev && rev.length <= 1 ? '': 's'}<br>${paps ? paps.length : 0} paper${paps && paps.length <= 1 ? '': 's'}</p>`
+     $( "#export-dialog" ).dialog( "open" );
 }
 
 function startRead(evt) {

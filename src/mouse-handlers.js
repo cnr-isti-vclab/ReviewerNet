@@ -191,7 +191,10 @@ function cmap_dbl(){
             .attr("x", 35)
             .attr("text-anchor", "left")  
             .style("font-size", "8px")
-            .text((d)=>d)
+            .text(function (d){
+                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
+                return d+" "+num;
+        })
     }else{
         $(".cmpClass").show()
         d3.selectAll(".jrect").remove()

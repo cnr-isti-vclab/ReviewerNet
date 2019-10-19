@@ -472,7 +472,7 @@ width: 15%;
 }
 
 #ui-id-2, #ui-id-1, #ui-id-3, .ui-autocomplete {
-	border: 1px solid #999;
+	border: 0px;
 	max-height: 150px;
 	max-width: 350px;
 	background: rgba( 234, 234, 234, 0.934 );
@@ -551,7 +551,7 @@ hr {
     float: right;
     position: absolute;
     background-color: rgba( 78, 89, 136, 0.298 );
-    transform:  translateY(10%)scale(0.8);
+    transform:  translateY(-10%)scale(0.8);
 }
 
 .col-sm-8 {
@@ -1029,7 +1029,7 @@ table#bnt-table td {
 
 .tb_labels {
     float: left;
-    font-size: 0.8em;
+    font-size: 0.7em;
     font-variant-caps: petite-caps; 
     color: #385e84; 
     font-weight: bold;
@@ -1170,4 +1170,17 @@ table#query_tab td {
 
 table#query_tab tr:nth-child(even) {
   background-color: lightgray;/*#d2e3f3;*/
+}
+
+
+table#import-table th {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+
+table#import-table td {
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: center
 }
