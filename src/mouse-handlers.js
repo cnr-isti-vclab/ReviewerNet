@@ -18,6 +18,22 @@ function biblio_click_handler(){
     }
 }
 
+function clean_biblio_query(query){
+    let aquery = query.split('\n\n'),
+        query_res = [];
+    
+    for(let i = 0; i < aquery.length; i++){
+        let cits1 = aquery[i];
+        
+        if(cits1 && !(cits1 == "") && !(cits1 == "\n") && !(cits1.length <= 15)){
+            cits1 = cits1.replace(/\[[^\]]+\]/g, '');
+            cits1 = cits1.replace(/\n/g, ' ');
+            query_res.push(cits1);
+        }
+    }
+    return query_res;
+}
+
 function submit_biblio(){
     
       let http = new XMLHttpRequest();
@@ -26,13 +42,8 @@ function submit_biblio(){
     //console.log(len+"\n"+document.getElementById("biblio-txt").value)
     let URL = "http://128.148.7.71/citations/create",
         URL1 = "http://anystyle.isti.cnr.it",
-        query =  document.getElementById("biblio-txt").value.split("\n"), tmp = query.indexOf("");
-    
-    while( tmp != -1){
-        query.splice(tmp, 1)
-        tmp = query.indexOf("")
-    }
-    
+        query =  clean_biblio_query(document.getElementById("biblio-txt").value);
+
     let params = 'query='+query.join("\n")
     
     //Send the proper header information along with the request
@@ -237,7 +248,8 @@ function create_jtext(instance, journals){
 }
 
 function readJournals(path, instance){
-     let jj = JSON.parse(readTextFile(path)),
+     let tfile = readTextFile(path),
+         jj = JSON.parse(tfile),
         jns = jj.journals,
         n = jns.length,
         npp = jj.papers ? jj.papers : 0,
@@ -262,8 +274,8 @@ function clickOnGo(){
             return 
         }
             
-       let ppath = "datasets/p_"+choosen_j+"_2019-01-31.txt",
-            apath = "datasets/a_"+choosen_j+"_2019-01-31.txt";
+       let ppath = "datasets/p_"+choosen_j+"_2019-10-01.txt",
+            apath = "datasets/a_"+choosen_j+"_2019-10-01.txt";
 
     show_loading()
 
@@ -281,7 +293,7 @@ function clickOnGo(){
 }
 
 function clickOnJ(x1){
-    console.log(x1.innerText)
+    //console.log(x1.innerText)
     let x = x1.id, instance = x.split("-")[0]
     choosen_j = instance
     document.getElementById('j-list').innerHTML = ""
@@ -290,13 +302,14 @@ function clickOnJ(x1){
     if(!j_lists[instance]){
         j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
         //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+        readJournals("datasets/j_"+instance+"_2019-10-01.txt", instance)
     }
     //e mostro testi con stats
+    //print_j_stats(j_lists[instance]['texts'][0], j_lists[instance]['texts'][1])
+    
     document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
     document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
     document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2019, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
-    
     
 }
 

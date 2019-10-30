@@ -25,8 +25,11 @@ function p_search(queries, full_queries){
         });
 
         let bestmatches = [];
-        for(i in papercount)
+        for(let i in papercount)
             bestmatches.push({ paper: i, count: papercount[i], title: papers[i].value });
+        
+        //not found se papercount.isempty in entrambe le search || top score <=3 sia con anystyle che full query???
+        
         bestmatches = bestmatches.sort((a, b) => b.count - a.count ).slice(0, 3);
         res.push({'query':fullq, 'bestm':bestmatches, 'idx':0, 'confirmed': false})
 
@@ -34,7 +37,7 @@ function p_search(queries, full_queries){
 
     return res
 }
-function search_biblio2(imports, query){
+function search_biblio(imports, query){
     
     
     let i = 0, titles = [];
@@ -56,7 +59,7 @@ function import_from_biblio(imports, query){
     $("#biblio-txt").css("background", "lightgray")
     
     current_query_result = []
-    res = search_biblio2(imports, query)
+    res = search_biblio(imports, query)
     print_query_result(res)
     
     current_query_result = res
@@ -173,7 +176,7 @@ function reprint_query(event){
     
     current_query_result[idq].idx = idc
     
-    let text =  `<td class="query"><button id="qb${idq}"type="button" class="query-btn"><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td><button id="cqb${idq}" class="confirm_parse" onclick="confirm_parsed_paper(event)" type="button">Confirm paper</button></td>`
+    let text =  `<td class="query"><button id="qb${idq}"type="button"  onclick="print_query_alt(event)" class="query-btn"><p>Query: ${query}</p><hr style="margin: 5px;" /><p>Result: ${year} ${auths}: <span class="eli-pap">${title}</span> ${jon}</p></button></td><td><button id="cqb${idq}" class="confirm_parse" onclick="confirm_parsed_paper(event)" type="button">Confirm paper</button></td>`
     
     document.getElementById("q"+idq).innerHTML = text;
     

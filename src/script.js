@@ -329,16 +329,6 @@ function hide_loading(){
 
 function setMouseHandlers(){
     
-    $("#default_inst").on("click", function(){
-        let ppath = "datasets/p_cg_2019-01-31.txt",
-            apath = "datasets/a_cg_2019-01-31.txt";
-        
-        show_loading()
-        
-        import_ds(ppath, apath)
-        
-        hide_loading()
-    })
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
 
@@ -1156,7 +1146,7 @@ $(function (){
      if(!j_lists[instance]){
         j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
         //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2019-01-31.txt", instance)
+        readJournals("datasets/j_"+instance+"_2019-10-01.txt", instance)
     }
     
     clickOnGo()
