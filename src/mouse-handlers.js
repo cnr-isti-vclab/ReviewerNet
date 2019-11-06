@@ -1,6 +1,6 @@
  var texts = [],
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
-    j_lists = {}, choosen_j = null;
+    j_lists = {}, choosen_j = null, version =  "_2018-05-03.txt";
 
 function biblio_click_handler(){
      if($( "#biblio-dialog" ).dialog( "isOpen" )){
@@ -274,8 +274,8 @@ function clickOnGo(){
             return 
         }
             
-       let ppath = "datasets/p_"+choosen_j+"_2019-10-01.txt",
-            apath = "datasets/a_"+choosen_j+"_2019-10-01.txt";
+       let ppath = "datasets/p_"+choosen_j+version,
+            apath = "datasets/a_"+choosen_j+version;
 
     show_loading()
 
@@ -302,7 +302,7 @@ function clickOnJ(x1){
     if(!j_lists[instance]){
         j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
         //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2019-10-01.txt", instance)
+        readJournals("datasets/j_"+instance+(choosen_j == "pers" ? "" : version), instance)
     }
     //e mostro testi con stats
     //print_j_stats(j_lists[instance]['texts'][0], j_lists[instance]['texts'][1])
