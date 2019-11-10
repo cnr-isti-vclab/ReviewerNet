@@ -1016,6 +1016,17 @@ function setup_searchbars(){
             setTimeout(function(){$('#authors-autocomplete')[0].value = ""}, 200)
         }
     })
+     .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let col = "black";
+        
+            if(authsReview.includes(item.id)) col = "#5263fe";
+            else if(authsExclude.includes(item.id)) col = "#be27be";
+            
+              return $( "<li>" )
+                .append( `<div style = "color:${col}";>` + item.value+`</div>` )
+                .appendTo( ul );
+    };
+
 
     $('.biginput').keypress(function(e) {
         if (e.keyCode === 13) {
@@ -1069,7 +1080,9 @@ function setup_searchbars(){
         }
       })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-       let name = item.label
+       let name = item.label,
+            elw = this.element.width();
+       
         if(item.value.length > 45)
             name = name.substring(0,45) + "..."
         if(papersPrint.includes(item.id)){
