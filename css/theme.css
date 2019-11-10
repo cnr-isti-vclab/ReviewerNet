@@ -76,7 +76,7 @@
 }
 
 .ui-menu-item{
-    font-size: 0.85em;
+    font-size: 0.65em;
     padding: 0px;
     margin: 1px
 }
@@ -434,7 +434,6 @@ width: 15%;
   margin: 0;
   padding: 5px;
   border-radius: 3px;
-  margin: 5px 0 0 0;
 }
 
 .checkbox-inline, .radio-inline {
@@ -812,7 +811,6 @@ hr {
 
 .td1 {
     width: 30%;
-    padding-bottom: 2%;
 }
 
 .button-label {
@@ -821,11 +819,9 @@ hr {
 }
 
 .td2 {
-    width: 70%
+    width: 10%
 }
-.button-bar {
-    width: 70%
-}
+
 
 form{
     width: 99%;
@@ -974,12 +970,6 @@ table#bnt-table td {
     background-color: lightgray
 }
 
-#export-btn {
-	border-width: 0;
-	height: 18px;
-	width: 22px;
-	transform: translateX(-10%);
-}
 
 #export_dropup{
     position: relative;
@@ -989,8 +979,8 @@ table#bnt-table td {
 .aform{
     margin: 0; 
     background-color: rgba( 0, 0, 0, 0 ); 
-    width: 90%;
-    float: right
+    width: 100%;
+    float: left
 }
 
 .key-pap{
@@ -1185,3 +1175,30 @@ table#import-table td {
     font-style: italic;
     text-align: center
 }
+.td3 {
+    width: 68%
+}
+
+.cpbtn {
+    border:0px;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    background: none; 
+    float: right;
+}
+
+.cpbtn:hover{background-color: #e8e8e8}
+
+.cpbtn:hover{
+    cursor: pointer;
+    
+}
+
+.cpimg {
+    width: 21px;
+    height: 19px;
+}
+
+.dbtn:hover{cursor: pointer;background-color: #e8e8e8}
+

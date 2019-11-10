@@ -266,7 +266,7 @@
                             <table>
                               <tr id="submitting_row">
                                 <td id="td1" class="td1">
-                                  <span id="conflict-a" class="text-left tb_labels"  style="transform: translateY(55%);">Conflicting Researchers <span id="authors-badge"class="badge"></span></span>
+                                  <span id="conflict-a" class="text-left tb_labels" >Conflicting Researchers <span id="authors-badge"class="badge"></span></span>
                                   </td>
                                 <td id = "td2" class ="button-bar">
                                     <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
@@ -285,14 +285,14 @@
                              <table>
                               <tr>
                                 <td class="td1" class = "button-label">
-                                 <span id="review-a" class="text-left tb_labels" style="transform:  translateY(55%);">Selected Reviewers<span id="rauthors-badge"class="badge"></span></span>
+                                 <span id="review-a" class="text-left tb_labels" style="float: left">Selected Reviewers<span id="rauthors-badge"class="badge"></span></span>
                                     </td>
-                                <td class ="td2 button-bar">
-                                    <div id="export_dropup" class="done_submit">
+                                <td class ="td2">
                                      <div id="export-dialog" title="Session Snapshot"  class = "my-dialog">
                                     </div>
-                                    <button id ="export-btn"  class = "pop-up" type="button" title = "Export button."><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
-                                    </div>
+                                    <button id ="export-btn"  class = "pop-up cpbtn" type="button" title = "Export button."><img id="export" class = "cpimg" src="imgs/file-export-solid.png" alt="Export Session"></button>
+                                    </td>
+                            <td class ="td3">
                             <form class="aform">
                                 <input name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
@@ -310,19 +310,18 @@
                                 <tbody>
                               <tr>
                                 <td class="td1">
-                                  <span id="area-paper-a" class="text-left tb_labels" style="transform:  translateY(46%);">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
+                                  <span id="area-paper-a" class="text-left tb_labels" style="float: left">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
                                   </td>
                             
 
                                   
                             <td class ="td2 button-bar">
-                            <div id="export_dropup" style="width: 15px">
-                                     <div id="biblio-dialog" title="Import from Bibliography"  class = "my-dialog" style="width: 100%">
+                                <div id="biblio-dialog" title="Import from Bibliography"  class = "my-dialog" style="width: 100%">
                                     </div>
-                                    <button id ="biblio-btn"  class = "pop-up" type="button" title = "Import from Bibliography button." style= "border:0px; background: none;"><img id="biblio" class = "biblio-btn" src="imgs/biblio.svg" style="width: 22px; height: 26px" alt="Import from biblio"
-                                    style=""></button>
-                                    </div> 
-                            <form style="margin: 0 auto; width: 90%; float:right; background-color: rgba( 0, 0, 0, 0 );"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                                <button id ="biblio-btn"  class = "pop-up cpbtn" type="button" title = "Import from Bibliography button." ><img id="biblio" class = "cpimg" src="imgs/file-import-solid.png" style="width: 27px; height: 23px;" alt="Import from biblio"></button>
+                               </td>
+                            <td class ="td3">
+                            <form class="aform"><input name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
                                   </td>
                                   
                                 <!--<td class ="td2">
@@ -388,15 +387,22 @@
               <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet</span> 
             </td>
           <td id = "import">
-              <button class="hiddenSB" id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
+              <button class="dbtn" id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
                 <input type="file" id="input_file" style="display: none;" onchange="startRead()"/> 
                   </td>
           <td id = "export">
-              <button class="hiddenSB" id="export_label" onclick="export_fileb()">Export session</button>
+              <button class="dbtn" id="export_label" onclick="export_fileb()">Export session</button>
                   </td>
                 <td>
                     
-                    <span style="justify-content: center; font-size: 0.75em; color: #1584c0">Default instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
+                    <span style="justify-content: center; font-size: 0.75em; color: #1584c0">Default instance computed on: IEEE TVCG,
+ACM ToG,
+C&G,
+IEEE Vis,
+COMPUT GRAPH FORUM,
+IEEE CG&A,
+SIGGRAPH (pre 2002),
+Springer VIS COMPUT </span> 
 
             </td>
                   <td>
