@@ -1083,8 +1083,8 @@ function setup_searchbars(){
        let name = item.label,
             elw = this.element.width();
        
-        if(item.value.length > 45)
-            name = name.substring(0,45) + "..."
+        if(item.value.length > 52)
+            name = name.substring(0,52) + "..."
         if(papersPrint.includes(item.id)){
             if(idPs.includes(item.id)){
               return $( "<li>" )
