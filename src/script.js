@@ -55,7 +55,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     height = $(".ap").height(),
     heightA = $(".aa").height(),
     heightAG = $(".ag").height(),
-    heightP = 5000, baseHeight = 5000,
+    heightP = 2000, baseHeight = 2000,
     h = height,
     w = width,
     oldw = w,
@@ -76,7 +76,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     minYear = 1995,
     minInCits = 100,
     maxInCits = 0,
-    maxYear = 2019,
+    maxYear = 2018,
     checkboxTP = $('#MNP'),
     //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
@@ -574,15 +574,31 @@ function getPaperSvg(){
 
 function setSimulation(){
     simulation = d3.forceSimulation()
-    simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
-    simulation.force("charge", d3.forceManyBody()
-                .strength(-50)
-                .theta(0.5))
-//                .distanceMin(40)
-//                .distanceMax(140))
+    simulation.force("link", d3.forceLink().id(function(d) { return d.id; }).strength(0.1))
+//    let yforce =  d3.forceY()
+//        .strength(-100)
+//        .y(heightP / 2);
+//    
+//    simulation.force("center",yforce)
+    let frc = d3.forceManyBody()
+                .strength(-30)
+                .theta(0.1);//d3.forceY().strength(-100).y(heightP / 2);
+        simulation.force("charge", frc)
+        .force("collide", d3.forceCollide(10))
         .force("center", d3.forceCenter((w / 2), (heightP / 2)))
-        //.force("y", d3.forceY(-180))
-        //.force("x", d3.forceX())
+        .force("forceY",  d3.forceY().strength(0.015)
+        .y(heightP/2))
+        
+       //.force("y", )
+    
+ //   simulation.force("charge", ) //d3.forceManyBody()
+//                .strength(-50)
+//                .theta(0.5))
+////                .distanceMin(40)
+////                .distanceMax(140))
+ //       .force("center", d3.forceCenter((w / 2), (heightP / 2)))
+//       .force("y", d3.forceY(-180))
+//        //.force("x", d3.forceX())
     simulation.alpha(1)
      simulation.alphaMin(0.02)
      simulation.alphaDecay(0.02)

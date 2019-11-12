@@ -309,7 +309,7 @@ function clickOnJ(x1){
     
     document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
     document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
-    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2019, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2018, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
     
 }
 
