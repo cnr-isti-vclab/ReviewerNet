@@ -464,31 +464,36 @@ popRect = svgP.append("rect")
             .text(function(){return papers1[i].value});
     
     function ticked() {
+        
+         node
+            .attr("cx", function(d) { 
+            var nX = xConstrained(d.year);
+            return nX; })
+            .attr("cy", function(d) { 
+                let offs = 0, ny = Math.max(10 + offs, Math.min(heightP - 20 - offs, d.y));
+                d3.select(this).attr("baseY", () => ny ) 
+            return ny; })
+        
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { 
+            .attr("y1", function(d) { return d.source.y;
+                /*                     
                 let ny = Math.max(30, Math.min(heightP - 20, d.source.y));
                 d3.select(this).attr("baseY1", () => ny ) 
-                return ny; /*d.source.y*/; })
+                return ny; */; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { 
+            .attr("y2", function(d) { return d.target.y;
+                                     /*
                 let ny = Math.max(30, Math.min(heightP - 20, d.target.y));
                 d3.select(this).attr("baseY2", () => ny ) 
-                return ny;})
+                return ny;*/})
             .attr("stroke", function(d) {
             if(d.source.year === d.target.year)
                return "lightgray";
             else return d.source.x < d.target.x ? "url(#gradxX)":"url(#gradXx)";
         })
 
-        node
-            .attr("cx", function(d) { 
-            var nX = xConstrained(d.year);
-            return nX; })
-            .attr("cy", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.y));
-                d3.select(this).attr("baseY", () => ny ) 
-            return ny; })
+       
     
          if(idClickedA && idClickedA!=0){
             reset_texts()

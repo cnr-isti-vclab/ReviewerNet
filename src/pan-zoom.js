@@ -55,8 +55,9 @@ function zoom_by(zf, mouseY){
     if(zf == 1){
         d3.select("#scale").text("Y-force = 1.0X")
         simulation.force("charge", d3.forceManyBody()
-                    .strength(-50)
+                    .strength(-20)
                     .theta(0.5))
+        
 
         simulation.restart().alpha(0.1)
         centerSvg()
@@ -173,7 +174,7 @@ function scaleSvg(deltaY){
         scr = document.getElementById('scrollable').scrollTop;
     
     zoomFact += zff
-    zoomFact = Math.max(0,Math.min(zoomFact, 8));
+    zoomFact = Math.max(0.2,Math.min(zoomFact, 8));
     //console.log(old_zoomFact+" - "+zoomFact)
     d3.select("#scale").text("Y-force = "+zoomFact.toFixed(1)+"X")
     //let scrollT = zoomFact*(d3.event.layerY/old_zoomFact) - (hres/2),
@@ -181,7 +182,7 @@ function scaleSvg(deltaY){
     
     if(old_zoomFact != zoomFact){
         simulation.force("charge", d3.forceManyBody()
-                .strength(-50*zoomFact)
+                .strength(-30*zoomFact)
                 .theta(0.5))
         
         simulation.restart().alpha(deltaY < 0 ? 0.3 : 0.9)
