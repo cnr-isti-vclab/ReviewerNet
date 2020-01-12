@@ -1,0 +1,45 @@
+{"id": "ACMTOG", "name_list": ["ACM Transactions on Graphics", "ACM Trans. on Graph.", "ACM Trans. Graph.", "ACM TOG", "TOG"]}
+{"id": "CGF", "name_list": ["Computer Graphics Forum", "Comp. Graph. Forum", "Comput Graph Forum"]}
+{"id": "IEEETVCG", "name_list": ["IEEE Transactions on Visualization and Computer Graphics", "IEEE Trans. Vis. Comput. Graph.", "IEEE TVCG", "TVCG"]}
+{"id": "VISCOMP", "name_list": ["Visual Computer", "The Visual Computer", "Vis Comput"]}
+{"id": "CG", "name_list": ["Computer & Graphics"]}
+{"id": "IEEEVIS", "name_list": ["IEEE Visualization", "IEEE Conf. on Vis.", "IEEE Conference on Visualization", "IEEE Conf. on Visualization", "IEEEVIS", "VIS"]}
+{"id": "IEEECGA", "name_list": ["IEEE Computer Graphics & Applications", "IEEE Comp Graph & Apps", "IEEE CGA", "CGA"]}
+{"id": "SIGGRAPH", "name_list": ["SIGGRAPH"]}
+{"id": "CAGD", "name_list": ["Computer Aided Geometric Design", "CAGD"]}
+{"id": "CAD", "name_list": ["Computer Aided Design", "CAD"]}
+{"id": "GMOD", "name_list": ["Graphical Models", "GMOD" ]}
+{"id": "DCG", "name_list": ["Discrete and Computational Geometry", "Discrete Comput. Geom.", "DCG"]}
+{"id": "JGT", "name_list": ["Journal of Graphics Tools", "J. Graph. Tools", "JTG"]}
+{"id": "JCGGT", "name_list": ["Journal of Graphics, GPU, & Game Tools", "JCGGT"]}
+{"id": "ACMJOCCH", "name_list": ["ACM Journal on Computing and Cultural Heritage", "Journal on Computing and Cultural Heritage", "JOCCH"]}
+{"id": "IEEETM", "name_list": ["IEEE Transactions on Multimedia", "IEEE Trans. Multimed.", "IEEETM"]}
+{"id": "IEEETPAMI", "name_list": ["IEEE Transactions on Pattern Analysis and Machine Intelligence", "IEEE Trans. Pattern Anal. Mach. Intell.", "IEEETPAMI"]}
+{"id": "IEEETIP", "name_list": ["IEEE Transactions on Image Processing", "IEEETIP", "IEEE Trans. Image Proc."]}
+{"id": "IJCV", "name_list": ["International Journal of Computer Vision", "Int. J. Comput. Vis.", "Journal of Computer Vision", "J. Comput. Vis.", "IJCV"]}
+{"id": "CVIU", "name_list": ["Computer Vision and Image Understanding", "CVIU", "Comput. Vis. Image Underst."]}
+{"id": "PR", "name_list": ["Pattern Recognition", "Patt. Recogn.","PR"]}
+{"id": "SMI", "name_list": ["Shape Modeling International", "Shape Mod.", "SMI"]}
+{"id": "CGI", "name_list": ["Computer Graphics International", "Comput. Graph. International", "Comput. Graph. Int.", "CGI"]}
+{"id": "3DOR", "name_list": ["Eurographics Workshop on 3D Object Retrieval", "EG Workshop on 3D Object Retrieval", "3DOR" ]}
+{"id": "EGGCH", "name_list": ["Eurographics Workshop on Graphics and Cultural Heritage", "GCH","Comput. Graph. and Cult. Herit."]}
+{"id": "Web3D", "name_list": ["International Symposium on Web3D Technology", "WebD", "Int. Symp. on Web3D Tech."]}
+{"id": "SPM", "name_list": ["ACM Symposium on Solid and Physical Modeling", "Solid and Phys. Mod.", "SPM"]}
+{id="GMP", "name_list": ["International Conference on Geometric Modeling and Processing" "Int. Conf. Geom. Mod. and Proc.", "GMP"]}
+{id="VMV", "name_list": ["VMV", "Proceedings of the Vision, Modeling, and Visualization Conference 2003", "Vision, Modeling, and Visualization Conference"]}
+{id="3DPVT", "name_list": ["3DPVT","International Symposium on 3D Data Processing Visualization and Transmission", "Int Symp on 3D Data Proc Viz and Trans", "3D Data Processing Visualization and Transmission"]}
+{id="SCA", "name_list": ["SCA", "Symposium on Computer Animation", " Symposium on Comp. Anim."]}
+{id="NPAR", "name_list": ["NPAR", "Symposium on Non-Photorealistic Animation and Rendering", " Symp. on Non-Photorealistic Animation and Rendering"]}
+{id="PG", "name_list": ["PG", "Pacific Conference on Computer Graphics and Applications", "Pacific Graphics", "Pacific Graph. and App."]} 
+{id="SPBG", "name_list": ["IEEE/Eurographics Symposium on Point Based Graphics", "IEEE Symp. Point Based Graph.", "SPBG"]}
+{id="I3D", "name_list": ["ACM Symposium on Interactive 3D Graphics and Games", "I3D", "Symposium on Interactive 3D Graphics and Games"]}
+{id="VolVis", "name_list": ["VOLVIS", "Symposium on Volume Visualization and Graphics", "Vol. Vis. Symposium"]}
+{id="EGPGV", "name_list": ["EGPGV", "Eurographics Workshop on Parallel Graphics and Visualization", "Par. Graph. and Vis. EG"]}
+{id="PacificVis", "name_list": ["IEEE Pacific Visualization", "IEEE Pacific Vis", "PacificVis"]}
+{id="VAST" ", "name_list": ["VAST", "IEEE Visual Analytics Science and Technology"]}
+{id="InfoVis", "name_list": ["INFOVIS", "IEEE Information Visualization", "IEEE Info. Vis."]}
+{id="SciVis", "name_list": ["SciVis", "IEEE Scientific Visualization"]}
+{id="3DV", "name_list": ["3DV", "Int. Conference on 3D Vision"]}
+{id="CVPR", "name_list": ["Conf. on Computer Vision and Pattern Recognition", "CVPR", "Comput. Vis. and Pattern Recognition"]}
+{id="ICCV", "name_list": ["ICCV", "(Int. Conf on Comp Vis", "International Conference on Computer Vision"]}
+{id="ECCV", "name_list": ["European Conference on Computer Vision", "ECCV", "European Conf. Comp. Vis."]}

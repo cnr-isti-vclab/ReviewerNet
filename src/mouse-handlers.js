@@ -257,6 +257,11 @@ function readJournals(path, instance){
         nct = jj.cits ? jj.cits : 0;
     
     j_lists[instance]['j_list'] = []
+    //Sort on inCit-score
+    jns.sort(function(a, b) {
+        return b.count - a.count;
+    });
+
     for (i = 0; i < n; i++){
         j_lists[instance]['j_list'].push(jns[i]['id'])
     }

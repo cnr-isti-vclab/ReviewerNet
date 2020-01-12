@@ -13,7 +13,6 @@ import gzip
 import time
 import io
 import string
-from string import maketrans
 import json
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -21,17 +20,18 @@ import heapq
 
 def export_partialJ(path, j_obj):
     with io.open(path, mode='w', encoding = 'utf8')  as f:
-        i = 0
-        l = len(j_obj)
         for j in j_obj:
-            f.write(unicode(json.dumps(j)))
+            f.write(unicode(json.dumps(j_obj[j])))
             f.write(unicode('\n'))
 
 def import_partialJ(path):
     with io.open(path, mode='r', encoding = 'utf8')  as f:
         js = []
         for l in f:
-            js.append(json.loads(l))
+            try:
+                js.append(json.loads(l))
+            except Exception:
+                continue;
         return js
 
 journals = import_partialJ("journals.txt")
@@ -61,7 +61,7 @@ def contains_words(s):
             continue;
     #print(sp)
     for s in sp:
-        splt.add(s.translate(maketrans('',''),string.punctuation).lower())
+        splt.add(s.translate(string.maketrans('',''),string.punctuation).lower())
     return (len(exclude_words & splt)>0 or len(exclude2 & splt)>=2);
 
 def keep_goodP(papers):
@@ -103,9 +103,11 @@ def setAuthoring(authoring, authors, idP):
 
 def getPaperSet(papers):
     pS = set()
+    my = 1995
     for p in papers:
         pS.add(p['id'])
-    return pS
+        my = max(my, p['year'])
+    return pS, my
 
 def setCitations(citations, idP, cIn, cOut, PIds, inTot, inInP, outTot, outInP):
     if len(cIn) > 0:
@@ -279,16 +281,53 @@ def getLastest(papers):
 def incr_count(jn, js):
     for i in range(len(js)):
         if (journals[i]['id'] == jn):
-            js[i]['count'] += 1
-            return js
+            js[jn]['count'] += 1
+            break;
+    return js
 
 def rebuild_journals():
-    journals_new = []
+    journals_new = dict({})
     for i in range(len(journals)):
         j = journals[i]
-        journals_new.append({'id':j['id'], 'name_list':j['name_list'], 'count':0})
+        journals_new[j['id']] = { 'name_list':j['name_list'], 'count':0, 'score':0}
     return journals_new
+
+def get_papjv(papers):
+    pap_jv = dict({})
+    for p in papers:
+        kj = p['journalId']
+        kv = p['venueId'] 
+        pap_jv[p['id']] = [kj, kv]
+    return pap_jv
+
+def count_inCit(incits, pap_jv, kj, kv, journals):
+    for cit in incits:
+        if kj == kv and not(kj == ""):
+            if not(papjv[cit][0] == kj):
+                journals[kj]['score'] += 1
+        elif not(kj == kv):
+            if not(kj==""):
+                if not(papjv[cit][0] == kj):
+                    journals[kj]['score'] += 1
+            if not(kv==""):
+                if not(papjv[cit][1] == kv):
+                    journals[kv]['score'] += 1
+    return journals
+
+
+def count_j(papjv, journals):
+    
+    for j in range(len(papers)):
+        p = papers[j]
+        kj = p['journalId']
+        kv = p['venueId']   
+        """
+        Computing the inCitation-score, that is the number of 
+        citations recieved from a different journal/venue
+        """
+        journals = count_inCit(p['inCitations'], kj, kv, journals)
         
+    return journals    
 
 def fuzzy_search(path):
     add = 0
@@ -310,43 +349,53 @@ def fuzzy_search(path):
             p1 = p
             
             try:
-                scoresj = dict({})
-                scoresv = dict({})
+                if p['year'] and p['year'] >= 2018:
+                    scoresj = dict({})
+                    scoresv = dict({})
 
-                for j in journals:
-                    if jn:
-                        scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
-                    if v:
-                        scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+                    for j in journals:
+                        if jn:
+                            scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+                        if v:
+                            scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
 
-                kj = max(scoresj, key=scoresj.get) if jn else None
-                kv = max(scoresv, key=scoresv.get) if v else None
-                
-                scorej = scoresj[kj] if kj else None
-                scorev = scoresv[kv] if kv else None
-                
-                score = max(scorej, scorev)
-                 
-                journals_new = incr_count(kj, journals_new) if kj and scorej > 80 else journals_new
-                cond = kj and kv
-                journals_new = incr_count(kv, journals_new) if (kv and scorev > 80)  and (not kj or (cond and not(kv == kj))) else journals_new
-
-                p1['journalId'] = kj if kj else ''
-                p1['venueId'] = kv if kv else ''
+                    kj = max(scoresj, key=scoresj.get) if jn else None
+                    kv = max(scoresv, key=scoresv.get) if v else None
                     
+                    scorej = scoresj[kj] if kj else None
+                    scorev = scoresv[kv] if kv else None
+                    
+                    score = max(scorej, scorev)
+
+                    if kj and scorej > 80:
+                    	journals_new[kj]['count']+=1  
+                	
+                	cond = kj and kv
+                    
+                    if (kv and scorev > 80)  and (not kj or (cond and not(kv == kj))):
+                    	journals_new[kv]['count']+=1 
+
+                    p1['journalId'] = kj if kj else ''
+                    p1['venueId'] = kv if kv else ''
+
+
+                    if (cond and kj == 'ACMTOG' and kv == 'SIGGRAPH' and year <= 2004):
+                        p1['journalId'] = 'SIGGRAPH'
+                        p1['journalName'] = 'SIGGRAPH'
+                        
             except Exception:
 		      #print(Exception.message())
-                pass;
+                pass
         
-            if score > 80:
+            if score > 80 and (len(p['inCitations']) + len(p['outCitations']) > 0):
                 scoreTot += score
+                del p1['paperAbstract']
                 fuzzyP.append(p1)
                 add += 1
             
-            if(i%50000==0):
+            if(i%100000==0):
                 tm = time.asctime()
                 print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add))
-            
             i+=1
     avgScore = 0
     

@@ -1,8 +1,8 @@
-{"id": "ACMTOG", "name_list": ["ACM Transactions on Graphics", "ACM Trans. on Graph.", "ACM Trans. Graph.", "ACM TOG"]}
-{"id": "CGF", "name_list": ["Computer Graphics Forum", "Comp. Graph. Forum"]}
-{"id": "IEEETVCG", "name_list": ["IEEE Transactions on Visualization and Computer Graphics", "IEEE Trans. Vis. Comput. Graph.", "IEEE TVCG"]}
-{"id": "VISCOMP", "name_list": ["Visual Computer", "The Visual Computer"]}
-{"id": "CG", "name_list": ["Computer & Graphics"]}
-{"id": "IEEEVIS", "name_list": ["IEEE Visualization", "IEEE Conf. on Vis.", "IEEE Conference on Visualization", "IEEE Conf. on Visualization", "IEEECOV"]}
-{"id": "IEEECGA", "name_list": ["IEEE Computer Graphics & Applications", "IEEE Comp Graph & Apps", "IEEE CGA"]}
+{"id": "ACMTOG", "name_list": ["ACM Transactions on Graphics", "ACM Trans. on Graph.", "ACM Trans. Graph.", "ACM TOG", "TOG"]}
+{"id": "CGF", "name_list": ["Computer Graphics Forum", "Comp. Graph. Forum", "CGF"]}
+{"id": "IEEETVCG", "name_list": ["TVCG", "IEEE Transactions on Visualization and Computer Graphics", "IEEE Trans. Vis. Comput. Graph.", "IEEE TVCG"]}
+{"id": "VISCOMPUT", "name_list": ["Visual Computer", "Vis. Comput.", "VISCOMPUT", "The Visual Computer"]}
+{"id": "CG", "name_list": ["Computer & Graphics", "CG", "Comput. Graph."]}
+{"id": "IEEEVIS", "name_list": ["IEEE Visualization", "IEEE Vis.", "IEEE Conf. on Vis.", "IEEE Conference on Visualization", "IEEE Conf. on Visualization", "IEEEVIS"]}
+{"id": "IEEECGA", "name_list": ["IEEE Computer Graphics & Applications", "IEEE Comp Graph & Apps", "IEEE CGA", "CGA"]}
 {"id": "SIGGRAPH", "name_list": ["SIGGRAPH"]}

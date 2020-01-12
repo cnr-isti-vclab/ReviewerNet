@@ -3,6 +3,7 @@
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
 DWN=0
+PRS=0
 #Wait for parsing jobs to finish
 waitPPids() {
 	while [ ${#PARSING_PIDS[@]} -ne 0 ]; do
@@ -16,15 +17,15 @@ waitPPids() {
 	    sleep 2s
 	done
 	PARSING_PIDS=("${PARSING_PIDS[@]}") # Expunge nulls created by unset.
-	sleep 5m
+	sleep 1m
 	done
 	echo "All partition parsed."
 	echo "Merging all together..."
 }
-#Wait until there are less than 4 simultaneous download 
+#Wait until there are less than 10 simultaneous download 
 waitD4Pids() {
-	while [ ${#DOWNLOAD_PIDS[@]} -ge 4 ]; do
-	sleep 2m
+	while [ ${#DOWNLOAD_PIDS[@]} -ge 10 ]; do
+	sleep 1m
 	local range=$(eval echo {0..$((${#DOWNLOAD_PIDS[@]}-1))})
 	local i
 	for i in $range; do
@@ -35,6 +36,23 @@ waitD4Pids() {
 		sleep 1s
 	done
 	DOWNLOAD_PIDS=("${DOWNLOAD_PIDS[@]}") # Expunge nulls created by unset.
+	done
+	return
+}
+#Wait until there are less than 10 simultaneous download 
+waitP4Pids() {
+	while [ ${#PARSING_PIDS[@]} -ge 10 ]; do
+	sleep 1m
+	local range=$(eval echo {0..$((${#PARSING_PIDS[@]}-1))})
+	local i
+	for i in $range; do
+		if ! kill -0 ${PARSING_PIDS[$i]} 2> /dev/null; then
+		echo "Done parsing partition -- PID ${PARSING_PIDS[$i]}"
+		unset PARSING_PIDS[$i]
+		fi
+		sleep 1s
+	done
+	PARSING_PIDS=("${PARSING_PIDS[@]}") # Expunge nulls created by unset.
 	done
 	return
 }
@@ -51,7 +69,7 @@ waitDPids() {
 	    sleep 1s
 	done
 	DOWNLOAD_PIDS=("${DOWNLOAD_PIDS[@]}") # Expunge nulls created by unset.
-	sleep 5m
+	sleep 1m
 	done
 	echo "All partitions downloaded."
 }
@@ -84,12 +102,14 @@ contains() {
 # Download&parse JOB
 download_and_parse_file(){
 	wget --no-check-certificate -nv "$1$2"
+	sleep 2s
 	parse_file "$2" &
 	addPPid "Processing ${2#*/}" $!
 }
 # Parse JOB
 parse_file(){
 	python2 parse_and_filter.py "$1"
+	sleep 3s
 	file=${1#*/}
 	file="${file%.*}-filtered"
 	if [[ -f $filteredf ]]; then
@@ -99,7 +119,8 @@ parse_file(){
 	
 }
 
-ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/"
+ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt"#$1
+ROOT=${ROOT%manifest*}
 SUFFIX="-filtered"
 
 rm -f parsed_files.txt
@@ -107,7 +128,7 @@ rm -f manifest*
 
 echo "Downloading&parsing SemanticScholar corpus"
 
-wget --no-check-certificate https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/manifest.txt
+wget --no-check-certificate $ROOT"manifest.txt"
 
 filename="manifest.txt"
 
@@ -128,11 +149,11 @@ for i in "${FILENAMES[@]}";do
 		filteredf=${file%.*}$SUFFIX
 		#filtered file already exists
 		if [[ -f $filteredf ]]; then
-			echo "$i" >> parsed_files.txt
+			echo "$i" >> parsed_files.txt 
 		#filtered file & download not present, need to download&parse
 		elif [[ ! -f $file ]]; then
-		#Check that there are at most 4 concurret downloads
-			if [[ $DWN -ge 4 ]]; then
+		#Check that there are at most 8 concurret downloads
+			if [[ $DWN -ge 10 ]]; then
 			echo "Waiting for one of the ${#DOWNLOAD_PIDS[@]} downloads to be completed"
 			waitD4Pids
 			DWN=${#DOWNLOAD_PIDS[@]}
@@ -142,21 +163,35 @@ for i in "${FILENAMES[@]}";do
 			download_and_parse_file "$ROOT" "$i" &
 			addDPid "Downloading $ROOT$i" $!
 		#donwload present but no filtered file, only parsing
+		elif [[ $PRS -ge 810 ]]; then
+			echo "Waiting for one of the ${#PARSING_PIDS[@]} parsing to be completed"
+			waitP4Pids
+			PRS=${#PARSING_PIDS[@]}
 		else
-		parse_file "$i" & 
-		addPPid "Processing ${i#*/}" $!
+			echo "$PRS simultaneus parse, can add a new one."
+			((PRS++))
+			parse_file "$i" & 
+			addPPid "Processing ${i#*/}" $!
 		fi
 	fi 
 done 
 done < "$filename"
 
-echo "Waiting for ${#DOWNLOAD_PIDS[@]} downloads to complete"
-waitDPids
+
+if [[ ${#DOWNLOAD_PIDS[@]} -ne 0 ]]; then
+	echo "Waiting for ${#DOWNLOAD_PIDS[@]} partitions to be downloaded"
+	waitDPids
+fi
+
+if [[ ${#PARSING_PIDS[@]} -ne 0 ]]; then
+	echo "Waiting for ${#PARSING_PIDS[@]} partitions to be parsed"
+	waitPPids
+fi
 echo "Waiting for ${#PARSING_PIDS[@]} partitions to be decompressed and parsed"
 waitPPids
 
 echo "Creating datasets from parsed partitions"
-python2 merge_data.py
+#python2 merge_data.py
 
 options=(
     "Delete both compressed and filtered partitions and quit"
