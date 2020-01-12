@@ -78,7 +78,7 @@ function updateADpapers(){
 
 function prune_auth(d1){
     let exclude = false;
-    if(authsReview.includes(d1.id) || authsExclude.includes(d1.id) || authsConfilct.includes(d1.id)) return true;
+    if(authsReview.includes(d1.id) || authsExclude.includes(d1.id) || authsConflict.includes(d1.id)) return true;
     if((checkboxC[0].checked) && (authsExclude.length > 0 || authsReview.length >0)){
         authsExclude.map(function (el){
             if(d1.coAuthList[el] && checkThetaNC(d1, el))
@@ -99,17 +99,17 @@ function prune_auth(d1){
 }
 
 function apFilter(item){
-    return (authsConfilct.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return (authsConflict.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || AP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter(item){
-    return (authsConfilct.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return (authsConflict.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter_noc(item){
-    return (authsConfilct.includes(item.id) ||  authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return (authsConflict.includes(item.id) ||  authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id))
 }
 
@@ -141,7 +141,7 @@ function checkThetaNC(author, el){
 function authColor(author){
     let exclude = false;
     //console.log(author)
-    if(authsConfilct.includes(author.id)) return true;
+    if(authsConflict.includes(author.id)) return true;
     authsExclude.map(function (el){
         if(author.coAuthList[el] && checkThetaNC(author, el))
             exclude = true
@@ -364,11 +364,6 @@ function authorBars(){
                         //console.log(ln)
                         authDict[d.id][2][z].x_bar = authDict[d.id][2][z].x_bar/ln
                     }
-                    //let id_a = auths[i]
-                    //console.log(authors.filter(function (el){return el.id === id_a;}))
-                    //console.log(list_p)
-                    //console.log(hist)
-                    //authDict[auths[i]].push(hist)
             }  
             
                  

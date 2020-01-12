@@ -94,6 +94,50 @@ function swap_alt(id1, id2){
     
 }
 
+function delete_Confilct(idd){
+    if(clickJ) unclick_j()
+    if(click) unclick_auth(clkA)
+    if(clickP) unclick_pap(clkPp)
+     let idClick = idd;
+
+        undos.push(['rcr', idClick])
+
+        let index = authsConflict.indexOf(idClick),
+        elementPos = authsConflict_obj.map(function(x) {return x.id; }).indexOf(idClick);
+        authsConflict.splice(index, 1);
+        authsConflict_obj.splice(elementPos, 1);
+    print_submitting()
+        
+    d3.selectAll(".plink")
+        .style("opacity", 1)
+    
+    d3.selectAll(".papersNode")
+        .attr("r", "6")
+        .style("opacity", 1)
+        .attr("stroke", function(d1){
+            if(d1.authsId.includes(idClick))
+                d3.select($("#txt"+d1.id)[0])
+                    .attr("x", -1000)
+                    .attr("y", -1000)
+                    .attr("opacity", 0)  
+            if(idPs.includes(d1.id))
+                return "#4238ff"
+                //return "#6d10ca";
+            else return "#999";
+            })
+        .attr("stroke-width", function(d1){
+            if(idPs.includes(d1.id))
+                return 2.5;
+            })
+    
+    reset_texts()
+    authorBars()
+    authorGraph()
+
+    print_rew()
+    refresh_export()
+}
+
 function deleteConfilct(idd){
     if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
