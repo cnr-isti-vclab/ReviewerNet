@@ -32,7 +32,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     lines = [],
     authsReview = [], authsReview_obj = [], idA_rev, revDict = {},//id_rev: [[ida1, namea1]...]
     altRev = [], altRev_obj = [],
-    authsExclude = [], authsExclude_obj = [],
+    authsExclude = [], authsExclude_obj = [], authsConfilct = [], authsConfilct_obj = [],
     authsDef = [],
     papers = [],
     papersPrint = [],
@@ -41,7 +41,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     authHist = {}, // {idA, year1:[idList], year2:[idList]...}
     inC = [],
     outC = [],
-    its = 0,
+    its = 0, undos = [], redos =  [],
     sep1 = '§',
     sep2 = '£',
     zoomFact = 1.0, dy = 0, old_dy = 0, old_zoomFact=1.0,
@@ -241,6 +241,7 @@ function setPapHandlers(){
         .on("mouseout", ListMouseOut);
 }
 
+
 function setWinMouseHandlers(){
     
     $( window ).on("load", function(){
@@ -251,9 +252,19 @@ function setWinMouseHandlers(){
         updateWidth()
     })
     
+    document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        if (evt.ctrlKey && evt.keyCode == 90) {
+            undo()
+        }else if(evt.ctrlKey && evt.keyCode == 89) {
+            redo();
+        }
+    };
+
     $("body").on('click', function(){
             $(".badge").html("")
     })
+    
      
     
     window.onresize = function(e) {    
@@ -315,16 +326,7 @@ function hide_loading(){
     document.getElementById("ldr").innerHTML = "All data loaded"
      document.getElementById("loading").style.pointerEvents = "all"
     document.getElementById("loading").innerHTML = old_loading
-     document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.567 )"
-    //$("#loading").on("click", function(){
-      //  event.preventDefault()
-        //document.getElementById("loading").style.visibility = "hidden";
-        //d3.select(".pop-up").style("pointer", "help")    
-        //enable_all()
-//    })
-    
-    
-    
+     document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.567 )"  
 }
 
 function setMouseHandlers(){
@@ -720,6 +722,64 @@ function setSvgs(){
     .text("");
 }
 
+function print_submitting_old(){
+    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
+    d3.select("#authList").selectAll("tr").remove()
+    if(aPrint.length > 4){
+        //id = \"authsPap\"
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"tr-submitting\">"
+        for(let j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (let i = 0; i < 4; i++){
+                 let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (let i = ia; i < aPrint.length; i++){
+                let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
+    }else{
+        
+        thehtml += "<tr class=\"tr-submitting\">"
+        for (let i = 0; i < aPrint.length; i++){
+            let test_obj = aPrint[i],
+                fs = (authColor_r(test_obj)) ? "italic" : "normal";
+        
+            thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+        }
+        thehtml += "</tr>"
+    }
+    $("#authList").append(thehtml);
+}
+
+function startf(){
+    if(start){
+        let delta = maxYear-minYear
+        if(delta > 30) delta = delta/2
+        document.getElementById("startMsg").style.visibility = "hidden";
+        xaxis.scale(xConstrained).ticks(delta, "r");
+        svgAxis = d3.select("#svgAxis").attr("y", "80")  
+        svgAxis.append("g").attr("id", "axis").call(xaxis);
+        document.getElementById("startMsg").style.visibility = "hidden";
+         document.getElementById("svgAxis").style.visibility = "visible";
+        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+        d3.selectAll(".graph").style("overflow-y", "auto")
+        add_labels()
+        start = false;
+    }
+}
 function add_labels(){
     //Paper Network
     append_ico("#svgAxis", p_ico, 20, 55)
@@ -811,6 +871,14 @@ function add_labels(){
     $(".label-txtspan").css("cursor", "none")
 }
 
+function thetaPapFilter(item){
+    var paps = 0, lp = papersFiltered.length,
+        plset = new Set(papersPrint),
+        commonValues = item.paperList.filter(x => plset.has(x));
+    //console.log(item.value+" "+commonValues.length)
+    return authsConfilct.includes(item.id) || authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
+}
+
 function replacement(sid, cal){
     let i = 0, lim = cal.length, found = 0, txt = "no replacement found", txt1="";
     let a_obj = authsDef.filter(function(el){return el.id != sid && (authsReview.includes(el.id) || authsExclude.includes(el.id))})
@@ -840,9 +908,9 @@ function replacement(sid, cal){
     return found > 0 ? txt1 : txt;
 }
 
-function print_submitting(){
-    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
-    d3.select("#authList").selectAll("tr").remove()
+function print_conflict(aPrint, domElementId){
+    let ia = 0, thehtml = "", cls = domElementId[0] == 'c' ? "pAuthc pAuth" : "pAuthe pAuth";
+    d3.select("#"+domElementId).selectAll("tr").remove()
     if(aPrint.length > 4){
         //id = \"authsPap\"
         let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
@@ -853,7 +921,7 @@ function print_submitting(){
                  let test_obj = aPrint[ia],
                     fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
                 
-                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
                 ia++
             }
             thehtml += "</tr>"
@@ -864,7 +932,7 @@ function print_submitting(){
                 let test_obj = aPrint[ia],
                     fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
                 
-                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+                thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
             }
             thehtml += "</tr>"
         }
@@ -873,13 +941,22 @@ function print_submitting(){
         thehtml += "<tr class=\"tr-submitting\">"
         for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
-                fs = (authColor_r(test_obj)) ? "italic" : "normal";
+                fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
         
-            thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
         }
         thehtml += "</tr>"
     }
-    $("#authList").append(thehtml);
+    $("#"+domElementId).append(thehtml);
+}
+
+function print_submitting(){
+    //Print submitting
+    if (authsExclude.length > 0 )
+    print_conflict(authsExclude_obj, "authList")
+    //Print Conflict
+    if (authsConfilct.length > 0)
+    print_conflict(authsConfilct_obj, "cauthList")
 }
 
 function print_rew(){
@@ -892,7 +969,7 @@ function print_rew(){
         let suggestion = authsReview_obj[i];
         let found = false, cal = [];
         for(let key in suggestion.coAuthList) {
-            if(!(authsExclude.includes(key) || authsReview.includes(key)) && idAs.includes(key))
+            if(!(authsExclude.includes(key) || authsReview.includes(key) || authsConfilct.includes(key) ) && idAs.includes(key))
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
@@ -925,6 +1002,9 @@ function setup_searchbars(){
     $('#authors-autocomplete').click(function (e){
     this.value=""
     });
+    $('#cauthors-autocomplete').click(function (e){
+    this.value=""
+    });
     $('#rauthors-autocomplete').click(function (e){
     this.value=""
     });
@@ -942,21 +1022,8 @@ function setup_searchbars(){
             $('#rauthors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
-            suggestion = ui.item
-            if(start){
-                let delta = maxYear-minYear
-                if(delta > 30) delta = delta/2
-                document.getElementById("startMsg").style.visibility = "hidden";
-                xaxis.scale(xConstrained).ticks(delta, "r");
-                svgAxis = d3.select("#svgAxis").attr("y", "80")  
-                svgAxis.append("g").attr("id", "axis").call(xaxis);
-                document.getElementById("startMsg").style.visibility = "hidden";
-                 document.getElementById("svgAxis").style.visibility = "visible";
-                d3.selectAll(".graph").style("overflow-y", "auto")
-                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-                add_labels()
-                start = false;
-            }
+            let suggestion = ui.item
+            startf()
           this.value = null
           let isIn = false
           idA_rev = suggestion.id
@@ -964,6 +1031,7 @@ function setup_searchbars(){
             if(authsReview.includes(idA_rev))
                 isIn = true
             else{
+                undos.push(['ar', idA_rev])
                 authsReview.push(idA_rev)
                 authsReview_obj.push(suggestion)
                 authorBars()
@@ -983,7 +1051,7 @@ function setup_searchbars(){
             else if(authColor_r(item)) col  = "#8d585a";
             
               return $( "<li>" )
-                .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )
+                .append( "<div style = \"color:"+col+"; font-style:"+fs+";\">" + item.value+"</div>" )
                 .appendTo( ul );
     };
 
@@ -1000,30 +1068,17 @@ function setup_searchbars(){
             $('#authors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
-            suggestion = ui.item
-            if(start){
-                let delta = maxYear-minYear
-                if(delta > 30) delta = delta/2
-                document.getElementById("startMsg").style.visibility = "hidden";
-                xaxis.scale(xConstrained).ticks(delta, "r");
-                svgAxis = d3.select("#svgAxis").attr("y", "80")  
-                svgAxis.append("g").attr("id", "axis").call(xaxis);
-                document.getElementById("startMsg").style.visibility = "hidden";
-                 document.getElementById("svgAxis").style.visibility = "visible";
-                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-                d3.selectAll(".graph").style("overflow-y", "auto")
-                add_labels()
-                start = false;
-            }
+            let suggestion = ui.item
+            startf()
           let isIn = false
           idA = suggestion.id
           let aName = suggestion.value
             if(authsExclude.includes(idA))
                 isIn = true
             else{
+                undos.push(['acr', idA])
                 authsExclude.push(idA)
                 authsExclude_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
-/*                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")*/
                 authorBars()
                 authorGraph()
                 print_submitting()
@@ -1033,13 +1088,62 @@ function setup_searchbars(){
         }
     })
      .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let col = "black";
-        
-            if(authsReview.includes(item.id)) col = "#5263fe";
-            else if(authsExclude.includes(item.id)) col = "#be27be";
+        let col = "black",
+
+        fs = (authColor(item)) ? "italic" : "normal";
+        if(authsReview.includes(item.id)) col = "#5263fe";
+        else if(authsExclude.includes(item.id)) col = "#be27be";
+        else if(authColor(item)) col =  "#db0000";
+        else if(authColor_r(item)) col  = "#8d585a";
             
               return $( "<li>" )
-                .append( `<div style = "color:${col}";>` + item.value+`</div>` )
+                .append( `<div style = "color:${col}; font-style:${fs}";>` + item.value+`</div>` )
+                .appendTo( ul );
+    };
+
+    $('#cauthors-autocomplete').autocomplete({
+        open : function(){
+            let d = $("#ui-id-2").height() + 25
+            if(_docHeight-heightAG-100 < 150)
+                $(".ui-autocomplete:visible").css({top:"-="+d});
+        },
+        source: authors,
+        minLength: 3,
+        response: function(event, ui){
+            ui.content.sort(function (a, b) {return a.value.localeCompare(b.value);})
+            $('#cauthors-badge').html(ui.content.length)
+        },
+        select: function (event, ui) {
+            let suggestion = ui.item
+            startf()
+          let isIn = false
+          idA = suggestion.id
+          let aName = suggestion.value
+            if(authsConfilct.includes(idA))
+                isIn = true
+            else{
+                undos.push(['acr', idA])
+                authsConfilct.push(idA)
+                authsConfilct_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
+                authorBars()
+                authorGraph()
+                print_submitting()
+            }
+        $('#cauthors-badge').html("")
+            setTimeout(function(){$('#cauthors-autocomplete')[0].value = ""}, 200)
+        }
+    })
+     .autocomplete( "instance" )._renderItem = function( ul, item ) {
+         let col = "black",
+            fs = (authColor(item)) ? "italic" : "normal";
+
+            if(authsReview.includes(item.id)) col = "#5263fe";
+            else if(authsExclude.includes(item.id)) col = "#be27be";
+            else if(authColor(item)) col =  "#db0000";
+            else if(authColor_r(item)) col  = "#8d585a";
+            
+              return $( "<li>" )
+                .append( `<div style = "color:${col}; font-style:${fs}";>` + item.value+`</div>` )
                 .appendTo( ul );
     };
 
@@ -1140,21 +1244,6 @@ function setup_searchbars(){
     $( "#biblio-btn").on("click", biblio_click_handler)
 }
 
-function process_auth(data) {
-        console.log(data)//document.getElementById("demo").innerHTML = this.responseText;
-}
-
-function get_JSON(json_id, process_JSON) {
-    /*
-        Non funziona per tutti i paper.
-    */
-    console.log(json_id.length)
-    console.log('https://api.semanticscholar.org/v1/'+
-            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id)
-  $.getJSON('https://api.semanticscholar.org/v1/'+
-            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id, process_JSON);
-  
-}
 
 $(function (){
     _docHeight = document.documentElement.clientHeight - 30;/*window.screen.height - 170 */ 
@@ -1164,24 +1253,17 @@ $(function (){
     setWinMouseHandlers()
     
     
-    
-    
-    
     //DEBUG
     
-    /*
+    
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
         j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
         //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2019-10-01.txt", instance)
+        readJournals("datasets/j_"+instance+"_2018-05-03.txt", instance)
     }
     
     clickOnGo()
-    */
-    /*
-    d3.select("#loading").style("pointer-events", "all")
-    $("#loading").on("click", start_click_handler);
-    */
+    
 });

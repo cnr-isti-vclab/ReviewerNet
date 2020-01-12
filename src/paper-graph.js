@@ -104,7 +104,7 @@ function addId(name, year){
       isIn = true
     }
     else{
-        
+
       idPs[idPs.length] = idP
       papersPrint.push(idP)
         /*
@@ -141,6 +141,7 @@ function addId(name, year){
 function deleteP(idCk){
     $('#papList').html("")
     var index = idPs.indexOf(idCk), idsT = [];
+    undos.push(['rp', idCk ])
     AP = []
     ANP = []
     if (index > -1) {
@@ -190,19 +191,7 @@ function deleteP(idCk){
 }
 
 function addPaper(suggestion){
-    if(start){
-        let delta = maxYear-minYear
-        if(delta > 30) delta = delta/2
-        xaxis.scale(xConstrained).ticks(delta, "r");
-        svgAxis = d3.select("#svgAxis").attr("y", "80")  
-        svgAxis.append("g").attr("id", "axis").call(xaxis);
-        document.getElementById("startMsg").style.visibility = "hidden";
-        document.getElementById("svgAxis").style.visibility = "visible";
-        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-        d3.selectAll(".graph").style("overflow-y", "auto")
-        add_labels()
-        start = false;
-    }
+    startf()
     idP = suggestion.id
     //console.log(suggestion)
     var isIn = addId(suggestion.value, suggestion.year)
@@ -210,6 +199,8 @@ function addPaper(suggestion){
     setPapHandlers()
     //setMouseHandlers()
     if(!isIn){
+        
+        undos.push(['ap', idP])
       //updateYear(suggestion.year)
         updateADpapers()
         updateAuthDict(papersFiltered)
@@ -354,13 +345,6 @@ function paperInfoa(suggestion){
 
 }
 
-function thetaPapFilter(item){
-    var paps = 0, lp = papersFiltered.length,
-        plset = new Set(papersPrint),
-        commonValues = item.paperList.filter(x => plset.has(x));
-    //console.log(item.value+" "+commonValues.length)
-    return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
-}
 
 function paperGraph(papers1, citations1, idPs, simulation){
     simulation.stop()
@@ -430,10 +414,12 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
+            console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d)
-            d3.event.stopPropagation()
+            event.stopPropagation()
+            event.preventDefault()
         })
         
 popRect = svgP.append("rect")

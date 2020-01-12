@@ -265,15 +265,18 @@
                         <li class="sidebar-search">
                         <div id="searchfield" style="width: 100%; padding-top: 1px;">
                             <table>
+                              <tbody>
                               <tr id="submitting_row">
                                 <td id="td1" class="td1">
-                                  <span id="conflict-a" class="text-left tb_labels" >Conflicting Researchers <span id="authors-badge"class="badge"></span></span>
+                                  <span id="conflict-a" class="text-left tb_labels" >Submitting Researchers <span id="authors-badge"class="badge"></span></span>
                                   </td>
                                 <td id = "td2" class ="button-bar">
-                                    <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
                                     <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
                                   </td>
+                                  
                               </tr>
+              
+                          </tbody>
                             </table>
                         </div>
                         </li>
@@ -281,6 +284,28 @@
                             <table id = "authList" ><!--class="list-group"-->
                             </table>
                         </li>
+                        <li class="sidebar-search">
+                            <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                                <table>
+                                  <tbody>
+                          <tr id="conflicting_row">
+                            <td id="td1" class="td1">
+                              <span id="conflict-a" class="text-left tb_labels" >Conflicting Researchers <span id="cauthors-badge" class="badge"></span></span>
+                              </td>
+                            <td id = "td22" class ="button-bar">
+                                <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB " id="cauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                              </td>
+                          </tr>
+                        </tbody>
+                          </table>
+                        </div>
+                        </li>
+
+                        <li id="caal" class="element">
+                          <table id = "cauthList" >
+                          </table>
+                      </li>
+
                         <li class="sidebar-search">
                         <div id="searchfield" style="width: 100%; padding-top: 1px;">
                              <table>
@@ -414,6 +439,7 @@ Springer VIS COMPUT </span>
     </footer>   
 </div>
 <script src="src\author-graph.js"></script>
+<script src="src\undoredo.js"></script>
 <script src="src\script.js"></script>
 <script src="src\paper-graph.js"></script>
 <script src="src\pan-zoom.js"></script>

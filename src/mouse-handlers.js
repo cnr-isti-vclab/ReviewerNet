@@ -462,7 +462,7 @@ function author_dblclick_ABG(d){
      let aName = suggestion.value
     if(authsReview.includes(idA_rev)){
         isIn = true
-        
+        undos.push(['rr', idA_rev])
         let index = authsReview.indexOf(idA_rev),
             elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idA_rev);
     
@@ -505,6 +505,7 @@ function author_dblclick_ABG(d){
         d3.event.stopPropagation()
     
     }else{
+        undos.push(['ar', idA_rev])
         authsReview.push(idA_rev)
         authsReview_obj.push(suggestion)
         authorBars()
@@ -1963,6 +1964,9 @@ function authDblc(event){
      let idClick = event.target.id;
     
      idClick = idClick.substring(1,idClick.length)
+
+        undos.push(['rcr', idClick])
+
         let index = authsExclude.indexOf(idClick),
         elementPos = authsExclude_obj.map(function(x) {return x.id; }).indexOf(idClick);
     authsExclude.splice(index, 1);
@@ -2029,6 +2033,9 @@ function r_authDblc(event){
      let idClick = event.target.id;
     
         idClick = idClick.substring(1,idClick.length)
+
+        undos.push(['rr', idClick])
+
     let index = authsReview.indexOf(idClick),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
     if(clickJ) unclick_j()
@@ -2094,6 +2101,9 @@ function repl_click(event){
     let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1],
          index = authsReview.indexOf(id1),
         elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(id1);
+
+        undos.push(['r', id1, id2])
+
     authsReview[index] = id2
     authsReview_obj[elementPos] = authors.filter(function(el){return el.id === id2})[0];
   

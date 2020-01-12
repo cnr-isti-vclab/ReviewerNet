@@ -270,7 +270,7 @@ a {
 }
 
 a {
-    padding 2px;
+    padding: 2px;
     text-rendering: optimizeLegibility;
     color: #6666a3
 }
@@ -422,7 +422,7 @@ width: 15%;
     text-align: center;}
 
 .row {
-    padding 2px;
+    padding: 2px;
     margin-left: 0px;
     margin-right: 0px;
 }
@@ -789,6 +789,14 @@ hr {
 .pAuthe {
     color:  #be27be;
     cursor: pointer;
+    font-size: 0.9em;
+    
+}
+
+.pAuthc {
+    color: #db0000; /*red and italic*/
+    cursor: pointer;
+    font-style: italic;
     font-size: 0.9em;
     
 }
