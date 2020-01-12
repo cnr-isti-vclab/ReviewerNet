@@ -32,7 +32,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     lines = [],
     authsReview = [], authsReview_obj = [], idA_rev, revDict = {},//id_rev: [[ida1, namea1]...]
     altRev = [], altRev_obj = [],
-    authsExclude = [], authsExclude_obj = [], authsConfilct = [], authsConfilct_obj = [],
+    authsExclude = [], authsExclude_obj = [], authsConflict = [], authsConflict_obj = [],
     authsDef = [],
     papers = [],
     papersPrint = [],
@@ -412,6 +412,11 @@ function setMouseHandlers(){
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
         .on("dblclick", "td", authDblc);
+    $("#cauthList")
+        .on("click","td", addFromList)
+        .on("mouseover", "td", ListMouseOver)
+        .on("mouseout", "td", ListMouseOut)
+        .on("dblclick", "td", cauthDblc);
     $("#rauthList")
         .on("click", "li", addFromList)
         .on("mouseover", "li", ListMouseOver)
@@ -876,7 +881,7 @@ function thetaPapFilter(item){
         plset = new Set(papersPrint),
         commonValues = item.paperList.filter(x => plset.has(x));
     //console.log(item.value+" "+commonValues.length)
-    return authsConfilct.includes(item.id) || authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
+    return authsConflict.includes(item.id) || authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
 }
 
 function replacement(sid, cal){
@@ -952,11 +957,9 @@ function print_conflict(aPrint, domElementId){
 
 function print_submitting(){
     //Print submitting
-    if (authsExclude.length > 0 )
     print_conflict(authsExclude_obj, "authList")
     //Print Conflict
-    if (authsConfilct.length > 0)
-    print_conflict(authsConfilct_obj, "cauthList")
+    print_conflict(authsConflict_obj, "cauthList")
 }
 
 function print_rew(){
@@ -969,7 +972,7 @@ function print_rew(){
         let suggestion = authsReview_obj[i];
         let found = false, cal = [];
         for(let key in suggestion.coAuthList) {
-            if(!(authsExclude.includes(key) || authsReview.includes(key) || authsConfilct.includes(key) ) && idAs.includes(key))
+            if(!(authsExclude.includes(key) || authsReview.includes(key) || authsConflict.includes(key) ) && idAs.includes(key))
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
@@ -1119,12 +1122,11 @@ function setup_searchbars(){
           let isIn = false
           idA = suggestion.id
           let aName = suggestion.value
-            if(authsConfilct.includes(idA))
+            if(authsConflict.includes(idA))
                 isIn = true
             else{
                 undos.push(['acr', idA])
-                authsConfilct.push(idA)
-                authsConfilct_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
+                add_conflicted(authors.filter(function(el){ return el.id === idA;})[0])
                 authorBars()
                 authorGraph()
                 print_submitting()
@@ -1254,7 +1256,7 @@ $(function (){
     
     
     //DEBUG
-    
+    /*
     
     choosen_j = "cg"
     let instance  = choosen_j
@@ -1265,5 +1267,5 @@ $(function (){
     }
     
     clickOnGo()
-    
+    */
 });

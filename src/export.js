@@ -140,6 +140,15 @@ function export_file(){
             +authsExclude_obj[authsExclude_obj.length-1].value
     }
     ret += "\n"
+
+    if(authsConflict_obj.length > 0){
+        for(let i  = 0; i < authsConflict_obj.length-1; i++)
+            ret += authsConflict_obj[i].id+sep1
+                +authsConflict_obj[i].value+sep2
+        ret += authsConflict_obj[authsConflict_obj.length-1].id+sep1
+            +authsConflict_obj[authsConflict_obj.length-1].value
+    }
+    ret += "\n"
     
     if(authsReview_obj.length > 0){
         for(let i  = 0; i < authsReview_obj.length-1; i++)
@@ -161,7 +170,7 @@ function export_file(){
 function export_session(){
     
     if($( "#export-dialog" ).dialog( "isOpen" )){
-         $( "#export-dialog" ).dialog( "close" );
+        $( "#export-dialog" ).dialog( "close" );
         $("#ui-id-1.ui-dialog-title")[0].innerHTML = "Session Snapshot"
         clickExp = false;
     }else{

@@ -265,6 +265,9 @@ function readJournals(path, instance){
     for (i = 0; i < n; i++){
         j_lists[instance]['j_list'].push(jns[i]['id'])
     }
+
+    maxYear = jj.maxy ? jj.maxy : maxYear
+
     j_lists[instance]['stats'] = [npp, nct, nat]
     create_jtext(instance, jns)
     
@@ -314,7 +317,7 @@ function clickOnJ(x1){
     
     document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
     document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
-    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2018, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    document.getElementById('stat-intro').innerHTML = "The "+ x1.innerText+" instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to "+maxYear+", from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
     
 }
 
@@ -1961,71 +1964,28 @@ function papDblc(event){
     }else first_dbl = !first_dbl
 }
 
-function authDblc(event){
+function cauthDblc(event){
     if(!first_dbla){
-    if(clickJ) unclick_j()
-    if(click) unclick_auth(clkA)
-    if(clickP) unclick_pap(clkPp)
      let idClick = event.target.id;
     
      idClick = idClick.substring(1,idClick.length)
 
-        undos.push(['rcr', idClick])
+    delete_Confilct(idClick)
+    
+    event.preventDefault()
+    event.stopPropagation()
+    first_dbla = true
+    }else first_dbla = !first_dbla
+    
+}
 
-        let index = authsExclude.indexOf(idClick),
-        elementPos = authsExclude_obj.map(function(x) {return x.id; }).indexOf(idClick);
-    authsExclude.splice(index, 1);
-    authsExclude_obj.splice(elementPos, 1);
-    print_submitting()
-        
-    d3.selectAll(".plink")
-        .style("opacity", 1)
+function authDblc(event){
+    if(!first_dbla){
+     let idClick = event.target.id;
     
-    d3.selectAll(".papersNode")
-        .attr("r", "6")
-        .style("opacity", 1)
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(idClick))
-                d3.select($("#txt"+d1.id)[0])
-                    .attr("x", -1000)
-                    .attr("y", -1000)
-                    .attr("opacity", 0)  
-            if(idPs.includes(d1.id))
-                return "#4238ff"
-                //return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d1){
-            if(idPs.includes(d1.id))
-                return 2.5;
-            })
-    
-    reset_texts()
-    authorBars()
-    authorGraph()
-//    if(authsExclude.length == 0){
-//        d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-//        d3.select("#td1").style("font-size", "1em")
-//        document.getElementById("td2").style.display = "inline";
-//        $( ".hiddenSB" ).autocomplete({disabled:true});
-//        $( ".hiddenSB" )[0].disabled = true;
-//        $( ".hiddenSB" )[1].disabled = true;
-//        $( "#export-btn" )[0].disabled = true;
-//        $( "#done_submit").on("click", function(){
-//            if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-//            else{
-//                $( ".hiddenSB" ).autocomplete({disabled:false});
-//                $( ".hiddenSB" )[0].disabled = false;
-//                $( ".hiddenSB" )[1].disabled = false;
-//                $( "#export-btn" )[0].disabled = false;
-//                d3.selectAll(".hiddenSB").style("background-color", "white")
-//                d3.select("#td1").style("font-size", "0.8em")
-//                document.getElementById("td2").style.display = "none";
-//            }
-//        })
-//    } 
-    print_rew()
-    refresh_export()
+     idClick = idClick.substring(1,idClick.length)
+
+    deleteConfilct(idClick)
     
     event.preventDefault()
     event.stopPropagation()
@@ -2039,45 +1999,7 @@ function r_authDblc(event){
     
         idClick = idClick.substring(1,idClick.length)
 
-        undos.push(['rr', idClick])
-
-    let index = authsReview.indexOf(idClick),
-        elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idClick);
-    if(clickJ) unclick_j()
-    if(click) unclick_auth(clkA)
-    if(clickP) unclick_pap(clkPp)
-    $('#rauthList').html("")
-    authsReview.splice(index, 1);
-    authsReview_obj.splice(elementPos, 1);
-    //console.log(authsReview_obj)
-  
-    d3.selectAll(".plink")
-        
-        .style("opacity", 1)
-    d3.selectAll(".papersNode")
-        .attr("r", "6")
-        .style("opacity", 1)
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(idClick))
-                d3.select($("#txt"+d1.id)[0])
-                    .attr("x", -1000)
-                    .attr("y", -1000)
-                    .attr("opacity", 0)  
-            if(idPs.includes(d1.id))
-                return "#4238ff"
-                //return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d1){
-            if(idPs.includes(d1.id))
-                return 2.5;
-            })
-    reset_texts()
-    authorBars()
-    authorGraph()
-    if(authsReview.length > 0)
-        print_rew()
-    refresh_export()
+    deleteRev(idClick)
     
     event.preventDefault()
     event.stopPropagation()
