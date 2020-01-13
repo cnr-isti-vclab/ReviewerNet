@@ -1247,6 +1247,25 @@ function handlerMouseOutAG(d){
     if(clickJ) highlight_j(clickedJ)
 }
 
+function link_dblclk(d){
+    redos = []
+
+    if(clickJ) unclick_j()
+    if(click) unclick_auth(clkA)
+    if(clickP) unclick_pap(clkPp)
+
+    let pp = d.source.coAuthList[d.target.id][2], i = 0, 
+        found = pp.length, res_obj = [],
+        tmp = papers.filter(function(el){ return pp.includes(el.id);});
+
+    for(i = 0; i < tmp.length; i++)
+        addPaper(tmp[i], true)
+
+
+    d3.event.preventDefault()
+    d3.event.stopPropagation()
+}
+
 function linkAGClickHandler(d){
 //show informative popup and hint shared viz papers
     if(clickJ) unclick_j()

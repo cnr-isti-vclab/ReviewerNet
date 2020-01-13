@@ -125,6 +125,7 @@ function authorGraph() {
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
+        .on("dblclick", link_dblclk)
     let node = svgAG.append("g")
         .attr("class", "authors-el-cont")
         .selectAll("circle")
