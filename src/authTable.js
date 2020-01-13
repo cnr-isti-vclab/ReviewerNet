@@ -246,7 +246,7 @@ function printPapers(auths){
             .on("mouseover", handleMouseOverPB)
             .on("mouseout", handleMouseOutPB)
             .on("dblclick", function(d) {
-                addPaper(d)
+                addPaper(d, true)
             })
     }
 }

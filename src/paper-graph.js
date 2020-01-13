@@ -117,7 +117,10 @@ function addId(name, year){
         name = 
         $("#papList").append("<li id=\""+"p"+idP+
         "\" class=\"paplist list-group-item pAuth\"><strong>"
-         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
+         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="
+         +name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+
+         "\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+
+         year+" "+name+del_btn(idP, 'p')+"</li>")
         
       write = true;
       let tempCits = citations.filter(citFilter);

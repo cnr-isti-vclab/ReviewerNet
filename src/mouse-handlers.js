@@ -2188,8 +2188,32 @@ function repl_out(event){
 }
 
 function delbtn_handler(event){
+	let typ = event.target.id[0], 
+		idd = event.target.id.slice(1, event.target.id.length);
 
-    console.log(this)
+    switch(typ) {
+        case 'p':
+            if(clickJ) unclick_j()
+            if(click) unclick_auth(clkA)
+            if(clickP) unclick_pap(clkPp)
+        
+            zoom_by(1)				  
+            deleteP(idd, true)
+            refresh_export()
+            document.getElementsByClassName("td2title").innerHTML = ""
+        break;
+        case's':
+            deleteConflict(idd, true)
+        break;
+        case 'c':
+            delete_Conflict(idd, true)
+        break;
+        case 'r':
+            deleteRev(idd, true)
+        break;
+        default:
+        break;
+    } 
 
     event.preventDefault()
     event.stopPropagation()

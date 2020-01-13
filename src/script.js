@@ -411,17 +411,17 @@ function setMouseHandlers(){
         .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
-        .on("dblclick", "td", authDblc);
+        //.on("dblclick", "td", authDblc);
     $("#cauthList")
         .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
-        .on("dblclick", "td", cauthDblc);
+        //.on("dblclick", "td", cauthDblc);
     $("#rauthList")
         .on("click", "li", addFromList)
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
-        .on("dblclick", "li", r_authDblc);
+        //.on("dblclick", "li", r_authDblc);
     $("#papList")
         .on("click", "li", function(event){
             let paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
@@ -430,7 +430,7 @@ function setMouseHandlers(){
         })
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
-        .on("dblclick", "li", papDblc);
+        //.on("dblclick", "li", papDblc);
     
      $("#reset-button")
         .on("click", function() {
@@ -947,12 +947,12 @@ function print_conflict(aPrint, domElementId){
         if(extra > 0){
             thehtml += `<tr>`
             for (let i = ia; i < aPrint.length; i++){
-                let test_obj = aPrint[ia],
+                let test_obj = aPrint[i],
                     fs = (authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
                 
                 thehtml += `<td class="${cls}" style="font-style:${fs}" 
-                id="a${aPrint[ia].id}">${aPrint[i].value}
-                ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+                id="a${test_obj.id}">${test_obj.value}
+                ${del_btn(test_obj.id, domElementId[0] == 'c' ? 'c' : 's')}
                 `
             }
             thehtml += `</tr>`
@@ -965,8 +965,8 @@ function print_conflict(aPrint, domElementId){
                 fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
         
             thehtml += `<td class="${cls}" style="font-style:${fs}" 
-            id="a${aPrint[ia].id}">${aPrint[i].value}
-            ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+            id="a${aPrint[i].id}">${aPrint[i].value}
+            ${del_btn(aPrint[i].id, domElementId[0] == 'c' ? 'c' : 's')}
             `
         }
         thehtml += `</tr>`
@@ -997,7 +997,11 @@ function print_rew(){
         cal.sort(function(a, b){return b[1]-a[1];})
         let name = suggestion.value//.replace(/[^\x00-\x7F]/g, "")
         let fs = (authColor(suggestion)) ? "italic" : "normal";
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs+";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
+        $("#rauthList").append("<li id=\"a"+suggestion.id+
+        "\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs
+        +";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="
+        +name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "
+        +suggestion.value+" - "+replacement(suggestion.id, cal)+del_btn(suggestion.id, 'r')+"</li>")
     }
     $(".replacement")
         .on("click", repl_clk)
