@@ -913,44 +913,63 @@ function replacement(sid, cal){
     return found > 0 ? txt1 : txt;
 }
 
+function del_btn(idd, typ){
+    let sty = "float: right; width: 25px; height: 20px;", sty1 = "width: 100%; height: 100%; border-radius: 60%; border:0px;";
+    return `<span style="${sty}">
+    <button id ="${typ}${idd}"
+    style="${sty1}" 
+    onclick=delbtn_handler(event)
+    class = "delbtn" title = "Remove">
+    <i class="fa fa-trash" style="pointer-events:none"></i></button></span>`     
+}
+
 function print_conflict(aPrint, domElementId){
-    let ia = 0, thehtml = "", cls = domElementId[0] == 'c' ? "pAuthc pAuth" : "pAuthe pAuth";
+    let ia = 0, thehtml = "", cls = domElementId[0] == 'c' ? `pAuthc pAuth` : `pAuthe pAuth`;
     d3.select("#"+domElementId).selectAll("tr").remove()
     if(aPrint.length > 4){
         //id = \"authsPap\"
         let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
-        thehtml += "<tr class=\"tr-submitting\">"
+        thehtml += `<tr class="tr-submitting">`
         for(let j = 0; j < rspan; j++){
-            if (j!=0) thehtml += "<tr>"
+            if (j!=0) thehtml += `<tr>`
             for (let i = 0; i < 4; i++){
                  let test_obj = aPrint[ia],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
-                
-                thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
+                //<strong>${(ia+1)}</strong>
+                thehtml += `<td class="${cls}" style="font-style:${fs}" 
+                    id="a${aPrint[ia].id}">${aPrint[ia].value}
+                    ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+                    `
                 ia++
             }
-            thehtml += "</tr>"
+            thehtml += `</tr>`
         }
         if(extra > 0){
-            thehtml += "<tr>"
+            thehtml += `<tr>`
             for (let i = ia; i < aPrint.length; i++){
                 let test_obj = aPrint[ia],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
                 
-                thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+                thehtml += `<td class="${cls}" style="font-style:${fs}" 
+                id="a${aPrint[ia].id}">${aPrint[i].value}
+                ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+                `
             }
-            thehtml += "</tr>"
+            thehtml += `</tr>`
         }
     }else{
         
-        thehtml += "<tr class=\"tr-submitting\">"
+        thehtml += `<tr class="tr-submitting">`
         for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
                 fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
         
-            thehtml += "<td class=\""+cls+"\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            thehtml += `<td class="${cls}" style="font-style:${fs}" 
+            id="a${aPrint[ia].id}">${aPrint[i].value}
+            ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+            `
         }
-        thehtml += "</tr>"
+        thehtml += `</tr>`
     }
     $("#"+domElementId).append(thehtml);
 }

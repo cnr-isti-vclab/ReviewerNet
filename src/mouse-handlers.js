@@ -2186,3 +2186,11 @@ function repl_out(event){
         if(clickJ) highlight_j(clickedJ)
     event.stopPropagation()
 }
+
+function delbtn_handler(event){
+
+    console.log(this)
+
+    event.preventDefault()
+    event.stopPropagation()
+}
