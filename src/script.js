@@ -206,13 +206,12 @@ function getArrays(graph, path) {
   }
 
 function getAuths(path) {
-
     let authG = JSON.parse(readTextFile(path)),
         a = authG.authors,
         n = a.length
     for (i = 0; i < n; i++){
         authors[i]=a[i]
-        authDict[a[i].id] = [2019, 1900, []]
+        authDict[a[i].id] = [maxYear, 1900, [], a[i].value ]
     }
         
 }
@@ -1171,12 +1170,19 @@ function setup_searchbars(){
             terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
   
           let resultset = [];
-          $.each(papers, function() {
-            let t = this.value;
-            if (this.value && (!request.term || str_match(matchers, t)))
-               resultset.push(this)
+          papers.map(function(el) {
+            let t = el.value;
+            if (el.value && (!request.term || str_match(matchers, t)))
+               resultset.push(el)
+            else
+                el.authsId.map(function(ell){
+                    if(str_match(matchers, authDict[ell][3]))
+                    resultset.push(el)
+                })  
 
           });
+
+
             $('#area-paper-badge').html(resultset.length)
             resultset = resultset.length > 200 ? resultset.slice(0,200) : resultset;
             
