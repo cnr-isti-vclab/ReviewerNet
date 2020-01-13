@@ -113,6 +113,8 @@ function loaded(evt) {
     $('#authList').html("")
     $('#rauthList').html("")
     
+    undos = []
+    redos = []
     authsExclude = []
     authsExclude_obj = []
     authsConflict = []

@@ -138,7 +138,9 @@ function addId(name, year){
     return isIn
 }
 
-function deleteP(idCk){
+function deleteP(idCk, reset_redo){
+    if(reset_redo)
+        redos = []
     $('#papList').html("")
     var index = idPs.indexOf(idCk), idsT = [];
     undos.push(['rp', idCk ])
@@ -190,7 +192,7 @@ function deleteP(idCk){
         }
 }
 
-function addPaper(suggestion){
+function addPaper(suggestion, reset_redo){
     startf()
     idP = suggestion.id
     //console.log(suggestion)
@@ -199,7 +201,8 @@ function addPaper(suggestion){
     setPapHandlers()
     //setMouseHandlers()
     if(!isIn){
-        
+        if(reset_redo)
+            redos = []
         undos.push(['ap', idP])
       //updateYear(suggestion.year)
         updateADpapers()
@@ -417,7 +420,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
             console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
             if(idPs.includes(d.id)) deleteP(d.id)
-                else addPaper(d)
+                else addPaper(d, true)
             event.stopPropagation()
             event.preventDefault()
         })

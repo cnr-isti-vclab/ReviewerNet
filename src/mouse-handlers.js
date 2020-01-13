@@ -470,64 +470,17 @@ function author_dblclick_ABG(d){
      let aName = suggestion.value
     if(authsReview.includes(idA_rev)){
         isIn = true
-        undos.push(['rr', idA_rev])
-        let index = authsReview.indexOf(idA_rev),
-            elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(idA_rev);
-    
-        if(clickJ) unclick_j()
-        if(click) unclick_auth(clkA)
-        if(clickP) unclick_pap(clkPp)
-        $('#rauthList').html("")
-        authsReview.splice(index, 1);
-        authsReview_obj.splice(elementPos, 1);
-        //console.log(authsReview_obj)
-
-        d3.selectAll(".plink")
-
-            .style("opacity", 1)
-        d3.selectAll(".papersNode")
-            .attr("r", "6")
-            .style("opacity", 1)
-            .attr("stroke", function(d1){
-                if(d1.authsId.includes(idA_rev))
-                    d3.select($("#txt"+d1.id)[0])
-                        .attr("x", -1000)
-                        .attr("y", -1000)
-                        .attr("opacity", 0)  
-                if(idPs.includes(d1.id))
-                    return "#4238ff"
-                    //return "#6d10ca";
-                else return "#999";
-                })
-            .attr("stroke-width", function(d1){
-                if(idPs.includes(d1.id))
-                    return 2.5;
-                })
-        reset_texts()
-        authorBars()
-        authorGraph()
-        if(authsReview.length > 0)
-            print_rew()
-        refresh_export()
+        deleteRev(idA_rev, true)
 
         d3.event.stopPropagation()
     
     }else{
-        undos.push(['ar', idA_rev])
-        authsReview.push(idA_rev)
-        authsReview_obj.push(suggestion)
-        authorBars()
-        authorGraph()
+        addRev(idA_rev, true)
     }
     popTextA.style("opacity", 0)
     popRectA.style("opacity",0)
     d3.select(".txtspan").remove()
     d3.event.stopPropagation()
-    refresh_export()
-    
-    
-    
-    
 }
 
 function unclick_auth(d){
@@ -1670,7 +1623,7 @@ function addFromList(event){
          let paper = papers.filter(function (item){ return item.id === idClick})[0];
         if(!idPs.includes(idClick)){
             zoom_by(1)
-            addPaper(paper)
+            addPaper(paper, true)
         }
     }else{
         idClick = idClick.substring(1,idClick.length);
@@ -1956,7 +1909,7 @@ function papDblc(event){
     idClick = idClick.substring(1,idClick.length)
             
     zoom_by(1)
-    deleteP(idClick)
+    deleteP(idClick, true)
     refresh_export()
     
     document.getElementsByClassName("td2title").innerHTML = ""
@@ -1970,7 +1923,7 @@ function cauthDblc(event){
     
      idClick = idClick.substring(1,idClick.length)
 
-    delete_Confilct(idClick)
+    delete_Conflict(idClick, true)
     
     event.preventDefault()
     event.stopPropagation()
@@ -1985,7 +1938,7 @@ function authDblc(event){
     
      idClick = idClick.substring(1,idClick.length)
 
-    deleteConfilct(idClick)
+    deleteConflict(idClick, true)
     
     event.preventDefault()
     event.stopPropagation()
@@ -2021,48 +1974,12 @@ function repl_clk(event){
 }
 
 function repl_click(event){
-    if(clickJ) unclick_j()
-    if(!clickP){
       let idClick = event.target.id;
         idClick = idClick.substring(3,idClick.length)
-    let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1],
-         index = authsReview.indexOf(id1),
-        elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(id1);
+    let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
 
-        undos.push(['r', id1, id2])
-
-    authsReview[index] = id2
-    authsReview_obj[elementPos] = authors.filter(function(el){return el.id === id2})[0];
-  
-    d3.selectAll(".plink")
-        
-        .style("opacity", 1)
-    d3.selectAll(".papersNode")
-        
-        .attr("r", "6")
-        .style("opacity", 1)
-        .attr("stroke", function(d1){
-            if(d1.authsId.includes(idClick))
-                d3.select($("#txt"+d1.id)[0])
-                    .attr("x", -1000)
-                    .attr("y", -1000)
-                    .attr("opacity", 0)  
-            if(idPs.includes(d1.id))
-                return "#4238ff"
-                //return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d1){
-            if(idPs.includes(d1.id))
-                return 2.5;
-            })
-    reset_texts()
-    authorBars()
-    authorGraph()
-    if(authsReview.length > 0)
-        print_rew()
-    refresh_export()
-    }
+    swap_alt(id1, id2, true)
+    
     event.stopPropagation()
 }
 

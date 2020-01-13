@@ -1028,19 +1028,10 @@ function setup_searchbars(){
             let suggestion = ui.item
             startf()
           this.value = null
-          let isIn = false
           idA_rev = suggestion.id
           let aName = suggestion.value
-            if(authsReview.includes(idA_rev))
-                isIn = true
-            else{
-                undos.push(['ar', idA_rev])
-                authsReview.push(idA_rev)
-                authsReview_obj.push(suggestion)
-                authorBars()
-                authorGraph()
-                refresh_export()
-            }
+            if(!authsReview.includes(idA_rev))
+                addRev(idA_rev, true)
         $('#rauthors-badge').html("")
          setTimeout(function(){$('#rauthors-autocomplete')[0].value = ""}, 200)
         }
@@ -1073,19 +1064,11 @@ function setup_searchbars(){
         select: function (event, ui) {
             let suggestion = ui.item
             startf()
-          let isIn = false
+          
           idA = suggestion.id
           let aName = suggestion.value
-            if(authsExclude.includes(idA))
-                isIn = true
-            else{
-                undos.push(['acr', idA])
-                authsExclude.push(idA)
-                authsExclude_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
-                authorBars()
-                authorGraph()
-                print_submitting()
-            }
+            if(!authsExclude.includes(idA))
+                addConflict(idA, true)
         $('#authors-badge').html("")
             setTimeout(function(){$('#authors-autocomplete')[0].value = ""}, 200)
         }
@@ -1093,7 +1076,7 @@ function setup_searchbars(){
      .autocomplete( "instance" )._renderItem = function( ul, item ) {
         let col = "black",
 
-        fs = (authColor(item)) ? "italic" : "normal";
+        fs =  "normal";
         if(authsReview.includes(item.id)) col = "#5263fe";
         else if(authsExclude.includes(item.id)) col = "#be27be";
         else if(authColor(item)) col =  "#db0000";
@@ -1119,18 +1102,10 @@ function setup_searchbars(){
         select: function (event, ui) {
             let suggestion = ui.item
             startf()
-          let isIn = false
           idA = suggestion.id
           let aName = suggestion.value
-            if(authsConflict.includes(idA))
-                isIn = true
-            else{
-                undos.push(['acr', idA])
-                add_conflicted(authors.filter(function(el){ return el.id === idA;})[0])
-                authorBars()
-                authorGraph()
-                print_submitting()
-            }
+            if(!authsConflict.includes(idA))
+                addConflictc(idA, true)
         $('#cauthors-badge').html("")
             setTimeout(function(){$('#cauthors-autocomplete')[0].value = ""}, 200)
         }
@@ -1196,7 +1171,7 @@ function setup_searchbars(){
 //
         },
         select: function (event, ui) {
-            addPaper(ui.item)
+            addPaper(ui.item, true)
             setTimeout(function(){$('#papers-autocomplete')[0].value = ""}, 200)
             $('#area-paper-badge').html("")
         }
@@ -1256,7 +1231,7 @@ $(function (){
     
     
     //DEBUG
-    /*
+    
     
     choosen_j = "cg"
     let instance  = choosen_j
@@ -1267,5 +1242,5 @@ $(function (){
     }
     
     clickOnGo()
-    */
+    
 });
