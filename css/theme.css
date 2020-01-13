@@ -789,7 +789,7 @@ hr {
 .pAuthe {
     color:  #be27be;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 0.8em;
     
 }
 
@@ -797,7 +797,7 @@ hr {
     color: #db0000; /*red and italic*/
     cursor: pointer;
     font-style: italic;
-    font-size: 0.9em;
+    font-size: 0.75em;
     
 }
 

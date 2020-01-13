@@ -227,12 +227,12 @@ function str_match(matchers, t){
 function setPapHandlers(){
     $(".inCits")
         .on("click", clickHandler)
-        .on("dblclick", addFromList)
+        //.on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".outCits")
         .on("click", clickHandler)
-        .on("dblclick", addFromList)
+        //.on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".authsPap")
@@ -934,7 +934,7 @@ function print_conflict(aPrint, domElementId){
             if (j!=0) thehtml += `<tr>`
             for (let i = 0; i < 4; i++){
                  let test_obj = aPrint[ia],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
+                    fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
                 //<strong>${(ia+1)}</strong>
                 thehtml += `<td class="${cls}" style="font-style:${fs}" 
                     id="a${aPrint[ia].id}">${aPrint[ia].value}
@@ -948,7 +948,7 @@ function print_conflict(aPrint, domElementId){
             thehtml += `<tr>`
             for (let i = ia; i < aPrint.length; i++){
                 let test_obj = aPrint[i],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
+                    fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
                 
                 thehtml += `<td class="${cls}" style="font-style:${fs}" 
                 id="a${test_obj.id}">${test_obj.value}
@@ -962,7 +962,7 @@ function print_conflict(aPrint, domElementId){
         thehtml += `<tr class="tr-submitting">`
         for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
-                fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
         
             thehtml += `<td class="${cls}" style="font-style:${fs}" 
             id="a${aPrint[i].id}">${aPrint[i].value}
