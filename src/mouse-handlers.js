@@ -1249,14 +1249,14 @@ function handlerMouseOutAG(d){
 
 function link_dblclk(d){
     redos = []
-
+    hide_link_text()
     if(clickJ) unclick_j()
     if(click) unclick_auth(clkA)
     if(clickP) unclick_pap(clkPp)
 
     let pp = d.source.coAuthList[d.target.id][2], i = 0, 
         found = pp.length, res_obj = [],
-        tmp = papers.filter(function(el){ return pp.includes(el.id);});
+        tmp = papers.filter(function(el){ return !idPs.includes(el.id) && pp.includes(el.id);});
 
     for(i = 0; i < tmp.length; i++)
         addPaper(tmp[i], true)
