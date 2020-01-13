@@ -170,7 +170,7 @@ function printPapers(auths){
     let an = auths.length
     for(var i = 0; i < an; i++){
         let id_a = auths[i].id
-        let last = authDict[id_a][2].filter(function(el){return     papersPrint.includes(el.id)}),
+        let last = authDict[id_a][2].filter(function(el){return papersPrint.includes(el.id)}),
             first = authDict[id_a][2].filter(function(el){return !papersPrint.includes(el.id)})
         
         
