@@ -47,9 +47,9 @@ function submit_biblio(){
     let params = 'query='+query.join("\n")
     
     //Send the proper header information along with the request
+    
     http.open('POST', URL1, true);
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
 
     http.onload = function (e) {
     if (http.readyState === 4) {

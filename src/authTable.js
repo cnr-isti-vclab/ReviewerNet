@@ -99,18 +99,25 @@ function prune_auth(d1){
 }
 
 function apFilter(item){
-    return (authsConflict.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ( (authsConflict.includes(item.id) && !checkboxC[0].checked) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || AP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter(item){
-    return (authsConflict.includes(item.id) || authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ((authsConflict.includes(item.id) && !checkboxC[0].checked) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter_noc(item){
-    return (authsConflict.includes(item.id) ||  authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ((authsConflict.includes(item.id) && !checkboxC[0].checked) ||  authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id))
+}
+
+function order(att){
+    let idd = att.id
+    if(authsExclude.includes(idd)) return 0;
+    else if(authsConflict.includes(idd) ||  authColor(att)) return 1;
+    else return 2;
 }
 
 function rankAuths(auths){
@@ -127,7 +134,8 @@ function rankAuths(auths){
                 score+=beta
         })
         //for(var j = 0; j < npl; j++)
-        auths[i].score=score        
+        auths[i].score=score
+        auths[i].order=order(auths[i])        
     }
     return auths
 }
@@ -292,26 +300,9 @@ function authorBars(){
     if(authsDef){
         var na = authsDef.length
 
-        /*
-        
-        --------------
-        Submitters
-        -----------
-        Conflicted wt Sub
-        ------------
-        Candidate + selected & conflict wt selected
-        --------------
-        
-        prima stampo submitters e conflittati con submitters
-
-        poi ranko i restanti e gli stampo
-
-
-        */
-
         authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {
-            return -(a.score - b.score) == 0 ? a.value.localeCompare(b.value) : -(a.score - b.score);
+            return (a.order - b.order) == 0 ? (-(a.score - b.score) == 0 ? a.value.localeCompare(b.value) : -(a.score - b.score)) : a.order - b.order;
         });
         idAs = []
         authsDef.map(function(el){idAs.push(el.id)})

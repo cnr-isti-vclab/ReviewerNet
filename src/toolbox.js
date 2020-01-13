@@ -113,7 +113,7 @@ function checkboxesInit(){
         }
     });
     checkboxC.on('click', function(){
-        if(authsExclude.length > 0 || authsReview.length > 0){
+        if(authsConflict.length > 0 || authsExclude.length > 0 || authsReview.length > 0){
             authorBars()
             authorGraph()
         }
