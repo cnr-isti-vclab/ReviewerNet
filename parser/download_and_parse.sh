@@ -1,4 +1,5 @@
 #!/bin/bash
+#https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt
 #array pf PIDs fpr multitasking
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
@@ -119,7 +120,7 @@ parse_file(){
 	
 }
 
-ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt"#$1
+ROOT=$1
 ROOT=${ROOT%manifest*}
 SUFFIX="-filtered"
 
@@ -191,7 +192,7 @@ echo "Waiting for ${#PARSING_PIDS[@]} partitions to be decompressed and parsed"
 waitPPids
 
 echo "Creating datasets from parsed partitions"
-#python2 merge_data.py
+python2 merge_data.py
 
 options=(
     "Delete both compressed and filtered partitions and quit"
