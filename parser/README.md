@@ -61,7 +61,7 @@ At this point he *datasets* folder will contain the files needed to run Reviewer
 
 1. open *journals.txt* with a text editor and change the content of the JSON object with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
-2. execute *download_and_parse.sh*
+2. execute *download_and_parse.sh manifest_link*
 
 3. run a local/remote ReviewerNet session and click on *Upload instance* to upload the files you've just created; 
 
