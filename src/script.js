@@ -31,7 +31,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     ANP = [],
     lines = [],
     authsReview = [], authsReview_obj = [], idA_rev, revDict = {},//id_rev: [[ida1, namea1]...]
-    altRev = [], altRev_obj = [],
+    altRev = [], altRev_obj = [], coord_hist = {},
     authsExclude = [], authsExclude_obj = [], authsConflict = [], authsConflict_obj = [],
     authsDef = [],
     papers = [],
@@ -590,7 +590,7 @@ function setSimulation(){
                 .strength(-30)
                 .theta(0.1);//d3.forceY().strength(-100).y(heightP / 2);
         simulation.force("charge", frc)
-        .force("collide", d3.forceCollide(15).iterations(50))
+        .force("collide", d3.forceCollide(15).iterations(100))
         .force("center", d3.forceCenter((w / 2), (heightP / 2)))
         .force("forceY",  d3.forceY().strength(0.01)
         .y(heightP/2))
