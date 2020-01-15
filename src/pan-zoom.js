@@ -55,98 +55,15 @@ function zoom_by(zf, mouseY){
     if(zf == 1){
         d3.select("#scale").text("Y-force = 1.0X")
         simulation.force("charge", d3.forceManyBody()
-                    .strength(-20)
-                    .theta(0.5))
+                    .strength(-30)
+                    .theta(0.1))
         
 
         simulation.restart().alpha(0.1)
         centerSvg()
     }
     
-//    if(!mouseY)
-//        mouseY = 0
-//    console.log("mouse y in zoom "+mouseY)
-//     zoomFact = zf
-//     zoom_scaler = (x) => (x-mouseY)*zoomFact + mouseY
-//         /*d3.scaleLinear()
-//        .domain([0, heightP])
-//        .range([0, baseHeight * zoomFact])*/
-//    
-//    d3.select("#scale").text("Y-force = "+zoomFact.toFixed(1))
-//     let minc = heightP, maxc = 0;
-//    simulation.stop()
-//     heightP = baseHeight * zoomFact
-//         //console.log(Math.sqrt(zoomFact))
-//    //console.log("inzoom")
-//    //(console.log(zoomFact + "x -  new h"+ heightP+" - ")
-//    
-//     d3.selectAll(".papersNode").attr("min", function () {
-//        console.log(parseFloat(this.attributes.cy.value))
-//        if(!isNaN(this.attributes.cy.value)){
-//            minc = Math.min(minc, this.attributes.cy.value)
-//            maxc = Math.max(maxc, this.attributes.cy.value)
-//        }
-//        
-//     })
-//    console.log("minc "+minc)
-//     //minc = 0//Math.max(10, minc/10)
-//     //console.log("maxc "+maxc)
-//     //console.log("newH "+(heightP - maxc + 20)) 
-//     //console.log("H "+heightP)
-//    
-//     d3.selectAll(".papersNode").attr("cy", function () {
-//         if(this.attributes.baseY){
-//            // console.log("oldy = "+this.attributes.baseY.value+" newy "+(parseFloat(this.attributes.baseY.value)*zoomFact))
-//              let ny = zoom_scaler(this.attributes.baseY.value),
-//                  ret = Math.max(30, Math.min(heightP - 20, ny));
-//             return ny//ret == 30 ? ret : ret-minc
-//         }
-//         //console.log("no base")
-//         let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.__data__.y ) ))
-//            return zoom_scaler(this.__data__.y )//ret == 30 ? ret : ret-minc
-//     })
-//
-//
-//     d3.selectAll(".plink")
-//         .attr("y1", function () {
-//         if(this.attributes.baseY1){
-//             let ny = zoom_scaler(this.attributes.baseY1.value),
-//                 ret =  Math.max(30, Math.min(heightP - 20, ny))
-//             //minc = Math.min(minc, ret)
-//             return ny//ret == 30 ? ret : ret-minc
-//         }
-//         //console.log(this.y1.baseVal.value)
-//        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-//        //minc = Math.min(minc, ret)
-//        return zoom_scaler(this.y1.baseVal.value)//ret == 30 ? ret : ret-minc
-//        })
-//         .attr("y2",function () {
-//         if(this.attributes.baseY2){
-//             let ny = zoom_scaler(this.attributes.baseY2.value),
-//                ret =  Math.max(30, Math.min(heightP - 20, ny))
-//             //minc = Math.min(minc, ret)
-//             return ny//ret == 30 ? ret : ret-minc
-//         }
-//        let ret = Math.max(30, Math.min(heightP - 20, zoom_scaler(this.y1.baseVal.value)))   
-//        //minc = Math.min(minc, ret)
-//        return zoom_scaler(this.y1.baseVal.value)//ret == 30 ? ret : ret-minc
-//        })
-//    
-//    let at = authors.filter((el) => el.id === idClickedA)[0]
-//    if(at){
-//        reset_texts()
-//        popTextA.style("opacity", 0)
-//        popRectA.style('opacity',0)
-//        d3.select(".txtspan").remove()
-//        reclick_auth(at)
-//    }
-//    
-//     $("#svgP")[0].height.baseVal.value = heightP
-//
-//    //simulation.force("center", d3.forceCenter((w / 2), (heightP / 2)))
-//    
-//    
-//    return zoom_scaler   
+  
 }
 
 function dragStart(){
@@ -174,7 +91,7 @@ function scaleSvg(deltaY){
         scr = document.getElementById('scrollable').scrollTop;
     
     zoomFact += zff
-    zoomFact = Math.max(0.2,Math.min(zoomFact, 8));
+    zoomFact = Math.max(0.3,Math.min(zoomFact, 8));
     //console.log(old_zoomFact+" - "+zoomFact)
     d3.select("#scale").text("Y-force = "+zoomFact.toFixed(1)+"X")
     //let scrollT = zoomFact*(d3.event.layerY/old_zoomFact) - (hres/2),

@@ -38,7 +38,7 @@ function submit_biblio(){
     
       let http = new XMLHttpRequest();
     
-    let len = document.getElementById("biblio-txt").value.split('\n').length
+    let len = document.getElementById("biblio-txt").value.split('\n\n').length
     //console.log(len+"\n"+document.getElementById("biblio-txt").value)
     let URL = "http://128.148.7.71/citations/create",
         URL1 = "http://anystyle.isti.cnr.it",
@@ -365,7 +365,7 @@ function reset_pap_bar(d){
         .attr("r",function (d1){return (idPs.includes(d1.id) || papersPrint.includes(d1.id)) ? 3: 2 })
 
     d3.select("#p"+d.id)
-        .attr("r", 6);
+        .attr("r", (d)=>pap_radius(d));
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     d3.selectAll(".authNode")
@@ -493,7 +493,7 @@ function unclick_auth(d){
     d3.selectAll(".plink").style("opacity", 1)
     d3.selectAll(".papersNode")
         .style("opacity", 1)
-        .attr("r", 6)
+        .attr("r", (d)=>pap_radius(d))
         .attr("stroke", function(d){
                     if(idPs.includes(d.id))
                         return "#4238ff"
@@ -539,7 +539,7 @@ function unclick_auth(d){
 
 function unclick_pap(d){
     d3.select("#p"+d.id)
-        .attr("r", 6)
+        .attr("r", (d)=>pap_radius(d))
         .attr("stroke-width", function(d){
             if(idPs.includes(d.id))
                 return 2.5;
@@ -1277,7 +1277,7 @@ function linkAGClickHandler(d){
             d3.selectAll(".plink").style("opacity", 1)
             d3.selectAll(".papersNode")
                 .style("opacity", 1)
-                .attr("r", 6)
+                .attr("r", (d)=>pap_radius(d))
         //d3.select(".txtspan").remove()
         }else{
             clickAG = true;    
@@ -1340,7 +1340,7 @@ function handlerMouseOutLinkAG(d){
         d3.selectAll(".plink").style("opacity", 1)
         d3.selectAll(".papersNode")
             .style("opacity", 1)
-            .attr("r", 6)
+            .attr("r",(d)=>pap_radius(d))
         hide_link_text()
         if(clickP) reclick_pap(clkPp)
     }
@@ -1409,7 +1409,7 @@ function handleMouseOut(d){
             .attr("width", 0)
             .attr("opacity", 0);
         d3.select(this)
-            .attr("r", 6);
+            .attr("r", (d)=>pap_radius(d));
         d3.selectAll(".plink")
             .style("opacity", 0.8)
         d3.selectAll(".authNode")
@@ -1586,7 +1586,7 @@ function handleMouseOutPB(d){
         .attr("r",function (d1){return (idPs.includes(d1.id) || papersPrint.includes(d1.id)) ? 3: 2 })
     if(papersPrint.includes(d.id)){
         d3.select("#p"+d.id)
-            .attr("r", 6);
+            .attr("r", (d)=>pap_radius(d));
         d3.selectAll(".authNode")
                 .attr('fill', function (d){
                 return "rgba( 221, 167, 109, 0.342 )"
@@ -1829,7 +1829,7 @@ function ListMouseOut(event){
                 .style("background-color", "rgba( 71, 66, 66, 0)") 
             svgP.select("#p"+idClick).transition()
                 .duration(200)
-                .attr("r", 6)
+                .attr("r", (d)=>pap_radius(d))
                 .attr("fill", function(d){
                     return c20 ? color_j(d) : color_n(d.color); 
                 }) 

@@ -355,6 +355,9 @@ function paperInfoa(suggestion){
 
 }
 
+function pap_radius(pp){
+    return idPs.includes(pp.id) ? 8 : 6;
+}
 
 function paperGraph(papers1, citations1, idPs, simulation){
     simulation.stop()
@@ -398,7 +401,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .enter().append("circle")
         .attr("class", "papersNode")
         .attr("id", function(d){return "p"+d.id})
-        .attr("r", 6)
+        .attr("r", (d)=>pap_radius(d))
         .attr("stroke", function(d){
             if(idPs.includes(d.id))
                 return "#4238ff"
@@ -424,12 +427,12 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
-            console.log("dbl "+ idPs.includes(d.id))
+            //console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d, true)
-            event.stopPropagation()
-            event.preventDefault()
+            d3.event.stopPropagation()
+            d3.event.preventDefault()
         })
         
 popRect = svgP.append("rect")
@@ -594,7 +597,7 @@ function dragended(d) {
         .attr("opacity", 0);
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 6);
+        .attr("r", (d)=>pap_radius(d));
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     d3.selectAll(".authNode")

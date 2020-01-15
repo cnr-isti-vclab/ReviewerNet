@@ -590,9 +590,9 @@ function setSimulation(){
                 .strength(-30)
                 .theta(0.1);//d3.forceY().strength(-100).y(heightP / 2);
         simulation.force("charge", frc)
-        .force("collide", d3.forceCollide(10))
+        .force("collide", d3.forceCollide(15).iterations(50))
         .force("center", d3.forceCenter((w / 2), (heightP / 2)))
-        .force("forceY",  d3.forceY().strength(0.018)
+        .force("forceY",  d3.forceY().strength(0.01)
         .y(heightP/2))
         
        //.force("y", )
@@ -777,7 +777,7 @@ function startf(){
         svgAxis = d3.select("#svgAxis").attr("y", "80")  
         svgAxis.append("g").attr("id", "axis").call(xaxis);
         document.getElementById("startMsg").style.visibility = "hidden";
-         document.getElementById("svgAxis").style.visibility = "visible";
+        document.getElementById("svgAxis").style.visibility = "visible";
         d3.selectAll(".ui-resizable-handle").style("opacity", 1)
         d3.selectAll(".graph").style("overflow-y", "auto")
         add_labels()
