@@ -140,6 +140,7 @@ function addId(name, year){
       getAP()
       getANP()
       refresh_export()
+      refresh_cmap()
     }
     
     return isIn
@@ -182,15 +183,12 @@ function deleteP(idCk, reset_redo){
                     updateADpapers()
                 }    
             }
+
+        refresh_cmap()
+
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         
-        if(c20){
-            svgAxis.selectAll(".jtext")
-            .text(function (d){
-                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
-                return d+" "+num;
-            })
-        }
+        
         
         setTimeout(function(){ 
             authorBars()
@@ -216,17 +214,19 @@ function addPaper(suggestion, reset_redo){
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
                 
-        if(c20){
-            svgAxis.selectAll(".jtext")
-            .text(function (d){
-                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
-                return d+" "+num;
-            })
-        }
+        refresh_cmap()
+
         setTimeout(function(){ 
             authorBars()
             authorGraph()
             print_rew()
+            let i =0, ln = papers.length;
+            for(i=0; i< ln; i++){
+                papers[i].vy = 0
+                papers[i].vx = 0
+            }
+            
+
         }, 1000);
         
     }
@@ -429,8 +429,11 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .on("dblclick", function(d) {
             //console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
+            save_hist()
             if(idPs.includes(d.id)) deleteP(d.id)
                 else addPaper(d, true)
+            //refresh_cmap()
+
             d3.event.stopPropagation()
             d3.event.preventDefault()
         })
@@ -512,10 +515,14 @@ popRect = svgP.append("rect")
 
         simulation.force("link")
             .links(citations1);
+
+            //restore_hist()
+        
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
+        
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
-
+        
     svg_handlers()
     centerSvg()
 

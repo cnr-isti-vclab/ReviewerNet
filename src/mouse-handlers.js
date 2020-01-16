@@ -116,7 +116,9 @@ function getAsText(readFile, loaded) {
 
 function highlight_j(d){
     d3.selectAll(".papersNode").style("opacity", function(p){ 
-        return p.v_id === d || p.j_id == d ? 1 : 0.2 
+        return d != "Other" ? 
+        ((p.v_id === d || p.j_id == d) ? 1 : 0.2) : 
+        !jddata.includes(p.v_id) && !jddata.includes(p.j_id) ? 1 : 0.2
     })
     d3.selectAll(".plink").style("opacity", 0.2)
 }
@@ -169,24 +171,40 @@ function cmap_click(d){
     if (d3.event) d3.event.stopPropagation()
 }
 
+function refresh_cmap(){
+    if(c20){
+        svgAxis.selectAll(".jtext")
+        .text(function (d){
+            let ot =  (papersFiltered.filter((el) => (!jddata.includes(el.v_id) && !jddata.includes(el.j_id)) ).length)
+            //console.log(d+" "+ot)
+            if(d==="Other") return d+" "+(papersFiltered.filter((el) => !jddata.includes(el.v_id) && !jddata.includes(el.j_id) ).length)
+            else{
+                let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
+                return d+" "+num;
+            }
+        })
+        }
+}
+
+
 function cmap_dbl(){
     if(!c20){//hide inc cmap and show j/v squares
-        if(j_lists[choosen_j].j_list.length > 10)
-            colorjj = color20b
-        colorjj.domain(j_lists[choosen_j].j_list)
+        //if(j_lists[choosen_j].j_list.length > 10)
+        //    colorjj = color20b
+        //colorjj.domain(j_lists[choosen_j].j_list)
         $(".cmpClass").hide()
-        let x_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([150, 330]) 
+        let y_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([150, 330]);
         svgAxis.selectAll("jrect")
-            .data(j_lists[choosen_j].j_list)
+            .data(jddata.concat(["Other"]))
             .enter()
             .append("rect").attr("class","jrect").attr("id", (d)=>"j"+d)
             .attr("height", 10)
             .attr("width", 10)
             .attr("y", function (d){
-                return x_coords(j_lists[choosen_j].j_list.indexOf(d))
+                return d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d)) : y_coords(6)
             })
             .attr("x", 20)
-            .attr("fill", (d) => colorjj(j_lists[choosen_j].j_list.indexOf(d)))
+            .attr("fill", (d) => colorjj_(j_lists[choosen_j].j_list.indexOf(d)))
             .style("pointer-events", "all")
             //scrivere handler in mouse-handlers.js
             .on("click", cmap_click)
@@ -195,16 +213,18 @@ function cmap_dbl(){
             .on("dblclick", cmap_dbl)
             //evidenziare border e paperi su mouse over
         svgAxis.selectAll(".jtext")
-            .data(j_lists[choosen_j].j_list)
+            .data(jddata.concat(["Other"]))
             .enter()
             .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+d)
-            .attr("y", (d) => x_coords(j_lists[choosen_j].j_list.indexOf(d))+8)
+            .attr("y", (d) => d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d))+8 : y_coords(6)+8)
             .attr("x", 35)
             .attr("text-anchor", "left")  
             .style("font-size", "8px")
             .text(function (d){
+                if(d!="Other"){
                 let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
                 return d+" "+num;
+                }else return d+" "+ papersFiltered.filter((el) => !jddata.includes(el.v_id) && !jddata.includes(el.j_id) ).length
         })
     }else{
         $(".cmpClass").show()
@@ -214,6 +234,8 @@ function cmap_dbl(){
     //hide squares and show inc cmap
     c20 = !c20
     color_papers()
+    d3.event.preventDefault()
+    d3.event.stopPropagation()
 }
 
 function color_papers(){
@@ -257,9 +279,13 @@ function readJournals(path, instance){
         nct = jj.cits ? jj.cits : 0;
     
     j_lists[instance]['j_list'] = []
+
     //Sort on inCit-score
     jns.sort(function(a, b) {
-        return b.count - a.count;
+        return a.score ? 
+            (b-score == a.score ?
+            b.count - a.count : b.score - a.score )
+            : b.count - a.count;
     });
 
     for (i = 0; i < n; i++){
@@ -270,7 +296,7 @@ function readJournals(path, instance){
 
     j_lists[instance]['stats'] = [npp, nct, nat]
     create_jtext(instance, jns)
-    
+    jddata = j_lists[choosen_j].j_list.slice(0,6)
 }
 
 function clickOnGo(){

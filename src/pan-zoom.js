@@ -51,7 +51,7 @@ function centerSvg(){
     //console.log("hp "+hp)
 }
 
-function zoom_by(zf, mouseY){ 
+function zoom_by(zf){ 
     if(zf == 1){
         d3.select("#scale").text("Y-force = 1.0X")
         simulation.force("charge", d3.forceManyBody()

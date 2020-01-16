@@ -16,7 +16,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false, resize_ag = false, terms ={},
-    old_loading = "",
+    old_loading = "", jddata = [],
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -58,7 +58,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     heightP = 2000, baseHeight = 2000,
     h = height,
     w = width,
-    oldw = w,
+    oldw = w, old_pprint = [],
     thetaPap = 1, thetaN = 10, thetaC = 12, thetaY = 7,
     inputNumberTP = document.getElementById('input-numberTP'),
     sliderTP = document.getElementById('thetaPap'),
@@ -87,7 +87,8 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     authViz = document.getElementById('authViz'),
     color10 = d3.scaleOrdinal(d3.schemeCategory10),
     color20b = d3.scaleOrdinal(d3.schemeCategory20), //20b categorical cmap
-    colorjj = color10,
+    colorjj = d3.scaleOrdinal().domain([0, 1, 2, 3, 4, 5, 6])
+    .range(["white", "yellow", "red", "green", "blue", "black", "gray" ]),//color10,
     c20 = false,
     colorA = d3.scaleLinear()
         .domain([0, 10, 30])
@@ -134,6 +135,40 @@ function getXTxt(x, wdt, inGraph){
         return x - wdt -10
     else return x + 10
     */
+}
+
+function save_hist(){
+    let found = papersPrint.length, i = 0, 
+        ln = papers.length;
+    //Save ids
+    old_pprint = papersPrint
+    //Save y coord
+    while(i < ln && found > 0){
+        let pp = papers[i];
+        if(papersPrint.includes(pp.id)){
+            coord_hist[pp.id] = pp.y
+            found--
+        }
+        i++
+    }
+}
+
+function restore_hist(){
+    let found = 0, i = 0, ln = papers.length,
+        cond = Math.min(papersPrint.length, old_pprint.length);
+    //Restore y coord
+    while(i < ln && found < cond){
+        let pp = papers[i];
+        if(old_pprint.includes(pp.id) && papersPrint.includes(pp.id)){
+            if(coord_hist[pp.id]){
+                papers[i].y = coord_hist[pp.id]
+                papers[i].vy = 0 
+            }
+            found++
+        }
+        i++
+    }
+    old_pprint = []
 }
 
 function reset_texts(){
@@ -545,8 +580,12 @@ function color_n(c){
     return c > 100 ? color(100):color(c);
 }
 
+function colorjj_(idxx){
+    return idxx >= 6 || idxx == -1 ? "gray" : colorjj(idxx);
+}
+
 function color_j(p){
-   return p.v_id ? colorjj(j_lists[choosen_j].j_list.indexOf(p.v_id)) : colorjj(j_lists[choosen_j].j_list.indexOf(p.j_id))
+   return p.v_id ? colorjj_(j_lists[choosen_j].j_list.indexOf(p.v_id)) : colorjj_(j_lists[choosen_j].j_list.indexOf(p.j_id))
     
         /*
     color20b(j_lists[choosen_j].j_list.indexOf(p.venueId)) : color20b(j_lists[choosen_j].j_list.indexOf(p.journalId))
@@ -590,7 +629,7 @@ function setSimulation(){
                 .strength(-30)
                 .theta(0.1);//d3.forceY().strength(-100).y(heightP / 2);
         simulation.force("charge", frc)
-        .force("collide", d3.forceCollide(15).iterations(100))
+        .force("collide", d3.forceCollide(15).iterations(50))
         .force("center", d3.forceCenter((w / 2), (heightP / 2)))
         .force("forceY",  d3.forceY().strength(0.01)
         .y(heightP/2))
@@ -1201,6 +1240,7 @@ function setup_searchbars(){
         },
         select: function (event, ui) {
             addPaper(ui.item, true)
+            refresh_cmap()
             setTimeout(function(){$('#papers-autocomplete')[0].value = ""}, 200)
             $('#area-paper-badge').html("")
         }
