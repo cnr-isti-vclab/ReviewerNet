@@ -34,7 +34,7 @@ def import_partialJ(path):
                 continue;
         return js
 
-journals = import_partialJ("journals.txt")
+journals = import_partialJ("journals_large.txt")
 
 exclude_words = set([
     'foreword',
