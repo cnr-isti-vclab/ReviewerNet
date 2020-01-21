@@ -3,7 +3,7 @@ import io
 import json
 
 
-version = "cg_2019-10-01"
+version = "cg_2020-01-13"
 destination_path = "p_"+version+".txt"
 auth_file = "a_"+version+".txt"
 prefix = ""#"/media/mario/WD1TB/parser/L"
@@ -31,18 +31,15 @@ print(str(len(u.journals))+" journals in txt file")
 
 for j_list in j_files:
     for j in j_list:
-        try:
-            journals[j['id']]['count'] += j['count']
-        except:
-            journals[j['id']] = j
-            continue
+        journals[j['id']]['count'] += j['count']
 
-PTIds, maxy = u.getPaperSet(papers)
+
 u.start()
 
 print("Computing journal/venue score")
-papjv = u.get_papjv(papers)
-journals = u.count_j(papjv, journals)
+papjv, papers = u.get_papjv(papers)
+PTIds, maxy = u.getPaperSet(papers)
+journals = u.count_j(papers, papjv, journals)
 print("Updated journal dict:")
 print(journals)
 

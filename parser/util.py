@@ -24,6 +24,7 @@ def export_partialJ(path, j_obj):
             f.write(unicode(json.dumps(j_obj[j])))
             f.write(unicode('\n'))
 
+
 def import_partialJ(path):
     with io.open(path, mode='r', encoding = 'utf8')  as f:
         js = []
@@ -127,12 +128,6 @@ def setCitations(citations, idP, cIn, cOut, PIds, inTot, inInP, outTot, outInP):
                 if not(el in citations):
                     heapq.heappush(citations, el)
     return citations,inTot, inInP, outTot, outInP
-
-def getPaperSet(papers):
-    pS = set()
-    for p in papers:
-        pS.add(p['id'])
-    return pS
 
 def getAuthorsSet(authors):
     authSet = set()
@@ -242,7 +237,7 @@ def getP(path):
             P.append(json.loads(l))
     return P
 
-def saveP(papers, path):
+def saveP(papers, path, pap_tot = 0):
     with io.open(path, mode='w', encoding = 'utf8') as f:
         for p in papers:
             f.write(unicode(json.dumps(p)))
@@ -289,33 +284,38 @@ def rebuild_journals():
     journals_new = dict({})
     for i in range(len(journals)):
         j = journals[i]
-        journals_new[j['id']] = { 'name_list':j['name_list'], 'count':0, 'score':0}
+        journals_new[j['id']] = { 'id':j['id'], 'name_list':j['name_list'], 'count':0, 'score':0}
     return journals_new
 
 def get_papjv(papers):
     pap_jv = dict({})
+    pp = []
     for p in papers:
-        kj = p['journalId']
-        kv = p['venueId'] 
-        pap_jv[p['id']] = [kj, kv]
-    return pap_jv
+	try:        
+		kj = p['journalId']
+        	kv = p['venueId']
+		pp.append(p)
+       		pap_jv[p['id']] = [kj, kv]
+	except:
+		pass 
+    return pap_jv, pp
 
-def count_inCit(incits, pap_jv, kj, kv, journals):
+def count_inCit(incits, papjv, kj, kv, journals):
     for cit in incits:
         if kj == kv and not(kj == ""):
-            if not(papjv[cit][0] == kj):
+            if not(cit in papjv) or not(papjv[cit][0] == kj):
                 journals[kj]['score'] += 1
         elif not(kj == kv):
             if not(kj==""):
-                if not(papjv[cit][0] == kj):
+                if not(cit in papjv) or not(papjv[cit][0] == kj):
                     journals[kj]['score'] += 1
             if not(kv==""):
-                if not(papjv[cit][1] == kv):
+                if not(cit in papjv) or not(papjv[cit][1] == kv):
                     journals[kv]['score'] += 1
     return journals
 
 
-def count_j(papjv, journals):
+def count_j(papers, papjv, journals):
     
     for j in range(len(papers)):
         p = papers[j]
@@ -325,12 +325,13 @@ def count_j(papjv, journals):
         Computing the inCitation-score, that is the number of 
         citations recieved from a different journal/venue
         """
-        journals = count_inCit(p['inCitations'], kj, kv, journals)
+        journals = count_inCit(p['inCitations'], papjv, kj, kv, journals)
         
     return journals    
 
 def fuzzy_search(path):
     add = 0
+    exceptions = 0
     scoreTot = 0
     fuzzyP = []
     read = 0
@@ -338,7 +339,6 @@ def fuzzy_search(path):
     journals_new = rebuild_journals()
     
     start()
-    
     with gzip.open(path, 'rb') as f:
     #with io.open(path, mode = "r", encoding = 'utf-8') as f:
         for l in f:
@@ -349,7 +349,7 @@ def fuzzy_search(path):
             p1 = p
             
             try:
-                if p['year'] and p['year'] >= 2018:
+                if p['year'] and p['year'] >= 1995:
                     scoresj = dict({})
                     scoresv = dict({})
 
@@ -384,7 +384,8 @@ def fuzzy_search(path):
                         p1['journalName'] = 'SIGGRAPH'
                         
             except Exception:
-		      #print(Exception.message())
+		        #print(Exception.message())
+                exceptions+=1
                 pass
         
             if score > 80 and (len(p['inCitations']) + len(p['outCitations']) > 0):
@@ -395,15 +396,15 @@ def fuzzy_search(path):
             
             if(i%100000==0):
                 tm = time.asctime()
-                print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add))
+                print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add)+' - Exceptions: '+str(exceptions))
             i+=1
     avgScore = 0
     
     if add != 0:
         avgScore = scoreTot/add 
     end()
-    print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add))
-    
+    print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add)+' - Exceptions: '+str(exceptions))
+     
     return keep_goodP(fuzzyP)[0], journals_new
 
 ############################
@@ -529,34 +530,3 @@ def authorsJSONObj(papers, authJson1):
         i+=1
     end()
     return authJson1
-
-### Get the fuzzy-searched dataset
-#
-#fuzzyP = fuzzy_search(corpus_path, journal_list)
-##len(fp) = 15.213
-#
-### Get papers from file and create the dataset
-#
-#papers = getP(fuzzy_path)
-#PTIds = getPaperSet(papers)
-#start()
-#print("Starting file creation...")
-#pTestingJSON, authoring, citations = getPapersTestingJSON(papers, PTIds)
-#papersTestingForSearchFile(destination_path, pTestingJSON, authoring, citations)
-#end()
-##>> OUT:
-#
-##>>15213 papers loaded, 0 discarded
-##>>Total inC = 375540 - inInP = 87569
-##>>Total outC = 310357 - outInP = 87569
-# 
-### Create and write the authors' dataset
-#
-#get A, authors of at least one paper in P
-#authJSON = getAuthJson(papers)
-#A = authorsJSONObj(papers, authJSON)
-### once A is ready you can write it with
-#authorsForSearchFile(path, A)
-#auth_file = r"C:/**/a_v0518f.txt"
-#authorsForSearchFile(auth_file, A)
-##> len(A) = 19.464
