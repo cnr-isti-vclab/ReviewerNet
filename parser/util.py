@@ -342,9 +342,9 @@ def fuzzy_search(path):
     with gzip.open(path, 'rb') as f:
     #with io.open(path, mode = "r", encoding = 'utf-8') as f:
         for l in f:
-            p = json.loads(l)
             jn = p['journalName']
             v = p['venue']
+            year = p.get('year')
             score = 0
             p1 = p
             
@@ -359,38 +359,37 @@ def fuzzy_search(path):
                         if v:
                             scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
 
-                    kj = max(scoresj, key=scoresj.get) if jn else None
-                    kv = max(scoresv, key=scoresv.get) if v else None
+                    kj = max(scoresj, key=scoresj.get) if jn and jn != "" else ""
+                    kv = max(scoresv, key=scoresv.get) if v  and v != "" else ""
                     
-                    scorej = scoresj[kj] if kj else None
-                    scorev = scoresv[kv] if kv else None
+                    scorej = scoresj[kj] if kj else 0
+                    scorev = scoresv[kv] if kv else 0
                     
                     score = max(scorej, scorev)
 
-                    if kj and scorej > 80:
-                    	journals_new[kj]['count']+=1  
-                	
-                	cond = kj and kv
+                    if kj != "" and scorej > 80:
+                        journals_new[kj]['count']+=1  
                     
-                    if (kv and scorev > 80)  and (not kj or (cond and not(kv == kj))):
-                    	journals_new[kv]['count']+=1 
+                    cond = kj != "" and kv != ""
+                    
+                    if (kv != "" and scorev > 80) and (kj == "" or (cond and not(kv == kj))):
+                        journals_new[kv]['count']+=1 
 
                     p1['journalId'] = kj if kj else ''
                     p1['venueId'] = kv if kv else ''
-
-
-                    if (cond and kj == 'ACMTOG' and kv == 'SIGGRAPH' and year <= 2004):
-                        p1['journalId'] = 'SIGGRAPH'
-                        p1['journalName'] = 'SIGGRAPH'
-                        
-            except Exception:
+                    
+            except Exception as e:
 		        #print(Exception.message())
                 exceptions+=1
                 pass
         
             if score > 80 and (len(p['inCitations']) + len(p['outCitations']) > 0):
                 scoreTot += score
-                del p1['paperAbstract']
+                if p1.get('paperAbstract'):
+                    del p1['paperAbstract']
+                if ((kj == 'ACMTOG' or kv == 'SIGGRAPH' ) and year <= 2004):
+                    p1['journalId'] = 'SIGGRAPH'
+                    p1['journalName'] = 'SIGGRAPH'
                 fuzzyP.append(p1)
                 add += 1
             
