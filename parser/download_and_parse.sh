@@ -103,14 +103,12 @@ contains() {
 # Download&parse JOB
 download_and_parse_file(){
 	wget --no-check-certificate -nv "$1$2"
-	sleep 2s
 	parse_file "$2" &
 	addPPid "Processing ${2#*/}" $!
 }
 # Parse JOB
 parse_file(){
 	python2 parse_and_filter.py "$1"
-	sleep 3s
 	file=${1#*/}
 	file="${file%.*}-filtered"
 	if [[ -f $filteredf ]]; then
@@ -120,7 +118,7 @@ parse_file(){
 	
 }
 
-ROOT=$1
+ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt"
 ROOT=${ROOT%manifest*}
 SUFFIX="-filtered"
 

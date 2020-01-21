@@ -35,7 +35,7 @@ def import_partialJ(path):
                 continue;
         return js
 
-journals = import_partialJ("journals_large.txt")
+journals = import_partialJ("journals.txt")
 
 exclude_words = set([
     'foreword',
@@ -277,7 +277,7 @@ def incr_count(jn, js):
     for i in range(len(js)):
         if (journals[i]['id'] == jn):
             js[jn]['count'] += 1
-            break;
+            break
     return js
 
 def rebuild_journals():
@@ -291,13 +291,13 @@ def get_papjv(papers):
     pap_jv = dict({})
     pp = []
     for p in papers:
-	try:        
-		kj = p['journalId']
-        	kv = p['venueId']
-		pp.append(p)
-       		pap_jv[p['id']] = [kj, kv]
-	except:
-		pass 
+        try:        
+            kj = p['journalId']
+            kv = p['venueId']
+            pp.append(p)
+            pap_jv[p['id']] = [kj, kv]
+        except:
+            pass 
     return pap_jv, pp
 
 def count_inCit(incits, papjv, kj, kv, journals):
