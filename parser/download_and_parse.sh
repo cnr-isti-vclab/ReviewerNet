@@ -118,7 +118,7 @@ parse_file(){
 	
 }
 
-ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt"
+ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-13/manifest.txt"
 ROOT=${ROOT%manifest*}
 SUFFIX="-filtered"
 
