@@ -1076,7 +1076,7 @@ function handlerMouseOverAG(d){
             d3.selectAll(".plink")
                 .style("opacity", 0.2)
 
-            if(idAs.includes(d.id)) {   
+            //if(idAs.includes(d.id)) {   
             d3.selectAll(".papersNode")
                 .style("opacity", function(d1){
                     if(d1.authsId.includes(d.id))
@@ -1108,7 +1108,7 @@ function handlerMouseOverAG(d){
                         if(idPs.includes(d1.id))                    
                             return 2.5;
                     })
-            }
+            //}
         }
         else if(d.id != idClickedA && clkIds.includes(d.id)){
             reset_texts()

@@ -91,7 +91,8 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        exclude = (authDict[d1.id][2] && ( 2019 - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) )) ? true : false;
+        exclude = (authDict[d1.id][2] 
+            && ( maxYear - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) ))
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
     //console.log("Exclude "+exclude)
@@ -120,30 +121,10 @@ function order(att){
     else return 2;
 }
 
-function rankAuths(auths){
-    let a1 = [],
-        an = auths.length;
-    for(var i = 0; i < an; i++){
-        let score = 0.0,
-            pl = auths[i].paperList,
-            npl = pl.length;
-        pl.map(function(el){
-            if(idPs.includes(el))
-                score+=alpha
-            else if(papersPrint.includes(el))
-                score+=beta
-        })
-        //for(var j = 0; j < npl; j++)
-        auths[i].score=score
-        auths[i].order=order(auths[i])        
-    }
-    return auths
-}
-
 function checkThetaNC(author, el){
     //check what variable betweet thataN/C set to 0 or its spinner value
     var l = author.coAuthList[el][1] ? parseInt(author.coAuthList[el][1]) : 1900;
-    return ((2019 - l) <= parseInt(thetaC));
+    return ((maxYear - l) <= parseInt(thetaC));
 }
 
 function authColor(author){
@@ -286,9 +267,37 @@ function print_legend(txt_el){
 
 }
 
+function get_anp(){
+    let res = []
+    papersFiltered.map(function(el){
+        el.authsId.map(function(idd){
+            let aobj = authors[authDict[idd][4]];
+            if(prune_auth(aobj))
+                res.push(aobj)
+        })
+    })
+
+    if ( (!checkboxC[0].checked) && authsConflict_obj.length > 0)
+        authsConflict_obj.map(function (el){
+            if(prune_auth(el)) res.push(el)
+        })
+
+    if ( authsExclude_obj.length > 0)
+        authsExclude_obj.map(function (el){
+        if(prune_auth(el)) res.push(el)
+    })
+
+    if ( authsReview_obj.length > 0)
+        authsReview_obj.map(function (el){
+        if(prune_auth(el)) res.push(el)
+    })
+
+    return res
+}
+
 function authorBars(){
     
-    authsDef = authors.filter(anpFilter)
+    authsDef =  authors.filter(anpFilter)
     idAs = []
     authsDef = authsDef.filter(thetaPapFilter)
 

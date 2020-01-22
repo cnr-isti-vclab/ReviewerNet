@@ -342,6 +342,7 @@ def fuzzy_search(path):
     with gzip.open(path, 'rb') as f:
     #with io.open(path, mode = "r", encoding = 'utf-8') as f:
         for l in f:
+            p = json.loads(l)
             jn = p['journalName']
             v = p['venue']
             year = p.get('year')
@@ -355,9 +356,9 @@ def fuzzy_search(path):
 
                     for j in journals:
                         if jn:
-                            scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+                            scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_set_ratio)[1]
                         if v:
-                            scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_sort_ratio)[1]
+                            scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_set_ratio)[1]
 
                     kj = max(scoresj, key=scoresj.get) if jn and jn != "" else ""
                     kv = max(scoresv, key=scoresv.get) if v  and v != "" else ""

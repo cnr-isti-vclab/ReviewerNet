@@ -162,11 +162,12 @@ for i in "${FILENAMES[@]}";do
 			download_and_parse_file "$ROOT" "$i" &
 			addDPid "Downloading $ROOT$i" $!
 		#donwload present but no filtered file, only parsing
-		elif [[ $PRS -ge 810 ]]; then
+		else
+			if [[ $PRS -ge 10 ]]; then
 			echo "Waiting for one of the ${#PARSING_PIDS[@]} parsing to be completed"
 			waitP4Pids
 			PRS=${#PARSING_PIDS[@]}
-		else
+			fi
 			echo "$PRS simultaneus parse, can add a new one."
 			((PRS++))
 			parse_file "$i" & 

@@ -1,8 +1,7 @@
 var f = d3.forceManyBody()
-                .strength(-4)
-                .distanceMin(40)
-                .distanceMax(200)
-                .theta(0.2)
+                .strength(-10)
+                //.distanceMin(10)
+                //.distanceMax(200);
 
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
@@ -46,10 +45,18 @@ function setAGSimulation(){
     let wi = 200,
         he = 200;
     simulationA = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function(d) { return d.id; }))
+        .force("link", d3.forceLink()
+            .id(function(d) { return d.id; })
+            //.strength(function(d){ 
+            //    let val = authors[authDict[d.source.id][4]].coAuthList[d.target.id][0]
+            //    console.log(authors[authDict[d.source.id][4]].value+" "+authors[authDict[d.target.id][4]]+" "+val)
+                
+            //    return 1/val
+            //})
+            )
         .force("charge", f)
         .force("center", d3.forceCenter(wi, he))
-        .force('collision', d3.forceCollide().radius(1))
+        //.force('collision', d3.forceCollide().radius(1))
         simulationA.alpha(1)
      simulationA.alphaMin(0.6)
      //simulationA.alphaDecay(0.01)
@@ -66,8 +73,14 @@ function extract_coauthoring(){
     for(let i = 0; i< authsDef.length; i++){
         auths_in_g.add(authsDef[i].id)
         Object.keys(authsDef[i].coAuthList).forEach(function(key) {
-            if(authsDef[i].coAuthList[key][0] > 0){
-            co_authoring.push({'source':authsDef[i].id, 'target': key, 'value': authsDef[i].coAuthList[key][0]})
+            let aobj = authors[authDict[key][4]],
+                plset = new Set(papersPrint),
+                commonValues = aobj.paperList.filter(x => plset.has(x)).length
+                val = authsDef[i].coAuthList[key][0];
+
+            if( commonValues > 0 && authsDef[i].coAuthList[key][0] > 0){
+            co_authoring.push({'source':authsDef[i].id, 'target': key,
+             'value': val})
             auths_in_g.add(key)
             }
         });
@@ -78,7 +91,7 @@ function extract_coauthoring(){
 function auths_in_g_filter(item){ return auths_in_g.has(item.id) }
 
 function a_radius(d){
-    let r = d.score ? d.score+0.7 : 1.2;
+    let r = (d.score ? d.score : score_auth(d))+1.8;
     r = idAs.includes(d.id) ? r + 0.3 : r
     return r.toString()+"px";
 }
@@ -120,8 +133,8 @@ function authorGraph() {
             }else return "rgba( 178, 178, 178, 0.45 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return d.value*0.13
-            else return d.value*0.1})
+                return (d.value)*0.13
+            else return (d.value)*0.1})
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
@@ -165,9 +178,16 @@ function authorGraph() {
         .on("dblclick", function(d) {
             addPaper(d)
         })
-        */    
+    */      
     
-    
+    node.append("text")
+        .attr("class", "agtextt")    
+       .text(function(d) {
+         return d.value;
+       })
+       .style("font-size", "1em")
+       .attr('x', 6)
+       .attr('y', 3);
 
     if(simulationA){
         simulationA
