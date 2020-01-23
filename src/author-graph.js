@@ -1,6 +1,6 @@
 var f = d3.forceManyBody()
                 .strength(-10)
-                //.distanceMin(10)
+                //.distanceMin(100)
                 //.distanceMax(200);
 
 function getAGSvg(){
@@ -47,7 +47,8 @@ function setAGSimulation(){
     simulationA = d3.forceSimulation()
         .force("link", d3.forceLink()
             .id(function(d) { return d.id; })
-            //.strength(function(d){ 
+            .distance(function(d) {return 50/d.value; })//((d) => 1.5/d.value)
+            //.iterations(100)
             //    let val = authors[authDict[d.source.id][4]].coAuthList[d.target.id][0]
             //    console.log(authors[authDict[d.source.id][4]].value+" "+authors[authDict[d.target.id][4]]+" "+val)
                 
@@ -56,9 +57,13 @@ function setAGSimulation(){
             )
         .force("charge", f)
         .force("center", d3.forceCenter(wi, he))
-        //.force('collision', d3.forceCollide().radius(1))
+        .force("forceX",  d3.forceX().strength(0.03)
+        .x(wi/2))
+        .force("forceY",  d3.forceY().strength(0.03)
+        .y(he/2))
+        //.force('collision', d3.forceCollide().radius(10))
         simulationA.alpha(1)
-     simulationA.alphaMin(0.6)
+     simulationA.alphaMin(0.2)
      //simulationA.alphaDecay(0.01)
      simulationA.alphaDecay(0.025)
     
@@ -93,6 +98,7 @@ function auths_in_g_filter(item){ return auths_in_g.has(item.id) }
 function a_radius(d){
     let r = (d.score ? d.score : score_auth(d))+1.8;
     r = idAs.includes(d.id) ? r + 0.3 : r
+    r = r > 9 ? 9 : r
     return r.toString()+"px";
 }
 
@@ -180,28 +186,13 @@ function authorGraph() {
         })
     */      
     
-    node.append("text")
-        .attr("class", "agtextt")    
-       .text(function(d) {
-         return d.value;
-       })
-       .style("font-size", "1em")
-       .attr('x', 6)
-       .attr('y', 3);
+    let idAs_obj = [], i = 0, len = idAs.length;
 
-    if(simulationA){
-        simulationA
-            .nodes(a_nodes)
-            .on("tick", ticked)
+    for(i = 0; i<len; i++)
+        idAs_obj.push(authors[authDict[idAs[i]][4]])
+
     
-        try {
-            simulationA.force("link")
-                .links(co_authoring);
-        } catch (e) {
-            console.log(e)
-        }
-        simulationA.alpha(1).alphaMin(0.6).alphaDecay(0.025).restart()
-    }
+
     
         //.style("stroke","url(#gradxX)"
 
@@ -214,7 +205,11 @@ function authorGraph() {
             
         
         node
-            .attr("cx", function(d) { return d.x; })
+            .attr("cx", function(d) { 
+                d3.select("#agname"+d.id)
+                .attr('x', (d)=>d.x + 5)
+                .attr('y', (d)=>d.y - 5);
+                return d.x; })
             .attr("cy", function(d) { return d.y; })
             //.style("opacity", checkThetaNode)
     }
@@ -230,11 +225,52 @@ function authorGraph() {
         if(click) unclick_auth(clkA);
         if(clickP) unclick_pap(clkPp)
     })
+
+    if(simulationA){
+        simulationA
+            .nodes(a_nodes)
+            .on("tick", ticked)
+    
+        try {
+            simulationA.force("link")
+                .links(co_authoring);
+        } catch (e) {
+            console.log(e)
+        }
+        simulationA.alpha(1).alphaMin(0.2).alphaDecay(0.025).restart()
+    }
+    d3.select("#gAG").append("g").attr("class", "gNames")
+        .selectAll("text")
+        .data(idAs_obj)
+        .enter().append("text")
+        .attr("id", (d)=>"agname"+d.id)
+        .attr("class", "agtextt")    
+        .text(function(d) {
+            return d.value;
+        })
+       .style("font-size", (d) => 0.3*d.score < 1.5 ? 
+        (0.3*d.score < 0.3 ? "0.3em": 0.3*d.score+"em")
+        : "1.5em")  
+        .style("fill", function(d) {
+            if(authsReview.includes(d.id)) return "#5263fe";
+            else if(authsExclude.includes(d.id)) return "#be27be";
+            else if(!idAs.includes(d.id)) return "rgba( 153, 212, 234, 0.541 )";
+            else if(authColor(d)) return "#db0000";
+            else if(authColor_r(d)) return "#8d585a";
+            else return "black"}
+        )
+        .style("font-style", function(d) {
+            
+            if(authColor(d) || authColor_r(d)) return "italic";
+            else return "normal"}
+        )    
+       .attr('x', (d)=>d.x + 10)
+       .attr('y', (d)=>d.y - 10);
     
 }
 
 function dragstartedA(d) {
-    /*if (!d3.event.active)*/ simulationA.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
+    /*if (!d3.event.active)*/ simulationA.alpha(1).alphaMin(0.2).alphaDecay(0.025).restart()
     simulation.stop()
     d.fx = d.x;
     d.fy = d.y;
@@ -244,6 +280,7 @@ function dragstartedA(d) {
 }
 
 function draggedA(d) {
+    simulationA.alpha(0.6).restart()
     d.fx = d3.event.x;
     d.fy = d3.event.y;
 }

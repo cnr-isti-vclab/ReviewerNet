@@ -539,7 +539,8 @@ function unclick_auth(d){
         .attr("r", a_radius)
         .style("opacity", 1)
         .style("pointer", "cursor")
-    
+    d3.selectAll(".agtextt")
+        .style("opacity", 1)   
     d3.selectAll(".svgA")
         .style("opacity", 1)
         .style("pointer-events", "all")
@@ -821,10 +822,12 @@ function authClickHandler(d){
             .style('opacity',1)
         
         d3.selectAll(".authors-dot")
-            .style("opacity", function(d1){ if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
+            .style("opacity", function(d1){ 
+                if(d1.id === d.id || (idAs.includes(d1.id) && d.coAuthList[d1.id]) && checkThetaNC(d, d1.id)){
                     clkIds.push(d1.id);
                     return 1;
                 }else{
+                    d3.select("#agname"+d1.id).style("opacity", 0)
                     return 0;} })
             .attr("r", a_radius)
          d3.selectAll(".aglink")
@@ -1284,9 +1287,30 @@ function link_dblclk(d){
         found = pp.length, res_obj = [],
         tmp = papers.filter(function(el){ return !idPs.includes(el.id) && pp.includes(el.id);});
 
-    for(i = 0; i < tmp.length; i++)
-        addPaper(tmp[i], true)
+    redos = []
+      
+    for(i = 0; i < tmp.length; i++){
+        idP = tmp[i].id
+        undos.push(['ap', tmp[i].id])  
+        addId(tmp[i].value, tmp[i].year)
+    }
 
+    updateADpapers()
+    updateAuthDict(papersFiltered)
+    paperGraph(papersFiltered, citPrint, idPs, simulation)
+            
+    refresh_cmap()
+
+    setTimeout(function(){ 
+        authorBars()
+        authorGraph()
+        print_rew()
+        let i =0, ln = papers.length;
+        for(i=0; i< ln; i++){
+            papers[i].vy = 0
+            papers[i].vx = 0
+        }
+    }, 1000);
 
     d3.event.preventDefault()
     d3.event.stopPropagation()
@@ -1334,10 +1358,10 @@ function handlerMouseOverLinkAG(d){
         d3.selectAll(".aglink").style("opacity", 0.2)
 
         d3.select("#ag"+d.source.id)
-            .attr("r", function() {return $("#ag"+d.source.id)[0].r.baseVal.value  * 2.3})
+            .attr("r", function() {return $("#ag"+d.source.id)[0].r.baseVal.value  * 1.5})
             .style("opacity", 1)
         d3.select("#ag"+d.target.id)
-            .attr("r", function() {return $("#ag"+d.target.id)[0].r.baseVal.value  * 2.3})
+            .attr("r", function() {return $("#ag"+d.target.id)[0].r.baseVal.value  * 1.5})
             .style("opacity", 1)
         d3.select(this)
             .attr("stroke-width", 5).style("opacity", 1)
