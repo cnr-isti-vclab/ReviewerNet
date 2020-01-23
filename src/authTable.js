@@ -78,8 +78,9 @@ function updateADpapers(){
 
 function prune_auth(d1){
     let exclude = false;
-    if(authsReview.includes(d1.id) || authsExclude.includes(d1.id) || authsConflict.includes(d1.id)) return true;
-    if((checkboxC[0].checked) && (authsExclude.length > 0 || authsReview.length >0)){
+    if(authsReview.includes(d1.id) || authsExclude.includes(d1.id)) return true;
+    if((checkboxC[0].checked) && (authsConflict.length > 0 || authsExclude.length > 0 || authsReview.length >0)){
+        if (authsConflict.includes(d1.id)) return false
         authsExclude.map(function (el){
             if(d1.coAuthList[el] && checkThetaNC(d1, el))
                 exclude = true

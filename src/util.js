@@ -87,6 +87,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     xConstrained = d3.scaleLinear()
         .domain([minYear, maxYear])
         .range([10, width - 20]),
+    fullscreen = false,
     xaxis = d3.axisBottom().scale(xConstrained),
     loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";
 
@@ -111,4 +112,52 @@ function rankAuths(auths){
         auths[i].order=order(auths[i])        
     }
     return auths
+}
+
+function full_screen(){
+    if(!fullscreen){
+        if (
+            document.fullscreenEnabled || 
+            document.webkitFullscreenEnabled || 
+            document.mozFullScreenEnabled ||
+            document.msFullscreenEnabled
+        ) {
+            let i = document.getElementById("AG-container");
+        
+            // go full-screen
+            if (i.requestFullscreen) {
+                i.requestFullscreen(); ret = true;
+            } else if (i.webkitRequestFullscreen) {
+                i.webkitRequestFullscreen(); ret = true;
+            } else if (i.mozRequestFullScreen) {
+                i.mozRequestFullScreen(); ret = true;
+            } else if (i.msRequestFullscreen) {
+                i.msRequestFullscreen(); ret = true;
+            }
+        }
+    }else{
+        // are we in fulls creen mode?
+        if (
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement
+        ) {
+        // exit full-screen
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        }
+    }
+    fullscreen=!fullscreen
+    setTimeout(function(){ 
+        simulationA = setAGSimulation()
+        authorGraph()
+    }, 400);
 }

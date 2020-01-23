@@ -282,8 +282,7 @@ function setMouseHandlers(){
     
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
-
-    
+    d3.select("#AG-container").on("click", full_screen)
     d3.select(".pop-up").style("pointer", "none")
    
     
@@ -511,7 +510,7 @@ function color_j(p){
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return heightP})
+        .attr("height", function(){return 120*idPs.length})
         .append("g")
         .attr("id", "gP")
     define_gradients()
@@ -750,6 +749,7 @@ function add_labels(){
         .attr("title", "A visual overview of the literature related with a submission topic, showing key papers and their citation relations.")
         .attr("y", 50).attr("x", 5)
         .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
     d3.select("#svgAxis").append("text")
         .attr("class","area-text")
         .text("aper Network")

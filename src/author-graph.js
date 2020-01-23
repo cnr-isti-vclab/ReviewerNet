@@ -6,7 +6,7 @@ var f = d3.forceManyBody()
 function getAGSvg(){
     svgAG = d3.select("#svgAG")
         .style("width", "100%")
-        .attr("height", "600px")
+        .style("height", "100%")
         .call(d3.zoom()
               .on("zoom", function () {
                 svgAG.attr("transform", d3.event.transform)
@@ -16,8 +16,8 @@ function getAGSvg(){
     
     svgAGn = d3.select("#svgAG_names")
         .style("width", "100%")
-        .attr("height", "600px")
-        
+        .style("height", "100%")
+
     popTextA = svgAGn.append("text")
         .attr("x", 0)             
         .attr("y", 0)
@@ -42,8 +42,8 @@ function getAGSvg(){
 } 
 
 function setAGSimulation(){
-    let wi = 200,
-        he = 200;
+    let wi = $("#AG-container").width()/2,
+        he = $("#AG-container").height()/2;
     simulationA = d3.forceSimulation()
         .force("link", d3.forceLink()
             .id(function(d) { return d.id; })

@@ -355,11 +355,116 @@ function paperInfoa(suggestion){
 
 }
 
-function pap_radius(pp){
-    return idPs.includes(pp.id) ? 8 : 6;
+function pap_radius(p){
+    return  p.key ? 10 : 5 + (p.out + p.in) -1;
 }
 
+
 function paperGraph(papers1, citations1, idPs, simulation){
+
+    //rearrange papers
+        //filter citrations for nonkeypapers and cited only once.
+
+    var index = {}
+
+    papers1.forEach(p => { delete(p.key); delete(p.in); delete(p.out); delete(p.parent); 
+        delete(p.order); delete(p.suborder); delete(p.startY); delete(p.years); delete(p.isolated) });
+
+    papers1.forEach(p => { if(idPs.includes(p.id)) p.key = true; index[p.id] = p; p.in = 0; p.out = 0; });
+    citations1.forEach(c => { index[typeof(c.source) == "string" ? c.source: c.source.id].in++; index[typeof(c.target) == "string" ? c.target: c.target.id].out++ });
+
+    let keypapers = papers1.filter(p => p.key);
+    keypapers.sort((a, b) => a.year - b.year);
+    keypapers.forEach((p, i) => { p.order = i; });
+
+    papers1.forEach(p => { if(p.key) return; p.isolated = p.in + p.out  <= 1 });
+    //find related papers for isolated
+    papers1.forEach((p, i)=> {
+        if(p.isolated) {
+            //find keypaper related
+            citations1.forEach(c => {
+                let target = null, src = typeof(c.source) == "string" ? c.source: c.source.id,
+                    trg = typeof(c.target) == "string" ? c.target: c.target.id
+                if(src == p.id) target = trg;
+                if(trg == p.id) target = src;
+                if(target && index[target].key) 
+                    p.parent = target;
+            });
+            return;
+        }
+    });
+
+    keycitations = citations1.filter(c => {
+        let src = typeof(c.source) == "string" ? c.source: c.source.id,
+            trg = typeof(c.target) == "string" ? c.target: c.target.id;
+        var s = index[src]
+        var t = index[trg]
+        return (s.in + s.out) > 1 && (t.in + t.out)> 1;
+    });
+
+    //TODO sort keypapers minimize total distances
+    //place other papers inbetween minimizing distances
+    var nkeys = idPs.length;
+
+    papers1.forEach((p, i)=> {
+        if(p.key) return;
+        if(p.isolated) {
+            if(!p.parent) p.order =0;
+            var parent = index[p.parent];
+            if(!parent.years) parent.years = {};
+            if(!parent.years[p.year]) parent.years[p.year] = 1;
+            else parent.years[p.year]++;
+            p.order = parent.order
+            p.suborder = parent.years[p.year] -1;
+            return;
+        }
+        let best = -1;
+        let bestlength = 1e20;
+        for(var i = 0.5 ; i < nkeys; i++) {
+            //count lengths
+            let length = 0;
+            keycitations.forEach(c => {
+                let target = null,
+                    src = typeof(c.source) == "string" ? c.source: c.source.id,
+                    trg = typeof(c.target) == "string" ? c.target: c.target.id;
+
+                if(src == p.id) target = trg;
+                if(trg == p.id) target = src;
+
+                if(target && index[target].key) 
+                    length += Math.pow(index[target].order - i, 2)
+            });
+
+            if(length < bestlength) {
+                best = i;
+                bestlength = length;
+            }
+        }
+        p.order = best;
+        });
+    
+    let start = 100;
+    papers1.forEach(p => {
+        p.startY = start + p.order*100; 
+        p.dx = 0;
+        p.dy = 0;
+        if(p.parent) {
+            var sameyears = index[p.parent].years[p.year];
+            let r = sameyears == 1? 0 : 6 * (1.0/Math.sin(Math.PI/sameyears))
+            if(p.parent.year == p.year) r = 18
+            p.dx = r*Math.cos(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
+            p.dy = r*Math.sin(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
+        }
+    });
+
+    /*
+    
+    End paper rearranging
+    
+    */
+
+
+
     simulation.stop()
     d3.select("#svgP").remove()
     d3.select(".ap").append("svg").attr("id", "svgP")
@@ -392,6 +497,10 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .enter().append("line")
         .attr("class", "plink")
         .attr("stroke-width", "2px")
+        .attr("stroke", function(d) {
+            return "lightgray"
+            //return "url(#gradxX)"; //d.source.x < d.target.x ? "url(#gradxX)":"url(#gradXx)";
+    })
         .style("pointer-events", "none")
     
     var node = svg.append("g")
@@ -466,47 +575,33 @@ popRect = svgP.append("rect")
             .text(function(){return papers1[i].value});
     
     function ticked() {
-        
-         node
+    
+        node
             .attr("cx", function(d) { 
-            var nX = xConstrained(d.year);
+            var nX = xConstrained(d.year) + d.dx;
             return nX; })
-            .attr("cy", function(d) { 
-                let offs = 0, ny = Math.max(10 + offs, Math.min(heightP - 20 - offs, d.y));
-                d3.select(this).attr("baseY", () => ny ) 
-            return ny; })
+            .attr("cy", function(d) {
+                return d.startY + d.dy; 
+//                    d3.select(this).attr("baseY", () => ny ) 
+//                /return ny; 
+            })
         
         link
             .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { return d.source.y;
+            .attr("y1", function(d) { return d.source.startY;
                 /*                     
                 let ny = Math.max(30, Math.min(heightP - 20, d.source.y));
                 d3.select(this).attr("baseY1", () => ny ) 
                 return ny; */; })
             .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { return d.target.y;
-                                     /*
+            .attr("y2", function(d) { return d.target.startY;
+                                    /*
                 let ny = Math.max(30, Math.min(heightP - 20, d.target.y));
                 d3.select(this).attr("baseY2", () => ny ) 
                 return ny;*/})
-            .attr("stroke", function(d) {
-            if(d.source.year === d.target.year)
-               return "lightgray";
-            else return d.source.x < d.target.x ? "url(#gradxX)":"url(#gradXx)";
-        })
-
-       
-    
-         if(idClickedA && idClickedA!=0){
-            reset_texts()
-            popTextA.style("opacity", 0)
-            popRectA.style('opacity',0)
-            d3.select(".txtspan").remove()
-            reclick_auth(clkA)
-        }
+            
         
     }
-    
     if(simulation){
         
         simulation
