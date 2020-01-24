@@ -16,14 +16,17 @@ function svg_handlers(){
         //console.log(d3.event.layerY)
    //})
             //.on("end", dragEnd))
-    document.getElementById("svgP").addEventListener("wheel", function(event){
+/*    
+    
+            document.getElementById("svgP").addEventListener("wheel", function(event){
           event.preventDefault()
          event.stopPropagation()
         let deltaY = event.deltaY 
         //console.log(deltaY)
         if(deltaY!= 0) scaleSvg(deltaY)
         });
-//    d3.select("#scrollable")
+
+        //    d3.select("#scrollable")
 //        .on("scroll", scrollSvg)
 //        .on("wheel", bypass_wheel)
 
@@ -41,6 +44,7 @@ function svg_handlers(){
           event.preventDefault()
          event.stopPropagation()
         });
+    */
 }
 
 function centerSvg(){

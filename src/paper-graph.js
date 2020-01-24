@@ -281,82 +281,10 @@ function paperInfo(suggestion){
 
 }
 
-function paperInfoa(suggestion){
-    idInfo = suggestion.id;
-    var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
-    function isAuth(item){
-        return suggestion.authsId.includes(item.id);
-    }
-    var aPrint = authors.filter(isAuth)  
-    aPrint.sort(function(a, b) {
-            return (parseInt(a.year) - parseInt(b.year));
-        });
-    for (var i = 0; i < aPrint.length; i++)
-        thehtml += "<li id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</li>'
-    thehtml += "</ul>"
-    if(suggestion.jN.length > 0)
-      thehtml += "<strong>Journal Name:</strong><ul class=\"list-group\"><li class=\"list-group-item listG \">"+suggestion.jN+"</li></ul>";
 
-    if(suggestion.venue.length > 0)
-        thehtml += "<strong>Venue:</strong><ul class=\"list-group\" ><li class=\"list-group-item listG\">"+suggestion.venue+"</li></ul>";
-
-    idP = suggestion.id
-    if(idPs.includes(idP)){
-        var inCi = papersCit[idP][0],
-            outCi = papersCit[idP][1];
-        if(inCi.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\" >"
-          var inCits =  papers.filter(isInCited1)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outCi.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited1)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-    else{
-        inC = []
-        outC = []
-        citations.filter(citFilter);
-        if(inC.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\">"
-          var inCits =  papers.filter(isInCited)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outC.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-
-    return thehtml
-
-}
 
 function pap_radius(p){
-    return  p.key ? 10 : 5 + (p.out + p.in) -1;
+    return  p.key ? 9 : 5 + (p.out + p.in) -1;
 }
 
 
@@ -482,13 +410,14 @@ function paperGraph(papers1, citations1, idPs, simulation){
       .attr("x", 65)
       .attr('dy', 30)
       .text(papersFiltered.length)
-     d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
+     /*
+      d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
     .attr("x", () => width-150)
       .attr('y', 45)
       .text("Y-force = "+zoomFact.toFixed(1)+"X")
     d3.select("#reset-button").attr("cx", () => width-165)
     .attr("cy", () => 42)
-    
+    */
     
     var link = svg.append("g")
         .attr("class", "citations")

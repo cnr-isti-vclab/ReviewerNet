@@ -114,8 +114,19 @@ function rankAuths(auths){
     return auths
 }
 
+
+function FShandler(){
+    setTimeout(function(){ 
+        if(clickJ) unclick_j()
+        if(click) unclick_auth(clkA)
+        if(clickP) unclick_pap(clkPp)
+        simulationA = setAGSimulation()
+        authorGraph()
+    }, 400);
+}
+
+
 function full_screen(){
-    if(!fullscreen){
         if (
             document.fullscreenEnabled || 
             document.webkitFullscreenEnabled || 
@@ -135,7 +146,7 @@ function full_screen(){
                 i.msRequestFullscreen(); ret = true;
             }
         }
-    }else{
+    else{
         // are we in fulls creen mode?
         if (
             document.fullscreenElement ||
@@ -155,9 +166,6 @@ function full_screen(){
         }
         }
     }
-    fullscreen=!fullscreen
-    setTimeout(function(){ 
-        simulationA = setAGSimulation()
-        authorGraph()
-    }, 400);
+    //fullscreen=!fullscreen
+    
 }

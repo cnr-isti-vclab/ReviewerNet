@@ -285,7 +285,11 @@ function setMouseHandlers(){
     d3.select("#AG-container").on("click", full_screen)
     d3.select(".pop-up").style("pointer", "none")
    
-    
+    document.addEventListener("fullscreenchange", FShandler);
+    document.addEventListener("webkitfullscreenchange", FShandler);
+    document.addEventListener("mozfullscreenchange", FShandler);
+    document.addEventListener("MSFullscreenChange", FShandler);
+
     $( "#resizable" ).resizable({
         handles: "s",
         resize: function( event, ui ) {
@@ -379,7 +383,7 @@ function setMouseHandlers(){
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
         //.on("dblclick", "li", papDblc);
-    
+    /*
      $("#reset-button")
         .on("click", function() {
             if(zoomFact!=1){
@@ -388,9 +392,10 @@ function setMouseHandlers(){
                 zoom_by(1)
                 paperGraph(papersFiltered, citPrint, idPs, simulation)
             }})
-     .on("mouseenter", function() {d3.select("#reset-img").style("opacity", "0.55").transition().duration(100)})
+            .on("mouseenter", function() {d3.select("#reset-img").style("opacity", "0.55").transition().duration(100)})
      .on("mouseout", function(){d3.select("#reset-img").style("opacity", "0.3")})
-}
+            */
+    }
 
 function updateAuthDict(pf){
     for(let j = 0; j < pf.length; j++){
@@ -733,6 +738,7 @@ function startf(){
         document.getElementById("svgAxis").style.visibility = "visible";
         d3.selectAll(".ui-resizable-handle").style("opacity", 1)
         d3.selectAll(".graph").style("overflow-y", "auto")
+        d3.selectAll("#AG-container").style("overflow-y", "hidden")
         add_labels()
         start = false;
     }

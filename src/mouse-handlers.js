@@ -613,12 +613,7 @@ function reclick_auth(d){
             else
                 return 0.2;
         })
-        .attr("r", function(d1){
-            if(d1.authsId.includes(d.id))
-                return "9";
-            else return "6";
-        })
-        .attr("stroke", function(d1){
+       .attr("stroke", function(d1){
             if(d1.authsId.includes(d.id))
                 return "#d08701";
             else
@@ -889,11 +884,6 @@ function handlerMouseOverA(d){
                 else
                     return 0.2;
             })
-            .attr("r", function(d1){
-                if(d1.authsId.includes(d.id))
-                    return "9";
-                else return "6";
-            })
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(d.id))
                     return "#d08701";
@@ -925,7 +915,7 @@ function handlerMouseOverA(d){
                 .attr("r",  function(d1){
                      let al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
                     if (found) papNameConflict(d1);
-                    return found ? 9 : 6;
+                    return pap_radius(d1)
                 })
             //mostra autori conflittati in AG e AB
             d3.selectAll(".paper_in_bars").style("opacity", function(d1){
@@ -1018,6 +1008,7 @@ function handlerMouseOutA(d){
             .style("opacity", 1)
         d3.selectAll(".papersNode").attr("r", "6")
             .style("opacity", 1)
+            .attr("r", (d1)=>pap_radius(d1))
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(d.id))
                     d3.select($("#txt"+d1.id)[0])
@@ -1087,11 +1078,6 @@ function handlerMouseOverAG(d){
                     else
                         return 0.2;
                 })
-                .attr("r", function(d1){
-                    if(d1.authsId.includes(d.id))
-                        return "9";
-                    else return "6";
-                })
                 .attr("stroke", function(d1){
                     if(d1.authsId.includes(d.id))
                         return "#d08701";
@@ -1123,7 +1109,7 @@ function handlerMouseOverAG(d){
                 .attr("r",  function(d1){
                      let al = d1.authsId, found = al.includes(d.id) && al.includes(idClickedA);
                     if (found) papNameConflict(d1);
-                    return found ? 9 : 6;
+                    return pap_radius(d1)
                 })
             //mostra autori conflittati in AG e AB
             d3.selectAll(".paper_in_bars").style("opacity", function(d1){
@@ -1236,7 +1222,7 @@ function handlerMouseOutAG(d){
                 .style('opacity',0)
             reset_texts()
              d3.selectAll(".papersNode") 
-                .attr("r", "6")
+                .attr("r", (d1)=>pap_radius(d1))
                 .style("opacity", 1)
                 .attr("stroke", function(d1){
                     if(d1.authsId.includes(d.id))
@@ -1342,12 +1328,14 @@ function linkAGClickHandler(d){
                 .attr("r", function(d1){
                     if( checkThetaNC(d.source, d.target.id) &&  d.source.coAuthList[d.target.id][2].includes(d1.id)){
                         papName(d1)
-                        return "9";}
-                    else return "6";
+                        }
+                    return pap_radius(d1);
                 })
         }
     }
     }
+    d3.event.preventDefault()
+    d3.event.stopPropagation()
 }
 
 function handlerMouseOverLinkAG(d){
@@ -1512,7 +1500,7 @@ function handleMouseOverPB(d, event){
         if($(this)[0].style.opacity == 0) return;
         d3.selectAll(".plink")
             .style("opacity", 0.2)
-        d3.selectAll(".papersNode").attr("r", function (d1){return (d1.id == d.id) ? 9 : 6 })
+        d3.selectAll(".papersNode").attr("r", (d1)=>pap_radius(d1))
             .style("opacity", function (d1){return (d1.id == d.id) ?  1 : 0.2 })
         reset_texts()}
         d3.selectAll("#pb"+d.id)
@@ -1717,7 +1705,7 @@ function ListMouseOver(event){
             .style("background-color", "rgba( 71, 66, 66, 0.2)") 
             svgP.select("#p"+idClick).transition()
                 .duration(200)
-                .attr("r", 10)
+                .attr("r", 11)
                 .attr("fill", function(d){
                     d3.selectAll(".authNode")
                         
@@ -1787,7 +1775,7 @@ function ListMouseOver(event){
             .attr("r",  function(d1){
                  let al = d1.authsId, found = al.includes(idClick) && al.includes(idClickedA);
                 if (found) papNameConflict(d1);
-                return found ? 9 : 6;
+                return pap_radius(d1);
             })
         //mostra autori conflittati in AG e AB
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
@@ -1931,7 +1919,7 @@ function ListMouseOut(event){
                 .style("opacity", 1)
             d3.selectAll(".papersNode")
 
-                .attr("r", "6")
+                .attr("r", (d1)=> pap_radius(d1))
                 .style("opacity", 1)
                 .attr("stroke", function(d1){
                     if(d1.authsId.includes(idClick))
@@ -2074,11 +2062,6 @@ function repl_over(event){
                 else
                     return 0.2;
             })
-            .attr("r", function(d1){
-                if(d1.authsId.includes(id2))
-                    return "9";
-                else return "6";
-            })
             .attr("stroke", function(d1){
                 if(d1.authsId.includes(id2))
                     return "#d08701";
@@ -2111,7 +2094,7 @@ function repl_over(event){
             .attr("r",  function(d1){
                  let al = d1.authsId, found = al.includes(id2) && al.includes(idClickedA);
                 if (found) papNameConflict(d1);
-                return found ? 9 : 6;
+                return pap_radius(d1);
             })
         //mostra autori conflittati in AG e AB
         d3.selectAll(".paper_in_bars").style("opacity", function(d1){
@@ -2228,7 +2211,7 @@ function repl_out(event){
         .style("opacity", 1)
     d3.selectAll(".papersNode")
         
-        .attr("r", "6")
+        .attr("r", (d1)=> pap_radius(d1))
         .style("opacity", 1)
         .attr("stroke", function(d1){
             if(d1.authsId.includes(id2))

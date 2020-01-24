@@ -141,7 +141,7 @@ function authorGraph() {
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return (d.value)*0.13
             else return (d.value)*0.1})
-        .on("click", linkAGClickHandler)
+        //.on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
         .on("dblclick", link_dblclk)
@@ -248,9 +248,9 @@ function authorGraph() {
         .text(function(d) {
             return d.value;
         })
-       .style("font-size", (d) => 0.3*d.score < 1.5 ? 
+       .style("font-size", (d) => 0.3*d.score < 1.2 ? 
         (0.3*d.score < 0.3 ? "0.3em": 0.3*d.score+"em")
-        : "1.5em")  
+        : "1.2em")  
         .style("fill", function(d) {
             if(authsReview.includes(d.id)) return "#5263fe";
             else if(authsExclude.includes(d.id)) return "#be27be";
