@@ -439,7 +439,7 @@ function updateAuthDict(pf){
             }
     }
 }
-
+//unused remove.
 function printCits(){
     let thehtml = ""
     if(idPs.includes(idP)){

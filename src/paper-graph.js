@@ -295,7 +295,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
 
     var index = {}
 
-    papers1.forEach(p => { delete(p.key); delete(p.in); delete(p.out); delete(p.parent); 
+    papers1.forEach(p => { delete(p.key); delete(p.in); delete(p.out); delete(p.parent); delete(p.conflict);
         delete(p.order); delete(p.suborder); delete(p.startY); delete(p.years); delete(p.isolated) });
 
     papers1.forEach(p => { if(idPs.includes(p.id)) p.key = true; index[p.id] = p; p.in = 0; p.out = 0; });
@@ -306,20 +306,17 @@ function paperGraph(papers1, citations1, idPs, simulation){
     keypapers.forEach((p, i) => { p.order = i; });
 
     papers1.forEach(p => { if(p.key) return; p.isolated = p.in + p.out  <= 1 });
-    //find related papers for isolated
-    papers1.forEach((p, i)=> {
-        if(p.isolated) {
-            //find keypaper related
-            citations1.forEach(c => {
-                let target = null, src = typeof(c.source) == "string" ? c.source: c.source.id,
-                    trg = typeof(c.target) == "string" ? c.target: c.target.id
-                if(src == p.id) target = trg;
-                if(trg == p.id) target = src;
-                if(target && index[target].key) 
-                    p.parent = target;
-            });
-            return;
-        }
+
+    citations1.forEach(c => {
+       let target = null;
+       let src = typeof(c.source) == "string" ? c.source: c.source.id;
+       let trg = typeof(c.target) == "string" ? c.target: c.target.id;
+       src = index[src];
+       trg = index[trg];
+       if(!src || !trg)
+         return;
+       if(src.isolated) src.parent = trg;
+       if(trg.isolated) trg.parent = src;
     });
 
     keycitations = citations1.filter(c => {
@@ -337,13 +334,14 @@ function paperGraph(papers1, citations1, idPs, simulation){
     papers1.forEach((p, i)=> {
         if(p.key) return;
         if(p.isolated) {
-            if(!p.parent) p.order =0;
-            var parent = index[p.parent];
-            if(!parent.years) parent.years = {};
-            if(!parent.years[p.year]) parent.years[p.year] = 1;
-            else parent.years[p.year]++;
-            p.order = parent.order
-            p.suborder = parent.years[p.year] -1;
+            if(!p.parent)
+              p.order = 0;
+//            var parent = index[p.parent];
+            if(!p.parent.years) p.parent.years = {};
+            if(!p.parent.years[p.year]) p.parent.years[p.year] = 1;
+            else p.parent.years[p.year]++;
+            p.order = p.parent.order
+            p.suborder = p.parent.years[p.year] -1;
             return;
         }
         let best = -1;
@@ -371,18 +369,38 @@ function paperGraph(papers1, citations1, idPs, simulation){
         p.order = best;
         });
     
+    //I would like to get all the papers in the same year order.
+    var conflicts = {};
+    papers1.forEach(p => {
+        if(p.key) return;
+        var key = p.order + "_" + p.year;
+        if (!conflicts[key])
+            conflicts[key] = 1;
+        else conflicts[key]++;
+        p.conflict = conflicts[key];
+    });
     let start = 100;
     papers1.forEach(p => {
         p.startY = start + p.order*100; 
         p.dx = 0;
         p.dy = 0;
-        if(p.parent) {
-            var sameyears = index[p.parent].years[p.year];
-            let r = sameyears == 1? 0 : 6 * (1.0/Math.sin(Math.PI/sameyears))
+
+        if(p.conflict) {
+	        var key = p.order + "_" + p.year;
+    	    var nconflicts = conflicts[key];
+    	    let r = (nconflicts == 1? 0 : 5 * (1.0/Math.sin(Math.PI/nconflicts)))
+    	    if(p.parent && p.parent.year == p.year) r = 18
+    	    p.dx = r*Math.cos(p.conflict*(2*Math.PI)/nconflicts + Math.PI/2);
+    	    p.dy = r*Math.sin(p.conflict*(2*Math.PI)/nconflicts + Math.PI/2);
+		}
+
+/*        if(p.parent) {
+            var sameyears = p.parent.years[p.year];
+            let r = sameyears == 1? 0 : 5 * (1.0/Math.sin(Math.PI/sameyears))
             if(p.parent.year == p.year) r = 18
             p.dx = r*Math.cos(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
             p.dy = r*Math.sin(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
-        }
+        } */
     });
 
     /*
