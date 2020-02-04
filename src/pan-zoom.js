@@ -130,7 +130,7 @@ function scaleSvg(deltaY){
             popTextA.style("opacity", 0)
             popRectA.style('opacity',0)
             d3.select(".txtspan").remove()
-            reclick_auth(authors.filter((el) => el.id === idClickedA)[0])
+            reclick_auth(authors[authDict[idClickedA][4]])
         }
     }
 }

@@ -30,6 +30,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     sep2 = '£',
     zoomFact = 1.0, dy = 0, old_dy = 0, old_zoomFact=1.0,
     citPrint = [],
+    papersIndex = {},
     papersFiltered = [],
     authsFiltered = [],
     citations = [],
@@ -123,12 +124,14 @@ setTimeout(function(){
         document.webkitFullscreenElement ||
         document.mozFullScreenElement ||
         document.msFullscreenElement
-    )return
+    ){
+        return
+    }
     else{ 
     $("#gAG").removeAttr("transform")
     d3.select("#svgAG").call(d3.zoom().transform, d3.zoomIdentity);
     $("#fullscreen_btn").show()
-    d3.select("#fullscreen_btn").attr("y", () => $("#AG-container").height()-35)
+    d3.select("#fullscreen_btn").attr("y", () => $("#AG-container").height()-40)
     }
     
 }, 400);

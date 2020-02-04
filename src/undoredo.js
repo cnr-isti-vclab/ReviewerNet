@@ -1,5 +1,5 @@
 function addRev(idd, reset_redo){
-    let idA_rev = idd, suggestion = authors.filter(function(el){ return el.id === idd;})[0];
+    let idA_rev = idd, suggestion = authors[authDict[idd][4]];
 
     if(reset_redo)
         redos = []
@@ -31,7 +31,7 @@ function addConflict(idd, reset_redo){
     if(clickP) unclick_pap(clkPp)
     undos.push(['asr', idd])
     authsExclude.push(idd)
-    authsExclude_obj.push(authors.filter(function(el){ return el.id === idd;})[0])
+    authsExclude_obj.push(authors[authDict[idd][4]])
     authorBars()
     authorGraph()
     if(authsReview.length > 0)
@@ -47,7 +47,7 @@ function addConflictc(idd, reset_redo){
     if(clickP) unclick_pap(clkPp)
     undos.push(['acr', idd])
     authsConflict.push(idd)
-    authsConflict_obj.push(authors.filter(function(el){ return el.id === idd;})[0])
+    authsConflict_obj.push(authors[authDict[idd][4]])
     authorBars()
     authorGraph()
     if(authsReview.length > 0)
@@ -69,7 +69,7 @@ function swap_alt(id1, id2, reset_redo){
     elementPos = authsReview_obj.map(function(x) {return x.id; }).indexOf(id1);
 
     authsReview[index] = id2
-    authsReview_obj[elementPos] = authors.filter(function(el){return el.id === id2})[0];
+    authsReview_obj[elementPos] = authors[authDict[id2][4]];
   
     d3.selectAll(".plink")
         .style("opacity", 1)
@@ -191,7 +191,7 @@ function deleteConflict(idd, reset_redo){
 }
 
 function addPr(idd){
-    let pobj = papers.filter((el)=>el.id == idd)[0];
+    let pobj = papers[papersIndex[idd]];
     addPaper(pobj);
 }
 

@@ -127,11 +127,9 @@ function authorGraph() {
         .attr("class", "aglink")       
         .attr("stroke", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target)){
-                let src = authsDef.filter(function (el){
-                        return el.id == d.source;
-                    })[0],
+                let src = authors[authDict[d.source][4]],
                     shared_p = src.coAuthList[d.target][2],
-                        shared_in_viz = papersFiltered.filter(function (el){
+                    shared_in_viz = papersFiltered.filter(function (el){
                         return shared_p.includes(el.id);
                     });
 

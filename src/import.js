@@ -204,14 +204,16 @@ function loaded(evt) {
     
         //riaggiungo papers
     for(let i = 0; i < paps.length; i++){
-         let pap_id = paps[i].includes(sep1) ? paps[i].split(sep1)[0] : paps[i],
-                pap_name =paps[i].includes(sep1) ? paps[i].split(sep1)[1] : null
-        try{
-        addP(papers.filter(function(el){ return el.id === pap_id;})[0])
-            }catch (e) {
+        let pap_id = paps[i].includes(sep1) ? paps[i].split(sep1)[0] : paps[i],
+            pap_name =paps[i].includes(sep1) ? paps[i].split(sep1)[1] : null
+
+        
+            if (pap_id in papersIndex)
+            addP(papers[papersIndex[pap_id]])
+        else{
             n_missed += 1
             print_missing_table_row('papers', pap_name)
-            }
+        }
         }
     
      if(missed['mp']>0) 

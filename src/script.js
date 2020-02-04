@@ -122,6 +122,7 @@ function getArrays(graph, path) {
         n = p.length;
     for (i = 0; i < n; i++){
         papers.push(p[i])
+        papersIndex[p[i].id] = i
         let words = p[i].value.match(/(\w)+/g);
 		words
 		words.forEach((w, pos)=>{ 
@@ -161,7 +162,7 @@ function getAuths(path) {
         n = a.length
     for (i = 0; i < n; i++){
         authors[i]=a[i]
-        authDict[a[i].id] = [maxYear, 1900, [], a[i].value, i ]
+        authDict[a[i].id] = [maxYear, 1900, [], a[i].value, i]
     }
         
 }
@@ -348,7 +349,8 @@ function setMouseHandlers(){
             newH = _docHeight - heightA;
             document.getElementById('row21').style.height = newH.toString()+"px";
 /*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
-
+        d3.select("#fullscreen_btn").attr("y", () => $("#AG-container").height()-40)
+    
             event.stopPropagation()
         }
     })
@@ -869,7 +871,7 @@ function replacement(sid, cal){
                 exclude = true;
         })
         if(!exclude){
-            let test_obj = authsDef.filter(function(el){return el.id === id_test })[0],
+            let test_obj = authors[authDict[id_test][4]],
                 fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal",
                 name = test_obj.value;
             found++

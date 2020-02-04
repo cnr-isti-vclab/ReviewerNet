@@ -472,7 +472,7 @@ function un_highlight_cluster(){
 
 function highlight_auth(id){
 
-    let coAutL = authors.filter((d)=>d.id == id)[0].coAuthList
+    let coAutL = authors[authDict[id][4]].coAuthList
 
     d3.select("#aa"+id)        
         .attr('fill',"rgba( 221, 167, 109, 0.642 )")
@@ -1702,7 +1702,7 @@ function addFromList(event){
 
     if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
-         let paper = papers.filter(function (item){ return item.id === idClick})[0];
+         let paper = papers[papersIndex[idClick]];
         if(!idPs.includes(idClick)){
             zoom_by(1)
             addPaper(paper, true)
@@ -1710,7 +1710,7 @@ function addFromList(event){
     }else{
         idClick = idClick.substring(1,idClick.length);
         
-        let aObj = idAs.includes(idClick) ? (authsDef.filter(function (el){return el.id === idClick}))[0] : (authors.filter(function (el){return el.id === idClick}))[0];
+        let aObj = authors[authDict[idClick][4]]
         authClickHandler(aObj)    
 
     }
@@ -1745,7 +1745,7 @@ function ListMouseOver(event){
              d3.selectAll("#pb"+idClick)
             .attr("r", 5)
              .attr("cy", 12)
-            let p = papersFiltered.filter(function (el){return el.id === idClick})[0];
+            let p = papers[papersIndex[idClick]];
             highlight_cluster(p)
             highlight_cluster_pap(p)
         }else return;
@@ -1816,7 +1816,7 @@ function ListMouseOver(event){
                 if((d1.source.id === idClick || d1.target.id === idClick) 
                    && (d1.source.id === idClickedA || d1.target.id 
                     === idClickedA)) {
-                        let value = authsDef.filter(function (el){ return el.id === d1.target.id;})[0].value;
+                        let value = authors[authDict[d1.target.id][4]].value;
                          let txt = d1.source.value + " - " + d1.target.value
                         popTextA.text(txt)
                          let el   = document.getElementById("svgAG_names");
@@ -2047,7 +2047,7 @@ function repl_clk(event){
     
     let idsC = idClick.split("-"), id1 = idsC[0], id2 = idsC[1];
         
-        let aObj = idAs.includes(id2) ? (authsDef.filter(function (el){return el.id === id2}))[0] : (authors.filter(function (el){return el.id === id2}))[0];
+        let aObj = authors[authDict[id2][4]];
     if(clickJ) unclick_j()
     if(clickP) unclick_pap(clkPp)   
     authClickHandler(aObj)    
