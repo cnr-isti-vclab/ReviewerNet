@@ -13,7 +13,7 @@ Try it at
 > http://reviewernet.org <br>
 > *tested browsers: Chrome, Firefox, Safari* 
 
-![ReviewerNet screenshot](screen/screen.png) 
+![ReviewerNet screenshot](screen/teaser.png) 
 
 # The User Interface
 
