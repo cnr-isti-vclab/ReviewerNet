@@ -47,7 +47,7 @@ function setAGSimulation(){
     simulationA = d3.forceSimulation()
         .force("link", d3.forceLink()
             .id(function(d) { return d.id; })
-            .distance(function(d) {return 50/d.value; })//((d) => 1.5/d.value)
+            .distance(function(d) {return 80/d.value; })//((d) => 1.5/d.value)
             //.iterations(100)
             //    let val = authors[authDict[d.source.id][4]].coAuthList[d.target.id][0]
             //    console.log(authors[authDict[d.source.id][4]].value+" "+authors[authDict[d.target.id][4]]+" "+val)
@@ -141,7 +141,7 @@ function authorGraph() {
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return (d.value)*0.13
             else return (d.value)*0.1})
-        //.on("click", linkAGClickHandler)
+        .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
         .on("dblclick", link_dblclk)
@@ -196,27 +196,41 @@ function authorGraph() {
     
         //.style("stroke","url(#gradxX)"
 
+    function getAGx(d){
+        if (d.userX)
+            d.x = d.userX
+        return d.userX ? d.userX : d.x
+    }
+
+    function getAGy(d){
+        if (d.userY)
+            d.y = d.userY
+        return d.userY ? d.userY : d.y
+    }
+
     function ticked() {
         link
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
+            .attr("x1", function(d) { return getAGx(d.source)})//d.source.x; })
+            .attr("y1", function(d) { return getAGy(d.source)})//d.source.y; })
+            .attr("x2", function(d) { return getAGx(d.target)})//d.target.x; })
+            .attr("y2", function(d) { return getAGy(d.target)})//d.target.y; })
             
         
         node
             .attr("cx", function(d) { 
                 d3.select("#agname"+d.id)
-                .attr('x', (d)=>d.x + 5)
-                .attr('y', (d)=>d.y - 5);
-                return d.x; })
-            .attr("cy", function(d) { return d.y; })
+                .attr('x', (d)=>getAGx(d) + 5)
+                .attr('y', (d)=>getAGy(d) - 5);
+                return getAGx(d)})//d.x; })
+            .attr("cy", getAGy)//function(d) { return d.y; })
             //.style("opacity", checkThetaNode)
-    }
+        }
+        /*
     d3.select("#svgAG").on("click", function(){
         if(click) unclick_auth(clkA);
         if(clickP) unclick_pap(clkPp)
     })
+    */
     d3.select("#authTable").on("click", function(){
         if(click) unclick_auth(clkA);
         if(clickP) unclick_pap(clkPp)
@@ -264,8 +278,8 @@ function authorGraph() {
             if(authColor(d) || authColor_r(d)) return "italic";
             else return "normal"}
         )    
-       .attr('x', (d)=>d.x + 10)
-       .attr('y', (d)=>d.y - 10);
+       .attr('x', (d)=>getAGx(d) + 5)
+       .attr('y', (d)=>getAGy(d) - 5);
     
 }
 
@@ -283,6 +297,8 @@ function draggedA(d) {
     simulationA.alpha(0.6).restart()
     d.fx = d3.event.x;
     d.fy = d3.event.y;
+    d.userX = d3.event.x;
+    d.userY = d3.event.y;
 }
 
 function dragendedA(d) {

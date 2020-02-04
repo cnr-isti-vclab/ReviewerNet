@@ -3,7 +3,7 @@ import io
 import json
 
 
-version = "cg_2020-01-13"
+version = "cg_2020-02-01"
 destination_path = "p_"+version+".txt"
 auth_file = "a_"+version+".txt"
 prefix = ""#"/media/mario/WD1TB/parser/L"
@@ -60,7 +60,7 @@ A = u.authorsJSONObj(papers, authJSON)
 u.authorsForSearchFile(auth_file, A)
 
 print("Starting journals' file creation...")
-with io.open("j_p"+version+".txt", mode='w', encoding = 'utf8')  as f:
+with io.open("j_"+version+".txt", mode='w', encoding = 'utf8')  as f:
     f.write(unicode('{"journals": ['))
     i = 0
     l = len(journals)

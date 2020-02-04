@@ -282,9 +282,14 @@ function setMouseHandlers(){
     
     d3.selectAll(".links").attr("target", "_blank")
     d3.selectAll(".ui-resizable-handle").style("opacity", 0)
-    d3.select("#AG-container").on("click", full_screen)
+    //d3.select("#AG-container").on("click", full_screen)
     d3.select(".pop-up").style("pointer", "none")
-   
+    $(".row").on("click", function(event){
+        event.preventDefault(); 
+        if(clickJ) unclick_j()
+        if(click) unclick_auth(clkA)
+        if(clickP) unclick_pap(clkPp)
+    })
     document.addEventListener("fullscreenchange", FShandler);
     document.addEventListener("webkitfullscreenchange", FShandler);
     document.addEventListener("mozfullscreenchange", FShandler);
@@ -571,13 +576,14 @@ function setSimulation(){
 
 }
 
-function append_ico(svgN, url, x, y){
+function append_ico(svgN, url, x, y, id){
         let svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
         svgimg.setAttributeNS(null,'height','35');
         svgimg.setAttributeNS(null,'width','35');
         svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', url);
         svgimg.setAttributeNS(null,'x',x);
         svgimg.setAttributeNS(null,'y',y);
+        if(id!=null) svgimg.setAttributeNS(null,'id',id);
         svgimg.setAttributeNS(null, 'opacity', '0.5');
         $(svgN).append(svgimg);
 }
@@ -801,6 +807,15 @@ function add_labels(){
     /**/
     //Researcher Network
     append_ico("#svgAG_names", anp_ico, 15, 35)
+    append_ico("#svgAG_names", "imgs/fscreen.png", 5, $("#AG-container").height()-40, "fullscreen_btn")
+    
+    $("#fullscreen_btn").css("pointer-events", "all")
+        .css("cursor", "pointer")
+        .on("click", function (event){
+        event.stopPropagation()
+        full_screen()
+    })
+
     d3.select("#svgAG_names").append("text")
         .attr("class","area-labels popup")
         .attr("title", "A graph representation of co-authorship relations, for the visualization of network of collaborators.")
@@ -1221,7 +1236,7 @@ $(function (){
     
     
     //DEBUG
-    
+    /*
     
     choosen_j = "cg"
     let instance  = choosen_j
@@ -1232,5 +1247,5 @@ $(function (){
     }
     
     clickOnGo()
-    
+    */
 });

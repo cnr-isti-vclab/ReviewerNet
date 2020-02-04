@@ -284,7 +284,13 @@ def rebuild_journals():
     journals_new = dict({})
     for i in range(len(journals)):
         j = journals[i]
-        journals_new[j['id']] = { 'id':j['id'], 'name_list':j['name_list'], 'count':0, 'score':0}
+        
+        njns = []
+        for jj in j['name_list']:
+            jj = re.sub(r'[^a-zA-Z ]', '', jj)
+            njns.append(jj.lower())
+
+        journals_new[j['id']] = { 'id':j['id'], 'name_list':njns, 'count':0, 'score':0}
     return journals_new
 
 def get_papjv(papers):
@@ -329,6 +335,16 @@ def count_j(papers, papjv, journals):
         
     return journals    
 
+def scorejv(item, jns):
+    score = 0
+    item = re.sub(r'[^a-zA-Z ]', '', item).lower()
+    cond = item in jns
+    if not(cond):
+        score = process.extractOne(item.lower(), jns, scorer=fuzz.token_sort_ratio)[1]
+    else:
+        score = 100
+    return score
+
 def fuzzy_search(path):
     add = 0
     exceptions = 0
@@ -336,6 +352,8 @@ def fuzzy_search(path):
     fuzzyP = []
     read = 0
     i = 1
+    score_thres = 90
+    score_thres1 = 80
     journals_new = rebuild_journals()
     
     start()
@@ -343,67 +361,64 @@ def fuzzy_search(path):
     #with io.open(path, mode = "r", encoding = 'utf-8') as f:
         for l in f:
             p = json.loads(l)
-            jn = p['journalName']
-            v = p['venue']
+            jn = p.get('journalName')
+            v = p.get('venue')
             year = p.get('year')
             score = 0
             p1 = p
-            
-            try:
-                if p['year'] and p['year'] >= 1995:
-                    scoresj = dict({})
-                    scoresv = dict({})
 
+            if p.get('year') and p.get('year') >= 1995:
+                scoresj = dict({})
+                scoresv = dict({})
+                if (jn and jn != "") or (v and v!= ""):
                     for j in journals:
-                        if jn:
-                            scoresj[j['id']] = process.extractOne(jn, j['name_list'], scorer=fuzz.token_set_ratio)[1]
-                        if v:
-                            scoresv[j['id']] = process.extractOne(v, j['name_list'], scorer=fuzz.token_set_ratio)[1]
+                        if jn and jn != "":
+                            scoresj[j['id']] = scorejv(jn, journals_new[j['id']]['name_list'])
+                        if v and v != "":
+                            scoresv[j['id']] = scorejv(v, journals_new[j['id']['name_list'])
+                
+                kj = max(scoresj, key=scoresj.get) if jn and jn != "" else ""
+                kv = max(scoresv, key=scoresv.get) if v  and v != "" else ""
+                kj = kj if kj and kj != "" and scoresj[kj] >= score_thres else None
+                kv = kv if kv and kv != "" and scoresv[kv] >= score_thres else None
 
-                    kj = max(scoresj, key=scoresj.get) if jn and jn != "" else ""
-                    kv = max(scoresv, key=scoresv.get) if v  and v != "" else ""
-                    
-                    scorej = scoresj[kj] if kj else 0
-                    scorev = scoresv[kv] if kv else 0
-                    
-                    score = max(scorej, scorev)
+                scorej = scoresj[kj] if kj else 0
+                scorev = scoresv[kv] if kv else 0
+                
+                score = max(scorej, scorev)
 
-                    if kj != "" and scorej > 80:
-                        journals_new[kj]['count']+=1  
-                    
-                    cond = kj != "" and kv != ""
-                    
-                    if (kv != "" and scorev > 80) and (kj == "" or (cond and not(kv == kj))):
-                        journals_new[kv]['count']+=1 
+                if kj and kj != "" and scorej > score_thres:
+                    journals_new[kj]['count']+=1  
+                
+                cond = kj and kv and kj != "" and kv != ""
+                
+                if (kv != "" and scorev > score_thres and (kj == "" or (cond and not(kv == kj))):
+                    journals_new[kv]['count']+=1 
 
-                    p1['journalId'] = kj if kj else ''
-                    p1['venueId'] = kv if kv else ''
-                    
-            except Exception as e:
-		        #print(Exception.message())
-                exceptions+=1
-                pass
+                p1['journalId'] = kj if kj else ''
+                p1['venueId'] = kv if kv else ''
         
-            if score > 80 and (len(p['inCitations']) + len(p['outCitations']) > 0):
-                scoreTot += score
+            if score >= score_thres1 and (len(p['inCitations']) + len(p['outCitations']) > 0):
                 if p1.get('paperAbstract'):
                     del p1['paperAbstract']
                 if ((kj == 'ACMTOG' or kv == 'SIGGRAPH' ) and year <= 2004):
                     p1['journalId'] = 'SIGGRAPH'
                     p1['journalName'] = 'SIGGRAPH'
-                fuzzyP.append(p1)
-                add += 1
-            
-            if(i%100000==0):
+                if score >= score_thres:
+                    scoreTot += score
+                    fuzzyP.append(p1)
+                    add += 1
+
+            if(i%300000==0):
                 tm = time.asctime()
-                print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add)+' - Exceptions: '+str(exceptions))
+                print('['+tm+'] In '+str(path)+ ' processed '+str(i)+' papers - added '+str(add))
             i+=1
     avgScore = 0
-    
+
     if add != 0:
         avgScore = scoreTot/add 
     end()
-    print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add)+' - Exceptions: '+str(exceptions))
+    print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add))
      
     return keep_goodP(fuzzyP)[0], journals_new
 

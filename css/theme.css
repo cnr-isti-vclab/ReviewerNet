@@ -265,6 +265,10 @@ a {
      cursor: pointer;
 }
 
+#fullscreen_btn:hover {
+    opacity: 0.8;
+}
+
 .panel-default {
     margin-bottom: 0px;
 }

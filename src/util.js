@@ -61,6 +61,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
     minInCits = 100,
     maxInCits = 0,
     maxYear = 2018,
+    prevHeight = 0, prevWidth = 0,
     checkboxTP = $('#MNP'),
     //checkboxTOC = $('#MNoC'),
     checkboxTN = $('#N'),
@@ -116,17 +117,45 @@ function rankAuths(auths){
 
 
 function FShandler(){
+setTimeout(function(){
+    if (
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    )return
+    else{ 
+    $("#gAG").removeAttr("transform")
+    d3.select("#svgAG").call(d3.zoom().transform, d3.zoomIdentity);
+    $("#fullscreen_btn").show()
+    d3.select("#fullscreen_btn").attr("y", () => $("#AG-container").height()-35)
+    }
+    
+}, 400);
+/*
     setTimeout(function(){ 
         if(clickJ) unclick_j()
         if(click) unclick_auth(clkA)
         if(clickP) unclick_pap(clkPp)
         simulationA = setAGSimulation()
+        //authorGraph()
+        let wfactor = $("#AG-container").width()/prevWidth,
+            hfactor = $("#AG-container").height()/prevHeight;
+        authsDef.forEach(function(d){
+            if (d.userX){
+                d.userX *= wfactor
+                d.userY *= hfactor
+            }
+        })
         authorGraph()
     }, 400);
+  */
 }
 
 
 function full_screen(){
+        prevWidth = $("#AG-container").width()  
+        prevHeight = $("#AG-container").height()
         if (
             document.fullscreenEnabled || 
             document.webkitFullscreenEnabled || 
@@ -134,7 +163,7 @@ function full_screen(){
             document.msFullscreenEnabled
         ) {
             let i = document.getElementById("AG-container");
-        
+            $("#fullscreen_btn").hide()
             // go full-screen
             if (i.requestFullscreen) {
                 i.requestFullscreen(); ret = true;
@@ -164,6 +193,11 @@ function full_screen(){
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
         }
+
+        //Restore RN
+        
+
+
         }
     }
     //fullscreen=!fullscreen

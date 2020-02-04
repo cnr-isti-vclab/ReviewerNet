@@ -44,6 +44,8 @@ function submit_biblio(){
         URL1 = "http://anystyle.isti.cnr.it",
         query =  clean_biblio_query(document.getElementById("biblio-txt").value);
 
+    import_from_biblio(query, query);
+/*
     let params = 'query='+query.join("\n")
     
     //Send the proper header information along with the request
@@ -66,7 +68,7 @@ function submit_biblio(){
       console.error(http.statusText);
         alert("Some error occurred, check the connection and try again.")
     };
-
+*/
     /*
     
     http.onreadystatechange = function() {//Call a function when the state changes.
@@ -87,7 +89,7 @@ function submit_biblio(){
 
     http.timeout = 1000;
 */
-    http.send(params);
+   // http.send(params);
 }
 
 function readTextFile(file)
@@ -437,6 +439,7 @@ function highlight_cluster_pap(d){
 
 function highlight_cluster(d){
     d3.selectAll(".authors-dot")
+        .style("opacity", (d1)=>d.authsId.includes(d1.id)? 1 : 0.1 )
         .attr("stroke",function (d1){
             if(d.authsId.includes(d1.id))
                 return c20 ? color_j(d) : color_n(d.color);
@@ -446,12 +449,13 @@ function highlight_cluster(d){
             return (d.authsId.includes(d1.id)) ? "3px" : "0px";
         })
 
+    d3.selectAll(".agtextt").style("opacity", (d1) => d.authsId.includes(d1.id) ? 1 : 0.1 )
     d3.selectAll(".aglink")
         .style("opacity", function(d1){ 
             if(d.authsId.includes(d1.source.id) && d.authsId.includes(d1.target.id)) return  1 
-            else if(d.authsId.includes(d1.source.id) || d.authsId.includes(d1.target.id))
+            else/* if(d.authsId.includes(d1.source.id) || d.authsId.includes(d1.target.id))
                     return 0.3
-            else return 0.1;
+            else*/ return 0.1;
         })  
 }
 
@@ -460,12 +464,15 @@ function un_highlight_cluster(){
         .attr("r", a_radius)
         .attr("stroke","rgb(0,0,0,0)")
         .attr("stroke-width", "0px")
-
+        .style("opacity", "1")
+    d3.selectAll(".agtextt").style("opacity", "1")
     d3.selectAll(".aglink")
         .style("opacity", 1)
 }
 
 function highlight_auth(id){
+
+    let coAutL = authors.filter((d)=>d.id == id)[0].coAuthList
 
     d3.select("#aa"+id)        
         .attr('fill',"rgba( 221, 167, 109, 0.642 )")
@@ -476,7 +483,15 @@ function highlight_auth(id){
     d3.select("#ag"+id)
         .attr("stroke","rgba( 221, 167, 109)")
         .attr("stroke-width", "3.5px")
-        
+    
+    d3.selectAll(".authors-dot")
+        .style("opacity", (d) => d.id == id  || d.id in coAutL ? 1 : 0.1 )
+    d3.selectAll(".agtextt")
+        .style("opacity", (d) => d.id == id  || d.id in coAutL ? 1 : 0.1 )
+    d3.selectAll(".aglink")
+        .style("opacity", (d) => (d.source.id == id && d.target.id in coAutL ) || 
+            (d.target.id == id && d.source.id in coAutL) ? 1 : 0.1 )
+            
 }
 
 function un_highlight_auth(id){
@@ -486,6 +501,9 @@ function un_highlight_auth(id){
         .attr("stroke-width", "0px")
     
     d3.select("#aaline"+id).style('stroke', "rgba( 221, 167, 109, 0.342 )")   
+    d3.selectAll(".authors-dot").style("opacity", 1)
+    d3.selectAll(".agtextt").style("opacity", 1)
+    d3.selectAll(".aglink").style("opacity", 1)
 }
 
 function author_dblclick_ABG(d){
@@ -1303,6 +1321,9 @@ function link_dblclk(d){
 }
 
 function linkAGClickHandler(d){
+    d3.event.preventDefault()
+    d3.event.stopPropagation()
+    return
 //show informative popup and hint shared viz papers
     if(clickJ) unclick_j()
     if(!clickP){
@@ -1344,10 +1365,13 @@ function handlerMouseOverLinkAG(d){
         if(clickAG) clickAG = false;
         d3.selectAll(".authors-dot").style("opacity", 0.2)
         d3.selectAll(".aglink").style("opacity", 0.2)
+        d3.selectAll(".agtextt").style("opacity", 0.1)
 
         d3.select("#ag"+d.source.id)
             .attr("r", function() {return $("#ag"+d.source.id)[0].r.baseVal.value  * 1.5})
             .style("opacity", 1)
+        d3.select("#agname"+d.source.id).style("opacity", 1)
+        d3.select("#agname"+d.target.id).style("opacity", 1)
         d3.select("#ag"+d.target.id)
             .attr("r", function() {return $("#ag"+d.target.id)[0].r.baseVal.value  * 1.5})
             .style("opacity", 1)
@@ -1363,6 +1387,7 @@ function handlerMouseOutLinkAG(d){
         if(clickAG) clickAG = false;
         d3.selectAll(".authors-dot").style("opacity", 1)
         d3.selectAll(".aglink").style("opacity", 1)
+        d3.selectAll(".agtextt").style("opacity", 1)
         d3.select("#ag"+d.source.id)
             .attr("r", a_radius)  
         d3.select("#ag"+d.target.id)
