@@ -370,6 +370,7 @@ def fuzzy_search(path):
             if p.get('year') and p.get('year') >= 1995:
                 scoresj = dict({})
                 scoresv = dict({})
+                
                 if (jn and jn != "") or (v and v!= ""):
                     for j in journals:
                         if jn and jn != "":
@@ -386,14 +387,6 @@ def fuzzy_search(path):
                 scorev = scoresv[kv] if kv else 0
                 
                 score = max(scorej, scorev)
-
-                if kj and kj != "" and scorej > score_thres:
-                    journals_new[kj]['count']+=1  
-                
-                cond = kj and kv and kj != "" and kv != ""
-                
-                if (kv != "" and scorev > score_thres and (kj == "" or (cond and not(kv == kj))):
-                    journals_new[kv]['count']+=1 
 
                 p1['journalId'] = kj if kj else ''
                 p1['venueId'] = kv if kv else ''
@@ -420,7 +413,7 @@ def fuzzy_search(path):
     end()
     print('In '+str(path)+' average score of fuzzy search: '+str(avgScore)+' - Passed: '+str(add))
      
-    return keep_goodP(fuzzyP)[0], journals_new
+    return keep_goodP(fuzzyP)[0]
 
 ############################
 #  authorsGraph functions  #

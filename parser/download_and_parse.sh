@@ -1,10 +1,12 @@
 #!/bin/bash
-#https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-01-01/manifest.txt
 #array pf PIDs fpr multitasking
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
+ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-02-13/manifest.txt" 
 DWN=0
 PRS=0
+ROOT=${ROOT%manifest*}
+SUFFIX="-filtered"
 #Wait for parsing jobs to finish
 waitPPids() {
 	while [ ${#PARSING_PIDS[@]} -ne 0 ]; do
@@ -118,9 +120,6 @@ parse_file(){
 	
 }
 
-ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-02-01/manifest.txt"
-ROOT=${ROOT%manifest*}
-SUFFIX="-filtered"
 
 rm -f parsed_files.txt
 rm -f manifest*
@@ -134,7 +133,6 @@ filename="manifest.txt"
 if [[  ! -f $filename  ]]; then
 	printf "Unable to download manifest. Please retry\n"
 else
-
 
 while read -r line; do 
 FILENAMES=""; 
@@ -170,7 +168,7 @@ for i in "${FILENAMES[@]}";do
 			fi
 			echo "$PRS simultaneus parse, can add a new one."
 			((PRS++))
-			parse_file "$i" & 
+			parse_file "$i" & # debug change $file <-> $i
 			addPPid "Processing ${i#*/}" $!
 		fi
 	fi 

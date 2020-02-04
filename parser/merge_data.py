@@ -1,38 +1,39 @@
 import util as u
 import io
 import json
+import pickle
 
-
-version = "cg_2020-02-01"
+version = "pers"
 destination_path = "p_"+version+".txt"
 auth_file = "a_"+version+".txt"
-prefix = ""#"/media/mario/WD1TB/parser/L"
+prefix = ""
 
 
 files = []
 papers = []
-j_files = []
 journals = u.rebuild_journals()
 
 print("Merging all filtered files")
 with io.open("parsed_files.txt", mode='r', encoding = 'utf8') as f:
     for line in f:
         filename = unicode((line.split("/")[-1]).split(".")[0]+"-filtered")
-        jname = unicode(filename+"-journals")
         fn = line.split("/")[-1]
         if not fn in files:
-        	files.append(fn)
-            j_files.append(u.import_partialJ(prefix+jname))
-        	papers = papers + u.getP(prefix+filename)
+            files.append(fn)
+            papers = papers + u.getP(prefix+filename)
 
 print("Merged "+str(len(files))+" filtered files")
 print(str(len(papers))+" papers and "+str(len(journals))+" journals/venues")
-print(str(len(u.journals))+" journals in txt file")
 
-for j_list in j_files:
-    for j in j_list:
-        journals[j['id']]['count'] += j['count']
-
+#Counting papers per journal/venue
+for p in papers:
+    kj, kv = p.get("journalId"), p.get("venueId")
+    if kj == kv and kj != "":
+        journals[kj]['count']+=1
+    elif kv != "" :
+        journals[kv]['count']+=1
+    elif kj != "" :
+        journals[kj]['count']+=1 
 
 u.start()
 
