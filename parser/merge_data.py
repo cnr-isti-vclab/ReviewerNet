@@ -52,7 +52,7 @@ u.papersTestingForSearchFile(destination_path, pTestingJSON, citations)
 print("Papers' file created!")
 print("Starting authors' file creation...")
 authJSON = u.getAuthJson(papers)
-la = len(authJSON)
+la, lp, lc = len(authJSON), len(papers), len(citations)
 A = u.authorsJSONObj(papers, authJSON)
 ## once A is ready you can write it with
 u.authorsForSearchFile(auth_file, A)
