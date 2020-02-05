@@ -332,7 +332,7 @@ function loadeda(evt){
         n = a.length
     for (i = 0; i < n; i++){
         authors[i]=a[i]
-        authDict[a[i].id] = [2019, 1900, []]
+        authDict[a[i].id] =  [maxYear, 1900, [], a[i].value, i]
     }
     
     if(j_file) getAsText(j_file, loadedj);
