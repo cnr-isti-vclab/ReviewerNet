@@ -45,11 +45,8 @@ print("Updated journal dict:")
 print(journals)
 
 print(str(len(papers))+" papers from 1995 to "+str(maxy)+" collected. Starting papers' file creation...")
-pTestingJSON, authoring, citations = u.getPapersTestingJSON(papers, PTIds)
-print(str(len(pTestingJSON))+" a "+str(len(authoring))+" c "+str(len(citations)))
-lp = len(papers)
-lc = len(citations)
-u.papersTestingForSearchFile(destination_path, pTestingJSON, authoring, citations)
+pTestingJSON, citations = u.getPapersTestingJSON(papers, PTIds)
+u.papersTestingForSearchFile(destination_path, pTestingJSON, citations)
 
 ### Create and write the authors' dataset
 print("Papers' file created!")
@@ -78,4 +75,4 @@ with io.open("j_"+version+".txt", mode='w', encoding = 'utf8')  as f:
  
 print("All files created!")
 u.end()
-print("You can now copy them into datasets folder and start using your personalized instance of ReviewerNet.")
+print("You can now start using your personalized instance of ReviewerNet.")
