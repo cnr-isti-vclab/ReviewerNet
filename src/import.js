@@ -312,17 +312,30 @@ function loadedj(evt){
     
     j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[npp, nct, nat]}
     
+
+    //Sort on inCit-score
+    jns.sort(function(a, b) {
+    return a.score ? 
+        (b.score == a.score ?
+        b.count - a.count : b.score - a.score )
+        : b.count - a.count;
+    });
+
     for (i = 0; i < n; i++){
         j_lists[instance]['j_list'].push(jns[i]['id'])
     }
-    
+
+    maxYear = jj.maxy ? jj.maxy : maxYear
+
+
+
     create_jtext(instance, jns)
 
     hide_loading()
 
     document.getElementById('j-list').innerHTML = j_lists[instance]['texts'][0]
     document.getElementById('j-stat').innerHTML = j_lists[instance]['texts'][1]
-    document.getElementById('stat-intro').innerHTML = "The uploaded instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to 2018, from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
+    document.getElementById('stat-intro').innerHTML = "The uploaded instance contains "+j_lists[instance]['stats'][0]+" papers, "+j_lists[instance]['stats'][1]+" citations, and "+j_lists[instance]['stats'][2]+" authors, from 1995 to "+maxYear+", from "+(j_lists[instance]['j_list']).length+" sources:<br> <br>" 
     
 }
 
