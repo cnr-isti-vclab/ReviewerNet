@@ -256,11 +256,20 @@ function color_papers(){
 function create_jtext(instance, journals){
     let str = "<ul style=\"list-style-type:none;\">",
         str1 = "<ul style=\"list-style-type:none; float:left;\">",
-        n = journals.length;
+        n = instance == "cg" ?  journals.length : 7,
+        nn = journals.length, others = 0;
     
     for (i = 0; i < n; i++){
         str += "<li class =\"j-text\">"+journals[i]['id']+"</li>"
         str1 += "<li class =\"j-text-stat\">"+journals[i]["count"]+" papers </li>"
+    }
+
+    if(nn > n){
+        for(i; i < nn; i++)
+            others += journals[i]["count"]
+            
+        str += "<li class =\"j-text\">Others</li>"
+        str1 += "<li class =\"j-text-stat\">"+others+" papers </li>"
     }
     
     

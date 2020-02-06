@@ -362,7 +362,7 @@ def fuzzy_search(path):
                 p1['journalId'] = kj if kj else ''
                 p1['venueId'] = kv if kv else ''
 
-            if score >= score_thres1 and (len(p['inCitations']) + len(p['outCitations']) > 0):
+            if score >= score_thres and (len(p['inCitations']) + len(p['outCitations']) > 0):
                 
                 if p1.get('paperAbstract'):
                     del p1['paperAbstract']
@@ -370,12 +370,12 @@ def fuzzy_search(path):
                     p1['journalId'] = 'SIGGRAPH'
                     #p1['journalName'] = 'SIGGRAPH'
                 #str_out = str(score)+"\t\t"+p1.get("title")[:20]+"\t\t"+jn[:20]+"\t\t"+kj+"\t\t"+v[:20]+"\t\t"+kv
-                if score >= score_thres:
-                    scoreTot += score
-                    fuzzyP.append(p1)
-                    #fuzzy_out.write(str_out)
-                    #fuzzy_out.write("\n")
-                    add += 1
+                #if score >= score_thres:
+                scoreTot += score
+                fuzzyP.append(p1)
+                #fuzzy_out.write(str_out)
+                #fuzzy_out.write("\n")
+                add += 1
 
             if(i%300000==0):
                 tm = time.asctime()
@@ -437,40 +437,6 @@ def addAuthId(authSet, authors):
                 authSet.add(idA)
     return authSet
        
-def getAuthsIdSetF(path):
-    start()
-    i = 1
-    filePos = 0
-    lenght = 0
-    authSet = set([])
-    with io.open(path, mode='r', encoding = 'utf8') as f1:
-        lenght = LengthOfFile(f1)
-        for line in f1:
-            lln = len(line) + len('\n')
-            filePos += lln
-            r = json.loads(line)
-            authors = r['authors']
-            authSet = addAuthId(authSet, authors)
-            if i % 100000 == 0:
-                perc =(filePos*100)/(lenght) 
-                perc = str(perc)
-                perc = perc[0:5]
-                tm = time.asctime()
-                tm = tm.split(' ')
-                tm = tm[3]
-                print('['+tm+'] Processed '+str(perc)+' - '+str(i)+' papers - ')
-            i+=1
-    end()
-    return authSet
- 
-def getAuthsIdSet(papers):
-    start()
-    authSet = set([])
-    for r in papers:       
-        authors = r['authors']
-        authSet = addAuthId(authSet, authors)
-    end()
-    return authSet
 
 def getAuthJson(papers):
     authJson = dict()
