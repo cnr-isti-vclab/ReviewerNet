@@ -16,7 +16,7 @@ This folder contains both Bash and Python scripts. The only file to run in order
 
 To run the script succesfully you need:
 
-- **50 GB** of free space on disk to store corpus gzipped partitions (corpus details in the next section)
+- **100 GB** of free space on disk to store corpus gzipped partitions (corpus details in the next section)
 
 - wget, to download the partitions
 
@@ -27,24 +27,22 @@ To run the script succesfully you need:
 
 ## 2. The SemanticScholar corpus
 
-The reference corpus can be found at http://labs.semanticscholar.org/corpus/. This representation of the full Semantic Scholar corpus offers data relating to papers crawled from the web and subjected to a number of filters.
+The reference corpus can be found at http://api.semanticscholar.org/corpus/download/. This representation of the full Semantic Scholar corpus offers data relating to papers crawled from the web and subjected to a number of filters.
 
-The papers are provided as json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 990 MB, and the total collection is about 46 GB.
+The papers are provided as a set of json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 660 MB, and the total collection is about 100 GB.
 
 ## 3. download_and_parse.sh
 
-The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 4 concurrent downloads. 
+The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 10 concurrent downloads and parsers. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
 
 - a folder named *datasets* which contains the files needed to run a ReviewerNet session.
 
-- 47 corpus partitions as gzip files 
+- 180 corpus partitions as gzip files 
 
-- at most 47 parsed files
+- at most 180 parsed files
 
-- at most 47 partial journal files (partial paper per journal counts)
-
-The completion time of the whole process with a speed connection of 1MB/s is about 7 hours^.
+The completion time of the whole process with a speed connection of 1MB/s is about 10 hours^.
 
 Once exectued, the script checks the presence of the needed libraries, asking the user to install fuzzywuzzy if not present; then the latest corpus manifest is downloaded.
 
