@@ -327,9 +327,10 @@ function loadedj(evt){
 
     maxYear = jj.maxy ? jj.maxy : maxYear
 
-
+    xConstrained.domain([minYear, maxYear])
 
     create_jtext(instance, jns)
+    jddata = j_lists[instance].j_list.slice(0,6)
 
     hide_loading()
 

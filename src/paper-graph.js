@@ -379,7 +379,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
         else conflicts[key]++;
         p.conflict = conflicts[key];
     });
-    let start = 100;
+    let start = 80;
     papers1.forEach(p => {
         p.startY = start + p.order*100; 
         p.dx = 0;

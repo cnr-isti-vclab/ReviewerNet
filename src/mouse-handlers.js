@@ -295,7 +295,7 @@ function readJournals(path, instance){
     });
 
     maxYear = jj.maxy ? jj.maxy : maxYear
-
+    xConstrained.domain([minYear, maxYear])
     j_lists[instance]['stats'] = [npp, nct, nat]
     create_jtext(instance, jns)
     jddata = j_lists[choosen_j].j_list.slice(0,6)
@@ -313,10 +313,11 @@ function clickOnGo(){
        let ppath = "datasets/p_"+choosen_j+version,
             apath = "datasets/a_"+choosen_j+version;
 
+    
     show_loading()
 
     import_ds(ppath, apath)
-
+    
     hide_loading()
     
     start_click_handler()
