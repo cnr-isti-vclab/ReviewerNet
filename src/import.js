@@ -276,8 +276,21 @@ function loadedp(evt){
         p = graph.nodes,
         n = p.length;
     
-    for (i = 0; i < n; i++)
+    for (i = 0; i < n; i++){
         papers.push(p[i])
+        papersIndex[p[i].id] = i
+        let words = p[i].value.match(/(\w)+/g);
+        words
+        words.forEach((w, pos)=>{ 
+            w = w.toLowerCase();
+            if(w.length <= 3) return; 
+            if(w == 'constructor') return;
+            if(!terms[w]) {
+                terms[w] = [[i, pos]]; 
+            } else {
+                terms[w].push([i, pos]); 
+            }})
+    }
         //papers[i]=p[i]
     let c = graph.links,
         n1 = c.length;

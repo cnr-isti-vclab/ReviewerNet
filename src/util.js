@@ -88,7 +88,7 @@ var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  fal
         .range([5, 20]),
     xConstrained = d3.scaleLinear()
         .domain([minYear, maxYear])
-        .range([10, width - 20]),
+        .range([10, width - 40]),
     fullscreen = false,
     xaxis = d3.axisBottom().scale(xConstrained),
     loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";

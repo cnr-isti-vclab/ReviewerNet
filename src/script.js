@@ -26,7 +26,7 @@ function getXRect(x, wdt, inGraph){
 }
 
 function updateWidth(){
-    xConstrained.range([15, w -30]);
+    xConstrained.range([15, w -40]);
     d3.select("#axis").remove()
     d3.select("#scale").remove()
     if(svgAxis) svgAxis.append("g").attr("id", "axis").call(xaxis);
