@@ -445,8 +445,8 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .attr("class", "plink")
         .attr("stroke-width", "2px")
         .attr("stroke", function(d) {
-            return "lightgray"
-            //return "url(#gradxX)"; //d.source.x < d.target.x ? "url(#gradxX)":"url(#gradXx)";
+            //return "lightgray"
+            return d.source.order == d.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)" ;
     })
         .style("pointer-events", "none")
     

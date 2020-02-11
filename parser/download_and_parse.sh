@@ -2,10 +2,13 @@
 #array pf PIDs fpr multitasking
 declare -a PARSING_PIDS
 declare -a DOWNLOAD_PIDS
-ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-02-13/manifest.txt" 
+#Lastest version
+ROOT="https://s3-us-west-2.amazonaws.com/ai2-s2-research-public/open-corpus/2020-02-01/manifest.txt"
+if [[ $# -gt 0 ]]; then
+	ROOT=$1
+fi
 DWN=0
 PRS=0
-ROOT=${ROOT%manifest*}
 SUFFIX="-filtered"
 #Wait for parsing jobs to finish
 waitPPids() {
@@ -126,7 +129,9 @@ rm -f manifest*
 
 echo "Downloading&parsing SemanticScholar corpus"
 
-wget --no-check-certificate $ROOT"manifest.txt"
+wget --no-check-certificate $ROOT
+
+ROOT=${ROOT%manifest*}
 
 filename="manifest.txt"
 
