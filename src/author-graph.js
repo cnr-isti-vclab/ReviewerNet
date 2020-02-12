@@ -133,12 +133,12 @@ function authorGraph() {
                         return shared_p.includes(el.id);
                     });
 
-                return shared_in_viz.length > 0 ? "#6ba8ff" : "rgba( 178, 178, 178, 0.45 )"//return "#ffb689"//"#ff5405"
-            }else return "rgba( 178, 178, 178, 0.45 )"})
-        .attr("stroke-width", function(d){
+                return shared_in_viz.length > 0 ? "#6ba8ff" : "rgba( 178, 178, 178, 0.4 )"//return "#ffb689"//"#ff5405"
+            }else return "rgba( 178, 178, 178, 0.4 )"})
+        .attr("stroke-width", function(d) { return Math.max(0.35, 0.15*d.value)/*
             if(idAs.includes(d.source) && idAs.includes(d.target) )
                 return (d.value)*0.15
-            else return (d.value)*0.13})
+        else return (d.value)*0.13*/})
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
