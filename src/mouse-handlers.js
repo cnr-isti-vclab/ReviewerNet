@@ -150,8 +150,12 @@ function cmap_on(d){
     }
     //highlight cluster
     highlight_j(d)
-    d3.select("#j"+ d != "Other" ? jddata.indexOf(d) : 7).style("stroke-width", 1).style("stroke", "#1584c0").style("opacity", 1)
-    d3.select("#jt"+d != "Other" ? jddata.indexOf(d) : 7).attr("fill","#1584c0")
+    d3.select("#j"+( d != "Other" ? jddata.indexOf(d) : 7))
+        .attr("stroke-width", 1)
+        .attr("stroke", "#1584c0")
+        .style("opacity", 1)
+    d3.select("#jt"+(d != "Other" ? jddata.indexOf(d) : 7))
+    .attr("fill","#1584c0")
 }
 
 function cmap_out(d){
@@ -159,7 +163,8 @@ function cmap_out(d){
     unhighlight_j(d)
     d3.selectAll(".jrect").style("opacity", 1)
     d3.selectAll(".jtext").attr("fill", "black")
-    d3.select("#j"+ d != "Other" ? jddata.indexOf(d) : 7).style("stroke-width", 0)
+    d3.select("#j"+( d != "Other" ? jddata.indexOf(d) : 7))
+        .attr("stroke-width", 0)
 }
 
 function cmap_click(d){
@@ -199,7 +204,8 @@ function cmap_dbl(){
         svgAxis.selectAll("jrect")
             .data(jddata.concat(["Other"]))
             .enter()
-            .append("rect").attr("class","jrect").attr("id", (d)=>"j"+(d == "Other" ? 7 : jddata.indexOf(d)))
+            .append("rect").attr("class","jrect")
+            .attr("id", (d)=>"j"+(d == "Other" ? 7 : jddata.indexOf(d)))
             .attr("height", 10)
             .attr("width", 10)
             .attr("y", function (d){
@@ -217,7 +223,8 @@ function cmap_dbl(){
         svgAxis.selectAll(".jtext")
             .data(jddata.concat(["Other"]))
             .enter()
-            .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+(d == "Other" ? 7 : jddata.indexOf(d)))
+            .append("text").attr("class", "jtext")
+            .attr("id", (d)=>"jt"+(d == "Other" ? 7 : jddata.indexOf(d)))
             .attr("y", (d) => d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d))+8 : y_coords(6)+8)
             .attr("x", 35)
             .attr("text-anchor", "left")  
@@ -445,6 +452,8 @@ function highlight_cluster_pap(d){
                 return 1;
             }else return 0.2;
     })
+        .attr("stroke", (d1) => d.id === d1.source.id || d.id === d1.target.id ? "rgb(200,200,200)":
+        (d1.source.order == d1.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)"))
 }
 
 function highlight_cluster(d){
@@ -614,6 +623,9 @@ function unclick_pap(d){
         .style("opacity", 1)
     d3.selectAll(".plink")
         .style("opacity", 1)
+        .attr("stroke", (d1) => 
+        d1.source.order == d1.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)")
+
     d3.selectAll(".authNode")
         .attr('fill', "rgba( 221, 167, 109, 0.342 )")
     d3.selectAll(".authlLine")  
@@ -1484,7 +1496,10 @@ function handleMouseOut(d){
         d3.select(this)
             .attr("r", (d)=>pap_radius(d));
         d3.selectAll(".plink")
-            .style("opacity", 0.8)
+            .style("opacity", 1)
+            .attr("stroke", (d1) => 
+            d1.source.order == d1.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)")
+    
         d3.selectAll(".authNode")
                         .attr('fill', function (d){
                     return "rgba( 221, 167, 109, 0.342 )"
@@ -1638,8 +1653,7 @@ function handleMouseOverPB(d, event){
 }
 
 function handleMouseOutPB(d){
-    d3.select(this).transition()
-        .duration(200)
+    d3.select(this)
         .attr("r",function (d){
             return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
     popText.attr("width", 0)
@@ -1670,7 +1684,11 @@ function handleMouseOutPB(d){
             })
 
         un_highlight_cluster()
-        d3.selectAll(".plink").style("opacity", 1)
+        d3.selectAll(".plink")
+        .style("opacity", 1)
+        .attr("stroke", (d1) => 
+        d1.source.order == d1.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)")
+
         d3.selectAll(".papersNode").style("opacity", 1)
 
     d3.selectAll(".authors-dot")
@@ -1937,7 +1955,12 @@ function ListMouseOut(event){
             .attr("cy", 15)
             .attr("r",function (d){return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? 3: 2 })
             un_highlight_cluster()
-            d3.selectAll(".plink").style("opacity", 1)
+            
+            d3.selectAll(".plink")
+            .style("opacity", 1)
+            .attr("stroke", (d1) => 
+            d1.source.order == d1.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)")
+    
             d3.selectAll(".papersNode").style("opacity", 1)
         }else return;
     }else{

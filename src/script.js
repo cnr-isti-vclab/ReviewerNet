@@ -1239,7 +1239,7 @@ $(function (){
     
     //DEBUG
     
-    
+
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
