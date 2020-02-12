@@ -9,7 +9,7 @@ function biblio_click_handler(){
     }else{
         $( "#biblio-dialog" ).dialog( "open" );
         clickBiblio = true;
-        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, one for each line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
+        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, separated with one empty line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
         
         document.getElementById("biblio-dialog").innerHTML = inner_txt
         
@@ -134,7 +134,7 @@ function unclick_j(){
     unhighlight_j(clickedJ)
     d3.selectAll(".jrect").style("opacity", 1)
     d3.selectAll(".jtext").attr("fill", "black")
-    d3.select("#j"+clickedJ).style("stroke-width", 0)
+    d3.select("#j"+d != "Other" ? jddata.indexOf(clickedJ) : 7).style("stroke-width", 0)
     clickJ = !clickJ
 }
 
@@ -145,13 +145,13 @@ function cmap_on(d){
     if(clickJ){
         //unhighlight previous
         unhighlight_j(clickedJ)
-        d3.select("#j"+clickedJ).style("stroke-width", 0)
+        d3.select("#j"+d != "Other" ? jddata.indexOf(clickedJ) : 7).style("stroke-width", 0)
         clickedJ = d
     }
     //highlight cluster
     highlight_j(d)
-    d3.select("#j"+d).style("stroke-width", 1).style("stroke", "#1584c0").style("opacity", 1)
-    d3.select("#jt"+d).attr("fill","#1584c0")
+    d3.select("#j"+ d != "Other" ? jddata.indexOf(d) : 7).style("stroke-width", 1).style("stroke", "#1584c0").style("opacity", 1)
+    d3.select("#jt"+d != "Other" ? jddata.indexOf(d) : 7).attr("fill","#1584c0")
 }
 
 function cmap_out(d){
@@ -159,7 +159,7 @@ function cmap_out(d){
     unhighlight_j(d)
     d3.selectAll(".jrect").style("opacity", 1)
     d3.selectAll(".jtext").attr("fill", "black")
-    d3.select("#j"+d).style("stroke-width", 0)
+    d3.select("#j"+ d != "Other" ? jddata.indexOf(d) : 7).style("stroke-width", 0)
 }
 
 function cmap_click(d){
@@ -199,7 +199,7 @@ function cmap_dbl(){
         svgAxis.selectAll("jrect")
             .data(jddata.concat(["Other"]))
             .enter()
-            .append("rect").attr("class","jrect").attr("id", (d)=>"j"+d)
+            .append("rect").attr("class","jrect").attr("id", (d)=>"j"+(d == "Other" ? 7 : jddata.indexOf(d)))
             .attr("height", 10)
             .attr("width", 10)
             .attr("y", function (d){
@@ -217,7 +217,7 @@ function cmap_dbl(){
         svgAxis.selectAll(".jtext")
             .data(jddata.concat(["Other"]))
             .enter()
-            .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+d)
+            .append("text").attr("class", "jtext").attr("id", (d)=>"jt"+(d == "Other" ? 7 : jddata.indexOf(d)))
             .attr("y", (d) => d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d))+8 : y_coords(6)+8)
             .attr("x", 35)
             .attr("text-anchor", "left")  
@@ -1522,7 +1522,7 @@ function clickHandler(d){
         clickP = true;
         idClickedP = d.id
           let txt = d.value
-        clkPp = papersFiltered.filter(function(el){return el.id === d.id;})[0]
+        clkPp = d//papersFiltered.filter(function(el){return el.id === d.id;})[0]
         reclick_pap(clkPp)
         simulation.stop()
         simulationA.stop()

@@ -35,7 +35,7 @@ def import_partialJ(path):
                 continue;
         return js
 
-journals = import_partialJ("journals_large.txt")
+journals = import_partialJ("journals.txt")
 
 exclude_words = set([
     'foreword',
@@ -349,8 +349,8 @@ def fuzzy_search(path):
                         if sv > 0:
                             scoresv[j['id']] = sv
 
-                kj = max(scoresj, key=scoresj.get) if jn and jn != "" else ""
-                kv = max(scoresv, key=scoresv.get) if v  and v != "" else ""
+                kj = max(scoresj, key=scoresj.get) if len(scoresj) > 0 and jn and jn != "" else ""
+                kv = max(scoresv, key=scoresv.get) if len(scoresv) > 0 and v and v != "" else ""
                 kj = kj if kj and kj != "" and scoresj[kj] >= score_thres else None
                 kv = kv if kv and kv != "" and scoresv[kv] >= score_thres else None
 

@@ -96,9 +96,9 @@ function extract_coauthoring(){
 function auths_in_g_filter(item){ return auths_in_g.has(item.id) }
 
 function a_radius(d){
-    let r = (d.score ? d.score : score_auth(d))+1.8;
+    let r = (d.score ? d.score : score_auth(d))+1.2;
     r = idAs.includes(d.id) ? r + 0.3 : r
-    r = r > 9 ? 9 : r
+    r = r > 8 ? 8 : r
     return r.toString()+"px";
 }
 
@@ -137,8 +137,8 @@ function authorGraph() {
             }else return "rgba( 178, 178, 178, 0.45 )"})
         .attr("stroke-width", function(d){
             if(idAs.includes(d.source) && idAs.includes(d.target) )
-                return (d.value)*0.13
-            else return (d.value)*0.1})
+                return (d.value)*0.15
+            else return (d.value)*0.13})
         .on("click", linkAGClickHandler)
         .on("mouseover", handlerMouseOverLinkAG)
         .on("mouseout", handlerMouseOutLinkAG)
@@ -260,8 +260,8 @@ function authorGraph() {
         .text(function(d) {
             return d.value;
         })
-       .style("font-size", (d) => 0.3*d.score < 1.2 ? 
-        (0.3*d.score < 0.3 ? "0.3em": 0.3*d.score+"em")
+       .style("font-size", (d) => 0.1*d.score < 1.2 ? 
+        (0.1*d.score < 0.3 ? "0.3em": 0.1*d.score+"em")
         : "1.2em")  
         .style("fill", function(d) {
             if(authsReview.includes(d.id)) return "#5263fe";

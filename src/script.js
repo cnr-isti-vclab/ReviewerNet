@@ -1238,7 +1238,7 @@ $(function (){
     
     
     //DEBUG
-    /*
+    
     
     choosen_j = "cg"
     let instance  = choosen_j
@@ -1249,5 +1249,5 @@ $(function (){
     }
     
     clickOnGo()
-    */
+    addPaper(papers[0])
 });
