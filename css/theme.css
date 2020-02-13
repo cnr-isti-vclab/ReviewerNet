@@ -105,9 +105,9 @@
 }
 
 .my-container-resize {
-    height: 85%;
+    height: 99%;
     overflow-y: auto;
-    padding-right: 0;
+    padding-right: 15;
     background-color: #efefef;
 }
 
@@ -520,6 +520,7 @@ footer {
 .dblp-ico{
     width: 20px;
     height: 20px;
+    pointer-events: none;
 }
 
 #startMsg {
