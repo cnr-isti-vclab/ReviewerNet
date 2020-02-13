@@ -102,21 +102,25 @@ function createSliders(){
 }
 
 function checkboxesInit(){
-    checkboxA.on('click', function(){
+    checkboxA.on('click', function(evt){
         if(checkboxA[0].checked){
             last_val = $( "#MNP" )[0].value;
-            $( "#MNP" ).spinner("value", last_val < 4 ? last_val*2 : last_val)
+            $( "#MNP" ).spinner("value", last_val <= 3 ? last_val*2 : last_val)
+        }else{
+            $( "#MNP" ).spinner("value", last_val)
         }
         if(papersFiltered.length > 0){
             authorBars()
             authorGraph()
         }
+        evt.stopPropagation()
     });
-    checkboxC.on('click', function(){
+    checkboxC.on('click', function(evt){
         if(authsConflict.length > 0 || authsExclude.length > 0 || authsReview.length > 0){
             authorBars()
             authorGraph()
         }
+        evt.stopPropagation()
     });
     $(".tdp").css("padding", "0px")
     
