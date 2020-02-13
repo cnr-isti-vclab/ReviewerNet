@@ -249,7 +249,12 @@ function authorGraph() {
         } catch (e) {
             console.log(e)
         }
+
         simulationA.alpha(1).alphaMin(0.2).alphaDecay(0.025).restart()
+        
+        $("#gAG").removeAttr("transform")
+        d3.select("#svgAG").call(d3.zoom().transform, d3.zoomIdentity);
+
     }
     d3.select("#gAG").append("g").attr("class", "gNames")
         .selectAll("text")

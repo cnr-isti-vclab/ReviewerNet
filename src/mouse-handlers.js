@@ -1,6 +1,6 @@
  var texts = [],
     clickAG = false, clickP = false, clickJ = false, idClickedA, idClickedP, clkIds = [], clkA, clkPp, clkRect, clkLine, first_dbl = false,  first_dbla = false, clickBiblio = false,
-    j_lists = {}, choosen_j = null, version =  "_2018-05-03.txt";
+    j_lists = {}, choosen_j = null, version =  "_2020-01-01.txt";
 
 function biblio_click_handler(){
      if($( "#biblio-dialog" ).dialog( "isOpen" )){
