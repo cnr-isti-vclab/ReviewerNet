@@ -298,11 +298,11 @@ function paperGraph(papers1, citations1, idPs, simulation){
     papers1.forEach(p => { delete(p.key); delete(p.in); delete(p.out); delete(p.parent); delete(p.conflict);
         delete(p.order); delete(p.suborder); delete(p.startY); delete(p.years); delete(p.isolated) });
 
-    papers1.forEach(p => { if(idPs.includes(p.id)) p.key = true; index[p.id] = p; p.in = 0; p.out = 0; });
+    papers1.forEach(p => { if(idPs.includes(p.id)) p.key = true; p.order = idPs.indexOf(p.id); index[p.id] = p; p.in = 0; p.out = 0; });
     citations1.forEach(c => { index[typeof(c.source) == "string" ? c.source: c.source.id].in++; index[typeof(c.target) == "string" ? c.target: c.target.id].out++ });
 
     let keypapers = papers1.filter(p => p.key);
-    keypapers.sort((a, b) => a.year - b.year);
+    keypapers.sort((a, b) => a.order - b.order);
     keypapers.forEach((p, i) => { p.order = i; });
 
     papers1.forEach(p => { if(p.key) return; p.isolated = p.in + p.out  <= 1 });
