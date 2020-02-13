@@ -105,9 +105,9 @@
 }
 
 .my-container-resize {
-    height: 85%;
+    height: 95%;
     overflow-y: auto;
-    padding-right: 0;
+    padding-right: 15;
     background-color: #efefef;
 }
 
