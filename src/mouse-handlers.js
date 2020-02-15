@@ -298,10 +298,6 @@ function readJournals(path, instance){
     
     j_lists[instance]['j_list'] = []
 
-    for (i = 0; i < n; i++){
-        j_lists[instance]['j_list'].push(jns[i]['id'])
-    }
-
     //Sort on inCit-score
     jns.sort(function(a, b) {
         return a.score ? 
@@ -309,6 +305,10 @@ function readJournals(path, instance){
             b.count - a.count : b.score - a.score )
             : b.count - a.count;
     });
+    
+    for (i = 0; i < n; i++){
+        j_lists[instance]['j_list'].push(jns[i]['id'])
+    }
 
     maxYear = jj.maxy ? jj.maxy : maxYear
     xConstrained.domain([minYear, maxYear])
