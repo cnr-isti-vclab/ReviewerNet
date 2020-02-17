@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ReviewerNet</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, height=device-height">
+        <script type="text/javascript" src="src\jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="src\jscolor.js"></script>
+        <script type="text/javascript" src="src/d3.v4.min.js"></script>
+        <link rel="icon" href="imgs/logo-ico.ico" >
+        <link rel="stylesheet" href="css\bootstrap.min.css">
+        <link rel="stylesheet" href="css\nouislider.min.css">
+        <script src="src\bootstrap.min.js"></script>
+        <script src="src\nouislider.min.js"></script>
+       <!-- <script type="text/javascript" src="src/jquery.autocomplete.js"></script> -->
+        <script type="text/javascript" src="src/modernizr-custom.js"></script>
+        <script src="src/jquery-ui.js"></script>
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/theme.css">
+    </head>
+<body>
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script src="https://www.googletagmanager.com/gtag/js?id=UA-118764276-1"></script>
+<script>    
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-118764276-1');
+</script>
+        
+<div class="container-fluid" id= "all" >
+    <script src="src\import.js"></script>
+    <!-- RT & PN col -->
+    <div class="row" style="overflow: hidden">
+    <div class="col-sm-8" style="padding-left: 5px;padding-right: 2px;">
+        <div class="row ui-widget-content" id="resizable">
+            <div id="aut_table" class="container-fluid aa graph" style="width: 100%; overflow-y: auto">
+                <svg id = "svgRT" class = "svg" style="width: inherit; height: inherit" >
+                <!-- RT -->
+                <table id="authTable">
+                </table>
+            </div>
+         </div>
+        <!-- PN row-->
+        <div class="row ui-widget-content" id="row21">
+            <div  class="panel-body scroll container-fluid graph a ap text-left" style="width: 100%; height: inherit">
+                <!-- Start Msg -->
+                <span id="loading" class="text-center"><div id="ldr" class="cssload-loader">Loading data <span id = "ldr-val" style="width: auto; font-size: 0.6em">0</span>%</div> <!--<div class="loader text-center"></div>--></span>
+                <span id="startMsg">
+                <img id="logo" src="imgs/logo.png">
+                <h3 id="titleLogo">ReviewerNet</h3>
+                </span>
+                <!-- Paper Graph -->
+                <svg id = "svgAxis" class = "svg" style="width: inherit; height: 800px">
+                    <defs>
+                            <linearGradient id="grad_v" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop id = "firstStopS" offset="0%" style="stop-color:#ffff99;stop-opacity:1"/>
+<!--                              <stop id="secondStopS" offset="50%" style="stop-color:white;stop-opacity:1" />-->
+                              <stop id="thirdStopS" offset="100%" style="stop-color:#00cc99;stop-opacity:1"  />
+                            </linearGradient>
+                          </defs>
+               
+                          <rect id="cmpa" class = "cmpClass pop-up" x="20" y="126" width="10px" title = "Is a color-map associated with the number of in-citations. The steps are 0 and 100." height="36%" fill="url(#grad_v)" text ="100" ry="6px" />
+                        <text x="35px" y="126px" class = "cmpClass" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">100</text>
+<!--                        <text x="35px" y="275px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">30</text>-->
+                        <text class = "cmpClass" x="35px" y="420px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
+
+                </svg>
+                <svg id = "svgP" class = "svg" style="width: inherit" height= 500px >
+                </svg>
+            </div>   
+        </div>
+        
+    </div>
+    <!-- RN & GUI col -->
+    <div id="AG-col" class="col-sm-4">
+        <div class="row ui-widget-content" id="resizable1" style="margin: 0;">
+            <div id="AG-container" class="container-fluid ag-container graph ag">
+                <svg id="svgAG_names" class="svg" style="width: 100%">
+                <svg id = "svgAG" class = "svg" style="width: 100%">
+                </svg>
+            </div>
+        </div>
+        <div class="row ui-widget-content" id="row22">
+                            <!-- Toolbox -->
+                <div id = "toolbox" class="panel-body text-center">
+                    <div class="row" id="tbRow1">
+                        <table id = "bnt-table" class="table table-condensed" style="border:0px">
+                          <tr>
+                            <td rowspan="2" style="border:0px" >
+                                <label class=" pop-up gui-menu-item" title = "For a researcher to be a candidate reviewer, the minimum number of authored papers in the PN. If you increase the value, then you lower the number of researchers visualized in the RT and RN. " for="MNP">Productivity<br> Threshold</label>
+                                <input id="MNP" class = "spinner" name="value">
+<!--                                <button id="disableMNP">Filter authors</button>-->
+                            </td>
+<!--
+                            <td>
+                                <label class=" pop-up gui-menu-item" title = "Two researchers are considered as co-authors if they have at least n paper in common published in the last C years" for="N">n</label>
+                                <input id="N" class = "spinner" name="value">
+                                <button id="disableN">Filter<br>authors</button>
+                            </td>
+-->
+                                <td rowspan="2" style="border:0px">
+                                <label for="lastYearOfP" title = "For a researcher to be a candidate reviewer, the maximum number of years since the last authored paper in the database. If you increase the value, then you visualize more researchers in the RT and RN." class="pop-up gui-menu-item">Researcher<br>Expiration</label>
+                        <input id="lastYearOfP" class = "spinner" name="value">
+                                   <td rowspan="2" style="border:0px">
+                                <label for="C" title = "For two researchers to have a conflict-of-interest, the maximum number of years since the last co-authored paper in the database. If you increase the value, then more researchers are visualized as conflicting." class="pop-up gui-menu-item">Conflict<br>Expiration</label>
+                                <input id="C" class = "spinner" name="val">
+<!--                                <button id="disableC">Filter authors</button>-->
+                            </td>
+<!--                        <button id="disableY">Filter authors</button>-->
+
+                            <!--<td>
+                                <label for="MNoC" title = "Is the Mininimum Number of out-Citations threshold. Each paper having a number of out-citations smaller than this threshold is displayed in transparency in the PN." class="pop-up gui-menu-item">c</label>
+                                <input id="MNoC" class = "spinner" name="value">
+                                <button id="disableMNoC">Filter papers</button>
+                            </td>-->
+                              
+                              
+                                <td class="tdp" style="border:0px;transform:translateX(-5%)">
+                                <input id = "cb-av" class="checkB" type="checkbox" value="false"><label class="checkbox-inline pop-up gui-menu-item" title="If ticked, then you visualize the authors of all papers in the PN, instead of selected papers only. This augments the number of candidate reviewers. Note: visualizing a large number of authors can slow down the interface.">Expand RT & RN</label> 
+                            </td>
+                              </td>
+                            </tr>
+                            <tr>
+                            <td class="tdp" style="border:0px; transform: translate(-5%,-20%);">
+                                <input class="checkB" id = "cb-confl" type="checkbox" value="false">       
+                                <label title ="If ticked, then you remove conflicting authors from the visualization." class="checkbox-inline pop-up gui-menu-item">Hide Conflicted</label> 
+                            </td>
+                            </tr>
+                        </table>
+                        
+                        <!--
+
+                        <h9 id = "MNoC" title = "Is the Mininimum Number of out-Citations threshold. Once enabled, it lowers the opacity of papers that have a number of out-citations less than the indicated one." class="pop-up">Minimum number of out-citations</h9>
+                        <input id="input-numberTOC" min="0" max="20" step="1" style="width: 40px" type="number">
+                        <input type="checkbox" id="thetaCitCb" title = "Toggle/remove MNoC threshold"/>
+                    </div> -->
+                    </div>
+<!--                    <div class="row" id="tbRow4">
+
+                        <table id="stats" style=" float:left; width:30%">
+                            <caption title = "This table shows some interesting numbers, where P is the number of paper explicitly added to the visualization (searchbar or double-click on a node), N(P) is the total number of visualized papers that includes both paper in P and all their neighbors, aka in/out-citations, A(P): is the number of authors of the interesting papers P and A(N(P)) is the number of authors in N(P))." class="pop-up" id="statss" style="font-style: oblique; font-variant-caps: titling-caps; font-size: 0.8em; padding: 0px; text-align: center; font-weight: bold; cursor: help"><font color="#1e9476">STATS</font></caption>
+                            <tr>
+                              <td id="apn" class="stat"><strong><font color="#1e9476">A(P) =</font></strong> 0</td>
+                            <td id="anpn"class="stat"><strong><font color="#1e9476">
+                                A(N(P)) =</font></strong> 0
+                                </td>
+                          </tr>
+                          <tr>
+                            <td id="pn" class="stat">
+                                <strong><font color="#1e9476">P =</font></strong> 0
+                                    </td>
+                            <td id="npn" class="stat">
+                                <strong><font color="#1e9476">N(P) =</font></strong> 0</td>
+                          </tr>
+                        </table>
+                        
+
+                        <table id = "pruning-table">
+                          <tr>
+                            <td class="tdp">
+                                <input id = "cb-av"  type="checkbox" value="false"><label class="checkbox-inline pop-up gui-menu-item" title="If enabled, all authors of all the visualized papers will be displayed. Can be computationally expansive.">Expand Author Graph</label> 
+                            </td>
+                            <td class="tdp">
+                                <input id = "cb-confl" type="checkbox" value="false">       
+                                <label title ="If enabled, hide all conflicting researchers from the RT and RN." class="checkbox-inline pop-up gui-menu-item">Hide Conflicted</label> 
+                            </td>
+                            </tr>
+                        </table>
+                        
+                    
+             <select id="authViz" style="transform: translateY(30%); float: right; width: 65%">
+                  <optgroup label="Authors visualization options:">
+                    <option value="apO">Show <strong><font color="#275d58">A(P): </font></strong>authors with at least one paper in the active papers list</option>
+                    <option value="anpO">Show <strong><font color="#275d58">A(N(P)): </font></strong>all authors of all the visualized papers</option>
+                  </optgroup>
+                </select>-->
+
+<!--                    <button type="button" style="transform: translateY(30%);" class="btn btn-default">Hide conflicted</button>
+                    </div>      -->
+                </div>
+            <div id="my-container" class="container-fluid my-container-resize"> 
+
+                <!-- Search Bars -->
+                <div id = "sidenav" class="sidebar-nav navbar-collapse">
+                    <ul class="nav in" id="side-menu">
+                        <li class="sidebar-search">
+                        <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                            <table>
+                              <tr id="submitting_row">
+                                <td id="td1" class="td1">
+                                  <span id="conflict-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Submitting Authors <span id="authors-badge"class="badge"></span></span>
+                                  </td>
+                                <td id = "td2" class ="button-bar">
+                                    <button id="done_submit" class="btn btn-default done_submit pop-up" title="Done button." ><img id="hlp" class = "done-btn" src="imgs/done.png" alt="Done"></button>
+                                    <form class="aform"><input name="authoSearchBar" class="biginput " id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                  </td>
+                              </tr>
+                            </table>
+                        </div>
+                        </li>
+                        <li id="aal" class="element">
+                            <table id = "authList" ><!--class="list-group"-->
+                            </table>
+                        </li>
+                        <li class="sidebar-search">
+                        <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                             <table>
+                              <tr>
+                                <td class="td1" class = "button-label">
+                                 <span id="review-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(40%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Selected Reviewers<span id="rauthors-badge"class="badge"></span></span>
+                                    </td>
+                                <td class ="td2 button-bar">
+                                    <div id="export_dropup" class="done_submit">
+                                     <div id="export-dialog" title="Session Snapshot"  class = "my-dialog">
+                                    </div>
+                                    <button id ="export-btn"  class = "pop-up" type="button" title = "Export button."><img id="export" class = "done-btn" src="imgs/export.png" alt="Export Session"></button>
+                                    </div>
+                            <form class="aform">
+                                <input disabled="true" name="rauthoSearchBar" class=" hiddenSB biginput" id="rauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..." style="width: 100%"></form>
+                                  </td>
+                                 </tr>
+                            </table>
+                        </div>
+                        </li>
+                        <li id="raal" class="element">
+                            <ul id = "rauthList" class="list-group">
+                            </ul>
+                        </li>
+                        <li class="sidebar-search">                            
+                            <div id="searchfield" style="width: 100%; padding-top: 1px;">
+                            <table>
+                              <tr>
+                                <td class="td1">
+                                  <span id="area-paper-a" class="text-left"  style="float: left; font-size: 1em; transform: translateY(31%); font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Key Papers<span id="area-paper-badge"class="badge"></span> </span>
+                                  </td>
+                                <td class ="td2">
+                                    <form style="margin: 0 auto; background-color: rgba( 0, 0, 0, 0 );"><input disabled="true" name="papersSearchBar" class=" biginput hiddenSB" id="papers-autocomplete" autocomplete="off" type="text" placeholder="Find papers..." style="width: 100%; background-color: lightgray"></form>
+                                  </td>
+                              </tr>
+                            </table>  
+                            </div>
+                        </li>
+                        <li>
+                                <div id ="papL">    
+                            <ul id = "papList" class="list-group">
+                                    </ul>
+                                    </div>
+                        </li>
+                        <li id="pi" class="element">
+
+                            <table>
+                              <tr class="side-tab">
+                                <td class="td1pi">
+                                  <span id="paper-info-a" class="text-left"  style="width: 98%; padding-left: 0px; padding-right: 0px; padding-top: 4px; float: left; font-size: 1em; font-variant-caps: petite-caps; color: #385e84; font-weight: bold;">Paper Info</span>
+                                  </td>
+                                <td class ="td2title">
+                                  </td>
+                              </tr>
+                            </table>  
+                                    
+<!--                                    </td>
+                                </tr>
+                            </table>
+                            -->
+                            
+                            <table id = "paperInfo" style="width: 98%">
+                            </table>
+                        </li>
+                </ul>
+                </div>
+            </div>
+        </div> 
+    </div>
+    </div>
+    <footer class="text-center" id = "my-foot">
+     <table style="width:100%; height: 100%">
+      <tr>
+          <td>        
+              <div id="tutorial-dialog" title="Tutorial"  class = "my-dialog" style="width: 99%; height: 93%">
+                  To look for your reviewers:
+                  <ul id="tutorial-list">
+                    <li> input the names of the authors of the submitted paper in the ‘Submitting Authors’ field, and click the <img height="24" src="imgs/done.png" alt="Tutorial"> ‘Done’ button next to the searchbar;</li>
+                    <li> build your Paper Network: the intuition is that the authors of relevant papers are good candidate reviewers. Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic, and input their titles in the ‘Key papers’ field. Then, expand the network by selecting interesting nodes on a mouse double click;</li>
+                    <li> continue until you feel the selected papers and their citations offer a good coverage of the literature about the topic at hand. While you create the Paper Network, ReviewerNet automatically builds for you the Researcher Timeline - visualizing the academic career of the authors of selected key papers - and the Researcher Network - a graph visualization of co-authorship relations;</li>
+                    <li> explore the Researcher Timeline to assess the suitability of candidate reviewers: check topic coverage, stage of career, production over years etc. Visual cues (color, font) will help you to tell apart candidate reviewers from conflicting researchers;</li>
+                    <li> analyse the Researcher Network and find sets of independent reviewers, thanks to the the visualization of network of collaborators;</li>
+                    <li> once you identified one or more candidate reviewers who fit your requirements, input their names in the ‘Selected Reviewers’ field;</li>
+                    <li> download your list of reviewers; ReviewerNet will also add a list of potential substitute reviewers, in case of decline.
+                    </ul>
+                For further information, refer to the paper XXXX and the accompanying <a href="https://youtu.be/JnomPO8QI28">video</a>
+                </div>
+            <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class = "done-btn" src="imgs/help.png" alt="Tutorial"></button>
+          </td>
+            <td>
+              <span style="justify-content: center; font-size: 1em; font-variant-caps: all-small-caps; font-weight: bolder; color: #1584c0">ReviewerNet </span> 
+            </td>
+          <td id = "import">
+              <button id="import_label" onclick="document.getElementById('input_file').click()">Import session</button>
+                <input type="file" id="input_file" style="display: none;" onchange="startRead()"/> 
+                  </td>
+          <td id = "export">
+              <button id="export_label" onclick="export_fileb()">Export session</button>
+                  </td>
+                <td>
+                    
+                    <span style="justify-content: center; font-size: 0.8em; color: #1584c0">Instance computed on: ACM Trans. on Graphics, Comp. Graphics Forum, IEEE TVCG, The Visual Comp., Comput.&amp;Graph.,  IEEE CG&amp;A, SIGGRAPH Conf., IEEE Vis. Conf. </span> 
+
+            </td>
+                  <td>
+                <a class="links" href="http://labs.semanticscholar.org/corpus/" style="height: 9px; color: #275d58; font-style: oblique; font-size: 0.7em">data courtesy of semanticScholar </a><a class="links" href="https://github.com/hybrs/hybrs.github.io" style="cursor:zoom-in; color: #275d58; font-style: oblique;"><img class = "links" id="ghl" src="imgs/gh.png" alt="(about)"></a>
+              </td>
+      </tr>
+    </table> 
+    </footer>   
+</div>
+<script src="src\author-graph.js"> //rgba( 71, 66, 66, 0 )</script>
+<script src="src\script.js"> //rgba( 71, 66, 66, 0 )</script>
+<script src="src\export.js"> //rgba( 71, 66, 66, 0 )</script>
+<script src="src\authTable.js"></script>
+<script src="src\mouse-handlers.js"></script>
+<script src="src\toolbox.js"></script>
+
+
+</body>
+</html>
+
+            
