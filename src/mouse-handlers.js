@@ -9,7 +9,7 @@ function biblio_click_handler(){
     }else{
         $( "#biblio-dialog" ).dialog( "open" );
         clickBiblio = true;
-        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, separated with one empty line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
+        let inner_txt =  "<form><textarea id=\"biblio-txt\" cols=\"auto\" placeholder=\"Paste your references here, separated by one empty line…\" rows=\"10\"></textarea><br> <button id=\"cit-btn\" type=\"button\" >Parse</button> </form>";
         
         document.getElementById("biblio-dialog").innerHTML = inner_txt
         

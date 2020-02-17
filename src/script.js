@@ -389,6 +389,7 @@ function setMouseHandlers(){
         })
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
+}
 
 
 function updateAuthDict(pf){
