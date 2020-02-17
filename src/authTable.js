@@ -1,12 +1,3 @@
-/*
-"<tr class=\"authLine\" >"+
-"<td class=\"authline\">"+
-"<svg id=\"svgA"+<---ID--->+"\" class=\"svgA\"></svg></td></tr>"
-
-
-
-<rect x="400"width="100px" height="8px" fill="black"></rect>
-*/
 function prettyPrintAuthor(auth){
     function getAuthPapers(item){
     return auth.paperList.includes(item.id);
@@ -79,7 +70,8 @@ function updateADpapers(){
 function prune_auth(d1){
     let exclude = false;
     if(authsReview.includes(d1.id) || authsExclude.includes(d1.id)) return true;
-    if((checkboxC[0].checked) && (authsExclude.length > 0 || authsReview.length >0)){
+    if((checkboxC[0].checked) && (authsConflict.length > 0 || authsExclude.length > 0 || authsReview.length >0)){
+        if (authsConflict.includes(d1.id)) return false
         authsExclude.map(function (el){
             if(d1.coAuthList[el] && checkThetaNC(d1, el))
                 exclude = true
@@ -91,7 +83,8 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        exclude = (authDict[d1.id][2] && ( 2018 - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) )) ? true : false;
+        exclude = (authDict[d1.id][2] 
+            && ( maxYear - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) ))
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
     //console.log("Exclude "+exclude)
@@ -99,48 +92,37 @@ function prune_auth(d1){
 }
 
 function apFilter(item){
-    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ( (authsConflict.includes(item.id) && !checkboxC[0].checked) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || AP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter(item){
-    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ((authsConflict.includes(item.id) && !checkboxC[0].checked) || authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id)) && prune_auth(item)
 }
 
 function anpFilter_noc(item){
-    return (authsExclude.includes(item.id) || authsReview.includes(item.id)
+    return ((authsConflict.includes(item.id) && !checkboxC[0].checked) ||  authsExclude.includes(item.id) || authsReview.includes(item.id)
         || ANP.includes(item.id))
 }
 
-function rankAuths(auths){
-    let a1 = [],
-        an = auths.length;
-    for(var i = 0; i < an; i++){
-        let score = 0.0,
-            pl = auths[i].paperList,
-            npl = pl.length;
-        pl.map(function(el){
-            if(idPs.includes(el))
-                score+=alpha
-            else if(papersPrint.includes(el))
-                score+=beta
-        })
-        //for(var j = 0; j < npl; j++)
-        auths[i].score=score        
-    }
-    return auths
+function order(att){
+    let idd = att.id
+    if(authsExclude.includes(idd)) return 0;
+    else if(authsConflict.includes(idd) ||  authColor(att)) return 1;
+    else return 2;
 }
 
 function checkThetaNC(author, el){
     //check what variable betweet thataN/C set to 0 or its spinner value
     var l = author.coAuthList[el][1] ? parseInt(author.coAuthList[el][1]) : 1900;
-    return ((2018 - l) <= parseInt(thetaC));
+    return ((maxYear - l) <= parseInt(thetaC));
 }
 
 function authColor(author){
     let exclude = false;
     //console.log(author)
+    if(authsConflict.includes(author.id)) return true;
     authsExclude.map(function (el){
         if(author.coAuthList[el] && checkThetaNC(author, el))
             exclude = true
@@ -161,11 +143,7 @@ function printPapers(auths){
     let an = auths.length
     for(var i = 0; i < an; i++){
         let id_a = auths[i].id
-        //console.log(authDict[id_a][2])
-        //console.log(authors.filter(function (el){return el.id === id_a;}))
-        //console.log(authDict[id_a])
-        
-        let last = authDict[id_a][2].filter(function(el){return     papersPrint.includes(el.id)}),
+        let last = authDict[id_a][2].filter(function(el){return papersPrint.includes(el.id)}),
             first = authDict[id_a][2].filter(function(el){return !papersPrint.includes(el.id)})
         
         
@@ -192,7 +170,10 @@ function printPapers(auths){
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return (idPs.includes(d.id) || papersPrint.includes(d.id)) ? color_n(d.color): "rgba( 217, 217, 217, 1 )" }
+                if(idPs.includes(d.id) || papersPrint.includes(d.id))
+                    return c20 ? color_j(d) : color_n(d.color)
+                else return "rgba( 217, 217, 217, 1 )"
+            }
    /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/
@@ -201,6 +182,7 @@ function printPapers(auths){
             .on("mouseover", handleMouseOverPB)
             .on("mouseout", handleMouseOutPB)
             .on("dblclick", function(d) {
+                zoom_by(1)
                 addPaper(d)
                 popText.attr("width", 0)
                     .attr("x", -5000)
@@ -236,7 +218,7 @@ function printPapers(auths){
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return color_n(d.color) }
+                return c20 ? color_j(d) : color_n(d.color) }
                 /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/
@@ -245,7 +227,7 @@ function printPapers(auths){
             .on("mouseover", handleMouseOverPB)
             .on("mouseout", handleMouseOutPB)
             .on("dblclick", function(d) {
-                addPaper(d)
+                addPaper(d, true)
             })
     }
 }
@@ -257,7 +239,21 @@ function print_legend(txt_el){
         .attr("id", "main-span")
         .attr("x", 10)
         .attr('dy',function(){
-        return $("#svgRT").height()-100})
+        return $("#svgRT").height()-130})
+        .attr("fill","#5263fe")
+        .text("Selected reviewer")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("id", "main-span")
+        .attr("x", 10)
+        .attr('dy', 15)
+        .attr("fill","#be27be")
+        .text("Submitting researcher")
+    txt_el.append('tspan')
+        .attr("class", "label-txtspanL")
+        .attr("id", "main-span")
+        .attr("x", 10)
+        .attr('dy',15)
         .attr("fill","#db0000")
         .style("font-style", "italic")
         .text("Conflicted with submitting")
@@ -277,21 +273,51 @@ function print_legend(txt_el){
 
 }
 
+function get_anp(){
+    let res = []
+    papersFiltered.map(function(el){
+        el.authsId.map(function(idd){
+            let aobj = authors[authDict[idd][4]];
+            if(prune_auth(aobj))
+                res.push(aobj)
+        })
+    })
+
+    if ( (!checkboxC[0].checked) && authsConflict_obj.length > 0)
+        authsConflict_obj.map(function (el){
+            if(prune_auth(el)) res.push(el)
+        })
+
+    if ( authsExclude_obj.length > 0)
+        authsExclude_obj.map(function (el){
+        if(prune_auth(el)) res.push(el)
+    })
+
+    if ( authsReview_obj.length > 0)
+        authsReview_obj.map(function (el){
+        if(prune_auth(el)) res.push(el)
+    })
+
+    return res
+}
+
 function authorBars(){
-    //var authsDef = null;
-    //authsFiltered = [];
     
-    authsDef = authors.filter(anpFilter)
+    authsDef =  authors.filter(anpFilter)
     idAs = []
     authsDef = authsDef.filter(thetaPapFilter)
+
     if(!checkboxA[0].checked)
         authsDef = authsDef.filter(apFilter)
+
     $("#authTable").html("")
+
     if(authsDef){
         var na = authsDef.length
+
         authsDef = rankAuths(authsDef)
         authsDef.sort(function(a, b) {
-            return -(a.score - b.score) == 0 ? a.value.localeCompare(b.value) : -(a.score - b.score);
+            return (a.order - b.order) == 0 ? (-(a.score - b.score) == 0 ? a.value.localeCompare(b.value) : -(a.score - b.score)) : a.order - b.order;
         });
         idAs = []
         authsDef.map(function(el){idAs.push(el.id)})
@@ -344,11 +370,6 @@ function authorBars(){
                         //console.log(ln)
                         authDict[d.id][2][z].x_bar = authDict[d.id][2][z].x_bar/ln
                     }
-                    //let id_a = auths[i]
-                    //console.log(authors.filter(function (el){return el.id === id_a;}))
-                    //console.log(list_p)
-                    //console.log(hist)
-                    //authDict[auths[i]].push(hist)
             }  
             
                  

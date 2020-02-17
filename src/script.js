@@ -1,82 +1,19 @@
-var graph = [], alpha = 0.7, beta = 0.3, oldH = 250, oldHAG = 350, onlyag =  false,_docHeight, resize_pn = false,  resize_rn = false,
-    p_ico = "imgs/key1.png",
-    np_ico = "imgs/np.png",
-    a_ico = "imgs/omini.png",
-    anp_ico = "imgs/anp.png",
-    loader_str = "<div class=\"loader text-center\"></div>",
-    auths_in_g = new Set([]),
-    start = true,
-    click = false, clickExp = false, stoolboxSvg = d3.select("#tb-svg"),
-    authTable = d3.select("#authTable"),
-    authors = [], resize_modal = false,
-    AP = [],
-    ANP = [],
-    lines = [],
-    authsReview = [], authsReview_obj = [], idA_rev, revDict = {},//id_rev: [[ida1, namea1]...]
-    altRev = [], altRev_obj = [],
-    authsExclude = [], authsExclude_obj = [],
-    authsDef = [],
-    papers = [],
-    papersPrint = [],
-    papersCit = {},
-    authDict = {}, // [idA][oldX, newX]
-    authHist = {}, // {idA, year1:[idList], year2:[idList]...}
-    inC = [],
-    outC = [],
-    its = 0,
-    citPrint = [],
-    papersFiltered = [],
-    authsFiltered = [],
-    citations = [],
-    width = $(".ap").width(),
-    inSz = 100,
-    outSz = 100,
-    height = $(".ap").height(),
-    heightA = $(".aa").height(),
-    heightAG = $(".ag").height(),
-    h = height,
-    w = width,
-    oldw = w,
-    thetaPap = 1, thetaN = 10, thetaC = 12, thetaY = 7,
-    inputNumberTP = document.getElementById('input-numberTP'),
-    sliderTP = document.getElementById('thetaPap'),
-    thetaCit = 8,
-    inputNumberTOC = document.getElementById('input-numberTOC'),
-    sliderTOC = document.getElementById('thetaCit'),
-    svgP, svgAG, svgAGn, svgAxis, popText, popRect, popTextA, popRectA, popRectAX, popTextAx,
-    thehtml,
-    idP, idInfo,
-    showExclude = true,
-    showAll = false,
-    idA, idAs = [],
-    idPs = [], ul,
-    simulation, simulationA,
-    minYear = 1995,
-    minInCits = 100,
-    maxInCits = 0,
-    maxYear = 2018,
-    checkboxTP = $('#MNP'),
-    //checkboxTOC = $('#MNoC'),
-    checkboxTN = $('#N'),
-    checkboxTC = $('#C'),
-    checkboxTY = $('#lastYearOfP'),
-    checkboxC = $('#cb-confl'),
-    checkboxA = $('#cb-av'),
-    authViz = document.getElementById('authViz'),
-    colorA = d3.scaleLinear()
-        .domain([0, 10, 30])
-        .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff" , "rgba( 17, 0, 178, 0.845 )"]),
-    color = d3.scaleLinear()
-        .domain([0,100])//#ffff99
-.range(["#00cc99","#ffff99"]),
-//        .range(["#f90000", "#ffffff" , "#0019ff"]),
-    rscale = d3.scaleLinear()
-        .domain([0, 40])
-        .range([5, 20]),
-    xConstrained = d3.scaleLinear()
-        .domain([minYear, maxYear])
-        .range([10, width - 20]),
-    xaxis = d3.axisBottom().scale(xConstrained); 
+/*
+This file is part of ReviewerNet.org.
+Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
+All rights reserved.
+
+ReviewerNet.org is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 function getXRect(x, wdt, inGraph){
     
@@ -88,15 +25,10 @@ function getXRect(x, wdt, inGraph){
         else return x + 5
 }
 
-function start_click_handler(){
-    document.getElementById("loading").style.visibility = "hidden";
-    d3.select(".pop-up").style("pointer", "help")
-    toolboxInit()
-}
-
 function updateWidth(){
-    xConstrained.range([15, w -30]);
+    xConstrained.range([15, w -40]);
     d3.select("#axis").remove()
+    d3.select("#scale").remove()
     if(svgAxis) svgAxis.append("g").attr("id", "axis").call(xaxis);
 }
 
@@ -114,112 +46,51 @@ function getXTxt(x, wdt, inGraph){
     */
 }
 
-function paperFilter (item) { 
-    var r = papersPrint.includes(item.id);
-    /*if(r)
-        updateYear(item.year)
-    */return r;
-};
-
-function updateYear(y){
-    var change = false;
-    if(y<minYear){
-        minYear = y
-        change = true
-    }
-    if(y>maxYear){
-        maxYear = y
-        change = true
-    }
-    if(change){
-        xConstrained.domain([minYear, maxYear])
-        xaxis.scale(xConstrained)
+function save_hist(){
+    let found = papersPrint.length, i = 0, 
+        ln = papers.length;
+    //Save ids
+    old_pprint = papersPrint
+    //Save y coord
+    while(i < ln && found > 0){
+        let pp = papers[i];
+        if(papersPrint.includes(pp.id)){
+            coord_hist[pp.id] = pp.y
+            found--
+        }
+        i++
     }
 }
 
-function citFilter (currentValue) {
-    let flag = false,
-        cit = "", srcId,
-        trgId;
-    if(typeof(currentValue.source)==='string'){
-        srcId = currentValue.source
-        trgId = currentValue.target
-    }else{
-        srcId = currentValue.source.id
-        trgId = currentValue.target.id
+function restore_hist(){
+    let found = 0, i = 0, ln = papers.length,
+        cond = Math.min(papersPrint.length, old_pprint.length);
+    //Restore y coord
+    while(i < ln && found < cond){
+        let pp = papers[i];
+        if(old_pprint.includes(pp.id) && papersPrint.includes(pp.id)){
+            if(coord_hist[pp.id]){
+                papers[i].y = coord_hist[pp.id]
+                papers[i].vy = 0 
+            }
+            found++
+        }
+        i++
     }
-    if (srcId === idP){
-      cit = trgId
-      outC.push(cit)
-      flag = true
-    }
-    if (trgId === idP){
-      cit = srcId
-      inC.push(cit)
-      flag = true
-    }
-    if(write && flag && !(papersPrint.includes(cit))){ 
-        papersPrint.push(cit)
-    }
-    return flag;
-};
+    old_pprint = []
+}
 
 function reset_texts(){
-    for(var i = 0; i < texts.length; i++)
+    for(let i = 0; i < texts.length; i++)
         texts[i].attr("x", -1000)
                 .attr("y", -1000)
                 .attr("opacity", 0)
     texts = []
 }
 
-function papName(d){
-    var p_name = d3.select($("#txt"+d.id)[0]),
-        bbox = p_name.node().getBBox(),
-        wd = bbox.width,
-        ht = bbox.height,
-        x = d3.select("#p"+d.id).node().cx.baseVal.value,
-        y = d3.select("#p"+d.id).node().cy.baseVal.value;
-    texts.push(p_name)
-    p_name.attr("x", getXTxt(x, wd, true))
-        .attr("y", y + 4)
-        .attr("opacity", 1)
-        .attr("fill", "#000000")    
-}
-
-function papNameConflict(d){
-    var p_name = d3.select($("#txt"+d.id)[0]),
-        bbox = p_name.node().getBBox(),
-        wd = bbox.width,
-        ht = bbox.height,
-        x = d3.select("#p"+d.id).node().cx.baseVal.value,
-        y = d3.select("#p"+d.id).node().cy.baseVal.value;
-    texts.push(p_name)
-    p_name.attr("x", getXTxt(x, wd, true))
-        .attr("y", y + 4)
-        .attr("opacity", 1)
-        .attr("fill", "#db0000"/*"#000000"*/)    
-}
-
-function isCoAuth(item){ }
-
-function isInCited(item){ return inC.includes(item.id)}
-
-function isOutCited(item){ return outC.includes(item.id)}
-
-function isInCited1(item){ return papersCit[idP][0].includes(item.id)}
-
-function isOutCited1(item){ return papersCit[idP][1].includes(item.id)}
-
-function updateColor(){
-    var lp = papersFiltered.length
-    for(var i = 0; i < lp; i++){
-        minInCits = Math.min(minInCits, papersFiltered[i].color)
-        maxInCits = Math.max(maxInCits, papersFiltered[i].color)
-    }
-    //console.log("[UPDATECOLOR@script.js] minC: "+minInCits)
-    //console.log("[UPDATECOLOR@script.js] maxC: "+maxInCits)
-}
-
+/*
+Authors of key papers
+*/
 function getAP(){
     let np = papersFiltered.length, i = 0;
     for(i = 0; i < np; i++)
@@ -232,6 +103,9 @@ function getAP(){
             }
 }
 
+/*
+Authors of citations
+*/
 function getANP(){
     let np = papersFiltered.length, i = 0;
     for(i = 0; i < np; i++){
@@ -243,62 +117,33 @@ function getANP(){
     }
 }
 
-function addId(name, year){
-    var isIn = false
-    inC = []
-    outC = []
-    if(idPs.includes(idP)){
-      isIn = true
-    }
-    else{
-        
-      idPs[idPs.length] = idP
-      papersPrint.push(idP)
-        /*
-        console.log(idP)
-        get_JSON(idP, process_auth)
-        */
-      AP = []
-      ANP = []
-      papersCit[idP] = [[], []];
-        name = 
-        $("#papList").append("<li id=\""+"p"+idP+
-        "\" class=\"paplist list-group-item pAuth\"><strong>"
-         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
-        
-      write = true;
-      let tempCits = citations.filter(citFilter);
-      write = false;
-      for(var i = 0; i<inC.length; i++)
-        papersCit[idP][0].push(inC[i])
-      for(var i = 0; i<outC.length; i++)
-        papersCit[idP][1].push(outC[i])
-      citPrint = citPrint.concat(tempCits)
-      papersFiltered = papers.filter(paperFilter)
-      updateADpapers()
-      updateColor()
-      getAP()
-      getANP()
-      refresh_export()
-    }
-    
-    return isIn
-}
-
-function getArrays(graph) {
-    var p = graph.nodes,
+function getArrays(graph, path) {
+    let p = graph.nodes,
         n = p.length;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < n; i++){
         papers.push(p[i])
+        papersIndex[p[i].id] = i
+        let words = p[i].value.match(/(\w)+/g);
+		words
+		words.forEach((w, pos)=>{ 
+			w = w.toLowerCase();
+			if(w.length <= 3) return; 
+			if(w == 'constructor') return;
+			if(!terms[w]) {
+				terms[w] = [[i, pos]]; 
+			} else {
+				terms[w].push([i, pos]); 
+            }})
+    }
         //papers[i]=p[i]
-    var c = graph.links,
+    let c = graph.links,
         n1 = c.length;
     for (i = 0; i < n1; i++)
         citations[i]=c[i]
         // empty f
-     var ele = $("#ldr-val");
-      var clr = null;
-      var rand = 49;
+     let ele = $("#ldr-val");
+      let clr = null;
+      let rand = 49;
       (loop = function() {
         clearTimeout(clr);
         (inloop = function() {
@@ -308,90 +153,36 @@ function getArrays(graph) {
         })();
         //setTimeout(loop, 2500);
       })();
-    getAuths()
+    getAuths(path)
   }
 
-function getAuths() {
-    var authTxt = fetch('datasets/a_v0518f.txt')
-        .then(response => response.text())
-        .then(function(text){
-            var authG = JSON.parse(text),
-                a = authG.authors,
-                n = a.length
-            for (i = 0; i < n; i++){
-                authors[i]=a[i]
-                authDict[a[i].id] = [2019, 1900, []]
-            }
-
-            init_txt = "<br><br><b>ReviewerNet</b> is a tool for searching reviewers by maximizing expertise coverage and minimizing the conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet runs on a bibliographic database in the field of Computer Graphics extracted from the <a target=\"_blank\"class=\"links\" href=\"https://www.semanticscholar.org/\">Semantic Scholar</a> Corpus.<br> The reference dataset contains "+papers.length+" papers, "+citations.length+" citations, and "+authors.length+" authors, from 1995 to 2018, from eight sources:<br>ACM Transactions on Graphics,<br>Computer Graphics Forum,<br>IEEE Trans. on Visualization and Computer Graphics,<br> The Visual Computer,<br>IEEE Computer Graphics and Applications,<br> Computers & Graphics,<br> Proc. of IEEE Conf. on Visualization (pre 2006),<br> Proc. of ACM SIGGRAPH (pre 2003).<br><br> ReviewerNet can be built over any dataset, according to the domain of interest..<br><br><center>We use technical, statistical and third parties-cookies to collect page-level access information.<br>We DO NOT use profiling and advertising cookies.<br>ReviewerNet DO NOT transmit any data about the chosen authors or papers back to any server. <br>The bibliographic database is fully loaded at the beginning and queried on your local client.<br><br> Click anywhere to acknowledge this info and start enjoying ReviewerNet.</center>" 
-    
-            document.getElementById("loading").innerHTML = init_txt 
-            d3.select("#loading").style("pointer-events", "all")
-            d3.select("#loading").on("click", start_click_handler);
-        })
-        
+function getAuths(path) {
+    let authG = JSON.parse(readTextFile(path)),
+        a = authG.authors,
+        n = a.length
+    for (i = 0; i < n; i++){
+        authors[i]=a[i]
+        authDict[a[i].id] = [maxYear, 1900, [], a[i].value, i]
     }
-
-function str_match(matchers, t){
-    var res = true;
-    for(var i = 0; i < matchers.length; i++)
-        res = res && matchers[i].test(t)
-    return res;
+        
 }
 
-function deleteP(idCk){
-    $('#papList').html("")
-    var index = idPs.indexOf(idCk), idsT = [];
-    AP = []
-    ANP = []
-    if (index > -1) {
-        minInCits = 100
-        maxInCits = 0       
-        
-        idPs.splice(index, 1);
-        let idT = idPs
-        var n = authors.length
-        for (var i = 0; i < n; i++){
-            authDict[authors[i].id][0]= 2019
-            authDict[authors[i].id][1]= 1900
-        }
-            
-        var pT = papersFiltered.filter(function (item){
-                return idT.includes(item.id)})
-        idPs = []
-        papersFiltered = []
-        papersPrint = []
-        citPrint = []
-        papersCit = {}
-
-        if(idT.length > 0)
-            for(var i = 0; i < idT.length; i++){
-                var pap = pT.filter(function (item){return item.id === idT[i]})[0]
-                idP = pap.id
-                if(!addId(pap.value, pap.year)){
-                  //updateYear(pap.year)
-                    updateADpapers()
-                }    
-            }
-        paperGraph(papersFiltered, citPrint, idPs, simulation)
-        if(idInfo === idCk)
-            $('#paperInfo').html("")
-        setTimeout(function(){ 
-            authorBars()
-            authorGraph()
-        }, 1000);
-        }
+function str_match(matchers, t){
+    let res = true;
+    for(let i = 0; i < matchers.length; i++)
+        res = res && matchers[i].test(t)
+    return res;
 }
 
 function setPapHandlers(){
     $(".inCits")
         .on("click", clickHandler)
-        .on("dblclick", addFromList)
+        //.on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".outCits")
         .on("click", clickHandler)
-        .on("dblclick", addFromList)
+        //.on("dblclick", addFromList)
         .on("mouseover", ListMouseOver)
         .on("mouseout", ListMouseOut);
     $(".authsPap")
@@ -400,42 +191,210 @@ function setPapHandlers(){
         .on("mouseout", ListMouseOut);
 }
 
-function setMouseHandlers(){
-    $("#loading").on("click", function (event){
-        event.stopPropagation();
+
+function setWinMouseHandlers(){
+    
+    $( window ).on("load", function(){
+        height = this.height
+        heightA = this.height * 0.3
+        w = width
+        h = height
+        updateWidth()
     })
+    
+    document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        if (evt.ctrlKey && evt.keyCode == 90) {
+            undo()
+        }else if(evt.ctrlKey && evt.keyCode == 89) {
+            redo();
+        }
+    };
+
+    $("body").on('click', function(){
+            $(".badge").html("")
+    })
+    
+     
+    
+    window.onresize = function(e) {    
+        if(!resize_pn && !resize_ag){
+            //console.log("res_global")
+            width = $("#aut_table").width()
+            _docHeight = document.documentElement.clientHeight - 30
+            height = document.documentElement.clientHeight - 30
+
+            w = width
+            h = height
+            heightA = document.getElementById('aut_table').clientHeight    
+            let newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+
+            newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            d3.select("#main-span").attr("dy",function(){
+                return heightA-100}) 
+
+             if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
+                updateWidth()
+                 simulationA.stop()
+                 zoom_by(1.0)
+                 paperGraph(papersFiltered, citPrint, idPs, simulation)
+                    setTimeout(function(){ 
+                        simulation.stop()
+                    }, 100);
+                 authorBars()
+                    //authorGraph()
+                }
+            oldw = width
+        }
+     }
+    
+    document.onmouseup = function(e){
+        resize_pn = false
+        resize_ag = false
+    }
+    
+}
+
+function show_loading(){
+
+    document.getElementById("loading").style.pointerEvents = "none"
+    
+    old_loading = document.getElementById("loading").innerHTML
+    
+    document.getElementById("loading").innerHTML = loader + old_loading;
+
+    document.getElementById("loading").style.visibility = "visible";
+    document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.2 )"
+
+    document.getElementById("ldr").style.top = "30%";
+}
+
+function hide_loading(){
+
+    document.getElementById("ldr").innerHTML = "All data loaded"
+     document.getElementById("loading").style.pointerEvents = "all"
+    document.getElementById("loading").innerHTML = old_loading
+     document.getElementById("loading").style.color = "rgba( 0, 0, 0, 0.567 )"  
+}
+
+function setMouseHandlers(){
+    
+    d3.selectAll(".links").attr("target", "_blank")
+    d3.selectAll(".ui-resizable-handle").style("opacity", 0)
+    //d3.select("#AG-container").on("click", full_screen)
+    d3.select(".pop-up").style("pointer", "none")
+    $(".row").on("click", function(event){
+        event.preventDefault(); 
+        if(clickJ) unclick_j()
+        if(click) unclick_auth(clkA)
+        if(clickP) unclick_pap(clkPp)
+    })
+    document.addEventListener("fullscreenchange", FShandler);
+    document.addEventListener("webkitfullscreenchange", FShandler);
+    document.addEventListener("mozfullscreenchange", FShandler);
+    document.addEventListener("MSFullscreenChange", FShandler);
+
+    $( "#resizable" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+ 
+             onlyag = false
+            
+            if(ui.size.height < 200){
+                heightA = 200
+                ui.size.height = 200
+            }
+            else if(ui.size.height > 600){
+                heightA = 600
+                ui.size.height = 600
+            }
+            else heightA = ui.size.height
+            document.getElementById('aut_table').clientHeight = heightA;
+            let delta =  oldH - heightA,
+                newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+            oldH = heightA;
+            d3.select("#main-span").attr("dy",function(){
+            return heightA-100}) 
+            event.stopPropagation()
+            
+        }
+    })
+    .on("mousedown", function(){resize_pn = true})
+    .on("mouseup", function(){resize_pn = false})
+    
+    $( "#resizable1" ).resizable({
+        handles: "s",
+        resize: function( event, ui ) {
+            //console.log("res1")
+            onlyag = true
+            if(ui.size.height < 300){
+                heightAG = 300
+                ui.size.height = 300
+            }
+            else if(ui.size.height > 600){
+                heightAG= 600
+                ui.size.height = 600
+            }
+            else heightAG = ui.size.height
+            document.getElementById('AG-container').clientHeight = heightAG;
+            let delta =  oldHAG - heightAG,
+                newH = _docHeight - heightAG;
+            document.getElementById('row22').style.height = newH.toString()+"px";
+            oldHAG = heightAG;
+/*            console.log("H "+document.getElementById('row21').clientHeight)*/
+            heightA = document.getElementById('aut_table').clientHeight    
+            newH = _docHeight - heightA;
+            document.getElementById('row21').style.height = newH.toString()+"px";
+/*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
+        d3.select("#fullscreen_btn").attr("y", () => $("#AG-container").height()-40)
+    
+            event.stopPropagation()
+        }
+    })
+    .on("mousedown", function(){resize_ag = true})
+    .on("mouseup", function(){resize_ag = false})
+
+ 
+    /*
+    In-citations & journal/venue color-maps
+    */
+    d3.select("#cmpa")
+        .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
+        .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
+        .on("dblclick", cmap_dbl)
+    
     $("#authList")
         .on("click","td", addFromList)
         .on("mouseover", "td", ListMouseOver)
         .on("mouseout", "td", ListMouseOut)
-        .on("dblclick", "td", authDblc);
+        //.on("dblclick", "td", authDblc);
+    $("#cauthList")
+        .on("click","td", addFromList)
+        .on("mouseover", "td", ListMouseOver)
+        .on("mouseout", "td", ListMouseOut)
+        //.on("dblclick", "td", cauthDblc);
     $("#rauthList")
-        .on("click", addFromList)
+        .on("click", "li", addFromList)
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
-        .on("dblclick", "li", r_authDblc);
+        //.on("dblclick", "li", r_authDblc);
     $("#papList")
         .on("click", "li", function(event){
-            var idClick = event.target.id,
-                idClick = idClick.substring(1,idClick.length),
-                paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
+            let paper = papersFiltered.filter(function (item){ return item.id === event.target.id.substring(1, event.target.id.length)})[0];
             setPapHandlers()
             clickHandler(paper)
-            
         })
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
-        .on("dblclick", "li", papDblc);
-    $("#resizable")
-        .on("mousedown", () => resize_pn = true)
-    $("#resizable1")
-        .on("mousedown", () => resize_rn = true)
-}
+
 
 function updateAuthDict(pf){
-    for(var j = 0; j < pf.length; j++){
-        var auths = pf[j].authsId
-        for(var i = 0; i < auths.length; i++)
+    for(let j = 0; j < pf.length; j++){
+        let auths = pf[j].authsId
+        for(let i = 0; i < auths.length; i++)
             if(authDict[auths[i]][2].length == 0 ){
                 authDict[auths[i]][2] = papers.filter(function(el){
                         return el.authsId.includes(auths[i])
@@ -449,7 +408,7 @@ function updateAuthDict(pf){
                     curr_idx = 0
                 list_p[0].x_bar = 0
                 hist.push([curr_year, 1])
-                for(var z = 1; z < authDict[auths[i]][2].length; z++){
+                for(let z = 1; z < authDict[auths[i]][2].length; z++){
                     if(curr_year == list_p[z].year){
                         hist[curr_idx][1]++
                         list_p[z].x_bar= hist[curr_idx][1]-1
@@ -461,7 +420,7 @@ function updateAuthDict(pf){
                         list_p[z].x_bar = 0
                     }        
                 }
-                for(var z = 1; z < authDict[auths[i]][2].length; z++){
+                for(let z = 1; z < authDict[auths[i]][2].length; z++){
                     let ln = hist.filter(function (el) { return el[0] == authDict[auths[i]][2][z].year; })[0][1]
                     //console.log(ln)
                     authDict[auths[i]][2][z].x_bar = authDict[auths[i]][2][z].x_bar/ln
@@ -474,69 +433,30 @@ function updateAuthDict(pf){
             }
     }
 }
-
-function addPaper(suggestion){
-    this.value=""
-    if(start){
-        let delta = maxYear-minYear
-        if(delta > 30) delta = delta/2
-        xaxis.scale(xConstrained).ticks(delta, "r");
-        svgAxis = d3.select("#svgAxis").attr("y", "80")  
-        svgAxis.append("g").attr("id", "axis").call(xaxis);
-        document.getElementById("startMsg").style.visibility = "hidden";
-        document.getElementById("svgAxis").style.visibility = "visible";
-        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-        d3.selectAll(".graph").style("overflow-y", "auto")
-        add_labels()
-        start = false;
-    }
-    idP = suggestion.id
-    //console.log(suggestion)
-    var isIn = addId(suggestion.value, suggestion.year)
-    $('#paperInfo').html(paperInfo(suggestion));
-    setPapHandlers()
-    //setMouseHandlers()
-    if(!isIn){
-      //updateYear(suggestion.year)
-        updateADpapers()
-        updateAuthDict(papersFiltered)
-        paperGraph(papersFiltered, citPrint, idPs, simulation)
-        setTimeout(function(){ 
-            authorBars()
-            authorGraph()
-            print_rew()
-        }, 1000);
-        
-    }
-}
-
-function foo(event){
-    console.log(event)
-}
-
+//unused remove.
 function printCits(){
     let thehtml = ""
     if(idPs.includes(idP)){
-        var inCi = papersCit[idP][0],
+        let inCi = papersCit[idP][0],
             outCi = papersCit[idP][1];
         if(inCi.length > 0){
             thehtml += "<tr class =\"trP\" ><th class =\"thP\" rowspan=\""+inCi.length+"\">In Citations</th>"
-            var inCits =  papers.filter(isInCited1)
+            let inCits =  papers.filter(isInCited1)
             inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"inCits\" id=\"p"+inCits[0].id+"\">"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
-            for (var i = 1; i < inCits.length; i++)
+            for (let i = 1; i < inCits.length; i++)
                 thehtml +="<tr class =\"trP inCits\" id=\"p"+inCits[i].id+"\"><td>"+ inCits[i].value +  ", "+ inCits[i].year +";</td></tr>"
         }
         if(outCi.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+outCi.length+"\">Out Citations</th>"
-            var outCits =  papers.filter(isOutCited1)
+            let outCits =  papers.filter(isOutCited1)
             outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"outCits\"  id=\"p"+outCits[0].id+"\">"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
-            for (var i = 1; i < outCits.length; i++)
+            for (let i = 1; i < outCits.length; i++)
                 thehtml +="<tr class =\"trP outCits\" id=\"p"+outCits[i].id+"\"><td>"+ outCits[i].value +  ', '+ outCits[i].year +';</td></tr>'
         }
         
@@ -547,177 +467,49 @@ function printCits(){
         citations.filter(citFilter);
         if(inC.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+inC.length+"\">In Citations</th>"
-            var inCits =  papers.filter(isInCited)
+            let inCits =  papers.filter(isInCited)
             inCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"inCits\" id=\"p"+inCits[0].id+"\">"+ inCits[0].value +  ', '+ inCits[0].year +';</td></tr>'
-            for (var i = 1; i < inCits.length; i++)
+            for (let i = 1; i < inCits.length; i++)
                 thehtml +="<tr class =\"trP inCits\" id=\"p"+inCits[i].id+"\"><td>"+ inCits[i].value +  ', '+ inCits[i].year +';</td></tr>'
         }
         if(outC.length > 0){
             thehtml += "<tr class =\"trP\"><th class =\"thP\" rowspan=\""+outC.length+"\">Out Citations</th>"
-            var outCits =  papers.filter(isOutCited)
+            let outCits =  papers.filter(isOutCited)
             outCits.sort(function(a, b) {
                 return -(parseInt(a.year) - parseInt(b.year));
             });
             thehtml +="<td class = \"outCits\" id=\"p"+outCits[0].id+"\">"+ outCits[0].value +  ', '+ outCits[0].year +';</td></tr>'
-            for (var i = 1; i < outCits.length; i++)
+            for (let i = 1; i < outCits.length; i++)
                 thehtml +="<tr class =\"trP outCits\" id=\"p"+outCits[i].id+"\"><td>"+ outCits[i].value + ', '+ outCits[i].year +';</td></tr>'
         }
     }
     return thehtml;
 }
 
-function paperInfo(suggestion){
-    
-    idInfo = suggestion.id;
-    var title = suggestion.year+", "+(suggestion.value.length > 80 ? suggestion.value.substr(0, 78)+"..." : suggestion.value)
-    
-    d3.select(".td2title").attr("id", ("p"+idInfo)).attr("class", "outCits td2title").text(title)
-    document.getElementsByClassName("td2title").innerHTML = title
-    var thehtml =  ""
-    
-/*"<tr class =\"trP\"><th class =\"thP \">Title</th><td class=\"outCits\" id=\"p"+idInfo+"\">" + suggestion.value + "</td></tr><tr><th class =\"thP\">Year</th><td>" + suggestion.year+"</td></tr>"*/
-    function isAuth(item){
-        return suggestion.authsId.includes(item.id);
-    }
-    var aPrint = authors.filter(isAuth), ia = 0;  
-    if(aPrint.length > 4){
-        //id = \"authsPap\"
-        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
-        thehtml += "<tr class=\"trPj\"><th class =\"thP\"rowspan=\""+(extra > 0 ? rspan+1: rspan)+"\">Authors</th>"
-        for(var j = 0; j < rspan; j++){
-            if (j!=0) thehtml += "<tr>"
-            for (var i = 0; i < 4; i++){
-                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[ia].id+"\">"+ aPrint[ia].value + '</td>'
-                ia++
-            }
-            thehtml += "</tr>"
-        }
-        if(extra > 0){
-            thehtml += "<tr>"
-            for (var i = ia; i < aPrint.length; i++){
-                thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
-            }
-            thehtml += "</tr>"
-        }
-    }else{
-        thehtml += "<tr  class=\"trPj\"><th class =\"thP\" >Authors</th><td class=\"authsPap trP\" id=\"a"+aPrint[0].id+"\">"+ aPrint[0].value + '</td>'
-        for (var i = 1; i < aPrint.length; i++)
-            thehtml += "<td class =\"trP authsPap\" id=\"a"+aPrint[i].id+"\">"+ aPrint[i].value + '</td>'
-        thehtml += "</tr>"
-    }
-    if(suggestion.jN.length > 0)
-          thehtml += "<tr class=\"trPj\"><th class =\"thP\">Journal Name</th><td colspan=\"4\" class =\"tdj\">"+suggestion.jN+"</td></tr>";
-        else if(suggestion.venue.length > 0)
-            thehtml += "<tr  class=\"trPj\"><th class =\"thP\">Venue</th><td colspan=\"4\" class =\"tdj\" >"+suggestion.venue+"</td></tr>";
-    idP = suggestion.id
-    //thehtml += printCits()
-    return thehtml
-
+function color_n(c){
+    return c > 100 ? color(100):color(c);
 }
 
-function paperInfoa(suggestion){
-    idInfo = suggestion.id;
-    var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
-    function isAuth(item){
-        return suggestion.authsId.includes(item.id);
-    }
-    var aPrint = authors.filter(isAuth)  
-    aPrint.sort(function(a, b) {
-            return (parseInt(a.year) - parseInt(b.year));
-        });
-    for (var i = 0; i < aPrint.length; i++)
-        thehtml += "<li id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</li>'
-    thehtml += "</ul>"
-    if(suggestion.jN.length > 0)
-      thehtml += "<strong>Journal Name:</strong><ul class=\"list-group\"><li class=\"list-group-item listG \">"+suggestion.jN+"</li></ul>";
-
-    if(suggestion.venue.length > 0)
-        thehtml += "<strong>Venue:</strong><ul class=\"list-group\" ><li class=\"list-group-item listG\">"+suggestion.venue+"</li></ul>";
-
-    idP = suggestion.id
-    if(idPs.includes(idP)){
-        var inCi = papersCit[idP][0],
-            outCi = papersCit[idP][1];
-        if(inCi.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\" >"
-          var inCits =  papers.filter(isInCited1)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outCi.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited1)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-    else{
-        inC = []
-        outC = []
-        citations.filter(citFilter);
-        if(inC.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\">"
-          var inCits =  papers.filter(isInCited)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outC.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-
-    return thehtml
-
+function colorjj_(idxx){
+    return idxx >= 6 || idxx == -1 ? "gray" : colorjj(idxx);
 }
 
-function color_n(c){return c > 100 ? color(100):color(c);}
+function color_j(p){
+   return p.v_id ? colorjj_(j_lists[choosen_j].j_list.indexOf(p.v_id)) : colorjj_(j_lists[choosen_j].j_list.indexOf(p.j_id))
+    
+        /*
+    color20b(j_lists[choosen_j].j_list.indexOf(p.venueId)) : color20b(j_lists[choosen_j].j_list.indexOf(p.journalId))
+    */
 
-function define_gradients(){
-    svgP.append("svg:defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradxX")
-        .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%")
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("gradientUnits", "userSpaceOnUse")
-        .style("stop-color", "rgba( 71, 66, 66, 0 )")
-        .style("stop-opacity", "1")
-    d3.select("#gradxX")
-        .append("stop")
-        .attr("offset", "100%")
-        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
-        .style("stop-opacity", "1")
 }
 
 function getPaperSvg(){
     svgP = d3.select("#svgP")
         .attr("width", "100%")
-        .attr("height", function(){return "800px"})
+        .attr("height", function(){return 120*idPs.length})
         .append("g")
         .attr("id", "gP")
     define_gradients()
@@ -740,15 +532,21 @@ function getPaperSvg(){
 
 function setSimulation(){
     simulation = d3.forceSimulation()
-    simulation.force("link", d3.forceLink().id(function(d) { return d.id; }))
-    simulation.force("charge", d3.forceManyBody()
-                .strength(-50)
-                .theta(0.5))
-//                .distanceMin(40)
-//                .distanceMax(140))
-        .force("center", d3.forceCenter((w / 2), (800 / 2)))
-        //.force("y", d3.forceY(-180))
-        //.force("x", d3.forceX())
+    simulation.force("link", d3.forceLink().id(function(d) { return d.id; }).strength(0.1))
+//    let yforce =  d3.forceY()
+//        .strength(-100)
+//        .y(heightP / 2);
+//    
+//    simulation.force("center",yforce)
+    let frc = d3.forceManyBody()
+                .strength(-30)
+                .theta(0.1);//d3.forceY().strength(-100).y(heightP / 2);
+        simulation.force("charge", frc)
+        .force("collide", d3.forceCollide(15).iterations(50))
+        .force("center", d3.forceCenter((w / 2), (heightP / 2)))
+        .force("forceY",  d3.forceY().strength(0.01)
+        .y(heightP/2))
+
     simulation.alpha(1)
      simulation.alphaMin(0.02)
      simulation.alphaDecay(0.02)
@@ -757,242 +555,182 @@ function setSimulation(){
 
 }
 
-function thetaPapFilter(item){
-    var paps = 0, lp = papersFiltered.length,
-        plset = new Set(papersPrint),
-        commonValues = item.paperList.filter(x => plset.has(x));
-    //console.log(item.value+" "+commonValues.length)
-    return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
-}
-
-function append_ico(svgN, url, x, y){
-        var svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
+function append_ico(svgN, url, x, y, id){
+        let svgimg = document.createElementNS('http://www.w3.org/2000/svg','image');
         svgimg.setAttributeNS(null,'height','35');
         svgimg.setAttributeNS(null,'width','35');
         svgimg.setAttributeNS('http://www.w3.org/1999/xlink','href', url);
         svgimg.setAttributeNS(null,'x',x);
         svgimg.setAttributeNS(null,'y',y);
+        if(id!=null) svgimg.setAttributeNS(null,'id',id);
         svgimg.setAttributeNS(null, 'opacity', '0.5');
         $(svgN).append(svgimg);
 }
 
-function paperGraph(papers1, citations1, idPs, simulation) {
-    simulation.stop()
-    d3.select("#svgP").remove()
-    d3.select(".ap").append("svg").attr("id", "svgP")
+
+function define_gradients(){
+    //X gradients
+    svgP.append("svg:defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradxX")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%")
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradxX")
+        .append("stop")
+        .attr("offset", "100%")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
+    
+    svgP.select("defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradXx")
+        .attr("x1", "100%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%")
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradSameX")
+        .append("stop")
+        .attr("offset", "0%")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    
+    //Y gradients
+    svgP.select("defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradYy")
+        .attr("x1", "100%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%")
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradYy")
+        .append("stop")
+        .attr("offset", "0%")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    
+    svgP.select("defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradyY")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%")
+        .append("stop")
+        .attr("offset",  "0%")
+        .attr("gradientUnits", "userSpaceOnUse")
+        .style("stop-color", "rgba( 71, 66, 66, 0 )")
+        .style("stop-opacity", "1")
+    d3.select("#gradYy")
+        .append("stop")
+        .attr("offset", "100%")
+        .style("stop-color", "rgba( 71, 66, 66, 0.25 )")
+        .style("stop-opacity", "1")
+}
+
+function setSvgs(){
+    document.getElementById("svgAxis").style.visibility = "visible";
+
     getPaperSvg()
-    var svg = svgP
-    svg.attr("y", "120")
-    svg.attr("width", "100%")
-    d3.select("#gP").attr("width", "100%")
-    d3.select("#pn").text(idPs.length).attr("x", 65)
-      .attr('dy', 25).append('tspan').attr("class", "label-txtspan").attr("id", "npn")
-      .attr("x", 65)
-      .attr('dy', 30)
-      .text(papersFiltered.length)
-    
-    
-    var link = svg.append("g")
-        .attr("class", "citations")
-        .selectAll("line")
-        .data(citations1)
-        .enter().append("line")
-        .attr("class", "plink")
-        .attr("stroke-width", "2px")
-        .style("pointer-events", "none")
-        .attr("stroke", "rgba( 112, 112, 112, 0.402 )")
-    //.attr("marker-start","url(#end)")
+    getAGSvg()
+
+    document.getElementById("svgAxis").style.visibility = "hidden";
+    popRectAx = d3.select("#svgAxis").append("rect")
+    .attr('x',0)
+    .attr('y',-10)
+    .attr('width',0)
+    .attr('height',0)
+    .attr('fill',"rgba( 221, 167, 109, 0.842 )")
+    .attr('opacity',0)
+    .style("border-radius", "10px")
+    popTextAx = d3.select("#svgAxis")
+    .append("text")
+    .attr("x", 0)             
+    .attr("y", 0)
+    .attr("text-anchor", "left")  
+    .style("font-size", "11px")
+    .attr("fill", "rgba( 2, 2, 2, 0.961 )")
+    .attr("opacity",0)
+    .text("");
+}
+
+function print_submitting_old(){
+    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
+    d3.select("#authList").selectAll("tr").remove()
+    if(aPrint.length > 4){
+        //id = \"authsPap\"
+        let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
+        thehtml += "<tr class=\"tr-submitting\">"
+        for(let j = 0; j < rspan; j++){
+            if (j!=0) thehtml += "<tr>"
+            for (let i = 0; i < 4; i++){
+                 let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                ia++
+            }
+            thehtml += "</tr>"
+        }
+        if(extra > 0){
+            thehtml += "<tr>"
+            for (let i = ia; i < aPrint.length; i++){
+                let test_obj = aPrint[ia],
+                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+                
+                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            }
+            thehtml += "</tr>"
+        }
+    }else{
         
-
-    var node = svg.append("g")
-        .attr("class", "papers")
-        .selectAll("circle")
-        .data(papers1)
-        .enter().append("circle")
-        .attr("class", "papersNode")
-        .attr("id", function(d){return "p"+d.id})
-        .attr("r", 6)
-        .attr("stroke", function(d){
-            if(idPs.includes(d.id))
-                return "#4238ff"
-                //return "#6d10ca";
-            else return "#999";
-            })
-        .attr("stroke-width", function(d){
-            if(idPs.includes(d.id))
-                return 2.5;
-            })
-        .attr("fill", function(d) {
-            return color_n(d.color)}
-            /*
-            if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
-            else return "rgba( 64, 145, 215, 0.519 )";}*/)
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended))
-        .on("click", clickHandler)
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut)
-        .on("dblclick", function(d) {
-            if(idPs.includes(d.id)) deleteP(d.id)
-                else addPaper(d)
-        })
-
+        thehtml += "<tr class=\"tr-submitting\">"
+        for (let i = 0; i < aPrint.length; i++){
+            let test_obj = aPrint[i],
+                fs = (authColor_r(test_obj)) ? "italic" : "normal";
 
         
-popRect = svgP.append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         .style("border-radius", "10px")
-    popText = svgP.append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
-    for(var i = 0; i < papers1.length; i++)
-        svg.append("text")
-            .attr("id", function(){return "txt"+papers1[i].id})
-            .attr("x", -100)             
-            .attr("y", -100)
-            .attr("text-anchor", "center")  
-            .style("font-size", "0.7em")
-            .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-            .attr("opacity",0)
-            .text(function(){return papers1[i].value});
-    
-    function ticked() {
-        link
-            .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { return Math.max(30, Math.min(800 - 20, d.source.y)); /*d.source.y*/; })
-            .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { return Math.max(30, Math.min(800 - 20, d.target.y));})
-           .attr("stroke", function(d){
-                if(d.source.year != d.target.year)
-                    return "url(#gradxX)";
-                else return "lightgray";
-            })
-        
-        node
-            .attr("cx", function(d) { 
-            var nX = xConstrained(d.year);
-            return nX; })
-            .attr("cy", function(d) { return Math.max(30, Math.min(800 - 20, d.y)); })
+            thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+        }
+        thehtml += "</tr>"
     }
-    if(simulation){
-        
-        simulation
-            .nodes(papers1)
-            .on("tick", ticked)
 
-        simulation.force("link")
-            .links(citations1);
-        simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
+    $("#authList").append(thehtml);
+}
+
+function startf(){
+    if(start){
+        let delta = maxYear-minYear
+        if(delta > 30) delta = delta/2
+        document.getElementById("startMsg").style.visibility = "hidden";
+        xaxis.scale(xConstrained).ticks(delta, "r");
+        svgAxis = d3.select("#svgAxis").attr("y", "80")  
+        svgAxis.append("g").attr("id", "axis").call(xaxis);
+        document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("svgAxis").style.visibility = "visible";
+        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
+        d3.selectAll(".graph").style("overflow-y", "auto")
+        d3.selectAll("#AG-container").style("overflow-y", "hidden")
+        add_labels()
+        start = false;
     }
-    d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
 }
-
-//rgba( 223, 225, 225, 0.604 )
-
-function dragstarted(d) {
-    //console.log("started")
-    if(click) unclick_auth()
-    if(clickP)
-        d3.select("#p"+d.id)
-            .attr("r", 10)
-    //if(clickP) unclick_pap(clkPp)
-  /*if (!d3.event.active) */simulation.alpha(1).alphaMin(0.1).alphaDecay(0.0001).restart();
-  d.fx = d.x;
-  d.fy = d.y;
-}
-
-function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-    
-     d3.select(this)
-        .attr("r", 10);
-    var txt = d.value
-    /*
-    if(txt.length>80)
-        txt = txt.substring(0,80)+"...";
-    */
-    popText.text(txt)
-    var bbox = popText.node().getBBox();
-    var wd = bbox.width,
-        ht = bbox.height,
-        x = this.cx.baseVal.value,
-        y = this.cy.baseVal.value;
-    popRect.attr('fill', color_n(d.color))
-    //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
-        .attr('width',wd +10)
-        .attr('height',ht+2)
-        .attr("x", getXRect(x, wd, true))
-        .attr("y", y-8)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-    popText.attr("x", getXTxt(x, wd, true))
-        .attr("y", y + 4)
-        .transition()
-        .duration(200)
-        .attr("opacity", 1)
-
-    d3.selectAll(".authNode")
-        .attr("fill", function(d1){ 
-            if(d.authsId.includes(d1.id))
-                return color_n(d.color);
-            else return "rgba( 221, 167, 109, 0.342 )"
-         })
-     d3.selectAll(".authlLine")
-        .style("stroke", function(d1){ 
-            if(d.authsId.includes(d1.id))
-                return color_n(d.color);
-            else return "rgba( 221, 167, 109, 0.342 )"
-         })
-}
-
-function dragended(d) {
-  if (!d3.event.active) simulation.stop();
-  d.fx = null;
-  d.fy = null;
-
-    popText.attr("width", 0)
-        .attr("x", -5000)
-        .attr("opacity", 0);
-    popRect.attr("x", -5000)
-        .attr("width", 0)
-        .attr("opacity", 0);
-    d3.select(this).transition()
-        .duration(200)
-        .attr("r", 6);
-    d3.selectAll(".plink")
-        .style("opacity", 0.8)
-    d3.selectAll(".authNode")
-        .attr("fill", function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-        })
-    d3.selectAll(".authlLine")
-        .style("stroke", function (d){
-                    if(authColor(d))
-                        return "rgba( 188, 188, 188, 0.454 )"
-                    else
-                        return "rgba( 221, 167, 109, 0.342 )"
-        })
-    if(clickP) reclick_pap(clkPp)
-    
-}
-
 function add_labels(){
     //Paper Network
     append_ico("#svgAxis", p_ico, 20, 55)
@@ -1005,6 +743,7 @@ function add_labels(){
         .attr("title", "A visual overview of the literature related with a submission topic, showing key papers and their citation relations.")
         .attr("y", 50).attr("x", 5)
         .attr("fill", "rgba( 0, 0, 0, 0.407 )")
+    
     d3.select("#svgAxis").append("text")
         .attr("class","area-text")
         .text("aper Network")
@@ -1050,6 +789,15 @@ function add_labels(){
     /**/
     //Researcher Network
     append_ico("#svgAG_names", anp_ico, 15, 35)
+    append_ico("#svgAG_names", "imgs/fscreen.png", 5, $("#AG-container").height()-40, "fullscreen_btn")
+    
+    $("#fullscreen_btn").css("pointer-events", "all")
+        .css("cursor", "pointer")
+        .on("click", function (event){
+        event.stopPropagation()
+        full_screen()
+    })
+
     d3.select("#svgAG_names").append("text")
         .attr("class","area-labels popup")
         .attr("title", "A graph representation of co-authorship relations, for the visualization of network of collaborators.")
@@ -1084,6 +832,14 @@ function add_labels(){
     $(".label-txtspan").css("cursor", "none")
 }
 
+function thetaPapFilter(item){
+    var paps = 0, lp = papersFiltered.length,
+        plset = new Set(papersPrint),
+        commonValues = item.paperList.filter(x => plset.has(x));
+    //console.log(item.value+" "+commonValues.length)
+    return authsConflict.includes(item.id) || authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
+}
+
 function replacement(sid, cal){
     let i = 0, lim = cal.length, found = 0, txt = "no replacement found", txt1="";
     let a_obj = authsDef.filter(function(el){return el.id != sid && (authsReview.includes(el.id) || authsExclude.includes(el.id))})
@@ -1095,7 +851,7 @@ function replacement(sid, cal){
                 exclude = true;
         })
         if(!exclude){
-            let test_obj = authsDef.filter(function(el){return el.id === id_test })[0],
+            let test_obj = authors[authDict[id_test][4]],
                 fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal",
                 name = test_obj.value;
             found++
@@ -1113,46 +869,72 @@ function replacement(sid, cal){
     return found > 0 ? txt1 : txt;
 }
 
-function print_submitting(){
-    let aPrint = authsExclude_obj, ia = 0, thehtml = "";
-    d3.select("#authList").selectAll("tr").remove()
+function del_btn(idd, typ){
+    let sty = "float: right; width: 25px; height: 20px;", sty1 = "width: 100%; height: 100%; border-radius: 60%; border:0px;";
+    return `<span style="${sty}">
+    <button id ="${typ}${idd}"
+    style="${sty1}" 
+    onclick=delbtn_handler(event)
+    class = "delbtn" title = "Remove">
+    <i class="fa fa-trash" style="pointer-events:none"></i></button></span>`     
+}
+
+function print_conflict(aPrint, domElementId){
+    let ia = 0, thehtml = "", cls = domElementId[0] == 'c' ? `pAuthc pAuth` : `pAuthe pAuth`;
+    d3.select("#"+domElementId).selectAll("tr").remove()
     if(aPrint.length > 4){
         //id = \"authsPap\"
         let rspan = Math.floor(aPrint.length/4), extra = aPrint.length % 4; 
-        thehtml += "<tr class=\"tr-submitting\">"
-        for(var j = 0; j < rspan; j++){
-            if (j!=0) thehtml += "<tr>"
-            for (var i = 0; i < 4; i++){
+        thehtml += `<tr class="tr-submitting">`
+        for(let j = 0; j < rspan; j++){
+            if (j!=0) thehtml += `<tr>`
+            for (let i = 0; i < 4; i++){
                  let test_obj = aPrint[ia],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
-                
-                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\" id=\"a"+aPrint[ia].id+"\"><strong>"+(ia+1)+"</strong> "+ aPrint[ia].value + '</td>'
+                    fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
+                //<strong>${(ia+1)}</strong>
+                thehtml += `<td class="${cls}" style="font-style:${fs}" 
+                    id="a${aPrint[ia].id}">${aPrint[ia].value}
+                    ${del_btn(aPrint[ia].id, domElementId[0] == 'c' ? 'c' : 's')}
+                    `
                 ia++
             }
-            thehtml += "</tr>"
+            thehtml += `</tr>`
         }
         if(extra > 0){
-            thehtml += "<tr>"
-            for (var i = ia; i < aPrint.length; i++){
-                let test_obj = aPrint[ia],
-                    fs = (authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
+            thehtml += `<tr>`
+            for (let i = ia; i < aPrint.length; i++){
+                let test_obj = aPrint[i],
+                    fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? `italic` : `normal`;
                 
-                thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+                thehtml += `<td class="${cls}" style="font-style:${fs}" 
+                id="a${test_obj.id}">${test_obj.value}
+                ${del_btn(test_obj.id, domElementId[0] == 'c' ? 'c' : 's')}
+                `
             }
-            thehtml += "</tr>"
+            thehtml += `</tr>`
         }
     }else{
         
-        thehtml += "<tr class=\"tr-submitting\">"
-        for (var i = 0; i < aPrint.length; i++){
+        thehtml += `<tr class="tr-submitting">`
+        for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
-                fs = (authColor_r(test_obj)) ? "italic" : "normal";
+                fs = !authsExclude.includes(test_obj.id)&&(authColor(test_obj) || authColor_r(test_obj)) ? "italic" : "normal";
         
-            thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
+            thehtml += `<td class="${cls}" style="font-style:${fs}" 
+            id="a${aPrint[i].id}">${aPrint[i].value}
+            ${del_btn(aPrint[i].id, domElementId[0] == 'c' ? 'c' : 's')}
+            `
         }
-        thehtml += "</tr>"
+        thehtml += `</tr>`
     }
-    $("#authList").append(thehtml);
+    $("#"+domElementId).append(thehtml);
+}
+
+function print_submitting(){
+    //Print submitting
+    print_conflict(authsExclude_obj, "authList")
+    //Print Conflict
+    print_conflict(authsConflict_obj, "cauthList")
 }
 
 function print_rew(){
@@ -1160,18 +942,22 @@ function print_rew(){
     revDict = {}
     altRev = []
     altRev_obj = []
-    var al = authsReview_obj.length;
-    for(var i = 0; i < al; i++){
+    let al = authsReview_obj.length;
+    for(let i = 0; i < al; i++){
         let suggestion = authsReview_obj[i];
         let found = false, cal = [];
-        for(var key in suggestion.coAuthList) {
-            if(!(authsExclude.includes(key) || authsReview.includes(key)) && idAs.includes(key))
+        for(let key in suggestion.coAuthList) {
+            if(!(authsExclude.includes(key) || authsReview.includes(key) || authsConflict.includes(key) ) && idAs.includes(key))
                 cal.push([key, suggestion.coAuthList[key][0]])
         }
         cal.sort(function(a, b){return b[1]-a[1];})
         let name = suggestion.value//.replace(/[^\x00-\x7F]/g, "")
         let fs = (authColor(suggestion)) ? "italic" : "normal";
-        $("#rauthList").append("<li id=\"a"+suggestion.id+"\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs+";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "+suggestion.value+" - "+replacement(suggestion.id, cal)+"</li>")
+        $("#rauthList").append("<li id=\"a"+suggestion.id+
+        "\" class=\"list-group-item pAuth pAuthr\" style =\"font-style:"+fs
+        +";\"><strong>"+(i+1)+"<a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="
+        +name.split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a></strong> "
+        +suggestion.value+" - "+replacement(suggestion.id, cal)+del_btn(suggestion.id, 'r')+"</li>")
     }
     $(".replacement")
         .on("click", repl_clk)
@@ -1183,6 +969,14 @@ function print_rew(){
     
 }
 
+function enable_all(){
+    $(".hiddenSB").css("pointer-events", "all")
+    
+    $(".hiddenSB").css("background-color", "white")
+    //d3.select("#td1").style("font-size", "0.8em")
+    //document.getElementById("td2").style.display = "none";
+}
+
 function setup_searchbars(){
     $('#papers-autocomplete').click(function (e){
     this.value=""
@@ -1190,11 +984,13 @@ function setup_searchbars(){
     $('#authors-autocomplete').click(function (e){
     this.value=""
     });
+    $('#cauthors-autocomplete').click(function (e){
+    this.value=""
+    });
     $('#rauthors-autocomplete').click(function (e){
     this.value=""
     });
     $('#rauthors-autocomplete').autocomplete({
-        disabled: true,
         open : function(){
             let d = $("#ui-id-1").height() + 25
             if(_docHeight-heightAG-100 < 160)
@@ -1208,50 +1004,27 @@ function setup_searchbars(){
             $('#rauthors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
-            suggestion = ui.item
-            if(start){
-                let delta = maxYear-minYear
-                if(delta > 30) delta = delta/2
-                document.getElementById("startMsg").style.visibility = "hidden";
-                xaxis.scale(xConstrained).ticks(delta, "r");
-                svgAxis = d3.select("#svgAxis").attr("y", "80")  
-                svgAxis.append("g").attr("id", "axis").call(xaxis);
-                document.getElementById("startMsg").style.visibility = "hidden";
-                 document.getElementById("svgAxis").style.visibility = "visible";
-                d3.selectAll(".graph").style("overflow-y", "auto")
-                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-                add_labels()
-                start = false;
-            }
+            let suggestion = ui.item
+            startf()
           this.value = null
-          var isIn = false
           idA_rev = suggestion.id
-          var aName = suggestion.value
-            if(authsReview.includes(idA_rev))
-                isIn = true
-            else{
-                authsReview.push(idA_rev)
-                authsReview_obj.push(suggestion)
-                authorBars()
-                authorGraph()
-                refresh_export()
-            }
+          let aName = suggestion.value
+            if(!authsReview.includes(idA_rev))
+                addRev(idA_rev, true)
         $('#rauthors-badge').html("")
          setTimeout(function(){$('#rauthors-autocomplete')[0].value = ""}, 200)
         }
     })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-        let /*fw = ((!authColor(item) && !authColor_r(item)) ||
-                      (authsReview.includes(item.id) || authsExclude.includes(item.id)) ) ? "bold" : "normal",*/
-                col = "black",
+        let col = "black",
             fs = (authColor(item)) ? "italic" : "normal";
             if(authsReview.includes(item.id)) col = "#5263fe";
             else if(authsExclude.includes(item.id)) col = "#be27be";
             else if(authColor(item)) col =  "#db0000";
-            else if(authColor_r(item)) return "#8d585a";
+            else if(authColor_r(item)) col  = "#8d585a";
             
               return $( "<li>" )
-                .append( "<div style = \"color:"+col+"; font-style="+fs+";\">" + item.value+"</div>" )
+                .append( "<div style = \"color:"+col+"; font-style:"+fs+";\">" + item.value+"</div>" )
                 .appendTo( ul );
     };
 
@@ -1268,38 +1041,68 @@ function setup_searchbars(){
             $('#authors-badge').html(ui.content.length)
         },
         select: function (event, ui) {
-            suggestion = ui.item
-            if(start){
-                let delta = maxYear-minYear
-                if(delta > 30) delta = delta/2
-                document.getElementById("startMsg").style.visibility = "hidden";
-                xaxis.scale(xConstrained).ticks(delta, "r");
-                svgAxis = d3.select("#svgAxis").attr("y", "80")  
-                svgAxis.append("g").attr("id", "axis").call(xaxis);
-                document.getElementById("startMsg").style.visibility = "hidden";
-                 document.getElementById("svgAxis").style.visibility = "visible";
-                d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-                d3.selectAll(".graph").style("overflow-y", "auto")
-                add_labels()
-                start = false;
-            }
-          var isIn = false
+            let suggestion = ui.item
+            startf()
+          
           idA = suggestion.id
-          var aName = suggestion.value
-            if(authsExclude.includes(idA))
-                isIn = true
-            else{
-                authsExclude.push(idA)
-                authsExclude_obj.push(authors.filter(function(el){ return el.id === idA;})[0])
-/*                $("#authList").append("<li id=\"a"+idA+"\" class=\"list-group-item pAuthe pAuth\"><strong>"+authsExclude.length+".</strong> "+suggestion.value+"</li>")*/
-                authorBars()
-                authorGraph()
-                print_submitting()
-            }
+          let aName = suggestion.value
+            if(!authsExclude.includes(idA))
+                addConflict(idA, true)
         $('#authors-badge').html("")
             setTimeout(function(){$('#authors-autocomplete')[0].value = ""}, 200)
         }
     })
+     .autocomplete( "instance" )._renderItem = function( ul, item ) {
+        let col = "black",
+
+        fs =  "normal";
+        if(authsReview.includes(item.id)) col = "#5263fe";
+        else if(authsExclude.includes(item.id)) col = "#be27be";
+        else if(authColor(item)) col =  "#db0000";
+        else if(authColor_r(item)) col  = "#8d585a";
+            
+              return $( "<li>" )
+                .append( `<div style = "color:${col}; font-style:${fs}";>` + item.value+`</div>` )
+                .appendTo( ul );
+    };
+
+    $('#cauthors-autocomplete').autocomplete({
+        open : function(){
+            let d = $("#ui-id-2").height() + 25
+            if(_docHeight-heightAG-100 < 150)
+                $(".ui-autocomplete:visible").css({top:"-="+d});
+        },
+        source: authors,
+        minLength: 3,
+        response: function(event, ui){
+            ui.content.sort(function (a, b) {return a.value.localeCompare(b.value);})
+            $('#cauthors-badge').html(ui.content.length)
+        },
+        select: function (event, ui) {
+            let suggestion = ui.item
+            startf()
+          idA = suggestion.id
+          let aName = suggestion.value
+            if(!authsConflict.includes(idA))
+                addConflictc(idA, true)
+        $('#cauthors-badge').html("")
+            setTimeout(function(){$('#cauthors-autocomplete')[0].value = ""}, 200)
+        }
+    })
+     .autocomplete( "instance" )._renderItem = function( ul, item ) {
+         let col = "black",
+            fs = (authColor(item)) ? "italic" : "normal";
+
+            if(authsReview.includes(item.id)) col = "#5263fe";
+            else if(authsExclude.includes(item.id)) col = "#be27be";
+            else if(authColor(item)) col =  "#db0000";
+            else if(authColor_r(item)) col  = "#8d585a";
+            
+              return $( "<li>" )
+                .append( `<div style = "color:${col}; font-style:${fs}";>` + item.value+`</div>` )
+                .appendTo( ul );
+    };
+
 
     $('.biginput').keypress(function(e) {
         if (e.keyCode === 13) {
@@ -1308,7 +1111,6 @@ function setup_searchbars(){
     });
     
     $('#papers-autocomplete').autocomplete({
-        disabled: true,
 /*        focus: function(event, ui){
             console.log(ui)  
         },*/
@@ -1319,18 +1121,25 @@ function setup_searchbars(){
         },
         source: function(request, response) {
           
-            var terms = request.term.split(' '),
+            let terms = request.term.split(' '),
                 matchers = []
             
             terms.map(function (el){matchers.push(new RegExp($.ui.autocomplete.escapeRegex(el), "i"))})
   
-          var resultset = [];
-          $.each(papers, function() {
-            var t = this.value;
-            if (this.value && (!request.term || str_match(matchers, t)))
-               resultset.push(this)
+          let resultset = [];
+          papers.map(function(el) {
+            let t = el.value;
+            if (el.value && (!request.term || str_match(matchers, t)))
+               resultset.push(el)
+            else
+                el.authsId.map(function(ell){
+                    if(str_match(matchers, authDict[ell][3]))
+                    resultset.push(el)
+                })  
 
           });
+
+
             $('#area-paper-badge').html(resultset.length)
             resultset = resultset.length > 200 ? resultset.slice(0,200) : resultset;
             
@@ -1348,15 +1157,18 @@ function setup_searchbars(){
 //
         },
         select: function (event, ui) {
-            addPaper(ui.item)
+            addPaper(ui.item, true)
+            refresh_cmap()
             setTimeout(function(){$('#papers-autocomplete')[0].value = ""}, 200)
             $('#area-paper-badge').html("")
         }
       })
     .autocomplete( "instance" )._renderItem = function( ul, item ) {
-       let name = item.label
-        if(item.value.length > 45)
-            name = name.substring(0,45) + "..."
+       let name = item.label,
+            elw = this.element.width();
+       
+        if(item.value.length > 52)
+            name = name.substring(0,52) + "..."
         if(papersPrint.includes(item.id)){
             if(idPs.includes(item.id)){
               return $( "<li>" )
@@ -1379,197 +1191,43 @@ function setup_searchbars(){
         if(this.value.length < 3) 
             $(".badge").html("")
     })
+    
     d3.selectAll(".hiddenSB").style("background-color", "lightgray")
-    $( "#rauthors-autocomplete" ).autocomplete( "option", "disabled", true );
-    $( "#papers-autocomplete" ).autocomplete( "option", "disabled", true );
+    $(".hiddenSB").css("pointer-events", "none")
+        
+    document.getElementById("loading").onclick = null
+    document.getElementById("loading").style.pointerEvents = "none"
+    
     $( "#done_submit").on("click", function(){
-        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
-        else{
-            $( ".hiddenSB" ).autocomplete({disabled:false});
-            $( ".hiddenSB" )[0].disabled = false;
-            $( ".hiddenSB" )[1].disabled = false;
-            d3.selectAll(".hiddenSB").style("background-color", "white")
-            d3.select("#td1").style("font-size", "0.8em")
-            document.getElementById("td2").style.display = "none";
-        }
-    })
+//        if(authsExclude.length == 0) alert("Add at least one author to the Submitting Authors list");
+//        else
+//            enable_all
+    }).hide()
+    
     $( "#export-btn").on("click", export_session)
-}
-
-function process_auth(data) {
-        console.log(data)//document.getElementById("demo").innerHTML = this.responseText;
-}
-
-function get_JSON(json_id, process_JSON) {
-    /*
-        Non funziona per tutti i paper.
-    */
-    console.log(json_id.length)
-    console.log('https://api.semanticscholar.org/v1/'+
-            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id)
-  $.getJSON('https://api.semanticscholar.org/v1/'+
-            (json_id.length > 20 ? 'paper' :'author')+'/'+json_id, process_JSON);
-  
+    $( "#biblio-btn").on("click", biblio_click_handler)
 }
 
 
 $(function (){
-    d3.selectAll(".links").attr("target", "_blank")
-    d3.selectAll(".ui-resizable-handle").style("opacity", 0)
     _docHeight = document.documentElement.clientHeight - 30;/*window.screen.height - 170 */ 
     document.getElementById('all').style.height =(_docHeight).toString()+"px";
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
-    $( window ).on("load", function(){
-        height = this.height
-        heightA = this.height * 0.3
-        w = width
-        h = height
-        updateWidth()
-    })
-    d3.select(".pop-up").style("pointer", "none")
-    $("body").on('click', function(){
-        $(".badge").html("")
-    })
-    
-    $( "#resizable" ).resizable({
-        handles: "s",
-        resize: function( event, ui ) {
-             onlyag = false
-            if(ui.size.height < 200){
-                heightA = 200
-                ui.size.height = 200
-            }
-            else if(ui.size.height > 600){
-                heightA = 600
-                ui.size.height = 600
-            }
-            else heightA = ui.size.height
-            document.getElementById('aut_table').clientHeight = heightA;
-            let delta =  oldH - heightA,
-                newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-            oldH = heightA;
-            d3.select("#main-span").attr("dy",function(){
-            return heightA-100}) 
-            event.stopPropagation()
-        }
-    });
-    
-    $( "#resizable1" ).resizable({
-        handles: "s",
-        resize: function( event, ui ) {
-            onlyag = true
-            if(ui.size.height < 300){
-                heightAG = 300
-                ui.size.height = 300
-            }
-            else if(ui.size.height > 600){
-                heightAG= 600
-                ui.size.height = 600
-            }
-            else heightAG = ui.size.height
-            document.getElementById('AG-container').clientHeight = heightAG;
-            let delta =  oldHAG - heightAG,
-                newH = _docHeight - heightAG;
-            document.getElementById('row22').style.height = newH.toString()+"px";
-            oldHAG = heightAG;
-/*            console.log("H "+document.getElementById('row21').clientHeight)*/
-            heightA = document.getElementById('aut_table').clientHeight    
-            newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-/*            console.log("nH "+newH+" "+document.getElementById('row21').clientHeight)*/
-            
-            event.stopPropagation()
-        }
-    });
-    
-    setMouseHandlers()
-
-    window.onresize = function(e) {
+    setWinMouseHandlers()
         
-        if(!resize_pn && !resize_rn){
-            width = $("#aut_table").width()
-            _docHeight = document.documentElement.clientHeight - 30
-            height = document.documentElement.clientHeight - 30
-
-            w = width
-            h = height
-            heightA = document.getElementById('aut_table').clientHeight    
-            let newH = _docHeight - heightA;
-            document.getElementById('row21').style.height = newH.toString()+"px";
-
-
-            newH = _docHeight - heightAG;
-            document.getElementById('row22').style.height = newH.toString()+"px";
-            d3.select("#main-span").attr("dy",function(){
-                return heightA-100}) 
-
-             if(oldw != w && papersFiltered.length > 0 || authsExclude.length > 0 || authsReview.length >0 && !onlyag){
-                updateWidth()
-                 simulationA.stop()
-                 paperGraph(papersFiltered, citPrint, idPs, simulation)
-                    setTimeout(function(){ 
-                        simulation.stop()
-                    }, 1000);
-                 authorBars()
-                    //authorGraph()
-                }
-            oldw = width
-        }
-    }
-    document.onmouseup =  function(e){
-        resize_pn = false;
-        resize_rn = false;
+    //DEBUG
+    
+/*
+    choosen_j = "cg"
+    let instance  = choosen_j
+     if(!j_lists[instance]){
+        j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
+        //scarico file x e creo jlist e texts
+        readJournals("datasets/j_"+instance+"_2018-05-03.txt", instance)
     }
     
-    document.getElementById("svgAxis").style.visibility = "visible";
-    
-    d3.select("#cmpa")
-        .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
-        .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
-    getPaperSvg()
-    getAGSvg()
-    document.getElementById("svgAxis").style.visibility = "hidden";
-    popRectAx = d3.select("#svgAxis").append("rect")
-         .attr('x',0)
-         .attr('y',-10)
-         .attr('width',0)
-         .attr('height',0)
-         .attr('fill',"rgba( 221, 167, 109, 0.842 )")
-         .attr('opacity',0)
-         .style("border-radius", "10px")
-    popTextAx = d3.select("#svgAxis").append("text")
-        .attr("x", 0)             
-        .attr("y", 0)
-        .attr("text-anchor", "left")  
-        .style("font-size", "11px")
-        .attr("fill", "rgba( 2, 2, 2, 0.961 )")
-        .attr("opacity",0)
-        .text("");
-    //M150 0 L75 200 L225 200 Z
-    simulation = setSimulation()
-    simulationA = setAGSimulation()
-    
-      var ele = $("#ldr-val");
-      var clr = null;
-      var rand = 0;
-      (loop = function() {
-        clearTimeout(clr);
-        (inloop = function() {
-          ele.html(rand += 1);
-            if(rand >= 49) return;
-          clr = setTimeout(inloop, 125);
-        })();
-        //setTimeout(loop, 2500);
-      })();
-    var graphTxt = fetch('datasets/p_v0518f.txt')
-        .then(response => response.text())
-        .then(function(text) {
-            var graph = JSON.parse(text);
-            getArrays(graph)       
-    });
-    setup_searchbars()
-                               
-    
+    clickOnGo()
+    addPaper(papers[0])
+*/
 });

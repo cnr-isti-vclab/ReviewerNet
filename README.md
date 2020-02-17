@@ -13,7 +13,8 @@ Try it at
 > http://reviewernet.org <br>
 > *tested browsers: Chrome, Firefox, Safari* 
 
-![ReviewerNet screenshot](https://raw.githubusercontent.com/cnr-isti-vclab/ReviewerNet/master/screen/screen.PNG) 
+
+![ReviewerNet screenshot](screen/teaser.PNG) 
 
 # The User Interface
 

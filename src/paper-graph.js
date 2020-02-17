@@ -1,3 +1,4 @@
+
 /*
 This file is part of ReviewerNet.org.
 Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
@@ -14,7 +15,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 
 function paperFilter (item) { 
     var r = papersPrint.includes(item.id);
@@ -122,7 +122,7 @@ function addId(name, year){
       isIn = true
     }
     else{
-        
+
       idPs[idPs.length] = idP
       papersPrint.push(idP)
         /*
@@ -132,10 +132,18 @@ function addId(name, year){
       AP = []
       ANP = []
       papersCit[idP] = [[], []];
-        name = 
-        $("#papList").append("<li id=\""+"p"+idP+
-        "\" class=\"paplist list-group-item pAuth\"><strong>"
-         +idPs.length+"</strong><a target=\"_blank\" class=\"dblp links\" href=\"https://dblp.uni-trier.de/search?q="+name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')+"\"><img class = \"dblp-ico\" src=\"imgs/dblp.png\"></img></a>"+year+" "+name+"</li>")
+
+    let new_pap = `<li id="p${idP}" class="paplist list-group-item pAuth">
+    <strong>${idPs.length}</strong>
+    <a target="_blank" class="dblp links" 
+    href="https://dblp.uni-trier.de/search?q=${name.replace(/[^\x00-\x7F]/g, "").split(' ').join('+')}">
+    <img class = "dblp-ico" src="imgs/dblp.png"></img>
+    </a>
+    ${year} ${name.length > 60 ? name.slice(0, 57)+"...": name}${del_btn(idP, 'p')}
+    </li>`
+
+        $("#papList").append(new_pap)
+
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -151,14 +159,21 @@ function addId(name, year){
       getAP()
       getANP()
       refresh_export()
+
+      refresh_cmap()
+
     }
     
     return isIn
 }
 
-function deleteP(idCk){
+function deleteP(idCk, reset_redo){
+    if(reset_redo)
+        redos = []
     $('#papList').html("")
     var index = idPs.indexOf(idCk), idsT = [];
+    undos.push(['rp', idCk ])
+
     AP = []
     ANP = []
     if (index > -1) {
@@ -190,8 +205,11 @@ function deleteP(idCk){
                     updateADpapers()
                 }    
             }
-        paperGraph(papersFiltered, citPrint, idPs, simulation)
 
+        refresh_cmap()
+
+        paperGraph(papersFiltered, citPrint, idPs, simulation)
+        
         setTimeout(function(){ 
             authorBars()
             authorGraph()
@@ -199,21 +217,10 @@ function deleteP(idCk){
         }
 }
 
-function addPaper(suggestion){
-    this.value=""
-    if(start){
-        let delta = maxYear-minYear
-        if(delta > 30) delta = delta/2
-        xaxis.scale(xConstrained).ticks(delta, "r");
-        svgAxis = d3.select("#svgAxis").attr("y", "80")  
-        svgAxis.append("g").attr("id", "axis").call(xaxis);
-        document.getElementById("startMsg").style.visibility = "hidden";
-        document.getElementById("svgAxis").style.visibility = "visible";
-        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-        d3.selectAll(".graph").style("overflow-y", "auto")
-        add_labels()
-        start = false;
-    }
+
+function addPaper(suggestion, reset_redo){
+    startf()
+
     idP = suggestion.id
     //console.log(suggestion)
     var isIn = addId(suggestion.value, suggestion.year)
@@ -221,14 +228,26 @@ function addPaper(suggestion){
     setPapHandlers()
     //setMouseHandlers()
     if(!isIn){
+
+        if(reset_redo)
+            redos = []
+        undos.push(['ap', idP])
+
       //updateYear(suggestion.year)
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
+
+        refresh_cmap()
         setTimeout(function(){ 
             authorBars()
             authorGraph()
             print_rew()
+            let i =0, ln = papers.length;
+            for(i=0; i< ln; i++){
+                papers[i].vy = 0
+                papers[i].vx = 0
+            }
         }, 1000);
         
     }
@@ -283,89 +302,134 @@ function paperInfo(suggestion){
 
 }
 
-function paperInfoa(suggestion){
-    idInfo = suggestion.id;
-    var thehtml = "<strong>Title:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.value + "</li></ul><strong>Year:</strong><ul class=\"list-group\"><li class=\"list-group-item listG\">" + suggestion.year + "</li></ul><strong>Author(s):</strong><ul id = \"authsPap\" class=\"list-group\" >"
-    function isAuth(item){
-        return suggestion.authsId.includes(item.id);
-    }
-    var aPrint = authors.filter(isAuth)  
-    aPrint.sort(function(a, b) {
-            return (parseInt(a.year) - parseInt(b.year));
-        });
-    for (var i = 0; i < aPrint.length; i++)
-        thehtml += "<li id=\""+"a"+aPrint[i].id+"\" class=\"list-group-item\">"+ aPrint[i].value + ';</li>'
-    thehtml += "</ul>"
-    if(suggestion.jN.length > 0)
-      thehtml += "<strong>Journal Name:</strong><ul class=\"list-group\"><li class=\"list-group-item listG \">"+suggestion.jN+"</li></ul>";
-
-    if(suggestion.venue.length > 0)
-        thehtml += "<strong>Venue:</strong><ul class=\"list-group\" ><li class=\"list-group-item listG\">"+suggestion.venue+"</li></ul>";
-
-    idP = suggestion.id
-    if(idPs.includes(idP)){
-        var inCi = papersCit[idP][0],
-            outCi = papersCit[idP][1];
-        if(inCi.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\" >"
-          var inCits =  papers.filter(isInCited1)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outCi.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited1)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-    else{
-        inC = []
-        outC = []
-        citations.filter(citFilter);
-        if(inC.length > 0){
-          thehtml += "<strong>In Citations:</strong><ul id = \"inCits\" class=\"list-group\">"
-          var inCits =  papers.filter(isInCited)
-        inCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < inCits.length; i++)
-            thehtml +="<li id=\""+"p"+inCits[i].id+"\" class=\"list-group-item\">"+ inCits[i].value +  ', '+ inCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-        if(outC.length > 0){
-          thehtml += "<strong>Out Citations:</strong><ul id = \"outCits\" class=\"list-group\">"
-          var outCits =  papers.filter(isOutCited)
-          outCits.sort(function(a, b) {
-                return -(parseInt(a.year) - parseInt(b.year));
-            });
-          for (var i = 0; i < outCits.length; i++)
-            thehtml += "<li id=\""+"p"+outCits[i].id+"\" class=\"list-group-item\">"+ outCits[i].value +  ', '+ outCits[i].year +';</li>'
-          thehtml += "</ul>"
-        }
-    }
-
-    return thehtml
-
+function pap_radius(p){
+    return  p.key ? 9 : 5 + (p.out + p.in) -1;
 }
 
-function thetaPapFilter(item){
-    var paps = 0, lp = papersFiltered.length,
-        plset = new Set(papersPrint),
-        commonValues = item.paperList.filter(x => plset.has(x));
-    //console.log(item.value+" "+commonValues.length)
-    return authsReview.includes(item.id) || authsExclude.includes(item.id) || commonValues.length >= thetaPap;
-}
 
 function paperGraph(papers1, citations1, idPs, simulation){
+
+    //rearrange papers
+        //filter citrations for nonkeypapers and cited only once.
+
+    var index = {}
+
+    papers1.forEach(p => { delete(p.key); delete(p.in); delete(p.out); delete(p.parent); delete(p.conflict);
+        delete(p.order); delete(p.suborder); delete(p.startY); delete(p.years); delete(p.isolated) });
+
+    papers1.forEach(p => { if(idPs.includes(p.id)) p.key = true; p.order = idPs.indexOf(p.id); index[p.id] = p; p.in = 0; p.out = 0; });
+    citations1.forEach(c => { index[typeof(c.source) == "string" ? c.source: c.source.id].in++; index[typeof(c.target) == "string" ? c.target: c.target.id].out++ });
+
+    let keypapers = papers1.filter(p => p.key);
+    keypapers.sort((a, b) => a.order - b.order);
+    keypapers.forEach((p, i) => { p.order = i; });
+
+    papers1.forEach(p => { if(p.key) return; p.isolated = p.in + p.out  <= 1 });
+
+    citations1.forEach(c => {
+       let target = null;
+       let src = typeof(c.source) == "string" ? c.source: c.source.id;
+       let trg = typeof(c.target) == "string" ? c.target: c.target.id;
+       src = index[src];
+       trg = index[trg];
+       if(!src || !trg)
+         return;
+       if(src.isolated) src.parent = trg;
+       if(trg.isolated) trg.parent = src;
+    });
+
+    keycitations = citations1.filter(c => {
+        let src = typeof(c.source) == "string" ? c.source: c.source.id,
+            trg = typeof(c.target) == "string" ? c.target: c.target.id;
+        var s = index[src]
+        var t = index[trg]
+        return (s.in + s.out) > 1 && (t.in + t.out)> 1;
+    });
+
+    //TODO sort keypapers minimize total distances
+    //place other papers inbetween minimizing distances
+    var nkeys = idPs.length;
+
+    papers1.forEach((p, i)=> {
+        if(p.key) return;
+        if(p.isolated) {
+            if(!p.parent)
+              p.order = 0;
+//            var parent = index[p.parent];
+            if(!p.parent.years) p.parent.years = {};
+            if(!p.parent.years[p.year]) p.parent.years[p.year] = 1;
+            else p.parent.years[p.year]++;
+            p.order = p.parent.order
+            p.suborder = p.parent.years[p.year] -1;
+            return;
+        }
+        let best = -1;
+        let bestlength = 1e20;
+        for(var i = 0.5 ; i < nkeys; i++) {
+            //count lengths
+            let length = 0;
+            keycitations.forEach(c => {
+                let target = null,
+                    src = typeof(c.source) == "string" ? c.source: c.source.id,
+                    trg = typeof(c.target) == "string" ? c.target: c.target.id;
+
+                if(src == p.id) target = trg;
+                if(trg == p.id) target = src;
+
+                if(target && index[target].key) 
+                    length += Math.pow(index[target].order - i, 2)
+            });
+
+            if(length < bestlength) {
+                best = i;
+                bestlength = length;
+            }
+        }
+        p.order = best;
+        });
+    
+    //I would like to get all the papers in the same year order.
+    var conflicts = {};
+    papers1.forEach(p => {
+        if(p.key) return;
+        var key = p.order + "_" + p.year;
+        if (!conflicts[key])
+            conflicts[key] = 1;
+        else conflicts[key]++;
+        p.conflict = conflicts[key];
+    });
+    let start = 80;
+    papers1.forEach(p => {
+        p.startY = start + p.order*100; 
+        p.dx = 0;
+        p.dy = 0;
+
+        if(p.conflict) {
+	        var key = p.order + "_" + p.year;
+    	    var nconflicts = conflicts[key];
+    	    let r = (nconflicts == 1? 0 : 5 * (1.0/Math.sin(Math.PI/nconflicts)))
+    	    if(p.parent && p.parent.year == p.year) r = 18
+    	    p.dx = r*Math.cos(p.conflict*(2*Math.PI)/nconflicts + Math.PI/2);
+    	    p.dy = r*Math.sin(p.conflict*(2*Math.PI)/nconflicts + Math.PI/2);
+		}
+
+/*        if(p.parent) {
+            var sameyears = p.parent.years[p.year];
+            let r = sameyears == 1? 0 : 5 * (1.0/Math.sin(Math.PI/sameyears))
+            if(p.parent.year == p.year) r = 18
+            p.dx = r*Math.cos(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
+            p.dy = r*Math.sin(p.suborder*(2*Math.PI)/sameyears + Math.PI/2);
+        } */
+    });
+
+    /*
+    
+    End paper rearranging
+    
+    */
+
+
+
     simulation.stop()
     d3.select("#svgP").remove()
     d3.select(".ap").append("svg").attr("id", "svgP")
@@ -383,13 +447,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
       .attr("x", 65)
       .attr('dy', 30)
       .text(papersFiltered.length)
-     d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
-    .attr("x", () => width-150)
-      .attr('y', 45)
-      .text("Y-force = "+zoomFact.toFixed(1)+"X")
-    d3.select("#reset-button").attr("cx", () => width-165)
-    .attr("cy", () => 42)
-    
+
     
     var link = svg.append("g")
         .attr("class", "citations")
@@ -398,6 +456,11 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .enter().append("line")
         .attr("class", "plink")
         .attr("stroke-width", "2px")
+        .attr("stroke", function(d) {
+            //return "lightgray"
+            return d.source.order == d.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)" ;
+    })
+
         .style("pointer-events", "none")
     
     var node = svg.append("g")
@@ -407,7 +470,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .enter().append("circle")
         .attr("class", "papersNode")
         .attr("id", function(d){return "p"+d.id})
-        .attr("r", 6)
+        .attr("r", (d)=>pap_radius(d))
         .attr("stroke", function(d){
             if(idPs.includes(d.id))
                 return "#4238ff"
@@ -433,10 +496,16 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
+
+            //console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
+            save_hist()
             if(idPs.includes(d.id)) deleteP(d.id)
-                else addPaper(d)
+                else addPaper(d, true)
+            //refresh_cmap()
+
             d3.event.stopPropagation()
+            d3.event.preventDefault()
         })
         
 popRect = svgP.append("rect")
@@ -467,42 +536,34 @@ popRect = svgP.append("rect")
             .text(function(){return papers1[i].value});
     
     function ticked() {
-        link
-            .attr("x1", function(d) { return xConstrained(d.source.year); })
-            .attr("y1", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.source.y));
-                d3.select(this).attr("baseY1", () => ny ) 
-                return ny; /*d.source.y*/; })
-            .attr("x2", function(d) { return xConstrained(d.target.year); })
-            .attr("y2", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.target.y));
-                d3.select(this).attr("baseY2", () => ny ) 
-                return ny;})
-            .attr("stroke", function(d) {
-            if(d.source.year === d.target.year)
-               return "lightgray";
-            else return d.source.x < d.target.x ? "url(#gradxX)":"url(#gradXx)";
-        })
-
+    
         node
             .attr("cx", function(d) { 
-            var nX = xConstrained(d.year);
+            var nX = xConstrained(d.year) + d.dx;
             return nX; })
-            .attr("cy", function(d) { 
-                let ny = Math.max(30, Math.min(heightP - 20, d.y));
-                d3.select(this).attr("baseY", () => ny ) 
-            return ny; })
-    
-         if(idClickedA && idClickedA!=0){
-            reset_texts()
-            popTextA.style("opacity", 0)
-            popRectA.style('opacity',0)
-            d3.select(".txtspan").remove()
-            reclick_auth(clkA)
-        }
+            .attr("cy", function(d) {
+                return d.startY + d.dy; 
+//                    d3.select(this).attr("baseY", () => ny ) 
+//                /return ny; 
+            })
+        
+        link
+            .attr("x1", function(d) { return xConstrained(d.source.year); })
+            .attr("y1", function(d) { return d.source.startY;
+                /*                     
+                let ny = Math.max(30, Math.min(heightP - 20, d.source.y));
+                d3.select(this).attr("baseY1", () => ny ) 
+                return ny; */; })
+            .attr("x2", function(d) { return xConstrained(d.target.year); })
+            .attr("y2", function(d) { return d.target.startY;
+                                    /*
+                let ny = Math.max(30, Math.min(heightP - 20, d.target.y));
+                d3.select(this).attr("baseY2", () => ny ) 
+                return ny;*/})
+            
         
     }
-    
+
     if(simulation){
         
         simulation
@@ -511,9 +572,14 @@ popRect = svgP.append("rect")
 
         simulation.force("link")
             .links(citations1);
+
+            //restore_hist()
+        
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
+        
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
+        
 
     svg_handlers()
     centerSvg()
@@ -552,7 +618,8 @@ function dragged(d) {
         ht = bbox.height,
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
-    popRect.attr('fill', () => c20 ? color_j(d) : color_n(d.color))
+    popRect.attr('fill', () =>  "#d1d1d1")//c20 ? color_j(d) : color_n(d.color))
+
     //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
         .attr('width',wd +10)
         .attr('height',ht+2)
@@ -596,7 +663,8 @@ function dragended(d) {
         .attr("opacity", 0);
     d3.select(this).transition()
         .duration(200)
-        .attr("r", 6);
+        .attr("r", (d)=>pap_radius(d));
+
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     d3.selectAll(".authNode")

@@ -1,0 +1,8 @@
+{"id": "ACM ToG", "name_list": ["ACM transactions on graphics", "ACM Trans. Graph.", "TOGS"]}
+{"id": "COMPUT GRAPH FORUM", "name_list": ["Computer Graphics Forum", "Comput. Graph. Forum", "Comput Graph Forum", "Computer graphics forum : journal of the European Association for Computer Graphics"]}
+{"id": "IEEE TVCG", "name_list": ["IEEE Transactions on Visualization and Computer Graphics", "IEEE Trans. Vis. Comput. Graph."]}
+{"id": "Springer VIS COMPUT", "name_list": ["Visual Computer", "The Visual Computer"]}
+{"id": "C&G", "name_list": ["Computers & Graphics"]}
+{"id": "IEEE Vis", "name_list": [ "Proceedings of Seventh Annual IEEE Visualization '96", "VIS 05. IEEE Visualization, 2005.", "Proceedings of Seventh Annual IEEE Visualization '96", "Proceedings of the First IEEE Conference on Visualization: Visualization 90", "IEEE Visualization, 2002. VIS 2002.", "2019 IEEE Visualization Conference (VIS)","IEEE Visualization", "Visualization : proceedings of the ... IEEE Conference on Visualization. IEEE Conference on Visualization"]}
+{"id": "IEEE COMPUT GRAPH", "name_list": [ "IEEE Computer Graphics and Applications", "IEEE Computer Graphics & Applications"]}
+{"id": "SIGGRAPH (pre 2002)", "name_list": ["SIGGRAPH"]}
