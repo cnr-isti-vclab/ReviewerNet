@@ -1,12 +1,3 @@
-/*
-"<tr class=\"authLine\" >"+
-"<td class=\"authline\">"+
-"<svg id=\"svgA"+<---ID--->+"\" class=\"svgA\"></svg></td></tr>"
-
-
-
-<rect x="400"width="100px" height="8px" fill="black"></rect>
-*/
 function prettyPrintAuthor(auth){
     function getAuthPapers(item){
     return auth.paperList.includes(item.id);

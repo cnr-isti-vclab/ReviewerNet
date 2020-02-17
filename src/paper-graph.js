@@ -1,3 +1,21 @@
+
+/*
+This file is part of ReviewerNet.org.
+Copyright (c) 2018-2019, Visual Computing Lab, ISTI - CNR
+All rights reserved.
+
+ReviewerNet.org is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 function paperFilter (item) { 
     var r = papersPrint.includes(item.id);
     /*if(r)
@@ -125,6 +143,7 @@ function addId(name, year){
     </li>`
 
         $("#papList").append(new_pap)
+
         
       write = true;
       let tempCits = citations.filter(citFilter);
@@ -140,7 +159,9 @@ function addId(name, year){
       getAP()
       getANP()
       refresh_export()
+
       refresh_cmap()
+
     }
     
     return isIn
@@ -152,6 +173,7 @@ function deleteP(idCk, reset_redo){
     $('#papList').html("")
     var index = idPs.indexOf(idCk), idsT = [];
     undos.push(['rp', idCk ])
+
     AP = []
     ANP = []
     if (index > -1) {
@@ -188,8 +210,6 @@ function deleteP(idCk, reset_redo){
 
         paperGraph(papersFiltered, citPrint, idPs, simulation)
         
-        
-        
         setTimeout(function(){ 
             authorBars()
             authorGraph()
@@ -197,8 +217,10 @@ function deleteP(idCk, reset_redo){
         }
 }
 
+
 function addPaper(suggestion, reset_redo){
     startf()
+
     idP = suggestion.id
     //console.log(suggestion)
     var isIn = addId(suggestion.value, suggestion.year)
@@ -206,16 +228,17 @@ function addPaper(suggestion, reset_redo){
     setPapHandlers()
     //setMouseHandlers()
     if(!isIn){
+
         if(reset_redo)
             redos = []
         undos.push(['ap', idP])
+
       //updateYear(suggestion.year)
         updateADpapers()
         updateAuthDict(papersFiltered)
         paperGraph(papersFiltered, citPrint, idPs, simulation)
-                
-        refresh_cmap()
 
+        refresh_cmap()
         setTimeout(function(){ 
             authorBars()
             authorGraph()
@@ -225,8 +248,6 @@ function addPaper(suggestion, reset_redo){
                 papers[i].vy = 0
                 papers[i].vx = 0
             }
-            
-
         }, 1000);
         
     }
@@ -280,8 +301,6 @@ function paperInfo(suggestion){
     return thehtml
 
 }
-
-
 
 function pap_radius(p){
     return  p.key ? 9 : 5 + (p.out + p.in) -1;
@@ -428,14 +447,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
       .attr("x", 65)
       .attr('dy', 30)
       .text(papersFiltered.length)
-     /*
-      d3.select("#svgAxis").append('text').attr("class", "label-txtspan").attr("id", "scale")
-    .attr("x", () => width-150)
-      .attr('y', 45)
-      .text("Y-force = "+zoomFact.toFixed(1)+"X")
-    d3.select("#reset-button").attr("cx", () => width-165)
-    .attr("cy", () => 42)
-    */
+
     
     var link = svg.append("g")
         .attr("class", "citations")
@@ -448,6 +460,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
             //return "lightgray"
             return d.source.order == d.target.order ? "rgba(231, 231, 231)" : "rgba(221, 221, 221)" ;
     })
+
         .style("pointer-events", "none")
     
     var node = svg.append("g")
@@ -483,6 +496,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .on("mouseover", handleMouseOver)
         .on("mouseout", handleMouseOut)
         .on("dblclick", function(d) {
+
             //console.log("dbl "+ idPs.includes(d.id))
             zoom_by(1)
             save_hist()
@@ -549,6 +563,7 @@ popRect = svgP.append("rect")
             
         
     }
+
     if(simulation){
         
         simulation
@@ -565,6 +580,7 @@ popRect = svgP.append("rect")
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
         
+
     svg_handlers()
     centerSvg()
 
@@ -603,6 +619,7 @@ function dragged(d) {
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
     popRect.attr('fill', () =>  "#d1d1d1")//c20 ? color_j(d) : color_n(d.color))
+
     //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
         .attr('width',wd +10)
         .attr('height',ht+2)
@@ -647,6 +664,7 @@ function dragended(d) {
     d3.select(this).transition()
         .duration(200)
         .attr("r", (d)=>pap_radius(d));
+
     d3.selectAll(".plink")
         .style("opacity", 0.8)
     d3.selectAll(".authNode")

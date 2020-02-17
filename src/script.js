@@ -389,20 +389,7 @@ function setMouseHandlers(){
         })
         .on("mouseover", "li", ListMouseOver)
         .on("mouseout", "li", ListMouseOut)
-        //.on("dblclick", "li", papDblc);
-    /*
-     $("#reset-button")
-        .on("click", function() {
-            if(zoomFact!=1){
-                if(idClickedA && idClickedA != 0) unclick_auth(clkA)
-                if(clkPp) unclick_pap(clkPp)
-                zoom_by(1)
-                paperGraph(papersFiltered, citPrint, idPs, simulation)
-            }})
-            .on("mouseenter", function() {d3.select("#reset-img").style("opacity", "0.55").transition().duration(100)})
-     .on("mouseout", function(){d3.select("#reset-img").style("opacity", "0.3")})
-            */
-    }
+
 
 function updateAuthDict(pf){
     for(let j = 0; j < pf.length; j++){
@@ -559,17 +546,7 @@ function setSimulation(){
         .force("center", d3.forceCenter((w / 2), (heightP / 2)))
         .force("forceY",  d3.forceY().strength(0.01)
         .y(heightP/2))
-        
-       //.force("y", )
-    
- //   simulation.force("charge", ) //d3.forceManyBody()
-//                .strength(-50)
-//                .theta(0.5))
-////                .distanceMin(40)
-////                .distanceMax(140))
- //       .force("center", d3.forceCenter((w / 2), (heightP / 2)))
-//       .force("y", d3.forceY(-180))
-//        //.force("x", d3.forceX())
+
     simulation.alpha(1)
      simulation.alphaMin(0.02)
      simulation.alphaDecay(0.02)
@@ -589,6 +566,7 @@ function append_ico(svgN, url, x, y, id){
         svgimg.setAttributeNS(null, 'opacity', '0.5');
         $(svgN).append(svgimg);
 }
+
 
 function define_gradients(){
     //X gradients
@@ -726,11 +704,13 @@ function print_submitting_old(){
         for (let i = 0; i < aPrint.length; i++){
             let test_obj = aPrint[i],
                 fs = (authColor_r(test_obj)) ? "italic" : "normal";
+
         
             thehtml += "<td class=\"pAuthe pAuth\" style=\"font-style:"+fs+";\"  id=\"a"+aPrint[i].id+"\"><strong>"+(i+1)+"</strong> "+ aPrint[i].value + '</td>'
         }
         thehtml += "</tr>"
     }
+
     $("#authList").append(thehtml);
 }
 
@@ -1235,8 +1215,7 @@ $(function (){
     document.getElementById('row21').style.height =(_docHeight - heightA).toString()+"px";
     document.getElementById('row22').style.height =(_docHeight - heightAG).toString()+"px";
     setWinMouseHandlers()
-    
-    
+        
     //DEBUG
     
 /*

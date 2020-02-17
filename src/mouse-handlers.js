@@ -1730,11 +1730,13 @@ function addFromList(event){
 
     if(idClick[0]=='p'){
         idClick = idClick.substring(1,idClick.length);
+
          let paper = papers[papersIndex[idClick]];
         if(!idPs.includes(idClick)){
             zoom_by(1)
             addPaper(paper, true)
         }
+
     }else{
         idClick = idClick.substring(1,idClick.length);
         
@@ -2021,12 +2023,13 @@ function papDblc(event){
         
     let idClick = event.target.id;
     
+
     idClick = idClick.substring(1,idClick.length)
             
     zoom_by(1)
     deleteP(idClick, true)
+
     refresh_export()
-    
     document.getElementsByClassName("td2title").innerHTML = ""
     first_dbl = true;
     }else first_dbl = !first_dbl
