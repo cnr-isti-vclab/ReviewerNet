@@ -7,7 +7,7 @@ The intuition behind ReviewerNet is that the authors of relevant papers are good
 
 ReviewerNet builds on a reference database including papers, authors and citations from selected sources (journal articles and conference papers) taken from the Semantic Scholar Research Corpus. ReviewerNet can be built over any dataset, according to the domain of interest. 
 
-The platform is demonstrated in the field of Computer Graphics. The reference dataset contains data (22.887 papers, 145.900 citations, and 29.549 authors) from eight sources (ACM Transactions on Graphics, Computer Graphics and Applications, Computer Graphics Forum, Computers & Graphics, IEEE Transactions on Visualization and Computer Graphics, Visual Computer, Proceedings of IEEE Conference Visualization pre 2006, Proceedings of ACM SIGGRAPH pre 2003), spanning the years in-between 1995 and 2018. 
+The platform is demonstrated in the field of Computer Graphics. The reference dataset contains data (22.887 papers, 145.900 citations, and 29.549 authors) from eight sources (ACM Transactions on Graphics, Computer Graphics and Applications, Computer Graphics Forum, Computers & Graphics, IEEE Transactions on Visualization and Computer Graphics, Visual Computer, Proceedings of IEEE Conference Visualization pre 2006, Proceedings of ACM SIGGRAPH pre 2003), spanning the years in-between 1995 and 2019. 
 
 Try it at
 > http://reviewernet.org <br>
@@ -21,8 +21,7 @@ Try it at
 There are four regions in the user interface, each resizable in height. The visual composition helps the user to gain different perspectives on the problem at hand, within a single visualization:
 
 
-1.  The **Paper Network (PN)**, at the bottom-left hand side of the screen, is a graph visualization of the literature related with a submission topic. The nodes represent papers, while the arcs represent in- and out-citation relations between papes. The horizontal dimension represents time. Each key paper is assigned a rectangular region of predefined vertical height; all its citing/cited papers with node degree equal to one are arranged inside the rectangle, whereas nodes with higher degree are positioned in-between the rectangular regions. Their positions minimize the sum of distances from the citing/cited selected papers. This visualization of the network enables one to easily detect higher-degree nodes and network cliques, and tell apart relevant papers, which are good candidates for node selection and expansion.
-
+1.  The **Paper Network (PN)**, at the bottom-left hand side of the screen, is a graph visualization of the literature related with a submission topic. The nodes represent papers, while the arcs represent in- and out-citation relations between papes. The horizontal dimension represents time. Each key paper is assigned a rectangular region of predefined vertical height; all its citing/cited papers with node degree equal to one are arranged inside the rectangle, whereas nodes with higher degree are positioned in-between the rectangular regions. This visualization of the network enables one to easily detect higher-degree nodes and network cliques, and tell apart relevant papers, which are good candidates for node selection and expansion.
 Through graph expansion functionalities, the PN supports the rapid identification of key papers in the literature with respect to the topic of the submitted paper. The intuition is that the authors of key papers form a good set of candidate reviewers.
 1.  The **Researcher Timeline (RT)**, at the upper-left side of the screen, is a visualization of the academic career of researchers, through horizontal bars. Each bar represents an author of key papers in the PN. The dots over the bar represent all authored papers in the reference database. The RT helps assessing the suitability of potential reviewers, according for example to topic coverage, productivity over years, and stage of career. Also, visual cues help the user to tell apart candidate reviewers from conflicting researchers.  
 1.  The **Researcher Network (RN)**, at the upper-right hand side of the screen, is a graph visualization of co-authorship relations: the nodes represent the authors in the PN and their collaborators in the dataset; the arcs connect authors who have publications in common. The aim of the RN is to visualize the research communities: indeed, the identification of network of collaborators helps looking for sets of independent, non-conflicting reviewers. 
@@ -31,14 +30,11 @@ Through graph expansion functionalities, the PN supports the rapid identificatio
 
 # Visual variables
 
-Visual cues are used to improve the comprehension during interactive sessions. The colour, size, boundary, and style of visual elements (nodes, dots, bars, writings) visually represent important characteristics of the entities they stand for. The coherence of visual cues across different views enforces their meaningfulness, and makes it easy for the user to switch between different views without losing focus. 
-
+Visual cues are used to improve the comprehension during interactive sessions. The position, colour, size, boundary, and style of visual elements (nodes, dots, bars, writings) visually represent important characteristics of the entities they stand for. The coherence of visual cues across different views enforces their meaningfulness, and makes it easy for the user to switch between different views without losing focus. 
 
 ### Visual cues for Papers 
 
-
-
-*   For papers in the PN, the node color corresponds to the number of citations received by the paper, from yellow (few citations) to green (many citations). The corresponding dots in the RT follow the same colormap. Dots corresponding to papers in the reference database, but not included the PN, are marked as grey. 
+*   For papers in the PN, the node color may corresponds either to the number of citations received by the paper, from yellow (few citations) to green (many citations) or to or to the venue where it is published - according to the colormap choosen by the user. The corresponding dots in the RT follow the same colormap. Dots corresponding to papers in the reference database, but not included the PN, are marked as grey. 
 *   Selected (key) papers are circled in blue, both in the PN and the RT.  Arcs are blue in the RN when the co-authored papers include a selected (key) paper.  
 
 
@@ -98,20 +94,19 @@ Finally, to modulate the conflict of interest, the user can set a threshold for 
 If you are a journal editor, or an IPC member asked to find additional reviewers, you can follow the steps below to find a set of reviewers for a submitted paper, and alternative reviewers in case of decline.  
 
 
-### Step 0: Input the names of submitting authors
+### Step 0: Input the names of submitting and conflicting authors
 
-Input the names of the authors of the submitted paper in the 'Submitting Authors' field (also with the help of the drop-down menu), and tick the _'Done'_ checkbox. The authors are now shown in the RT and the RN, marked as purple and the rest of the interface becomes active. 
+Input the names of the authors of the submitted paper in the 'Submitting Authors' field (also with the help of the drop-down menu). You can also input directly the names of conflicting researchers, if known. The authors are now shown in the RT and the RN, marked as purple (submitting) and red (conflicting). 
 
 
 ### Step 1: Build your Paper Network and select key papers 
 
 The Paper Network includes papers relevant to a submission topic, and their citations. The authors of selected papers in the network define the set of candidate reviewers.
 
-
-
-*   Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic: input their titles in the 'Key papers' field, and the papers will be included in the PN. Title-based suggestions are shown in a drop-down menu, listed by publication year. Papers already visualized in the PN are highlighted in the drop-down menu. Drag and drop the nodes to navigate the network. 
-*   Expand the network by selecting interesting nodes, i.e. papers you deem relevant to the topic of the submission, on a mouse double click. The PN then updates with the in- and out-citations of the nodes. The authors of selected (expanded) nodes are now included in the RT and the RN. Selected papers are marked with a blue contour circle, both in the PN and the RN. 
-*   Deselect irrelevant nodes, i.e. papers you are no longer interested in, on a mouse double click either on the node or on the paper title in the list of key papers. The authors of deselected nodes are removed from the RT and RN. 
+*   Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant to the submission topic: input their titles in the 'Key papers' field, and the papers will be included in the PN. Title-based suggestions are shown in a drop-down menu, listed by publication year. Papers already visualized in the PN are highlighted in the drop-down menu.
+The user can also press the Import from bibliography button and paste a list of references that will populate the views.
+*   Expand the network by selecting interesting nodes, i.e. papers you deem relevant to the topic of the submission, on a mouse double click. The PN then updates with the in- and out-citations of the nodes. The authors of selected (expanded) nodes are now included in the RT and the RN. Selected papers are marked with a blue contour circle, both in the PN and the RT. 
+*   Deselect irrelevant nodes, i.e. papers you are no longer interested in, either on a mouse double click on the node or on a mouse click on the thrash button besides the paper title in the list of key papers in the CP. The authors of deselected nodes are removed from the RT and RN. 
 *   Continue until you feel the selected papers and their citations offer a good coverage of the literature about the topic at hand. Though there is no limit to the number of selected papers, as a rule of thumb 8 are a good number to benefit from ReviewerNet functionalities.
 *   Hovering the mouse over a paper highlights the paper and its authors in all the views. Hovering also works for paper dots in the researcher timeline. A mouse click on a dot lets the user navigate the visualization. A single click restores the previous visualization. The paper details are shown on a mouse click in the bottom right corner. The icon beside the paper links to its DBLP page. 
 
@@ -133,7 +128,6 @@ The Researcher Timeline (RT) includes the authors of selected key papers in the 
 The Researcher Network (RN) is a graph visualization of co-authorship relations among the researchers in the RT and their collaborators in the dataset. 
 
 
-
 *   Explore the RN and use the different handlers to identify communities of collaborators, and find sets of independent, well distributed reviewers. Pan and zoom are available in the researcher network.
 *   Hovering over an element in the researcher network shows a popup with the researcher's name in the upper-right corner. Hovering over an arc highlights the common publications. A gray arc means no shared papers currently visualized. Blue arcs indicate common papers in the paper network.
 
@@ -147,7 +141,7 @@ The Researcher Network (RN) is a graph visualization of co-authorship relations 
 *   Once you select a reviewer, ReviewerNet adds automatically a list of potential alternative reviewers, in case of decline. Alternative reviewers are chosen from the candidate ones, so that they only conflict with the declining reviewer. Substitute reviewers by a mouse click.  
 *   Download your list of reviewers with a click on the download button. The list reports reviewers' names and bibliographic references to their papers. 
 
-For further information on how to use ReviewerNet, have a look at the accompanying video https://youtu.be/JnomPO8QI28 
+For further information on how to use ReviewerNet<!--, have a look at the accompanying video https://youtu.be/JnomPO8QI28 --> 
 
 
 
