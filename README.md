@@ -1,4 +1,23 @@
-# About ReviewerNet 
+<a id="top"></a>
+
+# Table of contents
+
+[1. About ReviewerNet](#about)
+
+[2. The User Interface](#ui)
+
+[3. Visual Variables](#vis)
+
+[4. Actions](#actions)
+
+[5. User-defined parameters and settings](#udps)
+
+[6. How to Use ReviewerNet](#howto)
+<hr>
+
+<a id="about"></a>
+
+# About ReviewerNet [to top](#top)
 
 The aim of ReviewerNet is to facilitate the selection of reviewers by journal editors and members of international programme committees. 
 Reviewers should be expert on the topic of the submitted paper, while not having conflicts of interest with the submitting authors.
@@ -16,7 +35,9 @@ Try it at
 
 ![ReviewerNet screenshot](screen/teaser.PNG) 
 
-# The User Interface
+<a id="ui"></a>
+
+# The User Interface [to top](#top)
 
 There are four regions in the user interface, each resizable in height. The visual composition helps the user to gain different perspectives on the problem at hand, within a single visualization:
 
@@ -27,8 +48,9 @@ Through graph expansion functionalities, the PN supports the rapid identificatio
 1.  The **Researcher Network (RN)**, at the upper-right hand side of the screen, is a graph visualization of co-authorship relations: the nodes represent the authors in the PN and their collaborators in the dataset; the arcs connect authors who have publications in common. The aim of the RN is to visualize the research communities: indeed, the identification of network of collaborators helps looking for sets of independent, non-conflicting reviewers. 
 1.  The **Control Panel (CP)**, at the bottom-right hand side of the screen, allows the user to input and manage the names of submitting authors, the names of selected reviewers, and the titles of key papers. The CP area also displays information about papers, upon request. The DBLP icon beside reviewers' names and paper titles links to their respective DBLP page. Finally, the CP includes parameters boxes and checkboxes to fine-tune the visualization. 
 
+<a id="vis"></a>
 
-# Visual variables
+# Visual variables [to top](#top)
 
 Visual cues are used to improve the comprehension during interactive sessions. The position, colour, size, boundary, and style of visual elements (nodes, dots, bars, writings) visually represent important characteristics of the entities they stand for. The coherence of visual cues across different views enforces their meaningfulness, and makes it easy for the user to switch between different views without losing focus. 
 
@@ -46,8 +68,9 @@ Visual cues are used to improve the comprehension during interactive sessions. T
 *   For researchers in the RT, the font style of names further helps to tell apart conflicting researchers (italic) from non-conflicting candidate reviewers (normal). The same colour/font rules apply to the names suggested in the selected reviewers' drop-down menu in the CP.
 *   The researchers in the RT are ordered vertically according to a score which counts the number of authored papers, weighted by their importance (i.e., being visualized and/or selected in the PN). The same score is rendered in the RN through the dimension of nodes.  
 
+<a id="actions"></a>
 
-# Actions
+# Actions [to top](#top)
 
 Each view (PN, RT, RN, CP) is linked to the other views, so that any action in a view is reflected in the others. 
 
@@ -72,8 +95,9 @@ Each view (PN, RT, RN, CP) is linked to the other views, so that any action in a
 *   The icon beside the researcher name in any of the fields in the CP links to the DBLP page of that researcher. 
 *   A researcher can be removed from the list of selected reviewers on a double click.
 
+<a id="udps"></a>
 
-# User-defined parameters and settings 
+# User-defined parameters and settings [to top](#top)
 
 Users can adjust the number of candidate reviewers visualized through a set of thresholds and options. To limit the number of potential reviewers visualized, the user can set two thresholds a researcher has to meet to be considered as a candidate reviewer, and therefore included in the RT and the RN visualizations: 
 
@@ -88,8 +112,9 @@ To augment instead the number of potential reviewers visualized, the user can ti
 
 Finally, to modulate the conflict of interest, the user can set a threshold for two researchers to be considered as co-authors, namely _Conflict expiration_: the maximum number of years since the last co-authored paper in the database. A larger threshold will increase the number of candidates marked as conflicted. Conversely, a smaller threshold will increase the number of available reviewers. 
 
+<a id="howto"></a>
 
-# How to use ReviewerNet 
+# How to use ReviewerNet [to top](#top)
 
 If you are a journal editor, or an IPC member asked to find additional reviewers, you can follow the steps below to find a set of reviewers for a submitted paper, and alternative reviewers in case of decline. 
 Reviewernet runs on a Computer Grapichs instance by default, but you can create your own instance with a user-friendly procedure described [here](https://github.com/cnr-isti-vclab/ReviewerNet/tree/master/parser).
@@ -140,7 +165,7 @@ The Researcher Network (RN) is a graph visualization of co-authorship relations 
 *   Once you select a reviewer, ReviewerNet adds automatically a list of potential alternative reviewers, in case of decline. Alternative reviewers are chosen from the candidate ones, so that they only conflict with the declining reviewer. Substitute reviewers by a mouse click.  
 *   Download your list of reviewers with a click on the download button. The list reports reviewers' names and bibliographic references to their papers. 
 
-For further information on how to use ReviewerNet refer to [this paper](https://arxiv.org/abs/1903.08004). <!--, have a look at the accompanying video https://youtu.be/JnomPO8QI28 --> 
+For further information on how to use ReviewerNet refer to [this paper](http://vcg.isti.cnr.it/Publications/2019/SGPC19/). <!--, have a look at the accompanying video https://youtu.be/JnomPO8QI28 --> 
 
 
 
