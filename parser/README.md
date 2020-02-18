@@ -16,7 +16,7 @@ This folder contains both Bash and Python scripts. The only file to run in order
 
 <a id="req"></a>
 
-## 1. Requirements
+## 1. Requirements [to top](#top)
 
 To run the script succesfully you need:
 
