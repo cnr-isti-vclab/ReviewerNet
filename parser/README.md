@@ -53,7 +53,7 @@ phase** can start. Filtered corpus partitions are merged together and the person
 
 Eventually the script asks the user whether to delete or not the interemediate files (gzipped/filtered partitions).
 
-At this point he *datasets* folder will contain the files needed to run ReviewerNet, both ending with *-pers* suffix.
+At this point he *datasets* folder will contain the 3 files needed to run ReviewerNet, ending with *_pers* suffix.
 
 ## 4. Execution
 
