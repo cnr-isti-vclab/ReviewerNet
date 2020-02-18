@@ -96,7 +96,7 @@ If you are a journal editor, or an IPC member asked to find additional reviewers
 
 ### Step 0: Input the names of submitting and conflicting authors
 
-Input the names of the authors of the submitted paper in the 'Submitting Researchers' field (also with the help of the drop-down menu). You can also input directly the names of conflicting researchers, if known, in the 'Conflicting Researchers field'. The authors are now shown in the RT and the RN, marked as purple (submitting) and red (conflicting). 
+Input the names of the authors of the submitted paper in the 'Submitting Researchers' field (also with the help of the drop-down menu). You can also input directly the names of conflicting researchers, if known, in the 'Conflicting Researchers' field. The authors are now shown in the RT and the RN, marked as purple (submitting) and red (conflicting). 
 
 
 ### Step 1: Build your Paper Network and select key papers 
