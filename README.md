@@ -117,8 +117,6 @@ While you build your set of key papers in the PN, ReviewerNet automatically buil
 
 The Researcher Timeline (RT) includes the authors of selected key papers in the PN. Researchers are represented as horizontal bars, spanning their academic career. 
 
-
-
 *   Explore the RT and use the different handlers to assess the suitability of candidate reviewers: check conflicts thanks to colours and font style; check expertise by looking at stage of career and production over years; check topic coverage by looking at who published what, etc.
 *   With a mouse click on a researcher, his/her co-authors are highlighted in the researcher timeline and the researcher network. Hovering on one of the co-authors highlights the common publications in the paper network and the researcher network. Another mouse click will get you back to the previous visualization
 
@@ -128,7 +126,7 @@ The Researcher Timeline (RT) includes the authors of selected key papers in the 
 The Researcher Network (RN) is a graph visualization of co-authorship relations among the researchers in the RT and their collaborators in the dataset. 
 
 
-*   Explore the RN and use the different handlers to identify communities of collaborators, and find sets of independent, well distributed reviewers. Pan and zoom are available in the researcher network.
+*   Explore the RN and use the different handlers to identify communities of collaborators, and find sets of independent, well distributed reviewers. Pan and zoom are available in the researcher network. The user can switch to full-screen mode by clicking on the icon in the bottom-left part in the RN.
 *   Hovering over an element in the researcher network shows a popup with the researcher's name in the upper-right corner. Hovering over an arc highlights the common publications. A gray arc means no shared papers currently visualized. Blue arcs indicate common papers in the paper network.
 
 
@@ -141,7 +139,7 @@ The Researcher Network (RN) is a graph visualization of co-authorship relations 
 *   Once you select a reviewer, ReviewerNet adds automatically a list of potential alternative reviewers, in case of decline. Alternative reviewers are chosen from the candidate ones, so that they only conflict with the declining reviewer. Substitute reviewers by a mouse click.  
 *   Download your list of reviewers with a click on the download button. The list reports reviewers' names and bibliographic references to their papers. 
 
-For further information on how to use ReviewerNet<!--, have a look at the accompanying video https://youtu.be/JnomPO8QI28 --> 
+For further information on how to use ReviewerNet refer to [this paper](https://arxiv.org/abs/1903.08004). <!--, have a look at the accompanying video https://youtu.be/JnomPO8QI28 --> 
 
 
 
