@@ -4,13 +4,16 @@ This is a tutotial to download, create and deploy a user-defined instance of Rev
 This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is download_and_parse.sh. 
 
 [1. Requirements](#req)
-[2. The SemanticScholar corpus](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#2-the-semanticscholar-corpus)
 
-[3. dowload_and_parse.sh](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#3-scriptsh)
+[2. The SemanticScholar corpus](#corpus)
 
-[4. Execution](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#4-Execution)
+[3. dowload_and_parse.sh](#script)
+
+[4. Execution](#exe)
 <hr>
+
 <a id="req"></a>
+
 ## 1. Requirements
 
 To run the script succesfully you need:
@@ -24,11 +27,15 @@ To run the script succesfully you need:
 - [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy/), a fuzzy string matching python library. If python-Levenshtein is also installed, 
  fuzzywuzzy uses Levenshtein Distance (up to 4-10x speedup)
 
+<a id="corpus"></a>
+
 ## 2. The SemanticScholar corpus
 
 The reference corpus can be found at http://api.semanticscholar.org/corpus/download/. This representation of the full Semantic Scholar corpus offers data relating to papers crawled from the web and subjected to a number of filters.
 
 The papers are provided as a set of json objects, one per line. Papers are grouped in batches and shared as a collection of gzipped files; each file is about 660 MB, and the total collection is about 100 GB.
+
+<a id="script"></a>
 
 ## 3. download_and_parse.sh
 
@@ -53,6 +60,8 @@ phase** can start. Filtered corpus partitions are merged together and the person
 Eventually the script asks the user whether to delete or not the interemediate files (gzipped/filtered partitions).
 
 At this point he *datasets* folder will contain the 3 files needed to run ReviewerNet, ending with *_pers* suffix.
+
+<a id="exe"></a>
 
 ## 4. Execution
 
