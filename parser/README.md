@@ -3,15 +3,14 @@
 This is a tutotial to download, create and deploy a user-defined instance of Reviewernet.org.
 This folder contains both Bash and Python scripts. The only file to run in order to have your instance of RN is download_and_parse.sh. 
 
-[1. Requirements](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#1-Requirements)
-
+[1. Requirements](#req)
 [2. The SemanticScholar corpus](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#2-the-semanticscholar-corpus)
 
 [3. dowload_and_parse.sh](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#3-scriptsh)
 
 [4. Execution](https://github.com/cnr-isti-vclab/ReviewerNet/tree/Yscaling/parser#4-Execution)
 <hr>
-
+<a id="req"></a>
 ## 1. Requirements
 
 To run the script succesfully you need:
