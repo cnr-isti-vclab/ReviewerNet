@@ -1,3 +1,5 @@
+<a id="top"></a>
+
 # How to run an user-defined instance of Reviewernet.org
 
 This is a tutotial to download, create and deploy a user-defined instance of Reviewernet.org.
@@ -29,7 +31,7 @@ To run the script succesfully you need:
 
 <a id="corpus"></a>
 
-## 2. The SemanticScholar corpus
+## 2. The SemanticScholar corpus [to top](#top)
 
 The reference corpus can be found at http://api.semanticscholar.org/corpus/download/. This representation of the full Semantic Scholar corpus offers data relating to papers crawled from the web and subjected to a number of filters.
 
@@ -37,7 +39,7 @@ The papers are provided as a set of json objects, one per line. Papers are group
 
 <a id="script"></a>
 
-## 3. download_and_parse.sh
+## 3. download_and_parse.sh [to top](#top)
 
 The provided script, given a list of journals/venues, downloads and parses the partitions in parallel, allowing a maximum number of 10 concurrent downloads and parsers. 
 The only input needed is a set of journal/venue names (see next section for further details on usage), and in the end the output will be:
@@ -63,7 +65,7 @@ At this point he *datasets* folder will contain the 3 files needed to run Review
 
 <a id="exe"></a>
 
-## 4. Execution
+## 4. Execution [to top](#top)
 
 1. open *journals.txt* with a text editor and change the content of the JSON object with the names^^ of the journals/venues that will be used to build the topic-based datasets.  
 
