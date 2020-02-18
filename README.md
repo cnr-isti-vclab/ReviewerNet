@@ -91,7 +91,8 @@ Finally, to modulate the conflict of interest, the user can set a threshold for 
 
 # How to use ReviewerNet 
 
-If you are a journal editor, or an IPC member asked to find additional reviewers, you can follow the steps below to find a set of reviewers for a submitted paper, and alternative reviewers in case of decline.  
+If you are a journal editor, or an IPC member asked to find additional reviewers, you can follow the steps below to find a set of reviewers for a submitted paper, and alternative reviewers in case of decline. 
+Reviewernet runs on a Computer Grapichs instance by default, but you can create your own instance with a user-friendly procedure described [here](https://github.com/cnr-isti-vclab/ReviewerNet/tree/master/parser).
 
 
 ### Step 0: Input the names of submitting and conflicting authors
