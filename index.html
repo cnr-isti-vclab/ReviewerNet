@@ -62,7 +62,10 @@
               conflicts.<br>The main idea is using visual representations of citation and co-authorship, assuming
               authors of relevant papers are good candidate reviewers.<br><br> ReviewerNet default instance runs on a
               bibliographic database in the field of Computer Graphics extracted from the <a target="_blank"
-                class="links" href="https://www.semanticscholar.org/">Semantic Scholar</a> Corpus.<br>
+                class="links" href="https://www.semanticscholar.org/">Semantic Scholar</a> Corpus, 
+                <br>but you can create your own instance with a
+              user-friendly procedure described <a class="links"
+                href="https://github.com/cnr-isti-vclab/ReviewerNet/tree/master/parser" target="_blank">here</a>.<br>
               <hr>
 
               <span id="stat-intro">
@@ -396,13 +399,18 @@
         <tr>
           <td>
             <div id="tutorial-dialog" title="Tutorial" class="my-dialog" style="width: 99%; height: 93%">
+              Reviewernet runs on a Computer Grapichs instance by default, but you can create your own instance with a
+              user-friendly procedure described <a class="links"
+                href="https://github.com/cnr-isti-vclab/ReviewerNet/tree/master/parser" target="_blank">here</a>.<br>
               To look for your reviewers:
               <ul id="tutorial-list">
-                <li> input the names of the authors of the submitted paper in the ‘Submitting Authors’ field, and click
-                  the <img height="24" src="imgs/done.png" alt="Tutorial"> ‘Done’ button next to the searchbar;</li>
+                <li> Input the names of the authors of the submitted paper in the 'Submitting Researchers'
+                  field (also with the help of the drop-down menu). You can also input directly the names of conflicting
+                  researchers, if known, in the 'Conflicting Researchers' field. </li>
                 <li> build your Paper Network: the intuition is that the authors of relevant papers are good candidate
                   reviewers. Start from one or more seed documents of your choice, say, 1 to 3 papers you deem relevant
-                  to the submission topic, and input their titles in the ‘Key papers’ field. Then, expand the network by
+                  to the submission topic, and input their titles in the ‘Key papers’ field. You can also press the 'Import from bibliography' 
+                  button and paste a list of references that will populate the views. Then, expand the network by
                   selecting interesting nodes on a mouse double click;</li>
                 <li> continue until you feel the selected papers and their citations offer a good coverage of the
                   literature about the topic at hand. While you create the Paper Network, ReviewerNet automatically
@@ -415,12 +423,13 @@
                   visualization of network of collaborators;</li>
                 <li> once you identified one or more candidate reviewers who fit your requirements, input their names in
                   the ‘Selected Reviewers’ field;</li>
-                <li> download your list of reviewers; ReviewerNet will also add a list of potential substitute
+                <li> download your list of reviewers with a mouse click on the 'Export session' button in the CP or in the page footer; you can use this file in the future to restore a ReviewerNet session.
+                  <br>ReviewerNet will also print a list of potential substitute
                   reviewers, in case of decline.
               </ul>
-              For further information, refer to the <a class="links"
-                href="https://arxiv.org/pdf/1903.08004v1.pdf">paper</a> and the accompanying <a class="links"
-                href="https://youtu.be/JnomPO8QI28">video</a>
+              For further information, refer to the <a class="links" target="_blank"
+                href="http://vcg.isti.cnr.it/Publications/2019/SGPC19/">paper</a> and the <a class="links" target="_blank"
+                href="https://github.com/cnr-isti-vclab/ReviewerNet/">GitHub page</a> of the project.
             </div>
             <button id="tutorial" class="btn btn-default" type="button"><img id="hlp" class="done-btn"
                 src="imgs/help.png" alt="Tutorial"></button>
@@ -453,7 +462,7 @@
           <td>
             <a class="links" href="http://labs.semanticscholar.org/corpus/"
               style="height: 9px; color: #275d58; font-style: oblique; font-size: 0.7em">data courtesy of
-              semanticScholar </a><a class="links" href="https://github.com/hybrs/hybrs.github.io"
+              semanticScholar </a><a class="links" href="https://github.com/cnr-isti-vclab/ReviewerNet/"
               style="cursor:zoom-in; color: #275d58; font-style: oblique;"><img class="links" id="ghl" src="imgs/gh.png"
                 alt="(about)"></a>
           </td>
