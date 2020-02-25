@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<img style="left: 13%; top: -10%; position:absolute; width: 120px; height: 140px; border: 0px; background-color: transparent;" data-src="images/logo.PNG"><h2>ReviewerNet.org</h2>
+					<p style="font-style: oblique; font-size: 0.8em;">
+						
+						Visualizing Citation and Authorship Relations for Finding Reviewers
+
+					</p><hr>
+					<div style="font-size:0.7em; text-align: center; transform: translateY(20px);">
+					<span style="float: left;">Candidate<br>Mario Leonardo Salinas
+					<br><br><img style="width: 150px; height: 150px; border: 0px; background-color: transparent; transform: translateY(17px);" data-src="images/cherubino.PNG">
+				</span>
+					<span style="float: right;">Supervisors<br>Dott. Paolo Cignoni<br>Dott. Daniela Giorgi<br>
+						<br>
+						<img style="width: 110px; height: 100px; border: 0px; background-color: transparent;" data-src="images/ISTIlogo.PNG">
+						
+						<img style="width: 100px; height: 100px; border: 0px; background-color: transparent;" data-src="images/VCLAB.PNG">
+					</span>
+					</div>
+				</section>
+				<section>
+
+					<h2>The problem</h2><hr>
+					<p>
+					<span> <span class="emph" > Reviewer finding </span> by journal editors and IPC members</span>
+					<br>
+
+						<ul>
+						<li>Look for active experts with good topic coverage</li>
+						<li>Identify research communities by searching the literature</li>
+						<li>Check conflict of interest and distribution of candidate in the community</li>
+					</ul>
+				</p>
+
+				</section>
+
+				<section>
+						<h2>Introduction</h2>
+					<hr>
+
+					<table>
+						<tr>
+						  <td style="width: 50%; font-size: 0.8em;">
+							<ul>
+								<li>The number of academic
+									uploaded documents grows
+									very fast</li>
+									<li>The volume, variety and
+									velocity generated satisfies
+									the big data definition</li>
+								<li>
+									More automation needed
+								</li>
+							</ul>  
+							<td>
+						  <td style="width: 50%;">
+							<img data-src="images/publicationsperyear.PNG">
+							<figcaption>Number of papers per publication year, from DBLP</figcaption>
+								
+
+						  </td>
+						</tr>
+					  </table>
+					
+					
+						
+				</section>
+				<section>
+					<section>
+						<h2>Related work</h2><hr>
+						<p>More than 100 visual approaches for document collections proposed in the
+							last 10 years</p>
+						<img data-src="images/federico.PNG">
+						<figcaption>Number of visual approaches papers per publication year [FED17]</figcaption>
+						<p>Most of the works focused on static visualization</p>
+						<footer style="font-size: 0.25em;"> 
+							<span style="font-weight: bold;" >[FED17]</span> <span style="font-style: italic;" >P. Federico, F. Heimerl, S. Koch, and S. Miksch.</span>  
+							 <span class="emph" >“A Survey on Visual Approaches for Analyzing Scientific Literature and Patents”.</span>
+							In: IEEE Transactions on Visualization and Computer Graphics 23.9 (2017), pp. 2179–2198.
+						</footer>
+					</section>
+					<section>
+						<h2>Related work</h2><hr>
+						<table>
+							<tr>
+							  <td style="width: 50%; font-size: 0.8em;">
+						<ul>
+							<li>The visualization of
+								bibliometric networks is an
+								active area of research
+							</li>
+							<li>History and development of
+								research fields can be
+								analyzed with citation
+								networks
+							</li>
+						</ul>
+						</td>
+						<td style="width: 50%;">
+							<img data-src="images/citenet.PNG">
+						<figcaption>CiteNetExplorer</figcaption>
+						</td>
+						</tr>
+						</table>
+					</section>
+					<section>
+						<h2>Related work</h2><hr>
+						<table>
+							<tr>
+							  <td style="width: 50%; font-size: 0.8em;">
+								<ul>
+									<li>
+										Graph structure allows one to obtain semantically meaningful hierarchies
+								</li></ul>
+									</td>
+								<td style="width: 50%;">
+							<img data-src="images/papervis.PNG">
+							<figcaption>PaperViz</figcaption>
+						</td>
+							</tr></table>
+					</section>
+					<section>
+						<h2>Related work</h2><hr>
+						<table>
+							<tr>
+							  <td style="width: 50%; font-size: 0.8em;">
+								<ul>
+									<li>
+						Rexplore includes a graph cnnecting similar authors
+						</li></ul>
+						</td>
+						<td style="width: 50%;">
+							<img data-src="images/rexplore.PNG">
+							<figcaption>Rexplore</figcaption>
+						</td></tr></table>
+					</section>
+			</section>
+			<section>
+				
+				<div >
+				<h3> Main Intuition &amp; The Reviewer Selection Process </h3>
+		<hr>
+
+			<ul style="font-size: 0.7em;" >
+				<li>Specific goal: provide enough understanding to help editors IPC members in
+					picking reviewers
+					</li>
+				<li>To support the user in the reviewer selection process we <span class="emph" >only rely on
+					citations</span></li>
+				<img class="fragment" data-fragment-index="1" src="images/proc.png">
+				<!-- 
+				<li>The process involves:
+					<ul>
+						<li>Identify relevan papers</li>
+						<li>Navigate&amp;Expand citations network</li>
+						<li>Assess the suitability and conflicts of researchers</li>
+					</ul>
+				</li>
+				-->
+				<li class="fragment" data-fragment-index="2"><span class="emph">Main intuition:</span> authors of relevant
+					papers are good
+					candidate reviewers</li>
+			</ul>
+		</div>
+			</section>
+				<section>
+					<h2>The User Interface</h2>
+					<hr>
+					<img src="images/screen.png" width="100%" height="100%" style="margin: 0px; padding: 0px;;">
+				</section>
+				<section>
+				<section><h2>Data</h2><hr>
+					<ul style="font-size: 0.8em;">
+						<li>The Semantic Scholar corpus contains more than 180M publications.</li>
+						<li>Papers are provided as JSON objects, one per line, then gzipped and partitioned in batches.</li>
+					</ul>
+					<pre><code data-trim data-noescape style="font-size:0.8em;">
+						{
+							"id": "4cd223df721b722b1c40689caa52932a41fcc223",
+							"title": "Knowledge-rich, computer-assisted composition of Chinese couplets",
+							"authors": [
+							  {
+								"name": "John Lee",
+								"ids": [
+								  "3362353"
+								]
+							  },
+							  "..."
+							],
+							"inCitations": [
+							  "c789e333fdbb963883a0b5c96c648bf36b8cd242"
+							],
+							"outCitations": [
+							  "abe213ed63c426a089bdf4329597137751dbb3a0",
+							  "..."
+							],
+							"year": 2016,
+							"venue": "DSH",
+							"journalName": "DSH",
+							"..."
+						  }
+							</code></pre>
+							
+				
+				</section>
+				<section><h2>Data</h2>
+					<hr>
+				<ul><li>
+					Data quality is fairly good, but there are some <span style="color: tomato;" >issues:</span>
+				<ol type="i" style="color: tomato; font-size: 0.7em;">
+					<li>ambiguity in how venues are referenced (acronyms, multiple abbreviations, ecc...)</li>
+					<li>lack of consistency in citations as extracted from JSON files</li>
+				</ol>
+				<li>Solution: data pre-processing and consolidation
+									</li>
+				</ul></section>
+				<section>
+					<h2 style="margin: 0px;">Data</h2>
+					<p style="margin: 0px;">Pre-processing</p>
+					<hr>
+					<ul style="font-size: 0.8em;">
+						<li>
+							Each single JSON has been parsed and filtered separately, in parallel, with a python script.
+						</li>
+						<li>
+							Approximate string matching of venues names to correctly extract publication from selected sources.
+						</li>
+						<li>
+							The final consolidation step produces 3 files (authors, papers, journals) representing the ReviewerNet reference instance 
+						</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h2 style="margin: 0px;">Data</h2>
+					<p style="margin: 0px;">Pre-processing</p>
+					<hr>
+				
+					<ul style="font-size: 0.7em;"> 
+						<li> We extracted only publications from selected sources in the Computer Graphics field, spanning the years in-between 1995 and 2019.</li>
+						<li>The final reference dataset contains 22.887 papers, 145.900 citations, and
+							29.549 authors.</li>
+					</ul>
+
+					<table style="font-size: 0.5em;">
+						<tr>
+						  <td>ACM Transactions on Graphics</td>
+						  <td>2594</td>
+						</tr>
+						<tr>
+						  <td>Computer Graphics and Applications</td>
+						  <td>1697</td>
+						</tr>
+						<tr>
+						  <td>Computer Graphics Forum</td>
+						  <td>3521</td>
+						</tr>
+						<tr>
+						  <td>Computers &amp; Graphics</td>
+						  <td>2092</td>
+						</tr>
+						<tr>
+						  <td>IEEE Transactions on Visualization and Computer Graphics</td>
+						  <td>3638</td>
+						</tr>
+						<tr>
+						  <td>Visual Computer</td>
+						  <td>2107</td>
+						</tr>
+						<tr>
+						  <td>Proceedings of IEEE Conference Visualization (pre 2006)</td>
+						  <td>474</td>
+						</tr>
+						<tr>
+						  <td>Proceedings of ACM SIGGRAPH (pre 2003)</td>
+						  <td>6718</td>
+						</tr>
+					  </table>
+				</section>
+				</section>
+				<section>
+				<section><h2>Implementation Details</h2><hr>
+				<ul>
+					<li>
+						Python 2.7 scripts for preprocessing <span style="font-style:italic;">(fuzzywuzzy for string matching)</span>
+					</li>
+					<li>
+						HTML5, JS for UI and D3js for graph drawing
+					</li>
+					<li>ReviewerNet is a client-side application</li>
+				</ul>
+
+			</section>
+			<section>
+				<h2>Implementation Details</h2><hr>
+				<ul style="font-size: 0.8em;">
+					<li>
+						The tool is open and publicly available <br>at <span style="color:lightsteelblue;" > reviewernet.org</span>
+					</li>
+					<li> The source code is available <br>at <span style="color:lightsteelblue;"> https://github.com/cnr-isti-vclab/ReviewerNet</span></li>
+						<li>
+							ReviewerNet can be built over <span class="emph" style="font-style:italic;"> any subset</span> of the Semantic Scholar corpus, following the user-friendly procedure described <br>
+							at <span style="color:lightsteelblue;" > https://github.com/cnr-isti-vclab/ReviewerNet/tree/master/parser</span>
+						</li>
+				</ul>
+			</section>
+				</section>
+				<section>
+					<section><h2>Live Demo</h2><hr></section>
+
+				<section data-background-iframe="http://reviewernet.org" data-background-interactive></section>
+				</section>
+
+					<section>
+						<section><h2>Evaluation</h2><hr>
+							<ul style="font-size: 0.8em;">
+								<li>We evaluated a preliminary version of ReviewerNet on
+									the dataset focused on Computer Graphics</li>
+								<li>15 senior researchers were asked to search for three reviewers for a paper that
+									they had to choose reviewers for in the recent past</li>
+								<li>For training, the volunteers were only provided with a 6-minutes tutorial video</li>
+								<li>The platform was then evaluated filling a questionnaire</li>
+							</ul>
+					</section>
+						<section><h2>Evaluation</h2><hr>
+						<ul style="font-size: 0.7em;">
+							<li>
+								Only one user out of 15 reported s/he was not able to figure out how to use the system.
+							</li>
+							<li>
+								73.3% of the testers evaluated ReviewerNet as either good or excellent in finding key papers and researchers.
+							</li>
+							<li>86.7% of the testers thought ReviewerNet was good or excellent to help avoiding conflicts of interest. </li>
+							<li>71.4% of the testers agreed or strongly agreed that ReviewerNet reduces the time spent to
+								look for good sets of reviewers</li>
+						</ul>
+						</section>
+						<section><h2>Evaluation</h2><hr>
+						<ul style="font-size:0.8em;">
+							<li>In addition, the testers could insert additional comments</li>
+							<li>We used their suggestions to improve the preliminary version of the platform:
+								<ul style="font-size: 0.8em;">
+									<li> improved effectiveness of the visualization and the interaction modes</li>
+									<li> page-zero problem solved by automated key papers insertion from PDF references</li>
+									<li> customizable data coverage by user-friendly generation of a ReviewerNet instance</li>
+								</ul>
+		
+							</li>
+						</ul>
+						</section>
+					</section>
+					<section>
+					<section>
+						<h2>Conclusions</h2><hr>
+						<ul>
+							<li>ReviewerNet fully supports the
+								reviewer selection process.</li>
+							<li>Only relies on citations and
+								co-authorship relationships.</li>
+							<li>
+								Avoids conflicts and builds a distributed pool of reviewers
+							</li>
+						</ul>
+					</section>
+				<section><h2>Conclusions &amp; further work</h2><hr>
+				<ul style="font-size: 0.9em;">
+
+					<li>The evaluation of a preliminary version confirmed that:
+						<ul style="font-size:0.8em">
+						<li>the users were able to get acquainted with the system
+							even with a very limited training </li>
+							<li>the platform offers different useful functionalities supporting the reviewer selection task</li></ul>
+					</li>
+					<li>
+						The evaluation also highlighted that there was room for improving the system, which <span class="emph"> we did</span>.
+					</li>
+				</ul>
+				</section>
+				<section><h2>Further work</h2><hr>
+
+					<ul>
+						<li>An automatic strategy to suggest key papers by computing network features
+							(e.g. betweenness centrality).</li>
+							<li>
+								Visual interface for building the reference dataset starting from a set of venues.
+							</li>
+					</ul>
+				</section>
+				</section>
+				<section><h2>Publications</h2><hr>
+				<ul style="font-size: 0.8em;">
+					<li> <span class="emph" style="font-style: italic;"> Best paper</span> nominee ath the 2019 edition of the Smart Tools and Applications in Graphics
+						conference</li>
+					<li> selected for publication in a <span class="emph" style="font-style: italic;"> special issue </span> of the Elsevier Computers &amp; Graphics journal <span style="color: lightsteelblue;" >[currently under review]</span> </li>
+				</ul>
+				</section>
+				<section><h3>Thanks for your attention</h3></section>
+				</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				hash: true,
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/highlight/highlight.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true }
+
+				]
+			});
+		</script>
+	</body>
+</html>
