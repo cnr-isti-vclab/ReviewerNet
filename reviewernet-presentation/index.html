@@ -26,7 +26,7 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<img style="left: 13%; top: -10%; position:absolute; width: 120px; height: 140px; border: 0px; background-color: transparent;" data-src="images/logo.png"><h2>ReviewerNet.org</h2>
+					<img style="left: 13%; top: -7%; position:absolute; width: 120px; height: 140px; border: 0px; background-color: transparent;" data-src="images/logo.png"><h2>ReviewerNet.org</h2>
 					<p style="font-style: oblique; font-size: 0.8em;">
 						
 						Visualizing Citation and Authorship Relations for Finding Reviewers
@@ -49,13 +49,13 @@
 
 					<h2>The problem</h2><hr>
 					<p>
-					<span> <span class="emph" > Reviewer finding </span> by journal editors and IPC members</span>
+					<span> <span class="emph" > Reviewer finding </span> by journal editors and IPC members:</span>
 					<br>
 
 						<ul>
-						<li>Look for active experts with good topic coverage</li>
-						<li>Identify research communities by searching the literature</li>
-						<li>Check conflict of interest and distribution of candidate in the community</li>
+						<li>Look for active experts with good topic coverage.</li>
+						<li>Identify research communities by searching the literature.</li>
+						<li>Check conflict of interest and distribution of candidate in the community.</li>
 					</ul>
 				</p>
 
@@ -71,18 +71,18 @@
 							<ul>
 								<li>The number of academic
 									uploaded documents grows
-									very fast</li>
+									very fast.</li>
 									<li>The volume, variety and
 									velocity generated satisfies
-									the big data definition</li>
+									the big data definition.</li>
 								<li>
-									More automation needed
+									More automation needed.
 								</li>
 							</ul>  
 							<td>
 						  <td style="width: 50%;">
 							<img data-src="images/publicationsperyear.png">
-							<figcaption>Number of papers per publication year, from DBLP</figcaption>
+							<figcaption>Number of papers per publication year, from DBLP.</figcaption>
 								
 
 						  </td>
@@ -95,12 +95,27 @@
 			</section>
 				<section>
 					<section>
+	
 						<h2>Related work</h2><hr>
-						<p>More than 100 visual approaches for document collections proposed in the
-							last 10 years</p>
+						<ul style="font-size: 0.8em;">
+							<li>The literature mostly focused on the automatic <span class="emph"> reviewer assignment </span>, which is a different problem than ours.</li>
+							<li>There are still many applications and platforms, built on top of big scholarly data, that offer useful functionalities for the reviewer selection.</li>
+						</ul>
+						<table>
+							<tr>
+							  <th style="width: 10%;"><img data-src="images/scopus.png"></th>
+							  <th style="width: 30%;"><img style="transform: translateY(-10%);"  data-src="images/ma.png" ></th>
+							</tr>
+						  </table>
+					</section>
+					<section>
+	
+						<h2>Related work</h2><hr>
+						<p style="font-size: 0.8em;" >More than 100 visual approaches for document collections proposed in the
+							last 10 years.</p>
 						<img data-src="images/federico.png">
 						<figcaption>Visual approaches per publication year [FED17]</figcaption>
-						<p>Most of the works focused on static visualization</p>
+						<p style="font-size: 0.8em;">Most of the works focused on authors and documents retreival, statistics analysis and static visualization.</p>
 						<footer style="font-size: 0.25em;"> 
 							<span style="font-weight: bold;" >[FED17]</span> <span style="font-style: italic;" >P. Federico, F. Heimerl, S. Koch, and S. Miksch.</span>  
 							 <span class="emph" >“A Survey on Visual Approaches for Analyzing Scientific Literature and Patents”.</span>
@@ -115,12 +130,12 @@
 						<ul>
 							<li>The visualization of
 								bibliometric networks is an
-								active area of research
+								active area of research.
 							</li>
 							<li>History and development of
 								research fields can be
 								analyzed with citation
-								networks
+								networks.
 							</li>
 						</ul>
 						</td>
@@ -138,7 +153,7 @@
 							  <td style="width: 50%; font-size: 0.8em;">
 								<ul>
 									<li>
-										Graph structure allows one to obtain semantically meaningful hierarchies
+										Graph structure allows one to obtain semantically meaningful hierarchies.
 								</li></ul>
 									</td>
 								<td style="width: 50%;">
@@ -154,7 +169,7 @@
 							  <td style="width: 50%; font-size: 0.8em;">
 								<ul>
 									<li>
-						Rexplore includes a graph cnnecting similar authors
+						Rexplore includes a graph connecting similar authors.
 						</li></ul>
 						</td>
 						<td style="width: 50%;">
@@ -169,7 +184,7 @@
 				<h3> Main Intuition &amp; The Reviewer Selection Process </h3>
 		<hr>
 
-			<ul style="font-size: 0.7em;">
+			<ul style="font-size: 0.9em;">
 				<img  src="images/proc.png">
 				<!-- 
 				<li>The process involves:
@@ -235,7 +250,7 @@
 					<li>ambiguity in how venues are referenced (acronyms, multiple abbreviations, ecc...)</li>
 					<li>lack of consistency in citations as extracted from JSON files</li>
 				</ol>
-				<li>Solution: data pre-processing and consolidation
+				<li>Solution: data pre-processing and consolidation.
 									</li>
 				</ul></section>
 				<section>
@@ -244,13 +259,13 @@
 					<hr>
 					<ul style="font-size: 0.8em;">
 						<li>
-							Each single JSON has been parsed and filtered separately, in parallel, with a python script
+							Each single JSON has been parsed and filtered separately, in parallel, with a python script.
 						</li>
 						<li>
-							Approximate string matching of venues names to correctly extract publication from selected sources
+							<span class="emph" >Approximate string matching</span>  of venues names to correctly extract publication from selected sources.
 						</li>
 						<li>
-							The final consolidation step produces 3 files (authors, papers, journals) representing the ReviewerNet reference instance 
+							The final consolidation step produces 3 files (authors, papers, journals) representing the ReviewerNet reference instance. 
 						</li>
 					</ul>
 				</section>
@@ -267,7 +282,7 @@
 							29.549 authors.</li>
 					</ul>
 
-					<table style="font-size: 0.5em;">
+					<table style="font-size: 0.45em;">
 						<tr>
 						  <td>ACM Transactions on Graphics</td>
 						  <td>2594</td>
@@ -307,12 +322,12 @@
 				<section><h2>Implementation Details</h2><hr>
 				<ul>
 					<li>
-						Python 2.7 scripts for preprocessing <span style="font-style:italic;">(fuzzywuzzy for string matching)</span>
+						Python 2.7 scripts for preprocessing <span style="font-style:italic;">(fuzzywuzzy for string matching)</span>.
 					</li>
 					<li>
-						HTML5, JS for UI and D3js for graph drawing
+						HTML5, JS for UI and D3js for graph drawing.
 					</li>
-					<li>ReviewerNet is a client-side application</li>
+					<li>ReviewerNet is a client-side application.</li>
 				</ul>
 
 			</section>
@@ -340,11 +355,11 @@
 						<section><h2>Evaluation</h2><hr>
 							<ul style="font-size: 0.8em;">
 								<li>We evaluated a preliminary version of ReviewerNet on
-									the dataset focused on Computer Graphics</li>
+									the dataset focused on Computer Graphics.</li>
 								<li>15 senior researchers were asked to search for three reviewers for a paper that
-									they had to choose reviewers for in the recent past</li>
+									they had to choose reviewers for in the recent past.</li>
 								<li>For training, the volunteers were only provided with a 6-minute tutorial video</li>
-								<li>The platform was then evaluated by filling a questionnaire</li>
+								<li>The platform was then evaluated by filling a questionnaire.</li>
 							</ul>
 					</section>
 						<section><h2>Evaluation</h2><hr>
@@ -355,12 +370,12 @@
 							<li>
 								about 80% of the testers evaluated ReviewerNet as either good or excellent in finding key papers and researchers and in helping avoiding conflicts of interest. </li>
 							<li>71.4% of the testers agreed or strongly agreed that ReviewerNet reduces the time spent to
-								look for good sets of reviewers</li>
+								look for good sets of reviewers.</li>
 						</ul>
 						</section>
 						<section><h2>Evaluation</h2><hr>
 						<ul style="font-size:0.8em;">
-							<li>In addition, the testers could insert additional comments</li>
+							<li>In addition, the testers could insert additional comments.</li>
 							<li>We used their suggestions to improve the preliminary version of the platform:
 								<ul style="font-size: 0.8em;">
 									<li> improved effectiveness of the visualization and the interaction modes</li>
