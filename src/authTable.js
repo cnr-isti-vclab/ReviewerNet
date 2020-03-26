@@ -83,7 +83,7 @@ function prune_auth(d1){
             })
     }
     if(!exclude)
-        exclude = (authDict[d1.id][2] 
+        exclude = (authDict[d1.id][2]  && authDict[d1.id][2].length > 0
             && ( maxYear - parseInt(authDict[d1.id][2][authDict[d1.id][2].length - 1].year) > parseInt(thetaY) ))
     //console.log(authDict[d1.id][2][authDict[d1.id][2].length - 1].year)
     //return r || (!checkboxTY.spinner( "option", "disabled" ) (2018 - d1.papList))
