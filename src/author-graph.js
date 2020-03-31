@@ -266,7 +266,7 @@ function authorGraph() {
             return authColor(d) ? "⛔"+d.value: d.value;
         })
        .style("font-size", (d) => 0.1*d.score < 1.2 ? 
-        (0.1*d.score < 0.3 ? "0.3em": 0.1*d.score+"em")
+        (0.1*d.score < 0.5 ? "0.5em": 0.1*d.score+"em")
         : "1.2em")  
         .style("fill", function(d) {
             if(authsReview.includes(d.id)) return "#5263fe";
