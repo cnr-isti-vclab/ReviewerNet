@@ -440,9 +440,8 @@ function authorBars(){
             .attr("text-anchor", "center")  
             .style("font-size", "12px")
             .text(function (d){ 
-                if(authColor(d))
-                    return "⛔"+d.value
-                else return d.value })
+                return authColor(d) ? "⛔ "+d.value: 
+            authColor_r(d) ?  "⚠ "+d.value: d.value; })
             .style("font-style", function (d){ 
                 if(authColor(d) || authColor_r(d))
                     return "italic"
