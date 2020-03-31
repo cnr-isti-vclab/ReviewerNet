@@ -263,7 +263,7 @@ function authorGraph() {
         .attr("id", (d)=>"agname"+d.id)
         .attr("class", "agtextt")    
         .text(function(d) {
-            return d.value;
+            return authColor(d) ? "⛔"+d.value: d.value;
         })
        .style("font-size", (d) => 0.1*d.score < 1.2 ? 
         (0.1*d.score < 0.3 ? "0.3em": 0.1*d.score+"em")

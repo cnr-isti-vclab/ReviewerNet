@@ -434,12 +434,15 @@ function authorBars(){
         authTable.selectAll(".svgA")
             .append("text")
             .attr("class", "auth-name")
-            .attr("y", 10)
+            .attr("y", 11)
             //.attr('fill',"rgba( 221, 167, 109, 0.2 )")
             .style("border-radius", "3px")
             .attr("text-anchor", "center")  
             .style("font-size", "12px")
-            .text(function (d){ return d.value })
+            .text(function (d){ 
+                if(authColor(d))
+                    return "⛔"+d.value
+                else return d.value })
             .style("font-style", function (d){ 
                 if(authColor(d) || authColor_r(d))
                     return "italic"

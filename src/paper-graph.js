@@ -507,7 +507,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
             d3.event.stopPropagation()
             d3.event.preventDefault()
         })
-        
+                
 popRect = svgP.append("rect")
          .attr('x',0)
          .attr('y',-10)
@@ -576,7 +576,23 @@ popRect = svgP.append("rect")
             //restore_hist()
         
         simulation.alpha(1).alphaMin(0.02).alphaDecay(0.02).restart()
-        
+    
+        setTimeout(function (){
+        for(let i= 0; i< idPs.length; i++){ 
+            let tmpx = document.getElementById("p"+idPs[i]).cx.baseVal.value-3,
+                tmpy = document.getElementById("p"+idPs[i]).cy.baseVal.value+4,
+                txt = (i+1).toString();
+            
+            
+            svg.append("text")
+                .attr("class", "kptxt")
+                .attr("x", tmpx)
+                .attr("y", tmpy)
+                .text(txt)
+                .style("font-size", "0.7em")
+        }
+    }, 100)
+    
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
         

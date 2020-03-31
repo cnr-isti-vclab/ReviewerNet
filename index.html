@@ -259,7 +259,13 @@
                             <span id="conflict-a" class="text-left tb_labels">Submitting Researchers <span
                                 id="authors-badge" class="badge"></span></span>
                           </td>
-                          <td id="td2" class="button-bar">
+                          <td class="td2">
+                            <div id="export-dialog" title="Session Snapshot" class="my-dialog">
+                            </div>
+                            <button id="export-btn" style="visibility:hidden;" class="pop-up cpbtn" type="button" title="Export button."><img
+                                id="export" class="cpimg"  src="imgs/file-export-solid.png" alt="Export Session"></button>
+                          </td>
+                          <td id="td3">
                             <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB "
                                 id="authors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..."
                                 style="width: 100%"></form>
@@ -285,11 +291,25 @@
                             <span id="conflict-a" class="text-left tb_labels">Conflicting Researchers <span
                                 id="cauthors-badge" class="badge"></span></span>
                           </td>
+                          <td class="td2">
+                          <div id="export-dialog" title="Session Snapshot" class="my-dialog">
+                          </div>
+                          <button id="export-btn" style="visibility:hidden;" class="pop-up cpbtn" type="button" title="Export button."><img
+                              id="export" class="cpimg"  src="imgs/file-export-solid.png" alt="Export Session"></button>
+                        </td>
+                        <td class="td3">
+                          <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB "
+                            id="cauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..."
+                            style="width: 100%"></form>  
+                        </td>
+
+<!--
+
                           <td id="td22" class="button-bar">
                             <form class="aform"><input name="authoSearchBar" class="biginput hiddenSB "
                                 id="cauthors-autocomplete" autocomplete="off" type="text" placeholder="Find authors..."
                                 style="width: 100%"></form>
-                          </td>
+                          </td>-->
                         </tr>
                       </tbody>
                     </table>

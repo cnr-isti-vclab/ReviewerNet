@@ -50,7 +50,7 @@
 }
 
 .ui-spinner {
-    width: 43px;
+    width: 46px;
     height: 30px;
     padding: 2px;
     font-size: 0.9em;
@@ -69,7 +69,7 @@
 
 .ui-spinner-button{
     background-color: transparent;
-    width: 10px;
+    width: 15px;
     height: 15px;
     padding: 0px
     
@@ -967,7 +967,7 @@ table#bnt-table td {
 
 .spinner{
     height: 20px;
-    width: auto;
+    width: 100px;
 }
 
 .my-ico{
@@ -1191,7 +1191,7 @@ table#import-table td {
     width: 32px;
     height: 32px;
     background: none; 
-    float: right;
+    float: center;
 }
 
 .cpbtn:hover{background-color: #e8e8e8}
