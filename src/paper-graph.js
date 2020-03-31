@@ -591,7 +591,7 @@ popRect = svgP.append("rect")
                 .text(txt)
                 .style("font-size", "0.7em")
         }
-    }, 100)
+    }, 300)
     
     }
     d3.selectAll(".dblp").on("click", function(){d3.event.stopPropagation()})
