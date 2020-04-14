@@ -120,6 +120,8 @@ var graph = [],
     .domain([minYear, maxYear])
     .range([10, width - 40]),
     fullscreen = false,
+    confli = "⛔ ",
+    conflir = "⚠ ",
     xaxis = d3.axisBottom().scale(xConstrained),
     loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";
 

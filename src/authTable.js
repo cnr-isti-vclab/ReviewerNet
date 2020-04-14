@@ -256,14 +256,14 @@ function print_legend(txt_el){
         .attr('dy',15)
         .attr("fill","#db0000")
         .style("font-style", "italic")
-        .text("Conflicted with submitting")
+        .text(confli+"Conflicted with submitting")
     txt_el.append('tspan')
         .attr("class", "label-txtspanL")
         .attr("x", 10)
         .attr('dy', 15)
         .style("font-style", "italic")
         .attr("fill", "#8d585a")
-        .text("Conflicted with reviewer")
+        .text(conflir+"Conflicted with reviewer")
     txt_el.append('tspan')
         .attr("class", "label-txtspanL")
         .attr("x", 10)
@@ -429,7 +429,7 @@ function authorBars(){
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
-        
+
         //console.log(authsReview)
         authTable.selectAll(".svgA")
             .append("text")
@@ -440,8 +440,8 @@ function authorBars(){
             .attr("text-anchor", "center")  
             .style("font-size", "12px")
             .text(function (d){ 
-                return authColor(d) ? "⛔ "+d.value: 
-            authColor_r(d) ?  "⚠ "+d.value: d.value; })
+                return authColor(d) ? confli+d.value: 
+            authColor_r(d) ?  conflir+d.value: d.value; })
             .style("font-style", function (d){ 
                 if(authColor(d) || authColor_r(d))
                     return "italic"

@@ -130,9 +130,20 @@
                 ReviewerNet, the bibliographic database is fully loaded and queried on your local client.<br><br> Click
                 on "Use ReviewerNet" to acknowledge this info and start enjoying ReviewerNet.</center>
             </span>
+            
             <span id="startMsg">
+              <span id="firstspan">
               <img id="logo" src="imgs/logo.png">
               <h3 id="titleLogo">ReviewerNet</h3>
+            </span>
+              <span id="cmap-span" style="visibility:hidden;">
+              <label id="cmap-label" for="cmap-select">Select a color-map</label>
+              <select name="Color-map" id="cmap-select" style="pointer-events: all;">
+                <option selected = "true">Total number of citations</option>
+                <option>Local relevance</option>
+                <option >Venue</option>
+              </select>
+            </span>
               <!--<table id="ds_table">
                   <tr>
                     <td  style="padding-right: 4px;"> <button style="float: right;" id="default_inst" class="ds_btn" >Use default instance</button></td>
@@ -143,8 +154,7 @@
                     </td>
                   </tr>
                 </table>                -->
-
-            </span>
+          </span>
             <!-- Paper Graph -->
             <svg id="svgAxis" class="svg" style="width: inherit; height: 800px">
               <defs>
@@ -167,13 +177,13 @@
                 </pattern>
               </defs>
               <rect id="cmpa" class="cmpClass pop-up" x="20" y="160" width="10px"
-                title="Is a color-map associated with the number of in-citations. The steps are 0 and 100." height="36%"
+                title="A color-map associated with the number of in-citations. The steps are 0 and 100." height="36%"
                 fill="url(#grad_v)" text="100" ry="6px" />
 
               <!--                    <circle style = "cursor: pointer; pointer-events: all" id="reset-button" cx="30" cy="135" r="10" stroke="lightgray" stroke-width="0" fill="url(#reset-image)" />-->
-              <text x="35px" y="160px" class="cmpClass" style="font-size: 0.7em;"
+              <text id="top_cmstop" x="35px" y="160px" class="cmpClass" style="font-size: 0.7em;"
                 fill="rgba( 0, 0, 0, 0.609 )">100</text>
-              <text class="cmpClass" x="35px" y="454px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
+              <text id="bottom_cmstop" class="cmpClass" x="35px" y="454px" style="font-size: 0.7em;" fill="rgba( 0, 0, 0, 0.609 )">0</text>
             </svg>
             <svg id="svgP" class="svg" style="width: inherit" height=500px>
             </svg>
