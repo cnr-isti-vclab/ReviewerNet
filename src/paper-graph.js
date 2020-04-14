@@ -303,7 +303,7 @@ function paperInfo(suggestion){
 }
 
 function pap_radius(p){
-    return  p.key ? 9 : 5 + (p.out + p.in) -1;
+    return  p.key ? 9 : 5 + (p.out + p.in) - 1;
 }
 
 
@@ -484,7 +484,7 @@ function paperGraph(papers1, citations1, idPs, simulation){
         .attr("fill", function(d) {
             if(c20)
                 return color_j(d)
-            else return color_n(d.color)}
+            else return color_n(d)}
             /*
             if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
             else return "rgba( 64, 145, 215, 0.519 )";}*/)
@@ -634,7 +634,7 @@ function dragged(d) {
         ht = bbox.height,
         x = this.cx.baseVal.value,
         y = this.cy.baseVal.value;
-    popRect.attr('fill', () =>  "#d1d1d1")//c20 ? color_j(d) : color_n(d.color))
+    popRect.attr('fill', () =>  "#d1d1d1")//c20 ? color_j(d) : color_n(d))
 
     //popRect.attr('fill', "rgba( 181, 181, 181, 1 )")
         .attr('width',wd +10)
@@ -653,13 +653,13 @@ function dragged(d) {
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color);
+                return c20 ? color_j(d) : color_n(d);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color);
+                return c20 ? color_j(d) : color_n(d);
             else return "rgba( 221, 167, 109, 0.342 )"
          })
     

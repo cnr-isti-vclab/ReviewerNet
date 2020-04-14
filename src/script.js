@@ -364,7 +364,7 @@ function setMouseHandlers(){
     d3.select("#cmpa")
         .on("mouseover", function(){ d3.select(this).style("opacity", 0.8)})
         .on("mouseout", function(){ d3.select(this).style("opacity", 0.2)})
-        .on("dblclick", cmap_dbl)
+        //.on("dblclick", cmap_dbl)
     
     $("#authList")
         .on("click","td", addFromList)
@@ -490,8 +490,9 @@ function printCits(){
     return thehtml;
 }
 
-function color_n(c){
-    return c > 100 ? color(100):color(c);
+function color_n(el){
+    c = ctype == 0 ? el.color+el.nOc : el.out + el.in;
+    return ctype == 0 ? (c > 100 ? color(100):color(c)) : (el. key || c>8? color_rel(1): color_rel(c/8))
 }
 
 function colorjj_(idxx){
@@ -719,16 +720,23 @@ function startf(){
     if(start){
         let delta = maxYear-minYear
         if(delta > 30) delta = delta/2
-        document.getElementById("startMsg").style.visibility = "hidden";
+        document.getElementById("firstspan").style.visibility = "hidden";
+        document.getElementById("cmap-span").style.visibility = "visible";
         xaxis.scale(xConstrained).ticks(delta, "r");
         svgAxis = d3.select("#svgAxis").attr("y", "80")  
         svgAxis.append("g").attr("id", "axis").call(xaxis);
-        document.getElementById("startMsg").style.visibility = "hidden";
         document.getElementById("svgAxis").style.visibility = "visible";
         d3.selectAll(".ui-resizable-handle").style("opacity", 1)
         d3.selectAll(".graph").style("overflow-y", "auto")
         d3.selectAll("#AG-container").style("overflow-y", "hidden")
         add_labels()
+        $( "#cmap-select" ).selectmenu({
+            change: function( event, ui ) {
+                change_cmap(ui.item.index)
+            }
+        });
+        $("#cmap-select")[0].selectedIndex = 0
+        $("#cmap-select").selectmenu("refresh");
         start = false;
     }
 }
@@ -1173,11 +1181,11 @@ function setup_searchbars(){
         if(papersPrint.includes(item.id)){
             if(idPs.includes(item.id)){
               return $( "<li>" )
-                .append( "<div style = \"background-color: "+color_n(item.color)+"; color:blue; font-weight: bold;\" >--<strong>" + item.year+ "</strong> " + name + "</div>" )
+                .append( "<div style = \"background-color: "+color_n(item)+"; color:blue; font-weight: bold;\" >--<strong>" + item.year+ "</strong> " + name + "</div>" )
                 .appendTo( ul );
             }else
                 return $( "<li>" )
-                .append( "<div style = \"background-color: "+color_n(item.color)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
+                .append( "<div style = \"background-color: "+color_n(item)+"\" ><strong>" + item.year+ "</strong> " + name + "</div>" )
                 .appendTo( ul );
         }else 
              return $( "<li>" )
@@ -1219,16 +1227,16 @@ $(function (){
         
     //DEBUG
     
-/*
+
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
         j_lists[instance] = {'j_list':[], 'texts':[], 'stats':[]}
         //scarico file x e creo jlist e texts
-        readJournals("datasets/j_"+instance+"_2018-05-03.txt", instance)
+        readJournals("datasets/j_"+instance+"_2020-01-01.txt", instance)
     }
     
     clickOnGo()
     addPaper(papers[0])
-*/
+
 });

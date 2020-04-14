@@ -171,7 +171,7 @@ function printPapers(auths){
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
                 if(idPs.includes(d.id) || papersPrint.includes(d.id))
-                    return c20 ? color_j(d) : color_n(d.color)
+                    return c20 ? color_j(d) : color_n(d)
                 else return "rgba( 217, 217, 217, 1 )"
             }
    /*
@@ -218,7 +218,7 @@ function printPapers(auths){
             })
             .attr("stroke-width", "1.5px")
             .attr("fill", function (d){
-                return c20 ? color_j(d) : color_n(d.color) }
+                return c20 ? color_j(d) : color_n(d) }
                 /*
                 if (idPs.includes(d.id)) return "rgba( 117, 65, 214, 0.81 )";
                 else return "rgba( 64, 145, 215, 0.519 )";}*/
@@ -429,7 +429,7 @@ function authorBars(){
             .on("mouseover", handlerMouseOverA)
             .on("mouseout", handlerMouseOutA)
             .on("dblclick", author_dblclick_ABG)
-
+        
         //console.log(authsReview)
         authTable.selectAll(".svgA")
             .append("text")
@@ -441,7 +441,7 @@ function authorBars(){
             .style("font-size", "12px")
             .text(function (d){ 
                 return authColor(d) ? confli+d.value: 
-            authColor_r(d) ?  conflir+d.value: d.value; })
+            authColor_r(d) ?  conflir+d.value : d.value;})
             .style("font-style", function (d){ 
                 if(authColor(d) || authColor_r(d))
                     return "italic"

@@ -200,7 +200,7 @@ function cmap_dbl(){
         //    colorjj = color20b
         //colorjj.domain(j_lists[choosen_j].j_list)
         $(".cmpClass").hide()
-        let y_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([150, 330]);
+        let y_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([170, 330]);
         svgAxis.selectAll("jrect")
             .data(jddata.concat(["Other"]))
             .enter()
@@ -250,13 +250,13 @@ function cmap_dbl(){
 function color_papers(){
     d3.selectAll(".paper_in_bars").attr("fill", function (d){
         if(idPs.includes(d.id) || papersPrint.includes(d.id))
-            return c20 ? color_j(d) : color_n(d.color)
+            return c20 ? color_j(d) : color_n(d)
         else return "rgba( 217, 217, 217, 1 )"
     })
     d3.selectAll(".papersNode").attr("fill", function(d) {
         if(c20)
             return color_j(d)
-        else return color_n(d.color)})  
+        else return color_n(d)})  
                                         
 }
 
@@ -391,7 +391,7 @@ function overing_pap_bar(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color)
+                return c20 ? color_j(d) : color_n(d)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -399,7 +399,7 @@ function overing_pap_bar(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color)
+                return c20 ? color_j(d) : color_n(d)
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 }
@@ -461,7 +461,7 @@ function highlight_cluster(d){
         .style("opacity", (d1)=>d.authsId.includes(d1.id)? 1 : 0.1 )
         .attr("stroke",function (d1){
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color);
+                return c20 ? color_j(d) : color_n(d);
             else return "rgb(0,0,0,0)";
         })
         .attr("stroke-width",function (d1){
@@ -730,7 +730,7 @@ function reclick_pap(d){
     d3.selectAll(".authNode")
         .attr("fill", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color);
+                return c20 ? color_j(d) : color_n(d);
             else return "rgba( 221, 167, 109, 0.342 )"
         })
 
@@ -739,7 +739,7 @@ function reclick_pap(d){
      d3.selectAll(".authlLine")
         .style("stroke", function(d1){ 
             if(d.authsId.includes(d1.id))
-                return c20 ? color_j(d) : color_n(d.color);
+                return c20 ? color_j(d) : color_n(d);
             else return "rgba( 221, 167, 109, 0.342 )"
             })
 }
@@ -1451,7 +1451,7 @@ function handleMouseOver(d){
             x = this.cx.baseVal.value,
             y = this.cy.baseVal.value;
         
-        popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
+        popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d)*/)
             .attr('width',wd +10)
             .attr('height',ht+2)
             .attr("x", getXRect(x, wd, true))
@@ -1468,7 +1468,7 @@ function handleMouseOver(d){
         d3.selectAll(".authNode")
             .attr("fill", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return c20 ? color_j(d) : color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d);
                 else return "rgba( 221, 167, 109, 0.342 )"
             })
         
@@ -1476,7 +1476,7 @@ function handleMouseOver(d){
          d3.selectAll(".authlLine")
             .style("stroke", function(d1){ 
                 if(d.authsId.includes(d1.id))
-                    return c20 ? color_j(d) : color_n(d.color);
+                    return c20 ? color_j(d) : color_n(d);
                 else return "rgba( 221, 167, 109, 0.342 )"
                 })
     }
@@ -1588,7 +1588,7 @@ function handleMouseOverPB(d, event){
                 pap = d3.select("#p"+d.id),
                 x = pap.node().cx.baseVal.value,
                 y = pap.node().cy.baseVal.value;
-            popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d.color)*/)
+            popRect.attr('fill', () => "#d1d1d1"/*c20 ? color_j(d) : color_n(d)*/)
             //popRect.attr('fill', aolor_r(d.color))
                 .attr('width',wd +10)
                 .attr('height',ht+2)
@@ -1609,7 +1609,7 @@ function handleMouseOverPB(d, event){
                  d3.selectAll(".authNode")
                 .attr("fill", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return c20 ? color_j(d) : color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d);
                     else /*if((authColor(d1) || authColor_r(d1)) && !(authsExclude.includes(d1.id) || authsReview.includes(d1.id) ))
                         return "rgba( 188, 188, 188, 0.454 )"
                     else*/
@@ -1618,7 +1618,7 @@ function handleMouseOverPB(d, event){
                 d3.selectAll(".authlLine")
                 .style("stroke", function(d1){ 
                     if(d.authsId.includes(d1.id))
-                        return c20 ? color_j(d) : color_n(d.color);
+                        return c20 ? color_j(d) : color_n(d);
                     else/* if(!(authsExclude.includes(d1.id) || authsReview.includes(d1.id)) && (authColor(d1) || authColor_r(d1)))
                             return "rgba( 188, 188, 188, 0.454 )"
                         else*/
@@ -1766,11 +1766,11 @@ function ListMouseOver(event){
                         
                         .attr("fill", function(d1){ 
                             if(d.authsId.includes(d1.id))
-                                return c20 ? color_j(d) : color_n(d.color);
+                                return c20 ? color_j(d) : color_n(d);
                             else 
                                 return "rgba( 221, 167, 109, 0.342 )"
                          })        
-                    return c20 ? color_j(d) : color_n(d.color);            
+                    return c20 ? color_j(d) : color_n(d);            
                 }) 
              d3.selectAll("#pb"+idClick)
             .attr("r", 5)
@@ -1924,7 +1924,7 @@ function ListMouseOut(event){
                 .duration(200)
                 .attr("r", (d)=>pap_radius(d))
                 .attr("fill", function(d){
-                    return c20 ? color_j(d) : color_n(d.color); 
+                    return c20 ? color_j(d) : color_n(d); 
                 }) 
             
             

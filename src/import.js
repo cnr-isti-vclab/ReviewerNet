@@ -93,20 +93,7 @@ function loaded(evt) {
     
     
     
-    if(start){
-        let delta = maxYear-minYear
-        if(delta > 30) delta = delta/2
-        document.getElementById("startMsg").style.visibility = "hidden";
-        xaxis.scale(xConstrained).ticks(delta, "r");
-        svgAxis = d3.select("#svgAxis").attr("y", "80")  
-        svgAxis.append("g").attr("id", "axis").call(xaxis);
-        document.getElementById("startMsg").style.visibility = "hidden";
-         document.getElementById("svgAxis").style.visibility = "visible";
-        d3.selectAll(".ui-resizable-handle").style("opacity", 1)
-        d3.selectAll(".graph").style("overflow-y", "auto")
-        add_labels()
-        start = false;
-    }
+    startf()
     
 
     $('#papList').html("")

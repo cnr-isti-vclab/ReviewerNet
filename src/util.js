@@ -9,6 +9,8 @@ var graph = [],
     terms = {},
     old_loading = "",
     jddata = [],
+    confli = "⛔ ",
+    conflir = "⚠ ",
     p_ico = "imgs/key1.png",
     np_ico = "imgs/np.png",
     a_ico = "imgs/omini.png",
@@ -106,12 +108,19 @@ var graph = [],
     colorjj = d3.scaleOrdinal().domain([0, 1, 2, 3, 4, 5, 6])
     .range(["white", "yellow", "red", "green", "blue", "black", "gray"]), //color10,
     c20 = false,
+    ctype = 0,
     colorA = d3.scaleLinear()
     .domain([0, 10, 30])
     .range(["rgba( 178, 0, 0, 0.901 )", "#ffffff", "rgba( 17, 0, 178, 0.845 )"]),
+    firststop = "#ffff99",
+    secondstop = "#00cc99",
+    rel_color = "rgba( 56, 90, 110, 0.792 )"
     color = d3.scaleLinear()
     .domain([0, 100]) //#ffff99
     .range(["#00cc99", "#ffff99"]),
+    color_rel = d3.scaleLinear()
+    .domain([0, 1]) //#ffff99
+    .range(["white", rel_color]),
     //        .range(["#f90000", "#ffffff" , "#0019ff"]),
     rscale = d3.scaleLinear()
     .domain([0, 40])
@@ -120,8 +129,6 @@ var graph = [],
     .domain([minYear, maxYear])
     .range([10, width - 40]),
     fullscreen = false,
-    confli = "⛔ ",
-    conflir = "⚠ ",
     xaxis = d3.axisBottom().scale(xConstrained),
     loader = "<div id=\"ldr\" class=\"cssload-loader\">Loading data <span id = \"ldr-val\" style=\"width: auto; font-size: 0.6em\">0</span>%</div>";
 
@@ -235,4 +242,83 @@ function full_screen() {
     }
     //fullscreen=!fullscreen
 
+}
+
+
+
+function color_papers(){
+    d3.selectAll(".paper_in_bars").attr("fill", function (d){
+        if(idPs.includes(d.id) || papersPrint.includes(d.id))
+            return c20 ? color_j(d) : color_n(d)
+        else return "rgba( 217, 217, 217, 1 )"
+    })
+    d3.selectAll(".papersNode").attr("fill", function(d) {
+        if(c20)
+            return color_j(d)
+        else return color_n(d)})  
+                                        
+}
+
+function change_cmap(index){
+    /**
+     * 0 : total cit count
+     * 1 : local relevance (degree of nodes) (p.out + p.in)
+     * 2 : venue
+     */
+
+    //
+
+    switch (index) {
+        case 2:
+            $(".cmpClass").hide()
+            let y_coords = d3.scaleLinear().domain([0,j_lists[choosen_j].j_list.length]).range([170, 330]);
+            svgAxis.selectAll("jrect")
+                .data(jddata.concat(["Other"]))
+                .enter()
+                .append("rect").attr("class","jrect")
+                .attr("id", (d)=>"j"+(d == "Other" ? 7 : jddata.indexOf(d)))
+                .attr("height", 10)
+                .attr("width", 10)
+                .attr("y", function (d){
+                    return d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d)) : y_coords(6)
+                })
+                .attr("x", 20)
+                .attr("fill", (d) => colorjj_(j_lists[choosen_j].j_list.indexOf(d)))
+                .style("pointer-events", "all")
+                //scrivere handler in mouse-handlers.js
+                .on("click", cmap_click)
+                .on("mouseenter", cmap_on)
+                .on("mouseout", cmap_out)
+                .on("dblclick", cmap_dbl)
+                //evidenziare border e paperi su mouse over
+            svgAxis.selectAll(".jtext")
+                .data(jddata.concat(["Other"]))
+                .enter()
+                .append("text").attr("class", "jtext")
+                .attr("id", (d)=>"jt"+(d == "Other" ? 7 : jddata.indexOf(d)))
+                .attr("y", (d) => d != "Other" ? y_coords(j_lists[choosen_j].j_list.indexOf(d))+8 : y_coords(6)+8)
+                .attr("x", 35)
+                .attr("text-anchor", "left")  
+                .style("font-size", "8px")
+                .text(function (d){
+                    if(d!="Other"){
+                    let num = papersFiltered.filter((el) => el.v_id == d || el.j_id == d ).length
+                    return d+" "+num;
+                    }else return d+" "+ papersFiltered.filter((el) => !jddata.includes(el.v_id) && !jddata.includes(el.j_id) ).length
+            })
+            c20 = true
+            break;
+        default:
+            $(".cmpClass").show()
+            d3.select("#top_cmstop").text(() => index == 0 ? "100": "1")
+            d3.select("#thirdStopS").style("stop-color",index == 1 ? "white" : secondstop)
+            d3.select("#firstStopS").style("stop-color",index == 1 ? rel_color : firststop)
+            $("#cmpa")[0].attributes.title.nodeValue = index == 1 ? "Local relevance color-map" : "A color-map associated with the number of in-citations. The steps are 0 and 100."
+            d3.selectAll(".jrect").remove()
+            d3.selectAll(".jtext").remove()
+            ctype = index
+            c20 = false;
+            break;
+    }
+    color_papers()
 }
