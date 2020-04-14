@@ -1227,7 +1227,7 @@ $(function (){
         
     //DEBUG
     
-
+/*
     choosen_j = "cg"
     let instance  = choosen_j
      if(!j_lists[instance]){
@@ -1238,5 +1238,5 @@ $(function (){
     
     clickOnGo()
     addPaper(papers[0])
-
+*/
 });
