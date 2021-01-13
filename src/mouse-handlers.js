@@ -263,7 +263,7 @@ function color_papers(){
 function create_jtext(instance, journals){
     let str = "<ul style=\"list-style-type:none;\">",
         str1 = "<ul style=\"list-style-type:none; float:left;\">",
-        n = instance == "cg" ?  journals.length : 7,
+        n =  journals.length,
         nn = journals.length, others = 0;
     
     for (i = 0; i < n; i++){
